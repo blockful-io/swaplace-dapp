@@ -11,7 +11,11 @@ import {
 import { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { WagmiConfig } from "wagmi";
-import { RainbowKitProvider, lightTheme } from "@rainbow-me/rainbowkit";
+import {
+  RainbowKitProvider,
+  darkTheme,
+  lightTheme,
+} from "@rainbow-me/rainbowkit";
 import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
@@ -24,11 +28,18 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           >
             <WagmiConfig config={wagmiConfig}>
               <RainbowKitProvider
-                theme={lightTheme({
-                  accentColor: "black",
-                  borderRadius: "small",
-                  overlayBlur: "small",
-                })}
+                theme={{
+                  lightMode: lightTheme({
+                    accentColor: "black",
+                    borderRadius: "small",
+                    overlayBlur: "small",
+                  }),
+                  darkMode: darkTheme({
+                    accentColor: "#888888",
+                    borderRadius: "small",
+                    overlayBlur: "small",
+                  }),
+                }}
                 chains={chains}
               >
                 <Component {...pageProps} />

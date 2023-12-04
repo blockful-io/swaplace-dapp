@@ -1,6 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-export const ConnectWallet = () => {
+export const ConnectWallet = ({ customStyle }: any) => {
   return (
     <ConnectButton.Custom>
       {({
@@ -34,7 +34,11 @@ export const ConnectWallet = () => {
             {(() => {
               if (!connected) {
                 return (
-                  <button onClick={openConnectModal} type="button">
+                  <button
+                    onClick={openConnectModal}
+                    type="button"
+                    className={customStyle}
+                  >
                     Connect Wallet
                   </button>
                 );
