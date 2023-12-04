@@ -1,16 +1,19 @@
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ConnectWallet } from "../components/index";
+import { TheHeader } from "@/components/02-molecules";
+import { HomeSection } from "@/components/04-templates";
 import { useAuthedAccess } from "@/lib/client/hooks/useAuthedAccess";
+import cc from "classcat";
 
 export default function Index() {
   useAuthedAccess();
 
   return (
-    <div>
-      <header className="py-6 flex justify-between px-20 font-medium bg-green-200 shadow">
-        <h1>Swaplace dApp</h1>
-        <ConnectWallet />
-      </header>
+    <div
+      className={cc([
+        "w-full h-full flex flex-col justify-center items-center",
+      ])}
+    >
+      <TheHeader />
+      <HomeSection />
     </div>
   );
 }
