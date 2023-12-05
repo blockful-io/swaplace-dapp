@@ -10,7 +10,7 @@ export const SearchBar = () => {
 
     try {
       const ethAddress = new EthereumAddress(searchInput);
-    } catch (event) {
+    } catch (event: any) {
       setInputIsValid(false);
     }
   };
@@ -22,7 +22,7 @@ export const SearchBar = () => {
   return (
     <div
       className={cc([
-        "w-[1120px]  h-[120px] bg-[#f2f2f2] p-5 gap-3 flex flex-col ",
+        "w-[1120px]  h-auto bg-[#f2f2f2] p-5 gap-3 flex flex-col ",
       ])}
     >
       <div className="flex font-semibold text-[20px]">
@@ -32,8 +32,8 @@ export const SearchBar = () => {
         <input
           type="search"
           className={cc([
-            "w-full border focus:none",
-            inputIsValid ? "bg-[#bbf7d0]" : "border-[#e20e0e]",
+            "w-full h-5 px-4 py-3 border ",
+            inputIsValid ? "bg-[#bbf7d0]" : "border-red-500",
           ])}
           placeholder="Search username, address or ENS"
           onChange={handleInputChange}
