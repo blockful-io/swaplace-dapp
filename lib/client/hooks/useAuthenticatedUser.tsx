@@ -9,6 +9,7 @@ interface AuthenticatedUserHook {
   loadingAuthenticatedUser: boolean;
   authenticatedUserEnsName: string | null;
   authenticatedUserAddress: EthereumAddress | null;
+  setPreferredChainId: any;
   preferredChainId: number | null;
   disconnectUser: () => void;
 }
@@ -88,6 +89,7 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
       loadingEnsName || errorLoadingEnsName || !ensName ? null : ensName,
     authenticatedUserAddress: authenticatedAccountAddress,
     preferredChainId,
+    setPreferredChainId,
     disconnectUser,
   };
 };

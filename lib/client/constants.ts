@@ -10,3 +10,15 @@ export enum NFTLoadingStatus {
   LOADING = "LOADING",
   COMPLETED = "COMPLETED",
 }
+
+export enum ChainId {
+  ETHEREUM = 1,
+  GOERLI = 2,
+  SEPOLIA = 3,
+}
+
+export const ChainIdName: Record<ChainId, string> = {
+  [ChainId.ETHEREUM]: "Ethereum",
+  [ChainId.GOERLI]: "Goerli",
+  [ChainId.SEPOLIA]: "Sepolia",
+};

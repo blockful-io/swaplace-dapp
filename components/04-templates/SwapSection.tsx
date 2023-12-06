@@ -1,6 +1,6 @@
 import cc from "classcat";
 import { useState } from "react";
-import { SearchBar } from "@/components/01-atoms";
+import { SearchBar, SelectChain } from "@/components/01-atoms";
 import { ShelfTabSwap } from "@/components/03-organisms";
 
 export const SwapSection = () => {
@@ -10,6 +10,7 @@ export const SwapSection = () => {
     <section className={cc(["w-full h-full flex flex-col items-center"])}>
       <div>
         <SearchBar onInputChange={(input) => setInputState(input)} />
+        <SelectChain />
         <ShelfTabSwap input={inputState} />
       </div>
     </section>
