@@ -1,8 +1,12 @@
-import { EthereumAddress } from "@/lib/shared/types";
-import React, { useState } from "react";
 import cc from "classcat";
+import { useState } from "react";
+import { EthereumAddress } from "@/lib/shared/types";
 
-export const SearchBar = () => {
+interface ISearchBar {
+  onInputChange: (_: string) => void;
+}
+
+export const SearchBar = ({ onInputChange }: ISearchBar) => {
   const [inputIsValid, setInputIsValid] = useState(false);
 
   const validateAddress = (searchInput: string) => {
@@ -17,6 +21,7 @@ export const SearchBar = () => {
 
   const handleInputChange = (event: { target: { value: string } }) => {
     validateAddress(event.target.value);
+    onInputChange(event.target.value);
   };
 
   return (
@@ -30,6 +35,8 @@ export const SearchBar = () => {
       </div>
       <div className={cc(["flex"])}>
         <input
+          id="search"
+          name="search"
           type="search"
           className={cc([
             "w-full h-5 px-4 py-3 border ",
