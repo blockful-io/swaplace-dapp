@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { useEffect, useState } from "react";
-import { NftCard } from "../01-atoms/NftCard";
+import { NftCard } from "@/components/01-atoms/NftCard";
 import { ADDRESS_ZERO, NFT, NFTLoadingStatus } from "@/lib/client/constants";
 
 /**
@@ -51,36 +51,38 @@ export const ShelfSwap = ({ address }: any) => {
   }, [address]);
 
   return (
-    <div className="flex w-[580px] h-[500px] bg-[#e5e5e5] p-4">
-      <div className="flex items-center">
-        {nftStatus == "NULL" ? (
-          <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
-            <div className="flex items-center">
-              <div>Select a user to start swapping</div>
-            </div>
-          </div>
-        ) : nftStatus == "NONE" ? (
-          <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
-            <div className="flex items-center">
-              <div>
-                Given address has no NFTs associated in the given network
+    <div className="flex">
+      <div className="w-[580px] h-[500px] bg-[#e5e5e5] ">
+        <div className="flex items-center ">
+          {nftStatus == "NULL" ? (
+            <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
+              <div className="flex items-center">
+                <div>Select a user to start swapping</div>
               </div>
             </div>
-          </div>
-        ) : nftStatus == "LOADING" ? (
-          <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
-            <div className="flex items-center">
-              <div>Loading..</div>
+          ) : nftStatus == "NONE" ? (
+            <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
+              <div className="flex items-center">
+                <div>
+                  Given address has no NFTs associated in the given network
+                </div>
+              </div>
             </div>
-          </div>
-        ) : (
-          nftStatus == "COMPLETED" &&
-          nftData && (
-            <div className="w-full h-full">
-              <NftCard nftsOwner={nftData} />
+          ) : nftStatus == "LOADING" ? (
+            <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
+              <div className="flex items-center">
+                <div>Loading..</div>
+              </div>
             </div>
-          )
-        )}
+          ) : (
+            nftStatus == "COMPLETED" &&
+            nftData && (
+              <div className="w-full h-full">
+                <NftCard nftsOwner={nftData} />
+              </div>
+            )
+          )}
+        </div>
       </div>
     </div>
   );
