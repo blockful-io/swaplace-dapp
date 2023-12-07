@@ -10,3 +10,8 @@ export enum NFTLoadingStatus {
   LOADING = "LOADING",
   COMPLETED = "COMPLETED",
 }
+export const ChainName: [string, number][] = [
+  ["ETHEREUM", 1],
+  ["GOERLI", 5],
+  ["POLYGON", 137],
+];

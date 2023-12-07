@@ -1,6 +1,6 @@
 import { EthereumAddress } from "../../shared/types";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAccount, useDisconnect, useEnsName, useNetwork } from "wagmi";
 import { ADDRESS_ZERO } from "../constants";
 
@@ -10,6 +10,7 @@ interface AuthenticatedUserHook {
   authenticatedUserEnsName: string | null;
   authenticatedUserAddress: EthereumAddress | null;
   preferredChainId: number | null;
+  setPreferredChainId: Dispatch<SetStateAction<number | null>>;
   disconnectUser: () => void;
 }
 
@@ -89,5 +90,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
     authenticatedUserAddress: authenticatedAccountAddress,
     preferredChainId,
     disconnectUser,
+    setPreferredChainId,
   };
 };
