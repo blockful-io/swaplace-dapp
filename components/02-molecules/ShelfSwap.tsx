@@ -1,14 +1,16 @@
 import fetch from "node-fetch";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NftCard } from "@/components/01-atoms/NftCard";
 import {
   ADDRESS_ZERO,
+  ChainID,
   NFT,
-  NFTLoadingStatus,
+  NFTsQueryState,
   getRpcHttpUrlForNetwork,
 } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useWalletClient } from "wagmi";
+import { SwapContext } from "../01-atoms";
 
 /**
  *
@@ -17,19 +19,23 @@ import { useWalletClient } from "wagmi";
  * @returns Shelf Nfts based in status of given address
  */
 
-export const ShelfSwap = ({ address }: any) => {
+interface IShelfSwapProps {
+  address: string | null;
+}
+
+export const ShelfSwap = ({ address }: IShelfSwapProps) => {
   const { preferredChainId } = useAuthenticatedUser();
   const [nftData, setNftData] = useState<NFT[]>();
-  const [nftStatus, setNftStatus] = useState<NFTLoadingStatus>(
-    NFTLoadingStatus.NULL
+  const [nftStatus, setNftStatus] = useState<NFTsQueryState>(
+    NFTsQueryState.EMPTY_QUERY
   );
-
-  console.log("address", address);
 
   const { data: walletClient } = useWalletClient();
   console.log("walletchain", walletClient?.chain.id);
 
-  const baseUrl = getRpcHttpUrlForNetwork.get(preferredChainId);
+  const baseUrl = getRpcHttpUrlForNetwork.get(ChainID[preferredChainId]);
+
+  if (!baseUrl) throw new Error("No RPC URL defined for connected chain");
 
   const url = `${baseUrl}/getNFTs/?owner=${address}`;
 
@@ -37,47 +43,50 @@ export const ShelfSwap = ({ address }: any) => {
     method: "get",
   };
 
-  const nft: any[] = [];
+  const nftsList: any[] = [];
   const fetchNft = async () => {
+    setNftStatus(NFTsQueryState.LOADING);
+
     fetch(url, requestOptions)
       .then(async (response) => {
-        if (address == ADDRESS_ZERO) {
-          setNftStatus(NFTLoadingStatus.NONE);
-        }
-        setNftStatus(NFTLoadingStatus.LOADING);
         const data = await response.json();
         console.log("data-response", data);
 
         for (let i = 0; i < data.ownedNfts.length; i++) {
-          nft.push(data.ownedNfts[i].metadata);
+          nftsList.push(data.ownedNfts[i].metadata);
         }
-        if (nft.length == 0) {
-          setNftStatus(NFTLoadingStatus.NONE);
+
+        if (nftsList.length == 0) {
+          setNftStatus(NFTsQueryState.NO_RESULTS);
+        } else {
+          setNftStatus(NFTsQueryState.WITH_RESULTS);
         }
-        if (nft.length > 0) {
-          setNftStatus(NFTLoadingStatus.COMPLETED);
-        }
-        setNftData(nft);
+
+        setNftData(nftsList);
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => {
+        console.log("error", error);
+        setNftStatus(NFTsQueryState.ERROR);
+      });
   };
 
   useEffect(() => {
-    fetchNft();
+    if (address) {
+      fetchNft();
+    }
   }, [address, preferredChainId]);
-  console.log("nftData", nftData);
 
   return (
     <div className="flex">
       <div className="w-[580px] h-[500px] bg-[#e5e5e5] ">
         <div className="flex items-center ">
-          {nftStatus == "NULL" ? (
+          {nftStatus == NFTsQueryState.EMPTY_QUERY || !address ? (
             <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
               <div className="flex items-center">
                 <div>Select a user to start swapping</div>
               </div>
             </div>
-          ) : nftStatus == "NONE" ? (
+          ) : nftStatus == NFTsQueryState.NO_RESULTS ? (
             <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
               <div className="flex items-center">
                 <div>
@@ -85,14 +94,14 @@ export const ShelfSwap = ({ address }: any) => {
                 </div>
               </div>
             </div>
-          ) : nftStatus == "LOADING" ? (
+          ) : nftStatus == NFTsQueryState.LOADING ? (
             <div className="flex justify-center w-[580px] h-[500px] bg-[#e5e5e5] p-4">
               <div className="flex items-center">
                 <div>Loading..</div>
               </div>
             </div>
           ) : (
-            nftStatus == "COMPLETED" &&
+            nftStatus == NFTsQueryState.WITH_RESULTS &&
             nftData && (
               <div className="w-full h-full">
                 <NftCard nftsOwner={nftData} />

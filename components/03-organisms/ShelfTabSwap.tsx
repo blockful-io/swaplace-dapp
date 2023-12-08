@@ -1,21 +1,25 @@
 import cc from "classcat";
-import { useState } from "react";
-import { Tab } from "@/components/01-atoms/";
+import { use, useContext, useState } from "react";
 import { ShelfSwap } from "@/components/02-molecules";
+import { SwapContext, Tab } from "@/components/01-atoms/";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 
-export const ShelfTabSwap = ({ input }: any) => {
+export const ShelfTabSwap = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const [isYourItem, setIsYourItem] = useState(false);
+  const [selectNftsFromOthers, setSelectNftsFromOthers] = useState(false);
+
+  const { validatedAddressToSwap } = useContext(SwapContext);
 
   return (
     <div>
-      <Tab setIsYourItem={(input) => setIsYourItem(input)} />
-      <div className={cc([isYourItem ? "hidden" : "block"])}>
-        <ShelfSwap address={input} />
+      <Tab
+        setSelectNftsFromOthers={(input) => setSelectNftsFromOthers(input)}
+      />
+      <div className={cc([selectNftsFromOthers ? "hidden" : "block"])}>
+        <ShelfSwap address={validatedAddressToSwap} />
       </div>
-      <div className={cc([!isYourItem ? "hidden" : "block"])}>
-        <ShelfSwap address={authenticatedUserAddress?.address} />
+      <div className={cc([!selectNftsFromOthers ? "hidden" : "block"])}>
+        <ShelfSwap address={authenticatedUserAddress?.address ?? null} />
       </div>
     </div>
   );

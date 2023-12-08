@@ -1,16 +1,28 @@
 import { EthereumAddress } from "../../shared/types";
 import { signOut, useSession } from "next-auth/react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useAccount, useDisconnect, useEnsName, useNetwork } from "wagmi";
-import { ADDRESS_ZERO } from "../constants";
+import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
+import {
+  useAccount,
+  useDisconnect,
+  useEnsName,
+  useNetwork,
+  useWalletClient,
+} from "wagmi";
+import {
+  ADDRESS_ZERO,
+  ChainID,
+  SupportedNetworks,
+  getRpcHttpUrlForNetwork,
+} from "../constants";
+import { switchChain } from "viem/actions";
 
 interface AuthenticatedUserHook {
   loadingEnsName: boolean;
   loadingAuthenticatedUser: boolean;
   authenticatedUserEnsName: string | null;
   authenticatedUserAddress: EthereumAddress | null;
-  preferredChainId: number;
-  setPreferredChainId: Dispatch<SetStateAction<number>>;
+  preferredChainId: SupportedNetworks;
+  setPreferredChainId: Dispatch<SetStateAction<SupportedNetworks>>;
   disconnectUser: () => void;
 }
 
@@ -19,13 +31,38 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
   const { disconnect } = useDisconnect();
   const { data: nextAuthUser } = useSession();
   const { address, isConnected } = useAccount();
-  const [preferredChainId, setPreferredChainId] = useState<number>(
-    chain?.id ?? Number
+  const [preferredChainId, setPreferredChainId] = useState(
+    SupportedNetworks.SEPOLIA
   );
   const [authenticatedAccountAddress, setAuthenticatedAccountAddress] =
     useState<EthereumAddress | null>(null);
   const [loadingAuthenticatedUser, setLoadingAuthenticatedUser] =
     useState(true);
+
+  const { data: walletClient } = useWalletClient();
+
+  const switchToDefaultChain = async () => {
+    if (walletClient) {
+      await switchChain(walletClient, { id: ChainID[preferredChainId] });
+    }
+  };
+
+  useEffect(() => {
+    if (chain?.id) console.log(getRpcHttpUrlForNetwork.get(chain?.id));
+
+    if (
+      typeof chain?.id === "number" &&
+      !getRpcHttpUrlForNetwork.get(chain?.id)
+    ) {
+      disconnect();
+      return;
+    }
+
+    if (chain?.id !== ChainID[preferredChainId]) {
+      switchToDefaultChain();
+    }
+  }, [chain]);
+
   const {
     data: ensName,
     isLoading: loadingEnsName,
@@ -75,12 +112,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
       }
     });
   }, []);
-
-  useEffect(() => {
-    if (chain?.id && chain?.id !== preferredChainId) {
-      setPreferredChainId(chain.id);
-    }
-  }, [chain]);
 
   return {
     loadingEnsName: (loadingEnsName || !ensName) && !errorLoadingEnsName,
