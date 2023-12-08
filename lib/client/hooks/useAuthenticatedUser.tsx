@@ -9,8 +9,8 @@ interface AuthenticatedUserHook {
   loadingAuthenticatedUser: boolean;
   authenticatedUserEnsName: string | null;
   authenticatedUserAddress: EthereumAddress | null;
-  preferredChainId: number | null;
-  setPreferredChainId: Dispatch<SetStateAction<number | null>>;
+  preferredChainId: number;
+  setPreferredChainId: Dispatch<SetStateAction<number>>;
   disconnectUser: () => void;
 }
 
@@ -19,8 +19,8 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
   const { disconnect } = useDisconnect();
   const { data: nextAuthUser } = useSession();
   const { address, isConnected } = useAccount();
-  const [preferredChainId, setPreferredChainId] = useState<number | null>(
-    chain?.id ?? null
+  const [preferredChainId, setPreferredChainId] = useState<number>(
+    chain?.id ?? Number
   );
   const [authenticatedAccountAddress, setAuthenticatedAccountAddress] =
     useState<EthereumAddress | null>(null);

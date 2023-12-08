@@ -10,15 +10,18 @@ import {
   rainbowWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
-import { goerli, polygon } from "viem/chains";
+import { polygon, polygonMumbai, sepolia } from "viem/chains";
 
 const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
 
 export const rpcHttpUrl = `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
 const rpcWebSocketpUrl = `wss://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
 
+// const { preferredChainId } = useAuthenticatedUser();
+// const alchemyRpc = getRpcHttpUrlForNetwork.get(preferredChainId) ?? rpcHttpUrl;
+
 export const { chains, webSocketPublicClient, publicClient } = configureChains(
-  [mainnet, goerli, polygon],
+  [mainnet, sepolia, polygon, polygonMumbai],
   [
     jsonRpcProvider({
       rpc: () => ({ http: rpcHttpUrl, webSocket: rpcWebSocketpUrl }),
@@ -30,7 +33,7 @@ export const { chains, webSocketPublicClient, publicClient } = configureChains(
 const connectorArgs = {
   appName: "Swaplace dApp",
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? "",
-  chains: [mainnet, goerli, polygon],
+  chains: [mainnet, sepolia, polygon, polygonMumbai],
 };
 
 const connectors = connectorsForWallets([

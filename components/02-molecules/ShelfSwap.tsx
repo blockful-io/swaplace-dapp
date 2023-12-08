@@ -1,7 +1,14 @@
 import fetch from "node-fetch";
 import { useEffect, useState } from "react";
 import { NftCard } from "@/components/01-atoms/NftCard";
-import { ADDRESS_ZERO, NFT, NFTLoadingStatus } from "@/lib/client/constants";
+import {
+  ADDRESS_ZERO,
+  NFT,
+  NFTLoadingStatus,
+  getRpcHttpUrlForNetwork,
+} from "@/lib/client/constants";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { useWalletClient } from "wagmi";
 
 /**
  *
@@ -11,13 +18,20 @@ import { ADDRESS_ZERO, NFT, NFTLoadingStatus } from "@/lib/client/constants";
  */
 
 export const ShelfSwap = ({ address }: any) => {
+  const { preferredChainId } = useAuthenticatedUser();
   const [nftData, setNftData] = useState<NFT[]>();
   const [nftStatus, setNftStatus] = useState<NFTLoadingStatus>(
     NFTLoadingStatus.NULL
   );
 
-  const baseURL = process.env.NEXT_PUBLIC_ALCHEMY_HTTP;
-  const url = `${baseURL}/getNFTs/?owner=${address}`;
+  console.log("address", address);
+
+  const { data: walletClient } = useWalletClient();
+  console.log("walletchain", walletClient?.chain.id);
+
+  const baseUrl = getRpcHttpUrlForNetwork.get(preferredChainId);
+
+  const url = `${baseUrl}/getNFTs/?owner=${address}`;
 
   var requestOptions = {
     method: "get",
@@ -32,6 +46,8 @@ export const ShelfSwap = ({ address }: any) => {
         }
         setNftStatus(NFTLoadingStatus.LOADING);
         const data = await response.json();
+        console.log("data-response", data);
+
         for (let i = 0; i < data.ownedNfts.length; i++) {
           nft.push(data.ownedNfts[i].metadata);
         }
@@ -48,7 +64,8 @@ export const ShelfSwap = ({ address }: any) => {
 
   useEffect(() => {
     fetchNft();
-  }, [address]);
+  }, [address, preferredChainId]);
+  console.log("nftData", nftData);
 
   return (
     <div className="flex">
