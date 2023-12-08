@@ -1,35 +1,13 @@
 import cc from "classcat";
-import { useState } from "react";
-import { EthereumAddress } from "@/lib/shared/types";
+import { useContext } from "react";
+import { SwapContext } from ".";
 
-interface ISearchBar {
-  onInputChange: (_: string) => void;
-}
-
-export const SearchBar = ({ onInputChange }: ISearchBar) => {
-  const [inputIsValid, setInputIsValid] = useState(false);
-
-  const validateAddress = (searchInput: string) => {
-    setInputIsValid(true);
-
-    try {
-      const ethAddress = new EthereumAddress(searchInput);
-    } catch (event: any) {
-      setInputIsValid(false);
-    }
-  };
-
-  const handleInputChange = (event: { target: { value: string } }) => {
-    validateAddress(event.target.value);
-    onInputChange(event.target.value);
-  };
+export const SearchBar = () => {
+  const { setInputAddress, inputAddress, validatedAddressToSwap } =
+    useContext(SwapContext);
 
   return (
-    <div
-      className={cc([
-        "w-[1120px]  h-auto bg-[#f2f2f2] p-5 gap-3 flex flex-col ",
-      ])}
-    >
+    <div className={cc(["h-auto bg-[#f2f2f2] p-5 gap-3 flex flex-col "])}>
       <div className="flex font-semibold text-[20px]">
         Who are you swapping with today?
       </div>
@@ -39,11 +17,14 @@ export const SearchBar = ({ onInputChange }: ISearchBar) => {
           name="search"
           type="search"
           className={cc([
-            "w-full h-5 px-4 py-3 border ",
-            inputIsValid ? "bg-[#bbf7d0]" : "border-red-500",
+            "w-full h-5 px-4 py-3 border",
+            {
+              "bg-[#bbf7d0]": validatedAddressToSwap && inputAddress,
+              "border-red-500": inputAddress && !validatedAddressToSwap,
+            },
           ])}
           placeholder="Search username, address or ENS"
-          onChange={handleInputChange}
+          onChange={(e) => setInputAddress(e.target.value)}
         />
       </div>
     </div>

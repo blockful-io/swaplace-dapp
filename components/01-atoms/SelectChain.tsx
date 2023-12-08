@@ -1,4 +1,4 @@
-import { ChainName } from "@/lib/client/constants";
+import { ChainID, SupportedNetworks } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useEffect } from "react";
 import { useWalletClient } from "wagmi";
@@ -8,13 +8,14 @@ export const SelectChain = () => {
   const { data: walletClient } = useWalletClient();
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedChain = event.target.value as unknown as number;
+    const selectedChain = event.target.value as SupportedNetworks;
     setPreferredChainId(selectedChain);
   };
 
   const fetchSwitchChain = async () => {
-    await walletClient?.switchChain({ id: preferredChainId ?? 1 });
+    await walletClient?.switchChain({ id: ChainID[preferredChainId] });
   };
+
   useEffect(() => {
     fetchSwitchChain();
   }, [preferredChainId]);
@@ -26,9 +27,9 @@ export const SelectChain = () => {
         className="bg-slate-50"
         onChange={handleSelectChange}
       >
-        {Object.keys(ChainName).map((key, index) => (
-          <option key={key} value={ChainName[index][1]}>
-            {ChainName[index][0]}
+        {Object.keys(ChainID).map((key) => (
+          <option key={key} value={key}>
+            {key}
           </option>
         ))}
       </select>
