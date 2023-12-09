@@ -9,28 +9,40 @@ export const Tab = ({ setSelectNftsFromOthers }: ITab) => {
   const [isActiveTab, setIsActiveTab] = useState(1);
 
   return (
-    <div className="flex-auto flex items-center justify-between w-[580px] ">
-      <div className="flex">
-        <button
-          className={cc([isActiveTab == 1 && "bg-slate-300"])}
-          onClick={() => {
-            setSelectNftsFromOthers(false);
-            setIsActiveTab(1);
-          }}
-        >
-          Their Items
-        </button>
+    <div className="flex-auto flex items-center justify-between ">
+      <div
+        className={cc([
+          isActiveTab == 1 ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
+          "flex-1 p-4",
+        ])}
+      >
+        <div className="flex items-center justify-center">
+          <button
+            onClick={() => {
+              setSelectNftsFromOthers(false);
+              setIsActiveTab(1);
+            }}
+          >
+            Their Items
+          </button>
+        </div>
       </div>
-      <div className="flex">
-        <button
-          className={cc([isActiveTab == 2 && "bg-slate-300"])}
-          onClick={() => {
-            setSelectNftsFromOthers(true);
-            setIsActiveTab(2);
-          }}
-        >
-          Your Items
-        </button>
+      <div
+        className={cc([
+          "flex-1 p-4 border-l-[1px] border-b-[1px]",
+          isActiveTab == 2 ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
+        ])}
+      >
+        <div className="flex items-center justify-center">
+          <button
+            onClick={() => {
+              setSelectNftsFromOthers(true);
+              setIsActiveTab(2);
+            }}
+          >
+            Your Items
+          </button>
+        </div>
       </div>
     </div>
   );

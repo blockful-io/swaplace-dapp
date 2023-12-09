@@ -1,5 +1,5 @@
 import cc from "classcat";
-import { use, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { ShelfSwap } from "@/components/02-molecules";
 import { SwapContext, Tab } from "@/components/01-atoms/";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
@@ -11,7 +11,7 @@ export const ShelfTabSwap = () => {
   const { validatedAddressToSwap } = useContext(SwapContext);
 
   return (
-    <div>
+    <div className={cc(["rounded border"])}>
       <Tab
         setSelectNftsFromOthers={(input) => setSelectNftsFromOthers(input)}
       />

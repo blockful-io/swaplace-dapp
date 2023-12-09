@@ -17,7 +17,9 @@ export const SearchBar = () => {
   }, [inputAddress]);
 
   return (
-    <div className={cc(["h-auto bg-[#f2f2f2] p-5 gap-3 flex flex-col "])}>
+    <div
+      className={cc(["h-auto bg-[#f2f2f2] p-5 gap-3 flex flex-col rounded"])}
+    >
       <div className="flex font-semibold text-[20px]">
         Who are you swapping with today?
       </div>
@@ -27,7 +29,7 @@ export const SearchBar = () => {
           name="search"
           type="search"
           className={cc([
-            "w-full h-5 px-4 py-3 border focus-visible:outline-[#f2f2f2] ",
+            "w-full h-11 px-4 py-3 border focus-visible:outline-[#f2f2f2] rounded",
             { "bg-slate-100 ": inputIsTyping == null },
             {
               "bg-[#bbf7d0]": validatedAddressToSwap && inputAddress,
@@ -40,7 +42,7 @@ export const SearchBar = () => {
           placeholder="Search username, address or ENS"
           onChange={(e) => setInputAddress(e.target.value)}
         />
-        <div className="flex justify-center items-center rounded-md">
+        <div className="flex justify-center items-center">
           <button
             disabled={!inputAddress}
             className="disabled:bg-gray-200 disabled:text-gray-700 p-3  "
@@ -52,9 +54,9 @@ export const SearchBar = () => {
               backgroundImage: "url('/Search.svg')",
               backgroundSize: "contain",
               backgroundRepeat: "no-repeat",
-              backgroundPosition: "top",
-              width: "50%",
-              height: "50%",
+              backgroundPosition: "center",
+              width: "100%",
+              height: "100%",
             }}
           />
         </div>
