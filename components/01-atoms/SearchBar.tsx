@@ -1,6 +1,6 @@
 import cc from "classcat";
 import { useContext, useEffect } from "react";
-import { MagnifyingGlassIcon, SwapContext } from ".";
+import { MagnifyingGlassIcon, SelectChain, SwapContext } from ".";
 import toast from "react-hot-toast";
 
 export const SearchBar = () => {
@@ -19,8 +19,12 @@ export const SearchBar = () => {
 
   return (
     <div className="w-[95%] h-auto bg-[#f8f8f8] p-5 gap-3 flex flex-col rounded border-2 border-gray-200">
-      <div className="flex font-light text-xl">
-        Who are you swapping with today?
+      <div className="w-full flex justify-between">
+        <h2 className="font-light text-xl">Who are you swapping with today?</h2>
+
+        <div className="z-40 flex items-center justify-center py-1">
+          <SelectChain />
+        </div>
       </div>
       <div className={cc(["flex relative items-center"])}>
         <input

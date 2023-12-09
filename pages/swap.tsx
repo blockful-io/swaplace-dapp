@@ -1,18 +1,23 @@
 import cc from "classcat";
 import { TheHeader } from "@/components/02-molecules";
 import { Layout, SwapSection } from "@/components/04-templates";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 
 export default function SwapPage() {
+  const { authenticatedUserAddress } = useAuthenticatedUser();
+
   return (
     <Layout>
-      <div
-        className={cc([
-          "w-full h-full mt-24 flex flex-col justify-center items-center",
-        ])}
-      >
-        <TheHeader />
-        <SwapSection />
-      </div>
+      {authenticatedUserAddress && (
+        <div
+          className={cc([
+            "w-full h-full mt-24 flex flex-col justify-center items-center",
+          ])}
+        >
+          <TheHeader />
+          <SwapSection />
+        </div>
+      )}
     </Layout>
   );
 }

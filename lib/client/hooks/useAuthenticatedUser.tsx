@@ -10,7 +10,7 @@ import {
 } from "wagmi";
 import {
   ADDRESS_ZERO,
-  ChainID,
+  ChainInfo,
   SupportedNetworks,
   getRpcHttpUrlForNetwork,
 } from "../constants";
@@ -43,7 +43,7 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
 
   const switchToDefaultChain = async () => {
     if (walletClient) {
-      await switchChain(walletClient, { id: ChainID[preferredChainId] });
+      await switchChain(walletClient, { id: ChainInfo[preferredChainId].id });
     }
   };
 
@@ -58,7 +58,7 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
       return;
     }
 
-    if (chain?.id !== ChainID[preferredChainId]) {
+    if (chain?.id !== ChainInfo[preferredChainId].id) {
       switchToDefaultChain();
     }
   }, [chain]);

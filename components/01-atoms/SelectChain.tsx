@@ -1,24 +1,19 @@
-import { ChainID, SupportedNetworks } from "@/lib/client/constants";
+import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Listbox } from "@headlessui/react";
 import { useWalletClient } from "wagmi";
 import { CheckmarkIcon } from "react-hot-toast";
-
-const people = [
-  { id: 1, name: "Durward Reynolds", unavailable: false },
-  { id: 2, name: "Kenton Towne", unavailable: false },
-  { id: 3, name: "Therese Wunsch", unavailable: false },
-  { id: 4, name: "Benedict Kessler", unavailable: true },
-  { id: 5, name: "Katelyn Rohan", unavailable: false },
-];
+import { capitalizeFirstLetter } from "@/lib/client/utils";
+import cc from "classcat";
 
 export const SelectChain = () => {
   const { setPreferredChainId, preferredChainId } = useAuthenticatedUser();
   const { data: walletClient } = useWalletClient();
 
   const fetchSwitchChain = async () => {
-    await walletClient?.switchChain({ id: ChainID[preferredChainId] });
+    if (walletClient)
+      await walletClient.switchChain({ id: ChainInfo[preferredChainId].id });
   };
 
   useEffect(() => {
@@ -26,34 +21,37 @@ export const SelectChain = () => {
   }, [preferredChainId]);
 
   return (
-    <Listbox
-      value={preferredChainId}
-      onChange={(newChain) => setPreferredChainId(newChain)}
-    >
-      <Listbox.Button className="px-4 py-2">
-        {SupportedNetworks[preferredChainId]}
-      </Listbox.Button>
-      <Listbox.Options>
-        <>
-          {Object.keys(ChainID).map((chain) => (
-            <Listbox.Option
-              key={ChainID[chain as SupportedNetworks]}
-              value={ChainID[chain as SupportedNetworks]}
-            >
-              {({ active, selected }) => (
-                <div
-                  className={`${
-                    active ? "bg-blue-500 text-white" : "bg-white text-black"
-                  }`}
-                >
-                  {selected && <CheckmarkIcon />}
-                  {chain}
-                </div>
-              )}
-            </Listbox.Option>
-          ))}
-        </>
-      </Listbox.Options>
-    </Listbox>
+    <div className="relative">
+      <Listbox
+        value={preferredChainId}
+        onChange={(newChain) => setPreferredChainId(newChain)}
+      >
+        <Listbox.Button className="font-medium text-lg rounded px-4 bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] transition">
+          {capitalizeFirstLetter(SupportedNetworks[preferredChainId])}
+        </Listbox.Button>
+        <Listbox.Options className="absolute left-0 top-full rounded overflow-hidden">
+          <>
+            {Object.keys(ChainInfo).map((chain) => (
+              <Listbox.Option
+                key={ChainInfo[chain as SupportedNetworks].id}
+                value={chain}
+              >
+                {({ active, selected }) => (
+                  <div
+                    className={cc([
+                      "flex items-center space-x-3 p-4 py-2 cursor-pointer transition",
+                      active ? "bg-gray-700 text-white" : "bg-white text-black",
+                    ])}
+                  >
+                    <p>{chain}</p>
+                    {selected && <CheckmarkIcon />}
+                  </div>
+                )}
+              </Listbox.Option>
+            ))}
+          </>
+        </Listbox.Options>
+      </Listbox>
+    </div>
   );
 };

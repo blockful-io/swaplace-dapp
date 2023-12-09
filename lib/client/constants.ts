@@ -23,12 +23,23 @@ export enum SupportedNetworks {
   MUMBAI = "MUMBAI",
 }
 
-export const ChainID: Record<SupportedNetworks, number> = {
-  [SupportedNetworks.SEPOLIA]: 11155111,
-  [SupportedNetworks.MUMBAI]: 80001,
+interface ChainProps {
+  id: number;
+  icon: string;
+}
+
+export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
+  [SupportedNetworks.SEPOLIA]: {
+    id: 11155111,
+    icon: "",
+  },
+  [SupportedNetworks.MUMBAI]: {
+    id: 80001,
+    icon: "",
+  },
 };
 
 export let getRpcHttpUrlForNetwork: Map<number, string> = new Map([
-  [ChainID.SEPOLIA, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP ?? ""],
-  [ChainID.MUMBAI, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? ""],
+  [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP ?? ""],
+  [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? ""],
 ]);

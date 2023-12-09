@@ -1,11 +1,5 @@
-import fetch from "node-fetch";
 import { useEffect, useState } from "react";
-import {
-  NFT,
-  ChainID,
-  NFTsQueryStatus,
-  getRpcHttpUrlForNetwork,
-} from "@/lib/client/constants";
+import { NFT, ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { NftsList } from "../02-molecules";
 import { getNftsFrom } from "@/lib/client/blockchain-data";
@@ -31,7 +25,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
 
   useEffect(() => {
     if (address && preferredChainId) {
-      getNftsFrom(address, ChainID[preferredChainId], setNftsQueryStatus)
+      getNftsFrom(address, ChainInfo[preferredChainId].id, setNftsQueryStatus)
         .then((nftsList) => {
           setNftsList(nftsList);
         })
