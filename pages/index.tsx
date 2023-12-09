@@ -1,10 +1,7 @@
 import { HomeSection, Layout } from "@/components/04-templates";
-import { useAuthedAccess } from "@/lib/client/hooks/useAuthedAccess";
 import cc from "classcat";
 
 export default function Index() {
-  useAuthedAccess();
-
   return (
     <Layout>
       <div

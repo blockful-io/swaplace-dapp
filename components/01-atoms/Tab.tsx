@@ -2,48 +2,56 @@ import { useState } from "react";
 import cc from "classcat";
 
 interface ITab {
-  setSelectNftsFromOthers: (_: boolean) => void;
+  setActiveSwappingShelfID: (_: SwappingShelfID) => void;
 }
 
-export const Tab = ({ setSelectNftsFromOthers }: ITab) => {
-  const [isActiveTab, setIsActiveTab] = useState(1);
+interface Tab {
+  id: number;
+  name: string;
+}
+
+export enum SwappingShelfID {
+  "THEIR_ITEMS",
+  "YOUR_ITEMS",
+}
+
+export const swappingTabs: Array<Tab> = [
+  {
+    id: SwappingShelfID.THEIR_ITEMS,
+    name: "Their Items",
+  },
+  {
+    id: SwappingShelfID.YOUR_ITEMS,
+    name: "Your Items",
+  },
+];
+
+export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
+  const [isActiveTab, setIsActiveTab] = useState(SwappingShelfID.THEIR_ITEMS);
 
   return (
-    <div className="flex-auto flex items-center justify-between ">
-      <div
-        className={cc([
-          isActiveTab == 1 ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
-          "flex-1 p-4",
-        ])}
-      >
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => {
-              setSelectNftsFromOthers(false);
-              setIsActiveTab(1);
-            }}
+    <div className="flex-auto flex items-center justify-between rounded rounded-b-none overflow-hidden border-gray-200 border-2 border-b-0">
+      {swappingTabs.map((tab) => {
+        return (
+          <div
+            className={cc([
+              isActiveTab == tab.id ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
+              "flex-1 p-4 border-gray-400",
+            ])}
           >
-            Their Items
-          </button>
-        </div>
-      </div>
-      <div
-        className={cc([
-          "flex-1 p-4 border-l-[1px] border-b-[1px]",
-          isActiveTab == 2 ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
-        ])}
-      >
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => {
-              setSelectNftsFromOthers(true);
-              setIsActiveTab(2);
-            }}
-          >
-            Your Items
-          </button>
-        </div>
-      </div>
+            <div className="flex items-center justify-center">
+              <button
+                onClick={() => {
+                  setActiveSwappingShelfID(tab.id);
+                  setIsActiveTab(tab.id);
+                }}
+              >
+                {tab.name}
+              </button>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -1,1 +1,1 @@
-export * from "./ShelfTabSwap";
+export * from "./SwappingShelfs";

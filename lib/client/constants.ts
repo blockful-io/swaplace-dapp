@@ -1,10 +1,16 @@
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
+export const WIDE_SCREEN_SIZE = 1279;
+export const DESKTOP_SCREEN_SIZE = 1023;
+export const TABLET_SCREEN_SIZE = 768;
+
 export interface NFT {
-  name: string;
+  id?: Record<string, any>;
+  metadata?: Record<string, any>;
+  contract?: Record<string, any>;
 }
 
-export enum NFTsQueryState {
+export enum NFTsQueryStatus {
   EMPTY_QUERY = "EMPTY_QUERY",
   LOADING = "LOADING",
   ERROR = "ERROR",

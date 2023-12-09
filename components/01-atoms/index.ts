@@ -4,3 +4,6 @@ export * from "./SearchBar";
 export * from "./SelectChain";
 export * from "./Tab";
 export * from "./SwapContext";
+export * from "./icons/SwaplaceIcon";
+export * from "./icons/MagnifyingGlassIcon";
+export * from "./icons/SwapIcon";

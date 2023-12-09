@@ -10,7 +10,7 @@ import {
 
 import { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
-import { WagmiConfig, useAccount, useNetwork } from "wagmi";
+import { WagmiConfig } from "wagmi";
 import {
   RainbowKitProvider,
   darkTheme,
@@ -18,6 +18,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { SwapContextProvider } from "@/components/01-atoms";
+import { Toaster } from "react-hot-toast";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
@@ -44,6 +45,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
                   }}
                   chains={chains}
                 >
+                  <Toaster />
                   <Component {...pageProps} />
                 </RainbowKitProvider>
               </WagmiConfig>

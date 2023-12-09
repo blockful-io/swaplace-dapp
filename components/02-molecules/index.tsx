@@ -1,3 +1,4 @@
 export * from "./CardHome";
 export * from "./TheHeader";
-export * from "./ShelfSwap";
+export * from "../03-organisms/NftsShelf";
+export * from "./NftsList";

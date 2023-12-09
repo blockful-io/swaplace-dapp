@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { EthereumAddress } from "@/lib/shared/types";
 import React, { Dispatch, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 interface SwapContextProps {
   inputAddress: string;
@@ -33,6 +34,7 @@ export const SwapContextProvider = ({ children }: any) => {
       setValidatedAddressToSwap(inputAddress);
       setInputIsTyping(true);
     } catch (event: any) {
+      toast.error("Please enter a valid address");
       setValidatedAddressToSwap("");
       setInputIsTyping(false);
     }

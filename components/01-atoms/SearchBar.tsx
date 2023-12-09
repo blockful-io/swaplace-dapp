@@ -1,6 +1,7 @@
 import cc from "classcat";
 import { useContext, useEffect } from "react";
-import { SwapContext } from ".";
+import { MagnifyingGlassIcon, SwapContext } from ".";
+import toast from "react-hot-toast";
 
 export const SearchBar = () => {
   const {
@@ -17,22 +18,20 @@ export const SearchBar = () => {
   }, [inputAddress]);
 
   return (
-    <div
-      className={cc(["h-auto bg-[#f2f2f2] p-5 gap-3 flex flex-col rounded"])}
-    >
-      <div className="flex font-semibold text-[20px]">
+    <div className="w-[95%] h-auto bg-[#f8f8f8] p-5 gap-3 flex flex-col rounded border-2 border-gray-200">
+      <div className="flex font-light text-xl">
         Who are you swapping with today?
       </div>
-      <div className={cc(["flex"])}>
+      <div className={cc(["flex relative items-center"])}>
         <input
           id="search"
           name="search"
           type="search"
           className={cc([
-            "w-full h-11 px-4 py-3 border focus-visible:outline-[#f2f2f2] rounded",
-            { "bg-slate-100 ": inputIsTyping == null },
+            "w-full h-11 px-4 py-3 border-2 border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded",
+            { "bg-white ": inputIsTyping == null },
             {
-              "bg-[#bbf7d0]": validatedAddressToSwap && inputAddress,
+              "border-[#bbf7d0]": validatedAddressToSwap && inputAddress,
               "border-red-500":
                 inputAddress &&
                 !validatedAddressToSwap &&
@@ -42,23 +41,25 @@ export const SearchBar = () => {
           placeholder="Search username, address or ENS"
           onChange={(e) => setInputAddress(e.target.value)}
         />
-        <div className="flex justify-center items-center">
-          <button
-            disabled={!inputAddress}
-            className="disabled:bg-gray-200 disabled:text-gray-700 p-3  "
+        <div className="absolute right-2 justify-center items-center">
+          <div
+            role="button"
             onClick={() => {
-              validateAddressToSwap();
+              if (!inputAddress) toast.error("Please type some address");
+              else validateAddressToSwap();
             }}
-            type="submit"
-            style={{
-              backgroundImage: "url('/Search.svg')",
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-              width: "100%",
-              height: "100%",
-            }}
-          />
+          >
+            <button
+              disabled={!inputAddress}
+              className="pointer-events-none p-3 pr-1"
+              type="submit"
+            >
+              <MagnifyingGlassIcon
+                className="w-6"
+                fill={inputAddress ? "black" : "#EEE"}
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -30,6 +30,7 @@ export const ConnectWallet = ({ customStyle }: any) => {
                 userSelect: "none",
               },
             })}
+            className="w-full"
           >
             {(() => {
               if (!connected) {
@@ -79,7 +80,11 @@ export const ConnectWallet = ({ customStyle }: any) => {
                     )}
                     {chain.name}
                   </button>
-                  <button onClick={openAccountModal} type="button">
+                  <button
+                    onClick={openAccountModal}
+                    className="hidden md:block"
+                    type="button"
+                  >
                     {account.displayName}
                     {account.displayBalance
                       ? ` (${account.displayBalance})`
