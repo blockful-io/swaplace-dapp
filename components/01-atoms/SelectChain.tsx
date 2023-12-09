@@ -21,7 +21,7 @@ export const SelectChain = () => {
   }, [preferredChainId]);
 
   return (
-    <div>
+    <div className="border">
       <select
         name="SelectChain"
         className="bg-slate-50"

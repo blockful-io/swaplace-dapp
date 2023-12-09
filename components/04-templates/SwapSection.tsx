@@ -10,15 +10,9 @@ export const SwapSection = () => {
     <section className={cc(["w-full h-full flex flex-col items-center"])}>
       <div>
         <SearchBar />
-        <button
-          disabled={!inputAddress}
-          className="disabled:bg-gray-200 disabled:text-gray-700 p-3 rounded-md pt-2"
-          onClick={() => validateAddressToSwap()}
-          type="submit"
-        >
-          Query NFTs
-        </button>
-        <SelectChain />
+        <div className="flex items-center justify-center py-1">
+          <SelectChain />
+        </div>
         <ShelfTabSwap />
       </div>
     </section>

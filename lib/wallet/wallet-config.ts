@@ -12,10 +12,14 @@ import {
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { polygonMumbai, sepolia } from "viem/chains";
 
-const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
+const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? "";
+
+// const { preferredChainId } = useAuthenticatedUser();
+
+// const baseUrl =
+//   getRpcHttpUrlForNetwork.get(ChainID[preferredChainId]) ?? alchemyApiKey;
 
 export const rpcHttpUrl = `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
-const rpcWebSocketpUrl = `wss://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
 
 const supportedNetworks = [sepolia, polygonMumbai];
 
@@ -23,7 +27,7 @@ export const { chains, webSocketPublicClient, publicClient } = configureChains(
   supportedNetworks,
   [
     jsonRpcProvider({
-      rpc: () => ({ http: rpcHttpUrl, webSocket: rpcWebSocketpUrl }),
+      rpc: () => ({ http: rpcHttpUrl }),
     }),
     publicProvider(),
   ]
