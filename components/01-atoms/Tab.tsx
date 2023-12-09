@@ -36,19 +36,14 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
           <div
             className={cc([
               isActiveTab == tab.id ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
-              "flex-1 p-4 border-gray-400",
+              "flex-1 p-4 border-gray-400 cursor-pointer",
             ])}
+            onClick={() => {
+              setActiveSwappingShelfID(tab.id);
+              setIsActiveTab(tab.id);
+            }}
           >
-            <div className="flex items-center justify-center">
-              <button
-                onClick={() => {
-                  setActiveSwappingShelfID(tab.id);
-                  setIsActiveTab(tab.id);
-                }}
-              >
-                {tab.name}
-              </button>
-            </div>
+            <div className="flex items-center justify-center">{tab.name}</div>
           </div>
         );
       })}
