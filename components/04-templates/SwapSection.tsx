@@ -1,5 +1,6 @@
 import { SearchBar, SelectChain } from "@/components/01-atoms";
 import { SwappingShelfs } from "@/components/03-organisms";
+import { SwapStation } from "@/components/02-molecules";
 
 export const SwapSection = () => {
   return (
@@ -9,6 +10,7 @@ export const SwapSection = () => {
         <SelectChain />
       </div>
       <SwappingShelfs />
+      <SwapStation />
     </section>
   );
 };
