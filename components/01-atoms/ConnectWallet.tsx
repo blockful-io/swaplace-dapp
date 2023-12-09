@@ -1,6 +1,10 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-export const ConnectWallet = ({ customStyle }: any) => {
+interface IConnectWallet {
+  customStyle?: string;
+}
+
+export const ConnectWallet = ({ customStyle }: IConnectWallet) => {
   return (
     <ConnectButton.Custom>
       {({
@@ -55,8 +59,7 @@ export const ConnectWallet = ({ customStyle }: any) => {
                 <div style={{ display: "flex", gap: 12 }}>
                   <button
                     onClick={openChainModal}
-                    className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition"
-                    style={{ display: "flex", alignItems: "center" }}
+                    className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition hidden md:flex items-center"
                     type="button"
                   >
                     {chain.hasIcon && (
@@ -83,13 +86,16 @@ export const ConnectWallet = ({ customStyle }: any) => {
                   </button>
                   <button
                     onClick={openAccountModal}
-                    className="hidden md:block p-4 py-2 bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded transition"
+                    className="p-4 py-2 bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded transition"
                     type="button"
                   >
                     {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
+
+                    <div className="hidden md:block">
+                      {account.displayBalance
+                        ? ` (${account.displayBalance})`
+                        : ""}
+                    </div>
                   </button>
                 </div>
               );

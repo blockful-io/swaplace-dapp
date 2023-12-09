@@ -1,8 +1,6 @@
-import cc from "classcat";
-
 export const CardSwap = () => {
   return (
-    <div className={cc(["flex flex-col gap-4 px-3 pt-3 pb-8"])}>
+    <div className="flex flex-col gap-4 px-3 pt-3 pb-8">
       <div className="flex items-center h-9 gap-2">
         <div className="w-9 h-9 bg-[#d9d9d9] rounded-full" />
         <div className="items-center">

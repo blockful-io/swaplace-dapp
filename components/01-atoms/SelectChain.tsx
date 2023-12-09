@@ -1,57 +1,101 @@
-import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
+import { ChainInfo } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useEffect } from "react";
-import { Listbox } from "@headlessui/react";
-import { useWalletClient } from "wagmi";
-import { CheckmarkIcon } from "react-hot-toast";
-import { capitalizeFirstLetter } from "@/lib/client/utils";
-import cc from "classcat";
+import { useNetwork, useWalletClient } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export const SelectChain = () => {
-  const { setPreferredChainId, preferredChainId } = useAuthenticatedUser();
+  const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
 
   const fetchSwitchChain = async () => {
-    if (walletClient)
-      await walletClient.switchChain({ id: ChainInfo[preferredChainId].id });
+    if (walletClient && chain) await walletClient.switchChain({ id: chain.id });
   };
 
   useEffect(() => {
     fetchSwitchChain();
-  }, [preferredChainId]);
+  }, [chain]);
 
   return (
     <div className="relative">
-      <Listbox
-        value={preferredChainId}
-        onChange={(newChain) => setPreferredChainId(newChain)}
-      >
-        <Listbox.Button className="font-medium text-lg rounded px-4 bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] transition">
-          {capitalizeFirstLetter(SupportedNetworks[preferredChainId])}
-        </Listbox.Button>
-        <Listbox.Options className="absolute left-0 top-full rounded overflow-hidden">
-          <>
-            {Object.keys(ChainInfo).map((chain) => (
-              <Listbox.Option
-                key={ChainInfo[chain as SupportedNetworks].id}
-                value={chain}
-              >
-                {({ active, selected }) => (
-                  <div
-                    className={cc([
-                      "flex items-center space-x-3 p-4 py-2 cursor-pointer transition",
-                      active ? "bg-gray-700 text-white" : "bg-white text-black",
-                    ])}
-                  >
-                    <p>{chain}</p>
-                    {selected && <CheckmarkIcon />}
+      <ConnectButton.Custom>
+        {({
+          account,
+          chain,
+          openChainModal,
+          openConnectModal,
+          authenticationStatus,
+          mounted,
+        }) => {
+          const ready = mounted && authenticationStatus !== "loading";
+          const connected =
+            ready &&
+            account &&
+            chain &&
+            (!authenticationStatus || authenticationStatus === "authenticated");
+          return (
+            <div
+              {...(!ready && {
+                "aria-hidden": true,
+                style: {
+                  opacity: 0,
+                  pointerEvents: "none",
+                  userSelect: "none",
+                },
+              })}
+              className="w-full"
+            >
+              {(() => {
+                if (!connected) {
+                  return (
+                    <button onClick={openConnectModal} type="button">
+                      Connect Wallet
+                    </button>
+                  );
+                }
+                if (chain.unsupported) {
+                  return (
+                    <button onClick={openChainModal} type="button">
+                      Wrong network
+                    </button>
+                  );
+                }
+                return (
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <button
+                      onClick={openChainModal}
+                      className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition hidden md:flex items-center"
+                      type="button"
+                    >
+                      {chain.hasIcon && (
+                        <div
+                          style={{
+                            background: chain.iconBackground,
+                            width: 12,
+                            height: 12,
+                            borderRadius: 999,
+                            overflow: "hidden",
+                            marginRight: 12,
+                          }}
+                        >
+                          {chain.iconUrl && (
+                            <img
+                              alt={chain.name ?? "Chain icon"}
+                              src={chain.iconUrl}
+                              style={{ width: 12, height: 12 }}
+                            />
+                          )}
+                        </div>
+                      )}
+                      {chain.name}
+                    </button>
                   </div>
-                )}
-              </Listbox.Option>
-            ))}
-          </>
-        </Listbox.Options>
-      </Listbox>
+                );
+              })()}
+            </div>
+          );
+        }}
+      </ConnectButton.Custom>
     </div>
   );
 };

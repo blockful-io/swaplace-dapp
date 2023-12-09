@@ -3,7 +3,7 @@ import { ConnectWallet, SwaplaceIcon } from "@/components/01-atoms";
 
 export const CardHome = () => {
   return (
-    <div className="flex flex-col justify-center items-center gap-16 w-full text-center">
+    <div className="flex flex-col justify-center items-center gap-16 w-[90%] text-center">
       <div className="flex flex-col gap-10 items-center">
         <div className="flex items-center gap-3 ">
           <SwaplaceIcon className="w-10" />

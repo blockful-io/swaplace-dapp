@@ -14,11 +14,6 @@ import { polygonMumbai, sepolia } from "viem/chains";
 
 const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? "";
 
-// const { preferredChainId } = useAuthenticatedUser();
-
-// const baseUrl =
-//   getRpcHttpUrlForNetwork.get(ChainID[preferredChainId]) ?? alchemyApiKey;
-
 export const rpcHttpUrl = `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
 
 const supportedNetworks = [sepolia, polygonMumbai];

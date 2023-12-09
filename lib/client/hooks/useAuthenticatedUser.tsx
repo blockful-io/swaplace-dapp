@@ -21,8 +21,6 @@ interface AuthenticatedUserHook {
   loadingAuthenticatedUser: boolean;
   authenticatedUserEnsName: string | null;
   authenticatedUserAddress: EthereumAddress | null;
-  preferredChainId: SupportedNetworks;
-  setPreferredChainId: Dispatch<SetStateAction<SupportedNetworks>>;
   disconnectUser: () => void;
 }
 
@@ -31,9 +29,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
   const { disconnect } = useDisconnect();
   const { data: nextAuthUser } = useSession();
   const { address, isConnected } = useAccount();
-  const [preferredChainId, setPreferredChainId] = useState(
-    SupportedNetworks.SEPOLIA
-  );
   const [authenticatedAccountAddress, setAuthenticatedAccountAddress] =
     useState<EthereumAddress | null>(null);
   const [loadingAuthenticatedUser, setLoadingAuthenticatedUser] =
@@ -41,25 +36,13 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
 
   const { data: walletClient } = useWalletClient();
 
-  const switchToDefaultChain = async () => {
-    if (walletClient) {
-      await switchChain(walletClient, { id: ChainInfo[preferredChainId].id });
-    }
-  };
-
   useEffect(() => {
-    if (chain?.id) console.log(getRpcHttpUrlForNetwork.get(chain?.id));
-
     if (
       typeof chain?.id === "number" &&
       !getRpcHttpUrlForNetwork.get(chain?.id)
     ) {
       disconnect();
       return;
-    }
-
-    if (chain?.id !== ChainInfo[preferredChainId].id) {
-      switchToDefaultChain();
     }
   }, [chain]);
 
@@ -119,8 +102,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
     authenticatedUserEnsName:
       loadingEnsName || errorLoadingEnsName || !ensName ? null : ensName,
     authenticatedUserAddress: authenticatedAccountAddress,
-    preferredChainId,
     disconnectUser,
-    setPreferredChainId,
   };
 };

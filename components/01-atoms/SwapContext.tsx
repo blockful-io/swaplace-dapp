@@ -61,7 +61,13 @@ export const SwapContextProvider = ({ children }: any) => {
       setNftInputUser,
       nftInputUser,
     });
-  }, [inputAddress, validatedAddressToSwap, inputIsTyping]);
+  }, [
+    inputAddress,
+    validatedAddressToSwap,
+    inputIsTyping,
+    nftAuthUser,
+    nftInputUser,
+  ]);
 
   const [swapData, setSwapData] = useState<SwapContextProps>({
     inputAddress,

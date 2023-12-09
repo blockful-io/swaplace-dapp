@@ -4,6 +4,8 @@ import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { NftsList } from "../02-molecules";
 import { getNftsFrom } from "@/lib/client/blockchain-data";
 import { SwapIcon } from "../01-atoms";
+import { EthereumAddress } from "@/lib/shared/types";
+import { useNetwork } from "wagmi";
 
 /**
  *
@@ -17,15 +19,15 @@ interface INftsShelfProps {
 }
 
 export const NftsShelf = ({ address }: INftsShelfProps) => {
-  const { preferredChainId } = useAuthenticatedUser();
+  const { chain } = useNetwork();
   const [nftsList, setNftsList] = useState<NFT[]>();
   const [nftsQueryStatus, setNftsQueryStatus] = useState<NFTsQueryStatus>(
     NFTsQueryStatus.EMPTY_QUERY
   );
 
   useEffect(() => {
-    if (address && preferredChainId) {
-      getNftsFrom(address, ChainInfo[preferredChainId].id, setNftsQueryStatus)
+    if (address && chain) {
+      getNftsFrom(address, chain.id, setNftsQueryStatus)
         .then((nftsList) => {
           setNftsList(nftsList);
         })
@@ -33,7 +35,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
           setNftsList([]);
         });
     }
-  }, [address, preferredChainId]);
+  }, [address, chain]);
 
   return (
     <div className="flex border-2 border-gray-200 border-t-0 rounded rounded-t-none">
@@ -41,7 +43,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
         <div className="flex items-center ">
           {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
             <div className="w-full h-full">
-              <NftsList nftsList={nftsList} />
+              <NftsList ownerAddress={address} nftsList={nftsList} />
             </div>
           ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
             <div className="flex justify-center w-[580px] h-[500px] bg-[#f8f8f8] p-4">
@@ -55,15 +57,18 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
           ) : nftsQueryStatus == NFTsQueryStatus.NO_RESULTS ? (
             <div className="flex justify-center w-[580px] h-[500px] bg-[#f8f8f8] p-4">
               <div className="flex items-center">
-                <div>
+                <p className="text-[#4F4F4F]">
                   Given address has no NFTs associated in the given network
-                </div>
+                </p>
               </div>
             </div>
           ) : nftsQueryStatus == NFTsQueryStatus.LOADING ? (
             <div className="flex justify-center w-[580px] h-[500px] bg-[#f8f8f8] p-4">
               <div className="flex items-center">
-                <div>Loading..</div>
+                <p className="text-[#4F4F4F]">
+                  Loading NFTs of{" "}
+                  {new EthereumAddress(address).getEllipsedAddress()}...
+                </p>
               </div>
             </div>
           ) : null}
