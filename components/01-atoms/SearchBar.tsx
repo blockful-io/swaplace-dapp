@@ -2,6 +2,7 @@ import cc from "classcat";
 import { useContext, useEffect } from "react";
 import { MagnifyingGlassIcon, SelectChain, SwapContext } from ".";
 import toast from "react-hot-toast";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 
 export const SearchBar = () => {
   const {
@@ -12,6 +13,8 @@ export const SearchBar = () => {
     setInputIsTyping,
     inputIsTyping,
   } = useContext(SwapContext);
+
+  const { authenticatedUserAddress } = useAuthenticatedUser();
 
   useEffect(() => {
     setInputIsTyping(null);
@@ -50,7 +53,8 @@ export const SearchBar = () => {
             role="button"
             onClick={() => {
               if (!inputAddress) toast.error("Please type some address");
-              else validateAddressToSwap();
+              else if (authenticatedUserAddress)
+                validateAddressToSwap(authenticatedUserAddress);
             }}
           >
             <button

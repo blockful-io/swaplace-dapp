@@ -15,7 +15,7 @@ export const TheHeader = () => {
     <header
       onMouseEnter={() => setShowFullNav(true)}
       onMouseLeave={() => isDesktop && setShowFullNav(false)}
-      className="bg-[#F2F2F2] z-40 w-screen h-auto lg:w-auto lg:h-screen py-6 flex lg:flex-col justify-between items-center px-8 font-medium shadow fixed left-0 top-0 lg:items-start"
+      className="bg-[#F2F2F2] z-40 w-screen h-auto lg:w-auto lg:h-screen py-6 flex lg:flex-col justify-between items-center px-8 font-medium shadow-lg fixed left-0 top-0 lg:items-start"
     >
       <SwaplaceIcon className="w-10" />
       <div className={cc([showFullNav ? "block" : "hidden"])}>

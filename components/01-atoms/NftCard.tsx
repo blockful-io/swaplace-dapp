@@ -8,6 +8,7 @@ import cc from "classcat";
 interface INftCard {
   nftData: NFT;
   ownerAddress: string | null;
+  withSelectionValidation?: boolean;
 }
 
 /**
@@ -19,8 +20,13 @@ interface INftCard {
  * @returns NftCard
  */
 
-export const NftCard = ({ nftData, ownerAddress }: INftCard) => {
-  if (!nftData.id || !nftData.contract || !ownerAddress) return null;
+export const NftCard = ({
+  nftData,
+  ownerAddress,
+  withSelectionValidation = true,
+}: INftCard) => {
+  if (!nftData || !nftData.id || !nftData.contract || !ownerAddress)
+    return null;
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { setNftAuthUser, setNftInputUser, nftAuthUser, nftInputUser } =
@@ -73,11 +79,11 @@ export const NftCard = ({ nftData, ownerAddress }: INftCard) => {
       className={cc([
         "w-20 lg:w-28 h-20 lg:h-28 relative rounded border-2 border-[#E0E0E0] flex flex-col justify-center items-center",
         {
-          "border-[#b1ca37]": currentNftIsSelected,
+          "border-[#b1ca37]": currentNftIsSelected && withSelectionValidation,
         },
       ])}
     >
-      {currentNftIsSelected && (
+      {currentNftIsSelected && withSelectionValidation && (
         <div className="absolute left-0 top-0 w-full h-full bg-[#b1ca37] opacity-50 z-20"></div>
       )}
       {nftData.metadata?.image ? (

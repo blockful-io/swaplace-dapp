@@ -30,7 +30,7 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
   const [isActiveTab, setIsActiveTab] = useState(SwappingShelfID.THEIR_ITEMS);
 
   return (
-    <div className="flex-auto flex items-center justify-between rounded rounded-b-none overflow-hidden border-gray-200 border-2 border-b-0">
+    <div className="w-full font-light flex-auto flex items-center justify-between rounded rounded-b-none overflow-hidden border-gray-200 border-2 border-b-0">
       {swappingTabs.map((tab) => {
         return (
           <div

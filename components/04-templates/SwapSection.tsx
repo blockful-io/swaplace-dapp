@@ -4,10 +4,12 @@ import { SwapStation } from "@/components/02-molecules";
 
 export const SwapSection = () => {
   return (
-    <section className="max-w-[615px] w-full h-full flex flex-col items-center space-y-6">
-      <SearchBar />
-      <SwappingShelfs />
+    <div className="w-full flex flex-col justify-center space-y-6 lg:flex-row lg:space-x-6 lg:space-y-0 mb-16">
+      <section className="lg:w-[615px] w-full h-full flex flex-col items-center space-y-6">
+        <SearchBar />
+        <SwappingShelfs />
+      </section>
       <SwapStation />
-    </section>
+    </div>
   );
 };

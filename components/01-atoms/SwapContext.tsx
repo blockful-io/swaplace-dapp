@@ -1,13 +1,14 @@
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { NFT } from "@/lib/client/constants";
+import { ADDRESS_ZERO, NFT } from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 
 interface SwapContextProps {
   inputAddress: string;
   validatedAddressToSwap: string;
   setInputAddress: (address: string) => void;
-  validateAddressToSwap: () => void;
+  validateAddressToSwap: (authedUser: EthereumAddress) => void;
   setInputIsTyping: Dispatch<React.SetStateAction<boolean | null>>;
   inputIsTyping: boolean | null;
   setNftAuthUser: Dispatch<React.SetStateAction<NFT[]>>;
@@ -19,7 +20,7 @@ interface SwapContextProps {
 export const SwapContext = React.createContext<SwapContextProps>({
   inputAddress: "",
   validatedAddressToSwap: "",
-  validateAddressToSwap: () => {},
+  validateAddressToSwap: (authedUser: EthereumAddress) => {},
   setInputAddress: (address: string) => {},
   setInputIsTyping: () => {},
   inputIsTyping: null,
@@ -36,9 +37,22 @@ export const SwapContextProvider = ({ children }: any) => {
   const [nftAuthUser, setNftAuthUser] = useState<NFT[]>([]);
   const [nftInputUser, setNftInputUser] = useState<NFT[]>([]);
 
-  const validateAddressToSwap = () => {
+  const validateAddressToSwap = (authenticatedUser: EthereumAddress) => {
     try {
-      new EthereumAddress(inputAddress);
+      const inputEthAddress = new EthereumAddress(inputAddress);
+
+      if (inputEthAddress.equals(authenticatedUser)) {
+        toast.error("You cannot swap with yourself");
+        setValidatedAddressToSwap("");
+        setInputIsTyping(false);
+        return;
+      } else if (inputAddress === ADDRESS_ZERO) {
+        toast.error("You cannot swap with the zero address");
+        setValidatedAddressToSwap("");
+        setInputIsTyping(false);
+        return;
+      }
+
       setValidatedAddressToSwap(inputAddress);
       setInputIsTyping(true);
     } catch (event: any) {
@@ -47,6 +61,10 @@ export const SwapContextProvider = ({ children }: any) => {
       setInputIsTyping(false);
     }
   };
+
+  useEffect(() => {
+    setNftInputUser([]);
+  }, [validatedAddressToSwap]);
 
   useEffect(() => {
     setSwapData({
