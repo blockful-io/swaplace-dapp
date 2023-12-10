@@ -1,16 +1,18 @@
 import { useContext } from "react";
-import { NftCard, SwapContext } from "../01-atoms";
-import { useEnsName } from "wagmi";
+import { EthereumIcon, NftCard, PolygonIcon, SwapContext } from "../01-atoms";
+import { useEnsName, useNetwork } from "wagmi";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
 
 interface IOfferSummary {
   forAuthedUser: boolean;
 }
 
 export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
-  const { validatedAddressToSwap, nftAuthUser, nftInputUser } =
+  const { validatedAddressToSwap, nftAuthUser, nftInputUser, destinyChain } =
     useContext(SwapContext);
+  const { chain } = useNetwork();
   const { data } = useEnsName({
     address: validatedAddressToSwap as `0x${string}`,
   });
@@ -18,7 +20,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
   return (
-    <div className="w-full flex flex-col gap-4 px-3 py-3 bg-[rgba(217,217,217,0.40)] rounded">
+    <div className="w-full flex flex-col gap-4 px-3 pt-2 pb-4 bg-[rgba(217,217,217,0.40)] rounded">
       <div className="flex justify-between items-center h-9 gap-2">
         <div className="flex space-x-2">
           <div className="w-6 h-6 bg-[#d9d9d9] rounded-full" />
@@ -69,6 +71,17 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
             />
           )}
         </div>
+      </div>
+
+      <div className="ml-auto flex space-x-1 mr-1 text-gray-700 font-medium text-sm">
+        <p>from</p>
+        <p>
+          {forAuthedUser ? (
+            <>{chain?.name}</>
+          ) : (
+            <>{ChainInfo[destinyChain].name}</>
+          )}
+        </p>
       </div>
     </div>
   );

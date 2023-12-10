@@ -9,3 +9,5 @@ export * from "./icons/MagnifyingGlassIcon";
 export * from "./icons/SwapIcon";
 export * from "./icons/PaperPlane";
 export * from "./SelectDestinyChain";
+export * from "./icons/EthereumIcon";
+export * from "./icons/PolygonIcon";

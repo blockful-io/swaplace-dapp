@@ -25,14 +25,17 @@ export enum SupportedNetworks {
 
 interface ChainProps {
   id: number;
+  name: string;
 }
 
 export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
   [SupportedNetworks.SEPOLIA]: {
     id: 11155111,
+    name: "Sepolia",
   },
   [SupportedNetworks.MUMBAI]: {
     id: 80001,
+    name: "Polygon Mumbai",
   },
 };
 

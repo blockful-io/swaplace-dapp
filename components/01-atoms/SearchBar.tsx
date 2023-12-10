@@ -1,6 +1,11 @@
 import cc from "classcat";
 import { useContext, useEffect, useState } from "react";
-import { MagnifyingGlassIcon, SelectAuthedUserChain, SwapContext } from ".";
+import {
+  MagnifyingGlassIcon,
+  SelectAuthedUserChain,
+  SelectDestinyChain,
+  SwapContext,
+} from ".";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { ENS } from "web3-eth-ens";
 import Web3 from "web3";
@@ -129,12 +134,14 @@ export const SearchBar = () => {
 
       <div className="w-full z-30 flex items-center justify-between py-1">
         <div className="flex flex-col space-y-2">
-          <p className="font-medium">Your chain:</p>
+          <p className="font-medium">Your network:</p>
           <SelectAuthedUserChain />
         </div>
         <div className="flex flex-col space-y-2">
-          <p className="font-medium">Destiny chain:</p>
-          <SelectAuthedUserChain />
+          <p className="font-medium">Searched address network:</p>
+          <div className="ml-auto">
+            <SelectDestinyChain />
+          </div>
         </div>
       </div>
     </div>

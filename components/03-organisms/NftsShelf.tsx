@@ -26,11 +26,17 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   );
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { validatedAddressToSwap, inputAddress } = useContext(SwapContext);
+  const { validatedAddressToSwap, inputAddress, destinyChain } =
+    useContext(SwapContext);
 
   useEffect(() => {
-    if (address && chain) {
-      getNftsFrom(address, chain.id, setNftsQueryStatus)
+    const chainId =
+      address === authenticatedUserAddress?.address
+        ? chain?.id
+        : ChainInfo[destinyChain].id;
+
+    if (address && chainId) {
+      getNftsFrom(address, chainId, setNftsQueryStatus)
         .then((nftsList) => {
           setNftsList(nftsList);
         })
@@ -38,7 +44,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
           setNftsList([]);
         });
     }
-  }, [address, chain]);
+  }, [address, chain, destinyChain]);
 
   useEffect(() => {
     if (

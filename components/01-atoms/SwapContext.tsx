@@ -100,6 +100,10 @@ export const SwapContextProvider = ({ children }: any) => {
   }, [inputAddress]);
 
   useEffect(() => {
+    setNftInputUser([]);
+  }, [destinyChain]);
+
+  useEffect(() => {
     setSwapData({
       inputAddress,
       setInputAddress,
@@ -120,6 +124,7 @@ export const SwapContextProvider = ({ children }: any) => {
     userJustValidatedInput,
     nftAuthUser,
     nftInputUser,
+    destinyChain,
   ]);
 
   const [swapData, setSwapData] = useState<SwapContextProps>({
