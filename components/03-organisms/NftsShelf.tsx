@@ -25,7 +25,8 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
     NFTsQueryStatus.EMPTY_QUERY
   );
 
-  const { validatedAddressToSwap } = useContext(SwapContext);
+  const { authenticatedUserAddress } = useAuthenticatedUser();
+  const { validatedAddressToSwap, inputAddress } = useContext(SwapContext);
 
   useEffect(() => {
     if (address && chain) {
@@ -40,21 +41,31 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   }, [address, chain]);
 
   useEffect(() => {
+    if (
+      address !== authenticatedUserAddress?.address &&
+      validatedAddressToSwap !== authenticatedUserAddress?.address
+    ) {
+      setNftsList([]);
+      setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
+    }
+  }, [inputAddress]);
+
+  useEffect(() => {
     if (!validatedAddressToSwap) {
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="flex border-2 border-gray-200 border-t-0 rounded rounded-t-none">
-      <div className="w-[100%] max-w-[580px] h-[500px] bg-[#f8f8f8] ">
-        <div className="flex items-center ">
+    <div className="w-full flex border-2 border-gray-200 border-t-0 rounded rounded-t-none overflow-auto bg-[#f8f8f8]">
+      <div className="w-[100%] lg:max-w-[580px] h-[500px]">
+        <div className="flex items-center">
           {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
             <div className="w-full h-full">
               <NftsList ownerAddress={address} nftsList={nftsList} />
             </div>
           ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
-            <div className="flex justify-center w-[580px] h-[500px] bg-[#f8f8f8] p-4">
+            <div className="flex justify-center w-full h-[500px] bg-[#f8f8f8] p-4">
               <div className="flex flex-col items-center justify-center space-y-4">
                 <SwapIcon className="w-[100px]" />
                 <p className="text-[#4F4F4F]">
@@ -63,7 +74,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
               </div>
             </div>
           ) : nftsQueryStatus == NFTsQueryStatus.NO_RESULTS ? (
-            <div className="flex justify-center w-[580px] h-[500px] bg-[#f8f8f8] p-4">
+            <div className="flex justify-center w-full h-[500px] bg-[#f8f8f8] p-4">
               <div className="flex items-center">
                 <p className="text-[#4F4F4F]">
                   Given address has no NFTs associated in the given network
@@ -71,7 +82,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
               </div>
             </div>
           ) : nftsQueryStatus == NFTsQueryStatus.LOADING ? (
-            <div className="flex justify-center w-[580px] h-[500px] bg-[#f8f8f8] p-4">
+            <div className="flex justify-center w-full h-[500px] bg-[#f8f8f8] p-4">
               <div className="flex items-center">
                 <p className="text-[#4F4F4F]">
                   Loading NFTs of{" "}

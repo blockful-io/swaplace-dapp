@@ -73,30 +73,60 @@ export const NftCard = ({
     }
   }, [authenticatedUserAddress, ownerAddress, nftAuthUser, nftInputUser]);
 
-  return (
-    <button
-      onClick={setNftAsActiveOne}
-      className={cc([
-        "w-20 lg:w-28 h-20 lg:h-28 relative rounded border-2 border-[#E0E0E0] flex flex-col justify-center items-center",
-        {
-          "border-[#b1ca37]": currentNftIsSelected && withSelectionValidation,
-        },
-      ])}
-    >
-      {currentNftIsSelected && withSelectionValidation && (
-        <div className="absolute left-0 top-0 w-full h-full bg-[#b1ca37] opacity-50 z-20"></div>
-      )}
-      {nftData.metadata?.image ? (
+  const [couldntLoadNftImage, setCouldntLoadNftImage] = useState(false);
+  const handleImageLoadError = () => {
+    setCouldntLoadNftImage(true);
+  };
+
+  useEffect(() => {
+    setCouldntLoadNftImage(false);
+  }, [nftData]);
+
+  const ButtonLayout = (children: React.ReactNode) => {
+    return (
+      <button
+        onClick={setNftAsActiveOne}
+        className={cc([
+          "mx-auto w-24 h-24 md:h-28 md:w-28 relative rounded border-2 border-[#E0E0E0] flex flex-col justify-center items-center",
+          {
+            "border-green-500": currentNftIsSelected && withSelectionValidation,
+          },
+        ])}
+      >
+        {currentNftIsSelected && withSelectionValidation && (
+          <div className="absolute left-0 top-0 w-full h-full bg-green-500 opacity-50 z-20"></div>
+        )}
+        {children}
+      </button>
+    );
+  };
+
+  return nftData.metadata?.image && !couldntLoadNftImage ? (
+    <>
+      {ButtonLayout(
         <img
+          onError={handleImageLoadError}
           src={nftData.metadata?.image}
           alt={nftData.metadata?.name}
           className="static z-10"
         />
-      ) : nftData.metadata?.name ? (
+      )}
+    </>
+  ) : nftData.metadata?.name ? (
+    <>
+      {ButtonLayout(
         <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll">
           {nftData.metadata?.name}
         </div>
-      ) : null}
-    </button>
-  );
+      )}
+    </>
+  ) : nftData.contract.name && nftData.id.tokenId ? (
+    <>
+      {ButtonLayout(
+        <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll">
+          {nftData.metadata?.name}
+        </div>
+      )}
+    </>
+  ) : null;
 };

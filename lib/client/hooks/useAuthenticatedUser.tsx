@@ -8,13 +8,7 @@ import {
   useNetwork,
   useWalletClient,
 } from "wagmi";
-import {
-  ADDRESS_ZERO,
-  ChainInfo,
-  SupportedNetworks,
-  getRpcHttpUrlForNetwork,
-} from "../constants";
-import { switchChain } from "viem/actions";
+import { ADDRESS_ZERO, getRpcHttpUrlForNetwork } from "../constants";
 
 interface AuthenticatedUserHook {
   loadingEnsName: boolean;
@@ -33,8 +27,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
     useState<EthereumAddress | null>(null);
   const [loadingAuthenticatedUser, setLoadingAuthenticatedUser] =
     useState(true);
-
-  const { data: walletClient } = useWalletClient();
 
   useEffect(() => {
     if (

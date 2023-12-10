@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { ConnectWallet, SwaplaceIcon } from "@/components/01-atoms";
 import cc from "classcat";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 
 export const TheHeader = () => {
   const { isDesktop } = useScreenSize();
-  const [showFullNav, setShowFullNav] = useState(!isDesktop);
+  const { authenticatedUserAddress } = useAuthenticatedUser();
+  const [showFullNav, setShowFullNav] = useState(
+    !isDesktop && !!authenticatedUserAddress?.address
+  );
 
   useEffect(() => {
     setShowFullNav(!isDesktop);

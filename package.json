@@ -21,7 +21,9 @@
     "react-hot-toast": "^2.4.1",
     "siwe": "^1.1.6",
     "viem": "^1.19.11",
-    "wagmi": "^1.4.7"
+    "wagmi": "^1.4.7",
+    "web3": "^4.3.0",
+    "web3-eth-ens": "^4.0.8"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -1,21 +1,6 @@
-import { ChainInfo } from "@/lib/client/constants";
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useEffect } from "react";
-import { useNetwork, useWalletClient } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-export const SelectChain = () => {
-  const { chain } = useNetwork();
-  const { data: walletClient } = useWalletClient();
-
-  const fetchSwitchChain = async () => {
-    if (walletClient && chain) await walletClient.switchChain({ id: chain.id });
-  };
-
-  useEffect(() => {
-    fetchSwitchChain();
-  }, [chain]);
-
+export const SelectAuthedUserChain = () => {
   return (
     <div className="relative">
       <ConnectButton.Custom>
@@ -64,7 +49,7 @@ export const SelectChain = () => {
                   <div style={{ display: "flex", gap: 12 }}>
                     <button
                       onClick={openChainModal}
-                      className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition hidden md:flex items-center"
+                      className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition flex items-center"
                       type="button"
                     >
                       {chain.hasIcon && (

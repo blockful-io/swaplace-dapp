@@ -1,70 +1,103 @@
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { ADDRESS_ZERO, NFT } from "@/lib/client/constants";
+import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 
 interface SwapContextProps {
   inputAddress: string;
   validatedAddressToSwap: string;
   setInputAddress: (address: string) => void;
-  validateAddressToSwap: (authedUser: EthereumAddress) => void;
-  setInputIsTyping: Dispatch<React.SetStateAction<boolean | null>>;
-  inputIsTyping: boolean | null;
+  validateAddressToSwap: (
+    authedUser: EthereumAddress,
+    inputEnsAddress: string | null | undefined
+  ) => void;
+  setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
+  userJustValidatedInput: boolean;
   setNftAuthUser: Dispatch<React.SetStateAction<NFT[]>>;
   nftAuthUser: NFT[];
   setNftInputUser: Dispatch<React.SetStateAction<NFT[]>>;
   nftInputUser: NFT[];
+  destinyChain: SupportedNetworks;
+  setDestinyChain: Dispatch<React.SetStateAction<SupportedNetworks>>;
 }
 
 export const SwapContext = React.createContext<SwapContextProps>({
   inputAddress: "",
   validatedAddressToSwap: "",
-  validateAddressToSwap: (authedUser: EthereumAddress) => {},
+  validateAddressToSwap: (
+    authedUser: EthereumAddress,
+    inputEnsAddress: string | null | undefined
+  ) => {},
   setInputAddress: (address: string) => {},
-  setInputIsTyping: () => {},
-  inputIsTyping: null,
+  setUserJustValidatedInput: () => {},
+  userJustValidatedInput: false,
   setNftAuthUser: () => {},
   nftAuthUser: [],
   setNftInputUser: () => {},
   nftInputUser: [],
+  destinyChain: SupportedNetworks.SEPOLIA,
+  setDestinyChain: () => {},
 });
 
 export const SwapContextProvider = ({ children }: any) => {
   const [inputAddress, setInputAddress] = useState<string>("");
   const [validatedAddressToSwap, setValidatedAddressToSwap] = useState("");
-  const [inputIsTyping, setInputIsTyping] = useState<boolean | null>(true);
+  const [userJustValidatedInput, setUserJustValidatedInput] = useState(true);
   const [nftAuthUser, setNftAuthUser] = useState<NFT[]>([]);
   const [nftInputUser, setNftInputUser] = useState<NFT[]>([]);
+  const [destinyChain, setDestinyChain] = useState<SupportedNetworks>(
+    SupportedNetworks.SEPOLIA
+  );
 
-  const validateAddressToSwap = (authenticatedUser: EthereumAddress) => {
+  const validateAddressToSwap = (
+    authenticatedUser: EthereumAddress,
+    inputEnsNameResponse: string | null | undefined
+  ) => {
+    if (!inputAddress && !inputEnsNameResponse) {
+      toast.error("Please type something");
+      setUserJustValidatedInput(true);
+      return;
+    }
+
+    let searchedAddress = inputAddress;
+    if (!!inputEnsNameResponse) searchedAddress = inputEnsNameResponse;
+
+    let inputIsValidAddress = false;
     try {
-      const inputEthAddress = new EthereumAddress(inputAddress);
+      new EthereumAddress(searchedAddress);
+      inputIsValidAddress = true;
+    } catch (e) {
+      console.error(e);
+    }
+
+    if (inputIsValidAddress) {
+      const inputEthAddress = new EthereumAddress(searchedAddress);
 
       if (inputEthAddress.equals(authenticatedUser)) {
         toast.error("You cannot swap with yourself");
         setValidatedAddressToSwap("");
-        setInputIsTyping(false);
+        setUserJustValidatedInput(true);
         return;
-      } else if (inputAddress === ADDRESS_ZERO) {
-        toast.error("You cannot swap with the zero address");
+      } else if (searchedAddress === ADDRESS_ZERO) {
+        toast.error("You cannot swap with an invalid address");
         setValidatedAddressToSwap("");
-        setInputIsTyping(false);
+        setUserJustValidatedInput(true);
         return;
       }
 
-      setValidatedAddressToSwap(inputAddress);
-      setInputIsTyping(true);
-    } catch (event: any) {
-      toast.error("Please enter a valid address");
-      setValidatedAddressToSwap("");
-      setInputIsTyping(false);
+      setValidatedAddressToSwap(searchedAddress);
+    } else {
+      toast.error(
+        "Your input is not a valid address and neither some registered ENS domain"
+      );
     }
+    setUserJustValidatedInput(true);
   };
 
   useEffect(() => {
     setNftInputUser([]);
-  }, [validatedAddressToSwap]);
+    setUserJustValidatedInput(false);
+  }, [inputAddress]);
 
   useEffect(() => {
     setSwapData({
@@ -72,17 +105,19 @@ export const SwapContextProvider = ({ children }: any) => {
       setInputAddress,
       validatedAddressToSwap,
       validateAddressToSwap,
-      setInputIsTyping,
-      inputIsTyping,
+      setUserJustValidatedInput,
+      userJustValidatedInput,
       setNftAuthUser,
       nftAuthUser,
       setNftInputUser,
       nftInputUser,
+      destinyChain,
+      setDestinyChain,
     });
   }, [
     inputAddress,
     validatedAddressToSwap,
-    inputIsTyping,
+    userJustValidatedInput,
     nftAuthUser,
     nftInputUser,
   ]);
@@ -92,12 +127,14 @@ export const SwapContextProvider = ({ children }: any) => {
     setInputAddress,
     validatedAddressToSwap,
     validateAddressToSwap,
-    setInputIsTyping,
-    inputIsTyping,
+    setUserJustValidatedInput,
+    userJustValidatedInput,
     setNftAuthUser,
     nftAuthUser,
     setNftInputUser,
     nftInputUser,
+    destinyChain,
+    setDestinyChain,
   });
 
   return (

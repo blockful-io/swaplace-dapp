@@ -1,8 +1,9 @@
 import cc from "classcat";
-import { useContext, useEffect } from "react";
-import { MagnifyingGlassIcon, SelectChain, SwapContext } from ".";
-import toast from "react-hot-toast";
+import { useContext, useEffect, useState } from "react";
+import { MagnifyingGlassIcon, SelectAuthedUserChain, SwapContext } from ".";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { ENS } from "web3-eth-ens";
+import Web3 from "web3";
 
 export const SearchBar = () => {
   const {
@@ -10,24 +11,78 @@ export const SearchBar = () => {
     inputAddress,
     validatedAddressToSwap,
     validateAddressToSwap,
-    setInputIsTyping,
-    inputIsTyping,
+    userJustValidatedInput,
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
+  const [validateAfterENSaddressLoads, setValidateAfterENSaddressLoads] =
+    useState(false);
+  const validateInput = () => {
+    if (authenticatedUserAddress) {
+      if (loadingENSaddress) {
+        setValidateAfterENSaddressLoads(true);
+      } else {
+        validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
+      }
+    }
+  };
+
+  const [ensNameAddress, setEnsNameAddress] = useState("");
+  const [loadingENSaddress, setLoadingENSaddress] = useState(false);
   useEffect(() => {
-    setInputIsTyping(null);
+    if (inputAddress) {
+      if (!process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP) {
+        throw new Error(
+          "Cannot get ENS address without Alchemy Ethereum Mainnet API key"
+        );
+      }
+
+      const provider = new Web3.providers.HttpProvider(
+        process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP
+      );
+
+      const ens = new ENS(undefined, provider);
+
+      ens
+        .getOwner(
+          inputAddress.toLowerCase().includes(".")
+            ? inputAddress.toLowerCase().includes(".eth")
+              ? inputAddress.split(".")[1].length >= 3
+                ? inputAddress
+                : `${inputAddress.split(".")[0]}.eth`
+              : inputAddress.split(".")[1].length >= 3
+              ? inputAddress
+              : `${inputAddress.split(".")[0]}.eth`
+            : `${inputAddress}.eth`
+        )
+        .then((address: unknown) => {
+          if (typeof address == "string") {
+            setEnsNameAddress(address);
+            setLoadingENSaddress(false);
+          } else {
+            setEnsNameAddress("");
+            setLoadingENSaddress(false);
+          }
+        })
+        .catch(() => {
+          setEnsNameAddress("");
+          setLoadingENSaddress(false);
+        });
+    }
   }, [inputAddress]);
+
+  useEffect(() => {
+    if (!loadingENSaddress && validateAfterENSaddressLoads) {
+      validateInput();
+      setValidateAfterENSaddressLoads(false);
+    }
+  }, [loadingENSaddress]);
 
   return (
     <div className="w-[95%] h-auto bg-[#f8f8f8] p-5 gap-3 flex flex-col rounded border-2 border-gray-200">
       <div className="w-full flex justify-between space-x-6">
         <h2 className="font-light text-xl">Who are you swapping with today?</h2>
-
-        <div className="z-30 flex items-center justify-center py-1">
-          <SelectChain />
-        </div>
       </div>
       <div className={cc(["flex relative items-center"])}>
         <input
@@ -36,26 +91,27 @@ export const SearchBar = () => {
           type="search"
           className={cc([
             "w-full h-11 px-4 py-3 border-2 border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded",
-            { "bg-white ": inputIsTyping == null },
+            { "bg-white ": !userJustValidatedInput },
             {
-              "border-[#bbf7d0]": validatedAddressToSwap && inputAddress,
-              "border-red-500":
+              "!border-green-500":
+                validatedAddressToSwap &&
                 inputAddress &&
-                !validatedAddressToSwap &&
-                inputIsTyping == false,
+                userJustValidatedInput,
+              "border-red-500":
+                (inputAddress &&
+                  !validatedAddressToSwap &&
+                  userJustValidatedInput) ||
+                (userJustValidatedInput && !inputAddress),
             },
           ])}
-          placeholder="Search username, address or ENS"
+          placeholder="Search for an address or ENS name"
           onChange={(e) => setInputAddress(e.target.value)}
         />
         <div className="absolute right-2 justify-center items-center">
           <div
             role="button"
-            onClick={() => {
-              if (!inputAddress) toast.error("Please type some address");
-              else if (authenticatedUserAddress)
-                validateAddressToSwap(authenticatedUserAddress);
-            }}
+            onClick={validateInput}
+            className={cc([!inputAddress && "cursor-not-allowed"])}
           >
             <button
               disabled={!inputAddress}
@@ -64,10 +120,21 @@ export const SearchBar = () => {
             >
               <MagnifyingGlassIcon
                 className="w-6"
-                fill={inputAddress ? "black" : "#EEE"}
+                fill={!!inputAddress ? "black" : "#EEE"}
               />
             </button>
           </div>
+        </div>
+      </div>
+
+      <div className="w-full z-30 flex items-center justify-between py-1">
+        <div className="flex flex-col space-y-2">
+          <p className="font-medium">Your chain:</p>
+          <SelectAuthedUserChain />
+        </div>
+        <div className="flex flex-col space-y-2">
+          <p className="font-medium">Destiny chain:</p>
+          <SelectAuthedUserChain />
         </div>
       </div>
     </div>
