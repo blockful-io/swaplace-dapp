@@ -43,3 +43,8 @@ export let getRpcHttpUrlForNetwork: Map<number, string> = new Map([
   [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP ?? ""],
   [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? ""],
 ]);
+
+export const SWAPLACE_SMART_CONTRACT_ADDRESS = {
+  [ChainInfo.SEPOLIA.id]: "0xcB003ed4Df4679D15b8863BB8F7609855A6a380d",
+  [ChainInfo.MUMBAI.id]: "0xcB003ed4Df4679D15b8863BB8F7609855A6a380d",
+};

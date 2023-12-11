@@ -25,8 +25,8 @@ export const SwapContext = React.createContext<SwapContextProps>({
   inputAddress: "",
   validatedAddressToSwap: "",
   validateAddressToSwap: (
-    authedUser: EthereumAddress,
-    inputEnsAddress: string | null | undefined
+    _authedUser: EthereumAddress,
+    _inputEnsAddress: string | null | undefined
   ) => {},
   setInputAddress: (address: string) => {},
   setUserJustValidatedInput: () => {},
@@ -50,17 +50,21 @@ export const SwapContextProvider = ({ children }: any) => {
   );
 
   const validateAddressToSwap = (
-    authenticatedUser: EthereumAddress,
-    inputEnsNameResponse: string | null | undefined
+    _authedUser: EthereumAddress,
+    _inputEnsAddress: string | null | undefined
   ) => {
-    if (!inputAddress && !inputEnsNameResponse) {
+    if (!inputAddress && !_inputEnsAddress) {
       toast.error("Please type something");
       setUserJustValidatedInput(true);
       return;
     }
 
     let searchedAddress = inputAddress;
-    if (!!inputEnsNameResponse) searchedAddress = inputEnsNameResponse;
+
+    // if (!!inputEnsNameResponse) searchedAddress = inputEnsNameResponse;
+    if (_inputEnsAddress !== ADDRESS_ZERO && searchedAddress) {
+      searchedAddress = _inputEnsAddress ?? "";
+    }
 
     let inputIsValidAddress = false;
     try {
@@ -73,7 +77,7 @@ export const SwapContextProvider = ({ children }: any) => {
     if (inputIsValidAddress) {
       const inputEthAddress = new EthereumAddress(searchedAddress);
 
-      if (inputEthAddress.equals(authenticatedUser)) {
+      if (inputEthAddress.equals(_authedUser)) {
         toast.error("You cannot swap with yourself");
         setValidatedAddressToSwap("");
         setUserJustValidatedInput(true);

@@ -38,6 +38,7 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
               isActiveTab == tab.id ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
               "flex-1 p-4 border-gray-400 cursor-pointer",
             ])}
+            role="tab"
             onClick={() => {
               setActiveSwappingShelfID(tab.id);
               setIsActiveTab(tab.id);
