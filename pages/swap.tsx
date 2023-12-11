@@ -11,7 +11,7 @@ export default function SwapPage() {
       {authenticatedUserAddress && (
         <div
           className={cc([
-            "w-full h-full mt-32 md:mt-16 flex flex-col justify-center items-center",
+            "w-full h-full mt-32 md:mt-40 xl:mt-16 flex flex-col justify-center items-center",
           ])}
         >
           <TheHeader />

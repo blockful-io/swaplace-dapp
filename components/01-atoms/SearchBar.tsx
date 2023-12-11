@@ -132,7 +132,7 @@ export const SearchBar = () => {
         </div>
       </div>
 
-      <div className="w-full z-30 flex items-center justify-between py-1">
+      <div className="w-full z-40 flex items-center justify-between py-1">
         <div className="flex flex-col space-y-2">
           <p className="font-medium">Your network:</p>
           <SelectAuthedUserChain />
