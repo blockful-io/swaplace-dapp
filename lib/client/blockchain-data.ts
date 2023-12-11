@@ -17,7 +17,7 @@ export const getNftsFrom = async (
     method: "get",
   };
 
-  const url = `${baseUrl}/getNFTsForOwner?owner=${address}&withMetadata=true&spamConfidenceLevel=LOW&pageSize=100`;
+  const url = `${baseUrl}/getNFTsForOwner?owner=${address}&withMetadata=true`;
 
   stateSetter(NFTsQueryStatus.LOADING);
 
