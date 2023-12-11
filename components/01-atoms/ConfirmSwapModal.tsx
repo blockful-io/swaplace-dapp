@@ -1,22 +1,109 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useContext } from "react";
-import { NftCard, NftCardActionType, SwapContext, SwapIcon } from ".";
+import { Fragment, useContext, useEffect, useState } from "react";
+import {
+  NftCard,
+  NftCardActionType,
+  SwapContext,
+  SwapIcon,
+  TransactionResultModal,
+} from ".";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { makeSwap } from "@/lib/client/blockchain-data";
+import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
+import { useNetwork, useWalletClient } from "wagmi";
+import { getTimestamp } from "@/lib/client/utils";
+import { signTransaction } from "viem/actions";
+import toast from "react-hot-toast";
 
 interface ConfirmSwapModalProps {
   open: boolean;
   onClose: () => void;
 }
 
+enum CreateOfferStatus {
+  "CREATE_OFFER" = "CREATE_OFFER",
+  "WAITING_WALLET_APPROVAL" = "WAITING_WALLET_APPROVAL",
+}
+
+export enum TransactionResult {
+  "LOADING" = "LOADING",
+  "SUCCESS" = "SUCCESS",
+  "FAILURE" = "FAILURE",
+}
+
 export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { nftInputUser, nftAuthUser, validatedAddressToSwap } =
+  const { nftInputUser, nftAuthUser, validatedAddressToSwap, destinyChain } =
     useContext(SwapContext);
+
+  const [createOfferStatus, setCreateOfferStatus] = useState(
+    CreateOfferStatus.CREATE_OFFER
+  );
+  const [transactionResult, displayTransactionResultModal] =
+    useState<null | TransactionResult>(null);
+
+  const { chain } = useNetwork();
+  const { data: walletClient } = useWalletClient();
+
+  useEffect(() => {
+    if (!open) {
+      setCreateOfferStatus(CreateOfferStatus.CREATE_OFFER);
+    }
+  }, [open]);
 
   if (!authenticatedUserAddress?.address || !nftInputUser || !nftAuthUser) {
     onClose();
     return null;
   }
+
+  const createOffer = async () => {
+    const swaplaceContractForCurrentChain =
+      chain && SWAPLACE_SMART_CONTRACT_ADDRESS[chain?.id];
+
+    if (swaplaceContractForCurrentChain && walletClient) {
+      const farFarInTheFuture = getTimestamp(chain.id);
+
+      setCreateOfferStatus(CreateOfferStatus.WAITING_WALLET_APPROVAL);
+      walletClient
+        .signMessage({
+          message: "Swaplace dApps wants to create a Swap Offer!",
+        })
+        .then(() => {
+          setCreateOfferStatus(CreateOfferStatus.CREATE_OFFER);
+          displayTransactionResultModal(TransactionResult.LOADING);
+          setTimeout(() => {
+            displayTransactionResultModal(TransactionResult.SUCCESS);
+          }, 10000);
+        })
+        .catch((error) => {
+          toast.error("Message signature failed");
+          setCreateOfferStatus(CreateOfferStatus.CREATE_OFFER);
+          displayTransactionResultModal(TransactionResult.FAILURE);
+          console.error(error);
+        });
+
+      // makeSwap(
+      //   swaplaceContractForCurrentChain,
+      //   authenticatedUserAddress.address,
+      //   validatedAddressToSwap,
+      //   destinyChain,
+      //   farFarInTheFuture,
+      //   nftAuthUser,
+      //   nftInputUser,
+      //   chain.id
+      // )
+      //   .then((data) => {
+      //     console.log("data", data);
+      //   })
+      //   .catch((error) => {
+      //     console.log("error", error);
+      //   });
+    } else {
+      throw new Error(
+        "Could not find a Swaplace contract for the current chain"
+      );
+    }
+  };
 
   return (
     <>
@@ -83,12 +170,25 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
             <Dialog.Description className={"text-white text-base mt-2"}>
               Are you sure you want to create this Swap Offer?
             </Dialog.Description>
-            <button className="mt-4 rounded w-full disabled:bg-gray-100 bg-green-400 border-green-500 disabled:border-gray-200 border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:text-gray-300 text-green-900">
-              Create offer
+            <button
+              onClick={createOffer}
+              className="mt-4 rounded w-full disabled:bg-gray-100 bg-green-400 border-green-500 disabled:border-gray-200 border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:text-gray-300 text-green-900"
+            >
+              {createOfferStatus ===
+              CreateOfferStatus.WAITING_WALLET_APPROVAL ? (
+                <p>Waiting wallet action...</p>
+              ) : createOfferStatus === CreateOfferStatus.CREATE_OFFER ? (
+                <p>Create offer</p>
+              ) : null}
             </button>
           </Dialog.Panel>
         </Transition>
       </Dialog>
+
+      <TransactionResultModal
+        onClose={onClose}
+        transactionResult={transactionResult}
+      />
     </>
   );
 };

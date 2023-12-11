@@ -1,10 +1,13 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useRouter } from "next/router";
 
 interface IConnectWallet {
   customStyle?: string;
 }
 
 export const ConnectWallet = ({ customStyle }: IConnectWallet) => {
+  const router = useRouter();
+
   return (
     <ConnectButton.Custom>
       {({
@@ -48,6 +51,9 @@ export const ConnectWallet = ({ customStyle }: IConnectWallet) => {
                   </button>
                 );
               }
+
+              if (router.pathname === "/") return null;
+
               if (chain.unsupported) {
                 return (
                   <button onClick={openChainModal} type="button">
