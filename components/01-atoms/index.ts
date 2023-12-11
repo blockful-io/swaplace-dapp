@@ -1,5 +1,5 @@
 export * from "./ConnectWallet";
-export * from "./NftCard";
+export * from "../02-molecules/NftCard";
 export * from "./SearchBar";
 export * from "./SelectAuthedUserChain";
 export * from "./Tab";
@@ -11,3 +11,4 @@ export * from "./icons/PaperPlane";
 export * from "./SelectDestinyChain";
 export * from "./icons/EthereumIcon";
 export * from "./icons/PolygonIcon";
+export * from "./ConfirmSwapModal";

@@ -56,7 +56,7 @@ export const ConnectWallet = ({ customStyle }: IConnectWallet) => {
                 );
               }
               return (
-                <div style={{ display: "flex", gap: 12 }}>
+                <div className="flex gap-3 xl:flex-col">
                   <button
                     onClick={openChainModal}
                     className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition hidden md:flex items-center"

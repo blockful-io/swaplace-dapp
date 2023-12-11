@@ -1,13 +1,15 @@
 import { NFT } from "@/lib/client/constants";
 import React, { useContext, useEffect, useState } from "react";
-import { SwapContext } from ".";
+import { SwapContext } from "../01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EthereumAddress } from "@/lib/shared/types";
 import cc from "classcat";
+import toast from "react-hot-toast";
 
 interface INftCard {
   nftData: NFT;
   ownerAddress: string | null;
+  onClickAction?: NftCardActionType;
   withSelectionValidation?: boolean;
 }
 
@@ -20,10 +22,16 @@ interface INftCard {
  * @returns NftCard
  */
 
+export enum NftCardActionType {
+  "SELECT_NFT_FOR_SWAP",
+  "SHOW_NFT_DETAILS",
+}
+
 export const NftCard = ({
   nftData,
   ownerAddress,
   withSelectionValidation = true,
+  onClickAction = NftCardActionType.SELECT_NFT_FOR_SWAP,
 }: INftCard) => {
   if (!nftData || !nftData.id || !nftData.contract || !ownerAddress)
     return null;
@@ -33,22 +41,27 @@ export const NftCard = ({
     useContext(SwapContext);
 
   const setNftAsActiveOne = () => {
-    const ownerEthAddress = new EthereumAddress(ownerAddress);
+    if (onClickAction === NftCardActionType.SELECT_NFT_FOR_SWAP) {
+      const ownerEthAddress = new EthereumAddress(ownerAddress);
 
-    if (authenticatedUserAddress?.equals(ownerEthAddress)) {
-      if (nftAuthUser.length) {
-        if (nftAuthUser[0].id === nftData.id) setNftAuthUser([]);
-        else setNftAuthUser([nftData]);
+      if (authenticatedUserAddress?.equals(ownerEthAddress)) {
+        if (nftAuthUser.length) {
+          if (nftAuthUser[0].id === nftData.id) setNftAuthUser([]);
+          else setNftAuthUser([nftData]);
+        } else {
+          setNftAuthUser([nftData]);
+        }
       } else {
-        setNftAuthUser([nftData]);
+        if (nftInputUser.length) {
+          if (nftInputUser[0].id === nftData.id) setNftInputUser([]);
+          else setNftInputUser([nftData]);
+        } else {
+          setNftInputUser([nftData]);
+        }
       }
-    } else {
-      if (nftInputUser.length) {
-        if (nftInputUser[0].id === nftData.id) setNftInputUser([]);
-        else setNftInputUser([nftData]);
-      } else {
-        setNftInputUser([nftData]);
-      }
+    } else if (onClickAction === NftCardActionType.SHOW_NFT_DETAILS) {
+      navigator.clipboard.writeText(JSON.stringify(nftData));
+      toast.success("NFT data copied to your clipboard");
     }
   };
 
@@ -87,7 +100,7 @@ export const NftCard = ({
       <button
         onClick={setNftAsActiveOne}
         className={cc([
-          "mx-auto w-24 h-24 md:h-28 md:w-28 relative rounded border-2 border-[#E0E0E0] flex flex-col justify-center items-center",
+          "mx-auto w-24 h-24 md:h-28 md:w-28 relative rounded border-2 border-[#E0E0E0] bg-[#E0E0E0] flex flex-col justify-center items-center",
           {
             "border-green-500": currentNftIsSelected && withSelectionValidation,
           },
@@ -108,7 +121,7 @@ export const NftCard = ({
           onError={handleImageLoadError}
           src={nftData.metadata?.image}
           alt={nftData.metadata?.name}
-          className="static z-10"
+          className="static z-10 w-full overflow-y-auto"
         />
       )}
     </>

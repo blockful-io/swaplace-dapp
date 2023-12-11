@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { useContext, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { EthereumIcon, PolygonIcon, SwapContext } from ".";
 import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
 import cc from "classcat";
@@ -19,7 +19,7 @@ export const SelectDestinyChain = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition flex items-center space-x-2"
+        className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition flex items-center space-x-3"
       >
         {destinyChain === SupportedNetworks.SEPOLIA ? (
           <EthereumIcon width={12} height={12} />
@@ -28,12 +28,20 @@ export const SelectDestinyChain = () => {
         )}
         <p>{ChainInfo[destinyChain].name}</p>
       </button>
+
+      <Transition
+        show={isOpen}
+        as={Fragment}
+        enter="ease-out duration-300"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="ease-in duration-200"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div className="z-40 fixed inset-0 bg-black/30 backdrop-blur-sm" />
+      </Transition>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-        <Dialog.Overlay
-          className={
-            "w-screen h-screen bg-black opacity-20 blur fixed top-0 left-0 z-40"
-          }
-        />
         <Transition
           show={isOpen}
           enter="transition duration-100 ease-out"
@@ -50,7 +58,7 @@ export const SelectDestinyChain = () => {
                 key={chain}
                 value={chain}
                 className={cc([
-                  "text-white font-bold text-base p-1 py-2 px-3 flex items-center w-[300px] justify-between rounded",
+                  "text-white font-bold text-base p-1 py-2 px-3 flex items-center w-[300px] justify-between rounded hover:bg-white hover:bg-opacity-10 transition",
                   {
                     "bg-gray-700 brightness-125 bg-opacity-70":
                       destinyChain === chain,
