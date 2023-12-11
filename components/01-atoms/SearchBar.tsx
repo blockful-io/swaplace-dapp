@@ -97,17 +97,6 @@ export const SearchBar = () => {
           className={cc([
             "w-full h-11 px-4 py-3 border-2 border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded",
             { "bg-white ": !userJustValidatedInput },
-            {
-              "!border-green-500":
-                validatedAddressToSwap &&
-                inputAddress &&
-                userJustValidatedInput,
-              "border-red-500":
-                (inputAddress &&
-                  !validatedAddressToSwap &&
-                  userJustValidatedInput) ||
-                (userJustValidatedInput && !inputAddress),
-            },
           ])}
           placeholder="Search for an address or ENS name"
           onChange={(e) => setInputAddress(e.target.value)}

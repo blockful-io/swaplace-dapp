@@ -1,5 +1,8 @@
+import { ethers } from "ethers";
 import { Dispatch, SetStateAction } from "react";
-import { NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
+import { NFT, NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
+import { publicClient } from "../wallet/wallet-config";
+import { getTimestamp } from "./utils";
 
 export const getNftsFrom = async (
   address: string,
@@ -14,7 +17,7 @@ export const getNftsFrom = async (
     method: "get",
   };
 
-  const url = `${baseUrl}/getNFTsForOwner?owner=${address}&withMetadata=true`;
+  const url = `${baseUrl}/getNFTsForOwner?owner=${address}&withMetadata=true&spamConfidenceLevel=LOW`;
 
   stateSetter(NFTsQueryStatus.LOADING);
 
@@ -37,3 +40,60 @@ export const getNftsFrom = async (
       return error;
     });
 };
+
+export interface Swap {
+  owner: string;
+  config: any;
+  biding: NFT[];
+  asking: NFT[];
+}
+
+export async function makeConfig(
+  Contract: any,
+  allowed: any,
+  destinationChainSelector: any,
+  expiration: any
+) {
+  const config = await Contract.packData(
+    allowed,
+    destinationChainSelector,
+    expiration
+  );
+  return config;
+}
+
+export async function makeSwap(
+  Contract: any,
+  owner: any,
+  allowed: any,
+  destinationChainSelector: any,
+  expiration: any,
+  biding: NFT[],
+  asking: NFT[],
+  chainId: number
+) {
+  const timestamp = await getTimestamp(chainId);
+  if (expiration < timestamp) {
+    throw new Error("InvalidExpiry");
+  }
+
+  if (biding.length == 0 || asking.length == 0) {
+    throw new Error("InvalidNFTsLength");
+  }
+
+  const config = await makeConfig(
+    Contract,
+    allowed,
+    destinationChainSelector,
+    expiration
+  );
+
+  const swap: Swap = {
+    owner: owner,
+    config: config,
+    biding: biding,
+    asking: asking,
+  };
+
+  return swap;
+}

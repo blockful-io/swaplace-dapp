@@ -54,14 +54,13 @@ export const SwapContextProvider = ({ children }: any) => {
     _inputEnsAddress: string | null | undefined
   ) => {
     if (!inputAddress && !_inputEnsAddress) {
-      toast.error("Please type something");
+      toast.error("Please enter a valid address or some registered ENS domain");
       setUserJustValidatedInput(true);
       return;
     }
 
     let searchedAddress = inputAddress;
 
-    // if (!!inputEnsNameResponse) searchedAddress = inputEnsNameResponse;
     if (_inputEnsAddress !== ADDRESS_ZERO && searchedAddress) {
       searchedAddress = _inputEnsAddress ?? "";
     }
@@ -90,6 +89,7 @@ export const SwapContextProvider = ({ children }: any) => {
       }
 
       setValidatedAddressToSwap(searchedAddress);
+      toast.success("Searching Address");
     } else {
       toast.error(
         "Your input is not a valid address and neither some registered ENS domain"

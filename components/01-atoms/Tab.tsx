@@ -34,6 +34,7 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
       {swappingTabs.map((tab) => {
         return (
           <div
+            key={tab.id}
             className={cc([
               isActiveTab == tab.id ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
               "flex-1 p-4 border-gray-400 cursor-pointer",

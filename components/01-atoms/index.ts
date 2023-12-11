@@ -12,3 +12,4 @@ export * from "./SelectDestinyChain";
 export * from "./icons/EthereumIcon";
 export * from "./icons/PolygonIcon";
 export * from "./ConfirmSwapModal";
+export * from "./TransactionResultModal";
