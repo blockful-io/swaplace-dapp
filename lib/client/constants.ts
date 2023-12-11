@@ -19,7 +19,7 @@ export enum NFTsQueryStatus {
 }
 
 export enum SupportedNetworks {
-  SEPOLIA = "SEPOLIA",
+  BINANCE_SMART_CHAIN = "BINANCE_SMART_CHAIN",
   MUMBAI = "MUMBAI",
 }
 
@@ -29,9 +29,9 @@ interface ChainProps {
 }
 
 export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
-  [SupportedNetworks.SEPOLIA]: {
+  [SupportedNetworks.BINANCE_SMART_CHAIN]: {
     id: 11155111,
-    name: "Sepolia",
+    name: "BINANCE_SMART_CHAIN",
   },
   [SupportedNetworks.MUMBAI]: {
     id: 80001,
@@ -40,6 +40,15 @@ export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
 };
 
 export let getRpcHttpUrlForNetwork: Map<number, string> = new Map([
-  [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP ?? ""],
+  [
+    ChainInfo.BINANCE_SMART_CHAIN.id,
+    process.env.NEXT_PUBLIC_ALCHEMY_BINANCE_SMART_CHAIN_HTTP ?? "",
+  ],
   [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? ""],
 ]);
+
+export const SWAPLACE_SMART_CONTRACT_ADDRESS = {
+  [ChainInfo.BINANCE_SMART_CHAIN.id]:
+    "0xcB003ed4Df4679D15b8863BB8F7609855A6a380d",
+  [ChainInfo.MUMBAI.id]: "0xcB003ed4Df4679D15b8863BB8F7609855A6a380d",
+};
