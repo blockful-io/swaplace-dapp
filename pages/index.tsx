@@ -1,16 +1,16 @@
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ConnectWallet } from "../components/index";
-import { useAuthedAccess } from "@/lib/client/hooks/useAuthedAccess";
+import { HomeSection, Layout } from "@/components/04-templates";
+import cc from "classcat";
 
 export default function Index() {
-  useAuthedAccess();
-
   return (
-    <div>
-      <header className="py-6 flex justify-between px-20 font-medium bg-green-200 shadow">
-        <h1>Swaplace dApp</h1>
-        <ConnectWallet />
-      </header>
-    </div>
+    <Layout>
+      <div
+        className={cc([
+          "w-full min-h-[100vh] h-full flex flex-col justify-center items-center",
+        ])}
+      >
+        <HomeSection />
+      </div>
+    </Layout>
   );
 }

@@ -1,6 +1,10 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-export const ConnectWallet = () => {
+interface IConnectWallet {
+  customStyle?: string;
+}
+
+export const ConnectWallet = ({ customStyle }: IConnectWallet) => {
   return (
     <ConnectButton.Custom>
       {({
@@ -30,11 +34,16 @@ export const ConnectWallet = () => {
                 userSelect: "none",
               },
             })}
+            className="w-full"
           >
             {(() => {
               if (!connected) {
                 return (
-                  <button onClick={openConnectModal} type="button">
+                  <button
+                    onClick={openConnectModal}
+                    type="button"
+                    className={customStyle}
+                  >
                     Connect Wallet
                   </button>
                 );
@@ -47,10 +56,10 @@ export const ConnectWallet = () => {
                 );
               }
               return (
-                <div style={{ display: "flex", gap: 12 }}>
+                <div className="flex gap-3 xl:flex-col">
                   <button
                     onClick={openChainModal}
-                    style={{ display: "flex", alignItems: "center" }}
+                    className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition hidden md:flex items-center"
                     type="button"
                   >
                     {chain.hasIcon && (
@@ -75,11 +84,18 @@ export const ConnectWallet = () => {
                     )}
                     {chain.name}
                   </button>
-                  <button onClick={openAccountModal} type="button">
+                  <button
+                    onClick={openAccountModal}
+                    className="p-4 py-2 bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded transition"
+                    type="button"
+                  >
                     {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
+
+                    <div className="hidden md:block">
+                      {account.displayBalance
+                        ? ` (${account.displayBalance})`
+                        : ""}
+                    </div>
                   </button>
                 </div>
               );

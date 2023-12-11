@@ -1,15 +1,20 @@
 import { EthereumAddress } from "../../shared/types";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useAccount, useDisconnect, useEnsName, useNetwork } from "wagmi";
-import { ADDRESS_ZERO } from "../constants";
+import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
+import {
+  useAccount,
+  useDisconnect,
+  useEnsName,
+  useNetwork,
+  useWalletClient,
+} from "wagmi";
+import { ADDRESS_ZERO, getRpcHttpUrlForNetwork } from "../constants";
 
 interface AuthenticatedUserHook {
   loadingEnsName: boolean;
   loadingAuthenticatedUser: boolean;
   authenticatedUserEnsName: string | null;
   authenticatedUserAddress: EthereumAddress | null;
-  preferredChainId: number | null;
   disconnectUser: () => void;
 }
 
@@ -18,13 +23,21 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
   const { disconnect } = useDisconnect();
   const { data: nextAuthUser } = useSession();
   const { address, isConnected } = useAccount();
-  const [preferredChainId, setPreferredChainId] = useState<number | null>(
-    chain?.id ?? null
-  );
   const [authenticatedAccountAddress, setAuthenticatedAccountAddress] =
     useState<EthereumAddress | null>(null);
   const [loadingAuthenticatedUser, setLoadingAuthenticatedUser] =
     useState(true);
+
+  useEffect(() => {
+    if (
+      typeof chain?.id === "number" &&
+      !getRpcHttpUrlForNetwork.get(chain?.id)
+    ) {
+      disconnect();
+      return;
+    }
+  }, [chain]);
+
   const {
     data: ensName,
     isLoading: loadingEnsName,
@@ -75,19 +88,12 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
     });
   }, []);
 
-  useEffect(() => {
-    if (chain?.id && chain?.id !== preferredChainId) {
-      setPreferredChainId(chain.id);
-    }
-  }, [chain]);
-
   return {
     loadingEnsName: (loadingEnsName || !ensName) && !errorLoadingEnsName,
     loadingAuthenticatedUser,
     authenticatedUserEnsName:
       loadingEnsName || errorLoadingEnsName || !ensName ? null : ensName,
     authenticatedUserAddress: authenticatedAccountAddress,
-    preferredChainId,
     disconnectUser,
   };
 };

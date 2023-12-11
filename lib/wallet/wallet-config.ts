@@ -1,6 +1,5 @@
-import { jsonRpcProvider } from "@wagmi/core/providers/jsonRpc";
-import { publicProvider } from "@wagmi/core/providers/public";
-import { configureChains, mainnet, createConfig } from "wagmi";
+import { polygonMumbai, sepolia } from "@wagmi/core/chains";
+import { configureChains, createConfig } from "wagmi";
 import {
   trustWallet,
   ledgerWallet,
@@ -10,26 +9,24 @@ import {
   rainbowWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
-
-const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
-
-export const rpcHttpUrl = `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
-const rpcWebSocketpUrl = `wss://eth-mainnet.g.alchemy.com/v2/${alchemyApiKey}`;
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { getRpcHttpUrlForNetwork } from "../client/constants";
 
 export const { chains, webSocketPublicClient, publicClient } = configureChains(
-  [mainnet],
+  [sepolia, polygonMumbai],
   [
     jsonRpcProvider({
-      rpc: () => ({ http: rpcHttpUrl, webSocket: rpcWebSocketpUrl }),
+      rpc: (chain) => ({
+        http: getRpcHttpUrlForNetwork.get(chain.id) ?? "",
+      }),
     }),
-    publicProvider(),
   ]
 );
 
 const connectorArgs = {
   appName: "Swaplace dApp",
+  chains: [sepolia, polygonMumbai],
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? "",
-  chains: [mainnet],
 };
 
 const connectors = connectorsForWallets([
