@@ -1,5 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { NFT, ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
+import {
+  NFT,
+  ChainInfo,
+  NFTsQueryStatus,
+  ADDRESS_ZERO,
+} from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { NftsList } from "../02-molecules";
 import { getNftsFrom } from "@/lib/client/blockchain-data";
@@ -45,6 +50,24 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
         });
     }
   }, [address, chain, destinyChain]);
+
+  useEffect(() => {
+    if (
+      authenticatedUserAddress &&
+      address &&
+      authenticatedUserAddress.equals(new EthereumAddress(address))
+    ) {
+      setNftsList([]);
+      setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
+    }
+  }, [destinyChain]);
+
+  useEffect(() => {
+    if (address !== authenticatedUserAddress?.address) {
+      setNftsList([]);
+      setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
+    }
+  }, [chain]);
 
   useEffect(() => {
     if (
