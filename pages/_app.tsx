@@ -19,6 +19,12 @@ import {
 import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { SwapContextProvider } from "@/components/01-atoms";
 import { Toaster } from "react-hot-toast";
+import localFont from "next/font/local";
+
+const onest = localFont({
+  src: "../public/fonts/Onest-VariableFont_wght.woff2",
+  variable: "--font-onest",
+});
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
@@ -46,7 +52,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
                   chains={chains}
                 >
                   <Toaster />
-                  <Component {...pageProps} />
+                  <main className={onest.className}>
+                    <Component {...pageProps} />
+                  </main>
                 </RainbowKitProvider>
               </WagmiConfig>
             </RainbowKitSiweNextAuthProvider>
