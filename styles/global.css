@@ -1,11 +1,52 @@
 html,
 body {
-  width: 100vw;
   overflow-x: hidden;
 }
+
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
   display: none;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .title-h1 {
+  }
+
+  .title-h2 {
+  }
+
+  .title-h3-normal {
+    @apply font-onest font-normal text-[20px] leading-[25.5px] text-[#333333];
+  }
+
+  .title-h3-normal-dark {
+    @apply font-onest font-normal text-[20px] leading-[25.5px] text-[#F6F6F6];
+  }
+
+  .p-medium-bold {
+    @apply font-onest font-medium text-[14px] leading-[16px] text-[#707572];
+  }
+  .p-medium-bold-dark {
+    @apply font-onest font-medium text-[14px] leading-[16px] text-[#F6F6F6];
+  }
+
+  .p-medium {
+    @apply font-onest font-medium text-[14px] leading-[20px] text-[#707572];
+  }
+  .p-medium-dark {
+    @apply font-onest font-medium text-[14px] leading-[20px] text-[#F6F6F6];
+  }
+
+  .p-small {
+    @apply font-onest font-normal text-[14px] leading-[20px] text-[#707572];
+  }
+  .p-small-dark {
+    @apply font-onest font-normal text-[14px] leading-[20px] text-[#F6F6F6];
+  }
 }

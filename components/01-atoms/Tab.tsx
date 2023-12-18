@@ -30,14 +30,16 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
   const [isActiveTab, setIsActiveTab] = useState(SwappingShelfID.THEIR_ITEMS);
 
   return (
-    <div className="w-full font-light flex-auto flex items-center justify-between rounded rounded-b-none overflow-hidden border-gray-200 border-2 border-b-0">
+    <div className="w-full font-light flex-auto flex items-center justify-between  overflow-hidden  ">
       {swappingTabs.map((tab) => {
         return (
           <div
             key={tab.id}
             className={cc([
-              isActiveTab == tab.id ? "bg-[#f8f8f8]" : "bg-[#f0f0f0]",
-              "flex-1 p-4 border-gray-400 cursor-pointer",
+              isActiveTab == tab.id
+                ? "dark:p-medium-bold-dark p-medium-bold border-b dark:border-[#DDF23D] border-black "
+                : "dark:p-medium-bold p-medium-bold opacity-50 border-b dark:border-[#313131]",
+              "flex-1 p-4  cursor-pointer",
             ])}
             role="tab"
             onClick={() => {

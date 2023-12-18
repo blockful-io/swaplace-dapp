@@ -25,7 +25,7 @@ export const SwappingShelfs = () => {
   }, [chain]);
 
   return (
-    <div className="w-[95%] mb-20">
+    <div className="w-[95%] mb-20 dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
       <Tab
         setActiveSwappingShelfID={(input) => setActiveSwappingShelfID(input)}
       />
