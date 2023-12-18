@@ -3,8 +3,9 @@ import cc from "classcat";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useTheme } from "next-themes";
-import { ConnectWallet } from "@/components/01-atoms";
+import { ConnectWallet, SwappingIcons } from "@/components/01-atoms";
 import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
+import Link from "next/link";
 
 export const TheHeader = () => {
   const { isDesktop } = useScreenSize();
@@ -28,15 +29,22 @@ export const TheHeader = () => {
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   return (
-    <header className="bg-[#F2F2F2] dark:bg-[#212322] z-40 w-screen h-auto xl:w-auto xl:h-screen py-6 flex xl:flex-col justify-between items-center px-8 xl:pt-5 xl:pb-4 font-medium shadow-lg absolute left-0 top-0 xl:items-start">
-      <SwaplaceIcon
-        className="w-10"
-        fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
-      />
-      <div className={cc([showFullNav ? "block" : "hidden"])}>
-        <ConnectWallet />
+    <header className="bg-[#F2F2F2] dark:bg-[#212322] z-40 w-screen h-auto xl:w-[62px] xl:h-screen py-6 flex xl:flex-col justify-between items-center xl:items-center  xl:px-0 md:px-8 xl:pt-5 xl:pb-4 font-medium shadow-lg absolute left-0 top-0">
+      <div className="flex">
+        <Link href="/">
+          <SwaplaceIcon
+            className="w-10 mt-5"
+            fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
+          />
+        </Link>
+        <div className={cc([showFullNav ? "block" : "hidden"])}>
+          <ConnectWallet />
+        </div>
       </div>
-      <div>
+      <div className="xl:flex-col flex-row flex">
+        <SwappingIcons />
+      </div>
+      <div className="md:flex-col ">
         <div className="flex justify-center">
           {currentTheme === "dark" ? (
             <button className="bg-black-500" onClick={() => setTheme("light")}>
