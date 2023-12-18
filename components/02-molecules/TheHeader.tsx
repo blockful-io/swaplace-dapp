@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { ConnectWallet, SwaplaceIcon } from "@/components/01-atoms";
 import cc from "classcat";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useTheme } from "next-themes";
-import { WalletIcon } from "../01-atoms/icons/WalletIcon";
+import { ConnectWallet } from "@/components/01-atoms";
+import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
 
 export const TheHeader = () => {
   const { isDesktop } = useScreenSize();

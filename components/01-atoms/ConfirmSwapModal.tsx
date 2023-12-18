@@ -1,12 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useContext, useEffect, useState } from "react";
-import {
-  NftCard,
-  NftCardActionType,
-  SwapContext,
-  SwapIcon,
-  TransactionResultModal,
-} from ".";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { makeSwap } from "@/lib/client/blockchain-data";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
@@ -14,6 +7,9 @@ import { useNetwork, useWalletClient } from "wagmi";
 import { getTimestamp } from "@/lib/client/utils";
 import { signTransaction } from "viem/actions";
 import toast from "react-hot-toast";
+import { SwapContext, TransactionResultModal } from "@/components/01-atoms";
+import { NftCard, NftCardActionType } from "@/components/02-molecules";
+import { SwapIcon } from "@/components/01-atoms/icons";
 
 interface ConfirmSwapModalProps {
   open: boolean;

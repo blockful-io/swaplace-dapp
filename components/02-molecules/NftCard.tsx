@@ -1,6 +1,6 @@
 import { NFT } from "@/lib/client/constants";
 import React, { useContext, useEffect, useState } from "react";
-import { SwapContext } from "../01-atoms";
+import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EthereumAddress } from "@/lib/shared/types";
 import cc from "classcat";

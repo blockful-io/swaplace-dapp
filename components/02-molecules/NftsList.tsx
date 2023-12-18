@@ -1,5 +1,5 @@
 import { NFT } from "@/lib/client/constants";
-import { NftCard } from "../01-atoms";
+import { NftCard } from "@/components/02-molecules";
 
 interface INftsList {
   nftsList: NFT[];

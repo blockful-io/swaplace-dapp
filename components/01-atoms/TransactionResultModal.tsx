@@ -1,9 +1,8 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { TransactionResult } from ".";
 import { Fragment, useState } from "react";
-import LoadingIndicator from "./LoadingIndicator";
+import { Dialog, Transition } from "@headlessui/react";
+import { TransactionResult, LoadingIndicator } from "@/components/01-atoms";
+import { DangerIcon } from "@/components/01-atoms/icons";
 import { CheckmarkIcon } from "react-hot-toast";
-import { DangerIcon } from "./icons/DangerIcon";
 
 interface TransactionResultModalProps {
   onClose: () => void;

@@ -1,7 +1,7 @@
 import cc from "classcat";
 import { useContext, useEffect, useState } from "react";
-import { NftsShelf } from "@/components/02-molecules";
 import { SwapContext, SwappingShelfID, Tab } from "@/components/01-atoms/";
+import { NftsShelf } from "@/components/03-organisms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork } from "wagmi";
 

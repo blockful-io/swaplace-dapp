@@ -1,3 +1,3 @@
 export * from "./HomeSection";
-export * from "./SwapSection";
 export * from "./Layout";
+export * from "./SwapSection";

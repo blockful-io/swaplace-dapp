@@ -1,5 +1,6 @@
 import React from "react";
-import { ConnectWallet, SwaplaceIcon } from "@/components/01-atoms";
+import { ConnectWallet } from "@/components/01-atoms";
+import { SwaplaceIcon } from "@/components/01-atoms/icons";
 
 export const CardHome = () => {
   return (

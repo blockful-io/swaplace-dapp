@@ -1,10 +1,7 @@
 import { useContext, useEffect, useState } from "react";
+import { ConfirmSwapModal, SwapContext } from "@/components/01-atoms";
+import { PaperPlane } from "@/components/01-atoms/icons";
 import { OfferSummary } from "@/components/02-molecules";
-import {
-  ConfirmSwapModal,
-  PaperPlane,
-  SwapContext,
-} from "@/components/01-atoms";
 import cc from "classcat";
 import toast from "react-hot-toast";
 
