@@ -47,11 +47,15 @@ export const SwapStation = () => {
   };
 
   return (
-    <div className="mx-auto w-[95%] lg:w-[400px] rounded p-5 flex flex-col justify-between items-center gap-16 bg-[#f8f8f8] border-2 border-[#E5E4E4]">
+    <div className="mx-auto w-[95%] xl:w-[500px] lg:w-[615px]  p-4  flex flex-col justify-between items-center gap-16 bg-[#f8f8f8] dark:bg-[#212322]  dark:border rounded-2xl dark:border-[#353836]">
       <div className="w-full flex flex-col justify-start ">
-        <h3 className="font-light text-xl text-[#333] mb-7">Swap offer</h3>
-        <OfferSummary forAuthedUser={true} />
-        <OfferSummary forAuthedUser={false} />
+        <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7">
+          Swap offer
+        </h3>
+        <div className="flex flex-col gap-4">
+          <OfferSummary forAuthedUser={true} />
+          <OfferSummary forAuthedUser={false} />
+        </div>
       </div>
       <div className="w-[95%] flex flex-col justify-center items-center">
         <div
@@ -67,7 +71,7 @@ export const SwapStation = () => {
           <button
             disabled={!isValidSwap}
             className={cc([
-              "pointer-events-none rounded w-full disabled:bg-gray-100 bg-green-400 border-green-500 disabled:border-gray-200 border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:text-gray-300 text-green-900",
+              "pointer-events-none rounded-xl w-full disabled:bg-gray-100 dark:disabled:bg-[#353836]  dark:hover:bg-[#4b514d] bg-green-400 border-green-500 disabled:border-gray-200  dark:disabled:border-[#434443]  border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:text-gray-300 text-green-900 ",
             ])}
           >
             <PaperPlane

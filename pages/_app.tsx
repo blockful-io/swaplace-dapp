@@ -20,6 +20,8 @@ import { RainbowKitSiweNextAuthProvider } from "@rainbow-me/rainbowkit-siwe-next
 import { SwapContextProvider } from "@/components/01-atoms";
 import { Toaster } from "react-hot-toast";
 import localFont from "next/font/local";
+import cc from "classcat";
+import { ThemeProvider } from "next-themes";
 
 const onest = localFont({
   src: "../public/fonts/Onest-VariableFont_wght.woff2",
@@ -52,9 +54,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
                   chains={chains}
                 >
                   <Toaster />
-                  <main className={onest.className}>
-                    <Component {...pageProps} />
-                  </main>
+                  <ThemeProvider enableSystem={true} attribute="class">
+                    <main className={cc([onest.className])}>
+                      <Component {...pageProps} />
+                    </main>
+                  </ThemeProvider>
                 </RainbowKitProvider>
               </WagmiConfig>
             </RainbowKitSiweNextAuthProvider>

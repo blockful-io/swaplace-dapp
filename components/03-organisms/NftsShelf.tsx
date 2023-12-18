@@ -11,6 +11,8 @@ import { getNftsFrom } from "@/lib/client/blockchain-data";
 import { SwapContext, SwapIcon } from "../01-atoms";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useNetwork } from "wagmi";
+import { SelectUserIcon } from "../01-atoms/icons/SelectUserIcon";
+import { useTheme } from "next-themes";
 
 /**
  *
@@ -29,6 +31,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   const [nftsQueryStatus, setNftsQueryStatus] = useState<NFTsQueryStatus>(
     NFTsQueryStatus.EMPTY_QUERY
   );
+  const { theme } = useTheme();
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { validatedAddressToSwap, inputAddress, destinyChain } =
@@ -86,7 +89,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="w-full flex border-2 border-gray-200 border-t-0 rounded rounded-t-none overflow-auto bg-[#f8f8f8]">
+    <div className="w-full flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322]">
       <div className="w-[100%] lg:max-w-[580px] h-[450px]">
         <div className="flex items-center">
           {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
@@ -94,26 +97,34 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
               <NftsList ownerAddress={address} nftsList={nftsList} />
             </div>
           ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
-            <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] p-4">
+            <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
               <div className="flex flex-col items-center justify-center space-y-4">
-                <SwapIcon className="w-[100px]" />
-                <p className="text-[#4F4F4F]">
-                  Select a user to start swapping
+                <div className="w-[80px] h-[80px] flex items-center border-[3px] rounded-full dark:border-[#DDF23D] border-[#A3A9A5] ">
+                  <SelectUserIcon
+                    className="w-[100px]"
+                    fill={theme == "dark" ? "#DDF23D" : "#A3A9A5"}
+                  />
+                </div>
+                <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
+                  No user selected yet
+                </p>
+                <p className="dark:text-[#A3A9A5] font-onest font-normal text-[14px] leading-[20px]">
+                  Search for a user to start swapping items
                 </p>
               </div>
             </div>
           ) : nftsQueryStatus == NFTsQueryStatus.NO_RESULTS ? (
-            <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] p-4">
+            <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
               <div className="flex items-center">
-                <p className="text-[#4F4F4F]">
+                <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
                   Given address has no NFTs associated in the given network
                 </p>
               </div>
             </div>
           ) : nftsQueryStatus == NFTsQueryStatus.LOADING ? (
-            <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] p-4">
+            <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
               <div className="flex items-center">
-                <p className="text-[#4F4F4F]">
+                <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
                   Loading NFTs of{" "}
                   {new EthereumAddress(address).getEllipsedAddress()}...
                 </p>
