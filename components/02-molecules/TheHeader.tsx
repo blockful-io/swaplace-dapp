@@ -11,7 +11,7 @@ export const TheHeader = () => {
   const { isDesktop } = useScreenSize();
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const [showFullNav, setShowFullNav] = useState(
-    !isDesktop && !!authenticatedUserAddress?.address
+    !isDesktop && !!authenticatedUserAddress?.address,
   );
 
   useEffect(() => {

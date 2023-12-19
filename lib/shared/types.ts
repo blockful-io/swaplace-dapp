@@ -1,7 +1,7 @@
 export class EthereumAddress {
   static readonly ETHEREUM_ADDRESS_LENGTH = 40;
   static readonly pattern = new RegExp(
-    `^0x[a-fA-F0-9]{${EthereumAddress.ETHEREUM_ADDRESS_LENGTH}}$`
+    `^0x[a-fA-F0-9]{${EthereumAddress.ETHEREUM_ADDRESS_LENGTH}}$`,
   );
 
   private readonly _value: string;

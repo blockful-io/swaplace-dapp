@@ -24,7 +24,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   const { chain } = useNetwork();
   const [nftsList, setNftsList] = useState<NFT[]>();
   const [nftsQueryStatus, setNftsQueryStatus] = useState<NFTsQueryStatus>(
-    NFTsQueryStatus.EMPTY_QUERY
+    NFTsQueryStatus.EMPTY_QUERY,
   );
   const { theme } = useTheme();
 

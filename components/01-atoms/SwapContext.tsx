@@ -9,7 +9,7 @@ interface SwapContextProps {
   setInputAddress: (address: string) => void;
   validateAddressToSwap: (
     authedUser: EthereumAddress,
-    inputEnsAddress: string | null | undefined
+    inputEnsAddress: string | null | undefined,
   ) => void;
   setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
   userJustValidatedInput: boolean;
@@ -26,7 +26,7 @@ export const SwapContext = React.createContext<SwapContextProps>({
   validatedAddressToSwap: "",
   validateAddressToSwap: (
     _authedUser: EthereumAddress,
-    _inputEnsAddress: string | null | undefined
+    _inputEnsAddress: string | null | undefined,
   ) => {},
   setInputAddress: (address: string) => {},
   setUserJustValidatedInput: () => {},
@@ -46,12 +46,12 @@ export const SwapContextProvider = ({ children }: any) => {
   const [nftAuthUser, setNftAuthUser] = useState<NFT[]>([]);
   const [nftInputUser, setNftInputUser] = useState<NFT[]>([]);
   const [destinyChain, setDestinyChain] = useState<SupportedNetworks>(
-    SupportedNetworks.SEPOLIA
+    SupportedNetworks.SEPOLIA,
   );
 
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
-    _inputEnsAddress: string | null | undefined
+    _inputEnsAddress: string | null | undefined,
   ) => {
     if (!inputAddress && !_inputEnsAddress) {
       toast.error("Please enter a valid address or some registered ENS domain");
@@ -92,7 +92,7 @@ export const SwapContextProvider = ({ children }: any) => {
       toast.success("Searching Address");
     } else {
       toast.error(
-        "Your input is not a valid address and neither some registered ENS domain"
+        "Your input is not a valid address and neither some registered ENS domain",
       );
     }
     setUserJustValidatedInput(true);

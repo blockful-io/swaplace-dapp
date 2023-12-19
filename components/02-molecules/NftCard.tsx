@@ -68,7 +68,7 @@ export const NftCard = ({
   const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
   useEffect(() => {
     const currentNftIsFromAuthedUser = authenticatedUserAddress?.equals(
-      new EthereumAddress(ownerAddress)
+      new EthereumAddress(ownerAddress),
     );
 
     if (currentNftIsFromAuthedUser) {
@@ -122,7 +122,7 @@ export const NftCard = ({
           src={nftData.metadata?.image}
           alt={nftData.metadata?.name}
           className="static z-10 w-full overflow-y-auto"
-        />
+        />,
       )}
     </>
   ) : nftData.metadata?.name ? (
@@ -130,7 +130,7 @@ export const NftCard = ({
       {ButtonLayout(
         <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll">
           {nftData.metadata?.name}
-        </div>
+        </div>,
       )}
     </>
   ) : nftData.contract.name && nftData.id.tokenId ? (
@@ -138,7 +138,7 @@ export const NftCard = ({
       {ButtonLayout(
         <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll">
           {nftData.metadata?.name}
-        </div>
+        </div>,
       )}
     </>
   ) : null;

@@ -26,7 +26,7 @@ export enum SwappingIconsID {
 export const SwappingIcons = () => {
   const { theme } = useTheme();
   const [isActiveTab, setIsActiveTab] = useState(
-    SwappingIconsID.SWAPLACE_STATION
+    SwappingIconsID.SWAPLACE_STATION,
   );
 
   const swappingTabs: Array<IconSwap> = [

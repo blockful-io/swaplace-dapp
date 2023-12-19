@@ -41,12 +41,12 @@ export const SearchBar = () => {
     if (inputAddress) {
       if (!process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP) {
         throw new Error(
-          "Cannot get ENS address without Alchemy Ethereum Mainnet API key"
+          "Cannot get ENS address without Alchemy Ethereum Mainnet API key",
         );
       }
 
       const provider = new Web3.providers.HttpProvider(
-        process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP
+        process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP,
       );
 
       const ens = new ENS(undefined, provider);
@@ -61,7 +61,7 @@ export const SearchBar = () => {
               : inputAddress.split(".")[1].length >= 3
               ? inputAddress
               : `${inputAddress.split(".")[0]}.eth`
-            : `${inputAddress}.eth`
+            : `${inputAddress}.eth`,
         )
         .then((address: unknown) => {
           if (typeof address == "string") {

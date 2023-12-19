@@ -38,7 +38,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
                     data
                       ? data
                       : new EthereumAddress(
-                          validatedAddressToSwap
+                          validatedAddressToSwap,
                         ).getEllipsedAddress()
                   } gives`}
             </p>

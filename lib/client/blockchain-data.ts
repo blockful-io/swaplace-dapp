@@ -7,7 +7,7 @@ import { getTimestamp } from "./utils";
 export const getNftsFrom = async (
   address: string,
   chainId: number,
-  stateSetter: Dispatch<SetStateAction<NFTsQueryStatus>>
+  stateSetter: Dispatch<SetStateAction<NFTsQueryStatus>>,
 ) => {
   const baseUrl = getRpcHttpUrlForNetwork.get(chainId);
 
@@ -52,12 +52,12 @@ export async function makeConfig(
   Contract: any,
   allowed: any,
   destinationChainSelector: any,
-  expiration: any
+  expiration: any,
 ) {
   const config = await Contract.packData(
     allowed,
     destinationChainSelector,
-    expiration
+    expiration,
   );
   return config;
 }
@@ -70,7 +70,7 @@ export async function makeSwap(
   expiration: any,
   biding: NFT[],
   asking: NFT[],
-  chainId: number
+  chainId: number,
 ) {
   const timestamp = await getTimestamp(chainId);
   if (expiration < timestamp) {
@@ -85,7 +85,7 @@ export async function makeSwap(
     Contract,
     allowed,
     destinationChainSelector,
-    expiration
+    expiration,
   );
 
   const swap: Swap = {

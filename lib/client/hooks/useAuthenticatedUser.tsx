@@ -67,7 +67,7 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
     setAuthenticatedAccountAddress(
       accountAuthenticated && address
         ? new EthereumAddress(address.toLowerCase())
-        : null
+        : null,
     );
     setLoadingAuthenticatedUser(false);
   }, [nextAuthUser, isConnected, address]);

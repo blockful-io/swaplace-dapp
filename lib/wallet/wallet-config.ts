@@ -20,7 +20,7 @@ export const { chains, webSocketPublicClient, publicClient } = configureChains(
         http: getRpcHttpUrlForNetwork.get(chain.id) ?? "",
       }),
     }),
-  ]
+  ],
 );
 
 const connectorArgs = {

@@ -33,7 +33,7 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
     useContext(SwapContext);
 
   const [createOfferStatus, setCreateOfferStatus] = useState(
-    CreateOfferStatus.CREATE_OFFER
+    CreateOfferStatus.CREATE_OFFER,
   );
   const [transactionResult, displayTransactionResultModal] =
     useState<null | TransactionResult>(null);
@@ -96,7 +96,7 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
       //   });
     } else {
       throw new Error(
-        "Could not find a Swaplace contract for the current chain"
+        "Could not find a Swaplace contract for the current chain",
       );
     }
   };

@@ -13,16 +13,16 @@ export const useScreenSize = () => {
 
   const checkIfIsMobile = () => {
     setIsMobile(
-      window.matchMedia(`(max-width: ${TABLET_SCREEN_SIZE - 1}px)`).matches
+      window.matchMedia(`(max-width: ${TABLET_SCREEN_SIZE - 1}px)`).matches,
     );
     setIsTablet(
-      window.matchMedia(`(max-width: ${DESKTOP_SCREEN_SIZE - 1}px)`).matches
+      window.matchMedia(`(max-width: ${DESKTOP_SCREEN_SIZE - 1}px)`).matches,
     );
     setIsDesktop(
-      window.matchMedia(`(min-width: ${DESKTOP_SCREEN_SIZE}px)`).matches
+      window.matchMedia(`(min-width: ${DESKTOP_SCREEN_SIZE}px)`).matches,
     );
     setIsWideScreen(
-      window.matchMedia(`(min-width: ${WIDE_SCREEN_SIZE}px)`).matches
+      window.matchMedia(`(min-width: ${WIDE_SCREEN_SIZE}px)`).matches,
     );
   };
 

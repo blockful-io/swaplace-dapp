@@ -13,7 +13,7 @@ export const SwapStation = () => {
 
   useEffect(() => {
     setIsValidSwap(
-      !!nftAuthUser.length && !!nftInputUser.length && !!validatedAddressToSwap
+      !!nftAuthUser.length && !!nftInputUser.length && !!validatedAddressToSwap,
     );
   }, [nftAuthUser, nftInputUser, validatedAddressToSwap]);
 
@@ -34,7 +34,7 @@ export const SwapStation = () => {
 
       if (!nftInputUser.length) {
         toast.error(
-          "You must select at least one NFT from the destiny wallet to swap"
+          "You must select at least one NFT from the destiny wallet to swap",
         );
         return;
       }
