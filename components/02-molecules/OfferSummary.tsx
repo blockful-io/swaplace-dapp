@@ -6,6 +6,7 @@ import { ChainInfo } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import { PersonIcon } from "@/components/01-atoms/icons";
 import { NftCard } from "@/components/02-molecules";
+import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 
 interface IOfferSummary {
   forAuthedUser: boolean;
@@ -20,6 +21,8 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
   });
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
+  const emptySquaresAuthUser = EmptyNftsCards(nftAuthUser.length);
+  const emptySquaresInputUser = EmptyNftsCards(nftInputUser.length);
 
   return (
     <div className="w-full flex flex-col gap-4 px-3 pt-2 pb-4 dark:bg-[#212322] dark:border-[#434443] rounded-lg border">
@@ -58,21 +61,25 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
         )}
       </div>
 
-      <div className="w-full h-full min-h-[144px] bg-[#f8f8f8] dark:bg-[#393b3a] rounded p-4">
-        <div className="grid grid-cols-6 gap-3">
+      <div className="w-full h-full min-h-[144px]  rounded p-4">
+        <div className="w-full grid grid-cols-2 md:grid-cols-6  xl:grid-cols-4 gap-3 ">
           {(forAuthedUser && !authenticatedUserAddress?.address) ||
           (!forAuthedUser && !validatedAddressToSwap) ? null : (
-            <NftCard
-              withSelectionValidation={false}
-              ownerAddress={
-                forAuthedUser
-                  ? authenticatedUserAddress
-                    ? authenticatedUserAddress.address
-                    : null
-                  : validatedAddressToSwap
-              }
-              nftData={forAuthedUser ? nftAuthUser[0] : nftInputUser[0]}
-            />
+            <>
+              <NftCard
+                withSelectionValidation={false}
+                ownerAddress={
+                  forAuthedUser
+                    ? authenticatedUserAddress
+                      ? authenticatedUserAddress.address
+                      : null
+                    : validatedAddressToSwap
+                }
+                nftData={forAuthedUser ? nftAuthUser[0] : nftInputUser[0]}
+              />
+              {forAuthedUser && emptySquaresAuthUser}
+              {!forAuthedUser && emptySquaresInputUser}
+            </>
           )}
         </div>
       </div>
@@ -89,4 +96,27 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
       </div>
     </div>
   );
+};
+
+const EmptyNftsCards = (len: number) => {
+  const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
+
+  let totalSquares: number = 0;
+  isMobile
+    ? (totalSquares = 4)
+    : isWideScreen
+    ? (totalSquares = 8)
+    : isDesktop
+    ? (totalSquares = 12)
+    : isTablet && (totalSquares = 12);
+
+  const emptySquaresCount = Math.max(totalSquares - len, 0);
+
+  const emptySquares = Array.from({ length: emptySquaresCount }, (_, index) => (
+    <>
+      <div key={`empty-${index}`} className="card-nft" />
+    </>
+  ));
+
+  return emptySquares;
 };
