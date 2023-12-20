@@ -5,6 +5,13 @@ import { NftsShelf } from "@/components/03-organisms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork } from "wagmi";
 
+/**
+ * SwappingShelfs Component
+ *
+ * React component that display of nfts swapping shelves.
+ *
+ * @return The rendered SwappingShelfs component.
+ */
 export const SwappingShelfs = () => {
   const { chain } = useNetwork();
   const { authenticatedUserAddress } = useAuthenticatedUser();

@@ -44,7 +44,7 @@ export const SwapStation = () => {
   };
 
   return (
-    <div className="mx-auto w-[95%] xl:w-[500px] lg:w-[615px]  p-4  flex flex-col justify-between items-center gap-16 bg-[#f8f8f8] dark:bg-[#212322]  dark:border rounded-2xl dark:border-[#353836]">
+    <div className="mx-auto w-[95%] xl:w-[500px] lg:w-[615px]  p-4 flex flex-col justify-between items-center bg-[#f8f8f8] dark:bg-[#212322] xl:gap-0  gap-4  dark:border rounded-2xl dark:border-[#353836]">
       <div className="w-full flex flex-col justify-start ">
         <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7">
           Swap offer

@@ -100,7 +100,7 @@ export const NftCard = ({
       <button
         onClick={setNftAsActiveOne}
         className={cc([
-          "mx-auto w-24 h-24 md:h-28 md:w-28 relative rounded border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-none flex flex-col justify-center items-center",
+          "card-nft",
           {
             "border-green-500": currentNftIsSelected && withSelectionValidation,
           },
