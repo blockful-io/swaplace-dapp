@@ -44,7 +44,7 @@ export const SwappingIcons = () => {
     {
       id: SwappingIconsID.OFFERS,
       name: "Offers",
-      href: "/offers",
+      href: "/swap/offers",
       icon: (
         <OffersIcon
           className="w-5 h-5 "

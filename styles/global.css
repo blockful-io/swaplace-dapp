@@ -18,7 +18,11 @@ input[type="search"]::-webkit-search-results-decoration {
   .title-h1 {
   }
 
-  .title-h2 {
+  .title-h2-medium {
+    @apply font-onest font-medium text-[32px] leading-[40.8px] text-[#333333];
+  }
+  .title-h2-medium-dark {
+    @apply font-onest font-medium text-[32px] leading-[40.8px] text-[#F6F6F6];
   }
 
   .title-h3-normal {
@@ -27,6 +31,13 @@ input[type="search"]::-webkit-search-results-decoration {
 
   .title-h3-normal-dark {
     @apply font-onest font-normal text-[20px] leading-[25.5px] text-[#F6F6F6];
+  }
+
+  .p-medium-bold-2 {
+    @apply font-onest font-medium text-[16px] leading-[20px] text-[#707572];
+  }
+  .p-medium-bold-2-dark {
+    @apply font-onest font-medium text-[16px] leading-[20px] text-[#F6F6F6];
   }
 
   .p-medium-bold {

@@ -1,4 +1,5 @@
 export * from "./ConnectWallet";
+export * from "./StatusOffers";
 export * from "./SearchBar";
 export * from "./SelectAuthedUserChain";
 export * from "./SelectDestinyChain";
