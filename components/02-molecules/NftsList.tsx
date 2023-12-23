@@ -1,6 +1,6 @@
 import { INftsList, NFT } from "@/lib/client/constants";
 import { NftCard } from "@/components/02-molecules";
-import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
+import { EmptyNftsCards } from "@/components/01-atoms";
 
 /**
  *
@@ -12,7 +12,7 @@ import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
  */
 
 export const NftsList = ({ nftsList, ownerAddress }: INftsList) => {
-  const emptySquares = EmptyNftsCards(nftsList.length);
+  const emptySquares = EmptyNftsCards(nftsList.length, 15, 30, 30, 30);
   const nftSquares = nftsList.map((nft: NFT, index) => (
     <div key={`nft-${index}`}>
       <NftCard ownerAddress={ownerAddress} nftData={nft} />
@@ -26,28 +26,4 @@ export const NftsList = ({ nftsList, ownerAddress }: INftsList) => {
       {allSquares}
     </div>
   );
-};
-
-const EmptyNftsCards = (len: number) => {
-  const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
-
-  let totalSquares: number = 0;
-
-  isMobile
-    ? (totalSquares = 15)
-    : isWideScreen
-    ? (totalSquares = 30)
-    : isDesktop
-    ? (totalSquares = 30)
-    : isTablet && (totalSquares = 30);
-
-  const emptySquaresCount = Math.max(totalSquares - len, 0);
-
-  const emptySquares = Array.from({ length: emptySquaresCount }, (_, index) => (
-    <>
-      <div key={`empty-${index}`} className="card-nft" />
-    </>
-  ));
-
-  return emptySquares;
 };

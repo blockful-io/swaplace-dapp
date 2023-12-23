@@ -19,4 +19,5 @@ export const getTimestamp = async (chainId: number) => {
   const blockDetails = await provider.getBlock({ blockNumber: block });
 
   const timestamp = blockDetails.timestamp;
+  return timestamp;
 };
