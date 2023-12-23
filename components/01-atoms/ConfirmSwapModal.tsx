@@ -1,15 +1,12 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { makeSwap } from "@/lib/client/blockchain-data";
-import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
 import { useNetwork, useWalletClient } from "wagmi";
-import { getTimestamp } from "@/lib/client/utils";
-import { signTransaction } from "viem/actions";
-import toast from "react-hot-toast";
 import { SwapContext, TransactionResultModal } from "@/components/01-atoms";
 import { NftCard, NftCardActionType } from "@/components/02-molecules";
 import { SwapIcon } from "@/components/01-atoms/icons";
+import { creatingSwap } from "@/lib/service/creatingSwap";
+import { Swapping } from "@/lib/client/blockchain-data";
 
 interface ConfirmSwapModalProps {
   open: boolean;
@@ -29,7 +26,7 @@ export enum TransactionResult {
 
 export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { nftInputUser, nftAuthUser, validatedAddressToSwap, destinyChain } =
+  const { nftInputUser, nftAuthUser, validatedAddressToSwap, timeDate } =
     useContext(SwapContext);
 
   const [createOfferStatus, setCreateOfferStatus] = useState(
@@ -52,53 +49,23 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
     return null;
   }
 
-  const createOffer = async () => {
-    const swaplaceContractForCurrentChain =
-      chain && SWAPLACE_SMART_CONTRACT_ADDRESS[chain?.id];
-
-    if (swaplaceContractForCurrentChain && walletClient) {
-      const farFarInTheFuture = getTimestamp(chain.id);
-
-      setCreateOfferStatus(CreateOfferStatus.WAITING_WALLET_APPROVAL);
-      walletClient
-        .signMessage({
-          message: "Swaplace dApps wants to create a Swap Offer!",
-        })
-        .then(() => {
-          setCreateOfferStatus(CreateOfferStatus.CREATE_OFFER);
-          displayTransactionResultModal(TransactionResult.LOADING);
-          setTimeout(() => {
-            displayTransactionResultModal(TransactionResult.SUCCESS);
-          }, 10000);
-        })
-        .catch((error) => {
-          toast.error("Message signature failed");
-          setCreateOfferStatus(CreateOfferStatus.CREATE_OFFER);
-          displayTransactionResultModal(TransactionResult.FAILURE);
-          console.error(error);
-        });
-
-      // makeSwap(
-      //   swaplaceContractForCurrentChain,
-      //   authenticatedUserAddress.address,
-      //   validatedAddressToSwap,
-      //   destinyChain,
-      //   farFarInTheFuture,
-      //   nftAuthUser,
-      //   nftInputUser,
-      //   chain.id
-      // )
-      //   .then((data) => {
-      //     console.log("data", data);
-      //   })
-      //   .catch((error) => {
-      //     console.log("error", error);
-      //   });
-    } else {
-      throw new Error(
-        "Could not find a Swaplace contract for the current chain",
-      );
+  let chainId: number;
+  const handleOffer = () => {
+    if (typeof chain?.id != "undefined") {
+      chainId = chain?.id;
     }
+
+    const swapData: Swapping = {
+      walletClient: walletClient,
+      expireDate: timeDate,
+      nftInputUser: nftInputUser[0],
+      nftAuthUser: nftAuthUser[0],
+      validatedAddressToSwap: validatedAddressToSwap,
+      authenticatedUserAddress: authenticatedUserAddress,
+      chain: chainId,
+    };
+
+    return creatingSwap(swapData);
   };
 
   return (
@@ -128,11 +95,9 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
         >
           <Dialog.Panel className={"p-6 flex flex-col min-w-[350px]"}>
             <Dialog.Title className={"text-white text-xl font-bold"}>
-              Confirm Swap Offer creation
+              Confirm Swap creation
             </Dialog.Title>
-            <Dialog.Description className={"text-white text-base mt-2"}>
-              Please confirm the data below is correct:
-            </Dialog.Description>
+
             <div className="flex justify-between items-center">
               <div className="flex flex-col my-8 space-y-3">
                 <div className="text-white text-sm">You are offering</div>
@@ -164,17 +129,17 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
             </Dialog.Description>
 
             <Dialog.Description className={"text-white text-base mt-2"}>
-              Are you sure you want to create this Swap Offer?
+              Are you sure you want to create this Swap?
             </Dialog.Description>
             <button
-              onClick={createOffer}
+              onClick={handleOffer}
               className="mt-4 rounded w-full disabled:bg-gray-100 bg-green-400 border-green-500 disabled:border-gray-200 border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:text-gray-300 text-green-900"
             >
               {createOfferStatus ===
               CreateOfferStatus.WAITING_WALLET_APPROVAL ? (
                 <p>Waiting wallet action...</p>
               ) : createOfferStatus === CreateOfferStatus.CREATE_OFFER ? (
-                <p>Create offer</p>
+                <p>Create Swap</p>
               ) : null}
             </button>
           </Dialog.Panel>

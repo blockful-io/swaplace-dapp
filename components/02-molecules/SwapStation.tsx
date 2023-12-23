@@ -4,6 +4,7 @@ import { PaperPlane } from "@/components/01-atoms/icons";
 import { OfferSummary } from "@/components/02-molecules";
 import cc from "classcat";
 import toast from "react-hot-toast";
+import { SwapExpireTime } from "@/components/01-atoms/SwapExpireTime";
 
 export const SwapStation = () => {
   const [isValidSwap, setIsValidSwap] = useState<boolean>(false);
@@ -46,9 +47,16 @@ export const SwapStation = () => {
   return (
     <div className="mx-auto w-[95%] xl:w-[500px] lg:w-[615px]  p-4 flex flex-col justify-between items-center bg-[#f8f8f8] dark:bg-[#212322] xl:gap-0  gap-4  dark:border rounded-2xl dark:border-[#353836]">
       <div className="w-full flex flex-col justify-start ">
-        <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7">
-          Swap offer
-        </h3>
+        <div className="flex justify-between">
+          <div>
+            <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7">
+              Swap offer
+            </h3>
+          </div>
+          <div>
+            <SwapExpireTime />
+          </div>
+        </div>
         <div className="flex flex-col gap-4">
           <OfferSummary forAuthedUser={true} />
           <OfferSummary forAuthedUser={false} />

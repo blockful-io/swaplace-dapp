@@ -6,7 +6,7 @@ import { ChainInfo } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import { PersonIcon } from "@/components/01-atoms/icons";
 import { NftCard } from "@/components/02-molecules";
-import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
+import { EmptyNftsCards } from "@/components/01-atoms";
 
 interface IOfferSummary {
   forAuthedUser: boolean;
@@ -21,8 +21,14 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
   });
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const emptySquaresAuthUser = EmptyNftsCards(nftAuthUser.length);
-  const emptySquaresInputUser = EmptyNftsCards(nftInputUser.length);
+  const emptySquaresAuthUser = EmptyNftsCards(nftAuthUser.length, 4, 8, 12, 12);
+  const emptySquaresInputUser = EmptyNftsCards(
+    nftInputUser.length,
+    4,
+    8,
+    12,
+    12,
+  );
 
   return (
     <div className="w-full flex flex-col gap-4 px-3 pt-2 pb-4 dark:bg-[#212322] dark:border-[#434443] rounded-lg border">
@@ -96,27 +102,4 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
       </div>
     </div>
   );
-};
-
-const EmptyNftsCards = (len: number) => {
-  const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
-
-  let totalSquares: number = 0;
-  isMobile
-    ? (totalSquares = 4)
-    : isWideScreen
-    ? (totalSquares = 8)
-    : isDesktop
-    ? (totalSquares = 12)
-    : isTablet && (totalSquares = 12);
-
-  const emptySquaresCount = Math.max(totalSquares - len, 0);
-
-  const emptySquares = Array.from({ length: emptySquaresCount }, (_, index) => (
-    <>
-      <div key={`empty-${index}`} className="card-nft" />
-    </>
-  ));
-
-  return emptySquares;
 };

@@ -19,6 +19,8 @@ interface SwapContextProps {
   nftInputUser: NFT[];
   destinyChain: SupportedNetworks;
   setDestinyChain: Dispatch<React.SetStateAction<SupportedNetworks>>;
+  setTimeDate: Dispatch<React.SetStateAction<bigint>>;
+  timeDate: bigint;
 }
 
 export const SwapContext = React.createContext<SwapContextProps>({
@@ -37,6 +39,8 @@ export const SwapContext = React.createContext<SwapContextProps>({
   nftInputUser: [],
   destinyChain: SupportedNetworks.SEPOLIA,
   setDestinyChain: () => {},
+  setTimeDate: () => {},
+  timeDate: BigInt(1),
 });
 
 export const SwapContextProvider = ({ children }: any) => {
@@ -48,6 +52,7 @@ export const SwapContextProvider = ({ children }: any) => {
   const [destinyChain, setDestinyChain] = useState<SupportedNetworks>(
     SupportedNetworks.SEPOLIA,
   );
+  const [timeDate, setTimeDate] = useState<bigint>(BigInt(1));
 
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
@@ -121,6 +126,8 @@ export const SwapContextProvider = ({ children }: any) => {
       nftInputUser,
       destinyChain,
       setDestinyChain,
+      setTimeDate,
+      timeDate,
     });
   }, [
     inputAddress,
@@ -129,6 +136,7 @@ export const SwapContextProvider = ({ children }: any) => {
     nftAuthUser,
     nftInputUser,
     destinyChain,
+    timeDate,
   ]);
 
   const [swapData, setSwapData] = useState<SwapContextProps>({
@@ -144,6 +152,8 @@ export const SwapContextProvider = ({ children }: any) => {
     nftInputUser,
     destinyChain,
     setDestinyChain,
+    setTimeDate,
+    timeDate,
   });
 
   return (
