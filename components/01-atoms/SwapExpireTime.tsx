@@ -40,7 +40,7 @@ export const SwapExpireTime = () => {
   return (
     <div className="flex">
       <div className="flex xl:h-[36px] rounded-lg border border-[#353836]">
-        <div className="dark:bg-[#353836] flex  justify-center items-center xl:p-3 ">
+        <div className="dark:bg-[#353836] flex justify-center items-center xl:p-3 dark:p-small-dark p-small">
           Expires in
         </div>
         <div className="flex justify-center items-center">
@@ -48,13 +48,13 @@ export const SwapExpireTime = () => {
             <select
               value={selectedOption}
               onChange={handleSelectChange}
-              className="bg-inherit "
+              className="bg-inherit dark:p-small-dark p-small  "
             >
               {ExpireDate.map((option, index) => (
                 <option
                   key={index}
                   value={option.value}
-                  className="dark:text-black"
+                  className="dark:text-black font-onest font-normal text-[14px] leading-[20px] "
                 >
                   {option.label}
                 </option>

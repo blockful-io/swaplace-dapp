@@ -30,6 +30,8 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
     12,
   );
 
+  const nftUser = forAuthedUser ? nftAuthUser : nftInputUser;
+
   return (
     <div className="w-full flex flex-col gap-4 px-3 pt-2 pb-4 dark:bg-[#212322] dark:border-[#434443] rounded-lg border">
       <div className="flex justify-between items-center h-9 gap-2">
@@ -55,14 +57,8 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
         </div>
         {!forAuthedUser && !validatedAddressToSwap ? null : (
           <div>
-            {forAuthedUser ? nftAuthUser.length : nftInputUser.length} item
-            {forAuthedUser
-              ? nftAuthUser.length !== 1
-                ? "s"
-                : ""
-              : nftInputUser.length !== 1
-              ? "s"
-              : ""}
+            {nftUser.length} item
+            {nftUser.length !== 1 ? "s" : ""}
           </div>
         )}
       </div>
@@ -72,33 +68,26 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
           {(forAuthedUser && !authenticatedUserAddress?.address) ||
           (!forAuthedUser && !validatedAddressToSwap) ? null : (
             <>
-              <NftCard
-                withSelectionValidation={false}
-                ownerAddress={
-                  forAuthedUser
-                    ? authenticatedUserAddress
-                      ? authenticatedUserAddress.address
-                      : null
-                    : validatedAddressToSwap
-                }
-                nftData={forAuthedUser ? nftAuthUser[0] : nftInputUser[0]}
-              />
+              {nftUser.map((nft, index) => (
+                <NftCard
+                  key={index}
+                  withSelectionValidation={false}
+                  ownerAddress={
+                    forAuthedUser
+                      ? authenticatedUserAddress
+                        ? authenticatedUserAddress.address
+                        : null
+                      : validatedAddressToSwap
+                  }
+                  nftData={nft}
+                />
+              ))}
+
               {forAuthedUser && emptySquaresAuthUser}
               {!forAuthedUser && emptySquaresInputUser}
             </>
           )}
         </div>
-      </div>
-
-      <div className="ml-auto flex space-x-1 mr-1 text-gray-700 dark:text-[#f6f6f6] font-medium text-sm">
-        <p>from</p>
-        <p>
-          {forAuthedUser ? (
-            <>{chain?.name}</>
-          ) : (
-            <>{ChainInfo[destinyChain].name}</>
-          )}
-        </p>
       </div>
     </div>
   );

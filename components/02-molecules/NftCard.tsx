@@ -39,24 +39,39 @@ export const NftCard = ({
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { setNftAuthUser, setNftInputUser, nftAuthUser, nftInputUser } =
     useContext(SwapContext);
+  const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
 
   const setNftAsActiveOne = () => {
     if (onClickAction === NftCardActionType.SELECT_NFT_FOR_SWAP) {
       const ownerEthAddress = new EthereumAddress(ownerAddress);
 
       if (authenticatedUserAddress?.equals(ownerEthAddress)) {
-        if (nftAuthUser.length) {
-          if (nftAuthUser[0].id === nftData.id) setNftAuthUser([]);
-          else setNftAuthUser([nftData]);
+        const isSelected = nftAuthUser.some(
+          (selectedNft) => selectedNft.id === nftData.id,
+        );
+
+        if (isSelected) {
+          setNftAuthUser((prevNftAuthUser) =>
+            prevNftAuthUser.filter(
+              (selectedNft) => selectedNft.id !== nftData.id,
+            ),
+          );
         } else {
-          setNftAuthUser([nftData]);
+          setNftAuthUser((prevNftAuthUser) => [...prevNftAuthUser, nftData]);
         }
       } else {
-        if (nftInputUser.length) {
-          if (nftInputUser[0].id === nftData.id) setNftInputUser([]);
-          else setNftInputUser([nftData]);
+        const isSelected = nftInputUser.some(
+          (selectedNft) => selectedNft.id === nftData.id,
+        );
+
+        if (isSelected) {
+          setNftInputUser((prevNftInputUser) =>
+            prevNftInputUser.filter(
+              (selectedNft) => selectedNft.id !== nftData.id,
+            ),
+          );
         } else {
-          setNftInputUser([nftData]);
+          setNftInputUser((prevNftInputUser) => [...prevNftInputUser, nftData]);
         }
       }
     } else if (onClickAction === NftCardActionType.SHOW_NFT_DETAILS) {
@@ -65,26 +80,27 @@ export const NftCard = ({
     }
   };
 
-  const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
   useEffect(() => {
     const currentNftIsFromAuthedUser = authenticatedUserAddress?.equals(
       new EthereumAddress(ownerAddress),
     );
 
     if (currentNftIsFromAuthedUser) {
-      if (nftAuthUser.length) {
-        setCurrentNftIsSelected(nftAuthUser[0].id === nftData.id);
-      } else {
-        setCurrentNftIsSelected(false);
-      }
+      setCurrentNftIsSelected(
+        nftAuthUser.some((selectedNft) => selectedNft.id === nftData.id),
+      );
     } else {
-      if (nftInputUser.length) {
-        setCurrentNftIsSelected(nftInputUser[0].id === nftData.id);
-      } else {
-        setCurrentNftIsSelected(false);
-      }
+      setCurrentNftIsSelected(
+        nftInputUser.some((selectedNft) => selectedNft.id === nftData.id),
+      );
     }
-  }, [authenticatedUserAddress, ownerAddress, nftAuthUser, nftInputUser]);
+  }, [
+    authenticatedUserAddress,
+    ownerAddress,
+    nftAuthUser,
+    nftInputUser,
+    nftData,
+  ]);
 
   const [couldntLoadNftImage, setCouldntLoadNftImage] = useState(false);
   const handleImageLoadError = () => {
@@ -107,7 +123,7 @@ export const NftCard = ({
         ])}
       >
         {currentNftIsSelected && withSelectionValidation && (
-          <div className="absolute left-0 top-0 w-full h-full bg-green-500 opacity-50 z-20"></div>
+          <div className="absolute left-0 top-0 w-full h-full bg-green-500 rounded-xl opacity-50 z-20"></div>
         )}
         {children}
       </button>
@@ -121,7 +137,7 @@ export const NftCard = ({
           onError={handleImageLoadError}
           src={nftData.metadata?.image}
           alt={nftData.metadata?.name}
-          className="static z-10 w-full overflow-y-auto"
+          className="static z-10 w-full overflow-y-auto rounded-xl"
         />,
       )}
     </>

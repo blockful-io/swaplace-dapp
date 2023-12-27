@@ -1,15 +1,47 @@
 import { Dispatch, SetStateAction } from "react";
 import { NFT, NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
 import { getTimestamp } from "./utils";
+import { hexToNumber } from "viem";
 
-export interface Swapping {
+export interface ICreateSwap {
   walletClient: any;
   expireDate: bigint;
-  nftInputUser: any;
-  nftAuthUser: any;
+  nftInputUser: any[];
+  nftAuthUser: any[];
   validatedAddressToSwap: string;
   authenticatedUserAddress: any;
   chain: number;
+}
+
+export interface NftAddrAmount {
+  addr: `0x${string}`;
+  amountOrId: bigint;
+}
+
+export function ComposeNftSwap(nftUser: NFT[]): NftAddrAmount[] {
+  let nftTokenContractArray: NftAddrAmount[] = [];
+
+  for (let i = 0; i < nftUser.length; i += 2) {
+    const amountOrId = BigInt(hexToNumber(nftUser[i]?.id?.tokenId));
+    const addr = nftUser[i]?.contract?.address as `0x${string}`;
+    if (amountOrId !== undefined && addr !== undefined) {
+      nftTokenContractArray.push({ addr, amountOrId });
+    }
+
+    if (i + 1 < nftUser.length) {
+      const nextAmountOrId = BigInt(hexToNumber(nftUser[i + 1]?.id?.tokenId));
+      const nextAddr = nftUser[i + 1]?.contract?.address as `0x${string}`;
+
+      if (nextAmountOrId !== undefined && nextAddr !== undefined) {
+        nftTokenContractArray.push({
+          addr: nextAddr,
+          amountOrId: nextAmountOrId,
+        });
+      }
+    }
+  }
+
+  return nftTokenContractArray;
 }
 
 export const getNftsFrom = async (
@@ -32,7 +64,6 @@ export const getNftsFrom = async (
   return fetch(url, requestOptions)
     .then(async (response) => {
       const data = await response.json();
-      console.log(data);
 
       if (!data.ownedNfts.length) {
         stateSetter(NFTsQueryStatus.NO_RESULTS);

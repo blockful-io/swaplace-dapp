@@ -32,7 +32,7 @@ export const SwaplaceAbi = [
       {
         indexed: true,
         internalType: "uint256",
-        name: "id",
+        name: "swapId",
         type: "uint256",
       },
       {
@@ -51,7 +51,7 @@ export const SwaplaceAbi = [
       {
         indexed: true,
         internalType: "uint256",
-        name: "id",
+        name: "swapId",
         type: "uint256",
       },
       {
@@ -70,7 +70,7 @@ export const SwaplaceAbi = [
       {
         indexed: true,
         internalType: "uint256",
-        name: "id",
+        name: "swapId",
         type: "uint256",
       },
       {
@@ -93,7 +93,7 @@ export const SwaplaceAbi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "id",
+        name: "swapId",
         type: "uint256",
       },
     ],
@@ -112,7 +112,7 @@ export const SwaplaceAbi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "id",
+        name: "swapId",
         type: "uint256",
       },
     ],
@@ -195,7 +195,7 @@ export const SwaplaceAbi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "id",
+        name: "swapId",
         type: "uint256",
       },
     ],
@@ -441,6 +441,27 @@ export const SwaplaceAbi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+] as const;
+
+export const Erc721SwaplaceAbi = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "approve",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ] as const;
