@@ -6,7 +6,7 @@ import { SwapContext, TransactionResultModal } from "@/components/01-atoms";
 import { NftCard, NftCardActionType } from "@/components/02-molecules";
 import { SwapIcon } from "@/components/01-atoms/icons";
 import { creatingSwap } from "@/lib/service/creatingSwap";
-import { Swapping } from "@/lib/client/blockchain-data";
+import { ComposeNftSwap, ICreateSwap } from "@/lib/client/blockchain-data";
 
 interface ConfirmSwapModalProps {
   open: boolean;
@@ -49,23 +49,30 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
     return null;
   }
 
+  const nftsInputUser = ComposeNftSwap(nftInputUser);
+  const nftsAuthUser = ComposeNftSwap(nftAuthUser);
+
   let chainId: number;
   const handleOffer = () => {
     if (typeof chain?.id != "undefined") {
       chainId = chain?.id;
     }
 
-    const swapData: Swapping = {
+    const swapData: ICreateSwap = {
       walletClient: walletClient,
       expireDate: timeDate,
-      nftInputUser: nftInputUser[0],
-      nftAuthUser: nftAuthUser[0],
+      nftInputUser: nftsInputUser,
+      nftAuthUser: nftsAuthUser,
       validatedAddressToSwap: validatedAddressToSwap,
       authenticatedUserAddress: authenticatedUserAddress,
       chain: chainId,
     };
 
-    return creatingSwap(swapData);
+    try {
+      creatingSwap(swapData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

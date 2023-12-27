@@ -1,11 +1,7 @@
 import cc from "classcat";
 import { useContext, useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@/components/01-atoms/icons";
-import {
-  SelectAuthedUserChain,
-  SelectDestinyChain,
-  SwapContext,
-} from "@/components/01-atoms";
+import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { ENS } from "web3-eth-ens";
 import Web3 from "web3";
@@ -128,21 +124,6 @@ export const SearchBar = () => {
                 ])}
               />
             </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full z-40 flex items-center justify-between py-1 ">
-        <div className="flex flex-col space-y-2">
-          <p className="p-medium dark:p-medium-dark ">Your network:</p>
-          <SelectAuthedUserChain />
-        </div>
-        <div className="flex flex-col space-y-2">
-          <p className="p-medium dark:p-medium-dark">
-            Searched address network:
-          </p>
-          <div className="ml-auto">
-            <SelectDestinyChain />
           </div>
         </div>
       </div>
