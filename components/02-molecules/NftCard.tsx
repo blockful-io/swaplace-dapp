@@ -25,6 +25,7 @@ interface INftCard {
 export enum NftCardActionType {
   "SELECT_NFT_FOR_SWAP",
   "SHOW_NFT_DETAILS",
+  "NFT_ONCLICK",
 }
 
 export const NftCard = ({
@@ -77,6 +78,8 @@ export const NftCard = ({
     } else if (onClickAction === NftCardActionType.SHOW_NFT_DETAILS) {
       navigator.clipboard.writeText(JSON.stringify(nftData));
       toast.success("NFT data copied to your clipboard");
+    } else if (onClickAction === NftCardActionType.NFT_ONCLICK) {
+      () => {};
     }
   };
 
@@ -154,6 +157,14 @@ export const NftCard = ({
       {ButtonLayout(
         <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll">
           {nftData.metadata?.name}
+        </div>,
+      )}
+    </>
+  ) : nftData.contractMetadata?.name && nftData.id.tokenId ? (
+    <>
+      {ButtonLayout(
+        <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll ">
+          {nftData.contractMetadata?.name}
         </div>,
       )}
     </>

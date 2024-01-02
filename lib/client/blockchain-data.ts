@@ -13,13 +13,35 @@ export interface ICreateSwap {
   chain: number;
 }
 
-export interface NftAddrAmount {
+export interface IApproveSwap {
+  walletClient: any;
+  chain: number;
+  spender: any;
+  amountOrId: bigint;
+  nftUser: any;
+}
+
+export interface INftAddressAmount {
   addr: `0x${string}`;
   amountOrId: bigint;
 }
 
-export function ComposeNftSwap(nftUser: NFT[]): NftAddrAmount[] {
-  let nftTokenContractArray: NftAddrAmount[] = [];
+export enum CreateApprovalStatus {
+  "CREATE_APPROVAL" = "CREATE_APPROVAL",
+  "WAITING_WALLET_APPROVAL" = "WAITING_WALLET_APPROVAL",
+  "WALLET_APPROVED" = "WALLET_APPROVED",
+}
+
+export enum CreateSwapStatus {
+  "CREATE_SWAP" = "CREATE_SWAP",
+  "WAITING_WALLET_APPROVAL" = "WAITING_WALLET_APPROVAL",
+  "WALLET_APPROVED" = "WALLET_APPROVED",
+}
+
+export type NftAddressAmount = [`0x${string}`, bigint];
+
+export function ComposeNftSwap(nftUser: NFT[]): INftAddressAmount[] {
+  let nftTokenContractArray: INftAddressAmount[] = [];
 
   for (let i = 0; i < nftUser.length; i += 2) {
     const amountOrId = BigInt(hexToNumber(nftUser[i]?.id?.tokenId));
@@ -37,6 +59,29 @@ export function ComposeNftSwap(nftUser: NFT[]): NftAddrAmount[] {
           addr: nextAddr,
           amountOrId: nextAmountOrId,
         });
+      }
+    }
+  }
+
+  return nftTokenContractArray;
+}
+
+export function ComposeNftApproval(nftUser: NFT[]): NftAddressAmount[] {
+  let nftTokenContractArray: NftAddressAmount[] = [];
+
+  for (let i = 0; i < nftUser.length; i += 2) {
+    const amountOrId = BigInt(hexToNumber(nftUser[i]?.id?.tokenId));
+    const addr = nftUser[i]?.contract?.address as `0x${string}`;
+    if (amountOrId !== undefined && addr !== undefined) {
+      nftTokenContractArray.push([addr, amountOrId]);
+    }
+
+    if (i + 1 < nftUser.length) {
+      const nextAmountOrId = BigInt(hexToNumber(nftUser[i + 1]?.id?.tokenId));
+      const nextAddr = nftUser[i + 1]?.contract?.address as `0x${string}`;
+
+      if (nextAmountOrId !== undefined && nextAddr !== undefined) {
+        nftTokenContractArray.push([nextAddr, nextAmountOrId]);
       }
     }
   }

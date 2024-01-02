@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { ConfirmSwapModal, SwapContext } from "@/components/01-atoms";
+import {
+  ConfirmSwapModal,
+  SwapContext,
+  SwapExpireTime,
+} from "@/components/01-atoms";
 import { PaperPlane } from "@/components/01-atoms/icons";
 import { OfferSummary } from "@/components/02-molecules";
 import cc from "classcat";
 import toast from "react-hot-toast";
-import { SwapExpireTime } from "@/components/01-atoms/SwapExpireTime";
 
 export const SwapStation = () => {
   const [isValidSwap, setIsValidSwap] = useState<boolean>(false);

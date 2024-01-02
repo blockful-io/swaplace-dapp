@@ -8,6 +8,7 @@ export interface NFT {
   id?: Record<string, any>;
   metadata?: Record<string, any>;
   contract?: Record<string, any>;
+  contractMetadata?: Record<string, any>;
 }
 
 export interface INftsList {
@@ -60,6 +61,10 @@ export const SWAPLACE_SMART_CONTRACT_ADDRESS = {
   [ChainInfo.SEPOLIA.id]: "0xD8E3580C1b6f117c5b35DdD01dd9e50d9487501D",
   [ChainInfo.MUMBAI.id]: "0xcB003ed4Df4679D15b8863BB8F7609855A6a380d",
 };
+
+//SEPOLIA MOCKS
+export const MOCKERC721 = "0x83dB434Db5014e24AdF5962457334122F1d4ab13";
+export const MOCKERC20 = "0x31a59e0f7fD0724545fCD912bcC2c5A1debddd0C";
 
 export enum TimeStampDate {
   ONE_DAY = 24 * 60 * 60 * 1000,
