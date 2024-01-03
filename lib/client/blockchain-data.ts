@@ -13,6 +13,16 @@ export interface ICreateSwap {
   chain: number;
 }
 
+export interface IApproveMulticall {
+  abi: any;
+  functionName: string;
+  address: `0x${string}`;
+  args?: [any];
+}
+export interface IGetApproveSwap {
+  tokenAddress: `0x${string}`;
+  amountOrId: bigint;
+}
 export interface IApproveSwap {
   walletClient: any;
   chain: number;
