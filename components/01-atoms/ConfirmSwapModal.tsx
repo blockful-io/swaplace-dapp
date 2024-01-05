@@ -45,9 +45,9 @@ export const ConfirmSwapModal = ({
     validatedAddressToSwap,
     timeDate,
     allSelectedNftsAproved,
-    allTokenApprovalStatus,
-    setAllTokenApprovalStatus,
-    setAllSelectedNftsAproved,
+    authedUserSelectedNftsApprovalStatus,
+    setAuthedUserNftsApprovalStatus,
+    setAllSelectedNftsAreApproved,
   } = useContext(SwapContext);
   const [createApprovalStatus, setCreateApprovalStatus] = useState(
     CreateApprovalStatus.CREATE_APPROVAL,
@@ -61,7 +61,7 @@ export const ConfirmSwapModal = ({
   const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
 
-  const { handleApprovedMulticall } = useSwaplace();
+  const { updateNftsToSwapApprovalStatus } = useSwaplace();
 
   useEffect(() => {
     if (!open) {
@@ -76,7 +76,7 @@ export const ConfirmSwapModal = ({
     }
 
     const fetchApprove = async () => {
-      await handleApprovedMulticall();
+      await updateNftsToSwapApprovalStatus();
     };
     fetchApprove();
   }, [nftAuthUser, allSelectedNftsAproved]);
@@ -154,7 +154,33 @@ export const ConfirmSwapModal = ({
     const isValidApproved = !arraynftApproval.some(
       (approved) => approved === ADDRESS_ZERO,
     );
-    setAllSelectedNftsAproved(isValidApproved);
+    setAllSelectedNftsAreApproved(isValidApproved);
+  };
+
+  const approveNftForSwapping = async (nft: NFT, index: number) => {
+    // Each token that is not yet approved is set as an ADDRESS_ZERO
+    // inside the authedUserSelectedNftsApprovalStatus state.
+    if (
+      authedUserSelectedNftsApprovalStatus[index]?.approved !== ADDRESS_ZERO
+    ) {
+      toast.error("Token already approved.");
+    }
+
+    await handleApprove(nft)
+      .then(() => {
+        setAuthedUserNftsApprovalStatus(
+          (authedUserSelectedNftsApprovalStatus[index].approved =
+            nft.contract?.address),
+        );
+        validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
+      })
+      .catch(() => {
+        setAuthedUserNftsApprovalStatus(
+          (authedUserSelectedNftsApprovalStatus[index].approved =
+            ADDRESS_ZERO as any),
+        );
+        validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
+      });
   };
 
   return (
@@ -198,35 +224,19 @@ export const ConfirmSwapModal = ({
                     className={cc([
                       "flex justify-center items-center",
                       allSelectedNftsAproved && "bg-green-500 z-20 rounded-xl",
-                      allTokenApprovalStatus[index]?.approved === ADDRESS_ZERO
+                      authedUserSelectedNftsApprovalStatus[index]?.approved ===
+                      ADDRESS_ZERO
                         ? "bg-red-500 z-20 rounded-xl"
                         : "bg-green-500 z-20 rounded-xl",
                     ])}
                   >
                     <div
                       role="button"
-                      onClick={async () => {
-                        allTokenApprovalStatus[index]?.approved === ADDRESS_ZERO
-                          ? await handleApprove(nft)
-                              .then(() => {
-                                setAllTokenApprovalStatus(
-                                  (allTokenApprovalStatus[index].approved =
-                                    nft.contract?.address),
-                                );
-                                validateApprovalTokens(allTokenApprovalStatus);
-                              })
-                              .catch(() => {
-                                setAllTokenApprovalStatus(
-                                  (allTokenApprovalStatus[index].approved =
-                                    ADDRESS_ZERO as any),
-                                );
-                                validateApprovalTokens(allTokenApprovalStatus);
-                              })
-                          : toast.error("Token already approved.");
-                      }}
+                      onClick={() => approveNftForSwapping(nft, index)}
                       className={cc([
                         allSelectedNftsAproved && "opacity-30",
-                        allTokenApprovalStatus[index]?.approved === ADDRESS_ZERO
+                        authedUserSelectedNftsApprovalStatus[index]
+                          ?.approved === ADDRESS_ZERO
                           ? "opacity-30"
                           : "opacity-30",
                       ])}

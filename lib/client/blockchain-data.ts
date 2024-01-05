@@ -31,7 +31,7 @@ export interface IApproveSwap {
   nftUser: any;
 }
 
-export interface INftAddressAmount {
+export interface INftSwappingInfo {
   addr: `0x${string}`;
   amountOrId: bigint;
 }
@@ -48,10 +48,13 @@ export enum CreateSwapStatus {
   "WALLET_APPROVED" = "WALLET_APPROVED",
 }
 
-export type NftAddressAmount = [`0x${string}`, bigint];
+export type NftSwappingInfo = {
+  tokenAddress: `0x${string}`;
+  amountOrId: bigint;
+};
 
-export function ComposeNftSwap(nftUser: NFT[]): INftAddressAmount[] {
-  let nftTokenContractArray: INftAddressAmount[] = [];
+export function ComposeNftSwap(nftUser: NFT[]): INftSwappingInfo[] {
+  let nftTokenContractArray: INftSwappingInfo[] = [];
 
   for (let i = 0; i < nftUser.length; i += 2) {
     const amountOrId = BigInt(hexToNumber(nftUser[i]?.id?.tokenId));
@@ -76,27 +79,31 @@ export function ComposeNftSwap(nftUser: NFT[]): INftAddressAmount[] {
   return nftTokenContractArray;
 }
 
-export function ComposeNftApproval(nftUser: NFT[]): NftAddressAmount[] {
-  let nftTokenContractArray: NftAddressAmount[] = [];
+export function getNftsInfoToSwap(userNfts: NFT[]): NftSwappingInfo[] {
+  let nftsInfoArray: NftSwappingInfo[] = [];
 
-  for (let i = 0; i < nftUser.length; i += 2) {
-    const amountOrId = BigInt(hexToNumber(nftUser[i]?.id?.tokenId));
-    const addr = nftUser[i]?.contract?.address as `0x${string}`;
-    if (amountOrId !== undefined && addr !== undefined) {
-      nftTokenContractArray.push([addr, amountOrId]);
+  for (let i = 0; i < userNfts.length; i++) {
+    const nftAmountOrTokenId = BigInt(hexToNumber(userNfts[i]?.id?.tokenId));
+    const nftContractAddress = userNfts[i]?.contract?.address as `0x${string}`;
+
+    if (nftAmountOrTokenId !== undefined && nftContractAddress !== undefined) {
+      nftsInfoArray.push({
+        tokenAddress: nftContractAddress,
+        amountOrId: nftAmountOrTokenId,
+      });
     }
 
-    if (i + 1 < nftUser.length) {
-      const nextAmountOrId = BigInt(hexToNumber(nftUser[i + 1]?.id?.tokenId));
-      const nextAddr = nftUser[i + 1]?.contract?.address as `0x${string}`;
+    // if (i + 1 < userNfts.length) {
+    //   const nextAmountOrId = BigInt(hexToNumber(userNfts[i + 1]?.id?.tokenId));
+    //   const nextAddr = userNfts[i + 1]?.contract?.address as `0x${string}`;
 
-      if (nextAmountOrId !== undefined && nextAddr !== undefined) {
-        nftTokenContractArray.push([nextAddr, nextAmountOrId]);
-      }
-    }
+    //   if (nextAmountOrId !== undefined && nextAddr !== undefined) {
+    //     nftsInfoArray.push([nextAddr, nextAmountOrId]);
+    //   }
+    // }
   }
 
-  return nftTokenContractArray;
+  return nftsInfoArray;
 }
 
 export const getNftsFrom = async (
@@ -190,19 +197,6 @@ export async function makeSwap(
   };
 
   return swap;
-}
-
-export function createArrayApproved(nftsAuthUserApproval: NftAddressAmount[]) {
-  const nftsApprove = [];
-  for (let i = 0; i < nftsAuthUserApproval.length; i++) {
-    const approveSwapData: IGetApproveSwap = {
-      tokenAddress: nftsAuthUserApproval[i][0],
-      amountOrId: nftsAuthUserApproval[i][1],
-    };
-    nftsApprove.push(approveSwapData);
-  }
-
-  return nftsApprove;
 }
 
 export interface IArrayStatusTokenApproved {

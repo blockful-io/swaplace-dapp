@@ -17,7 +17,9 @@ export async function getApprovedSwap({ nftUser, amountOrId }: IApproveSwap) {
   return data;
 }
 
-export async function getApprovedSwapMulticall(nftsApprove: IGetApproveSwap[]) {
+export async function getMultipleNftsApprovalStatus(
+  nftsApprove: IGetApproveSwap[],
+) {
   const approvedCall: IApproveMulticall[] = nftsApprove.map((data) => ({
     abi: MockERC721Abi,
     functionName: "getApproved",
@@ -29,5 +31,6 @@ export async function getApprovedSwapMulticall(nftsApprove: IGetApproveSwap[]) {
     contracts: approvedCall,
     allowFailure: false,
   });
+
   return approvedTokens;
 }

@@ -1,37 +1,42 @@
-import { getApprovedSwapMulticall } from "@/lib/service/getApproveSwap";
+import { getMultipleNftsApprovalStatus } from "@/lib/service/getApproveSwap";
 import { useContext } from "react";
 import { ADDRESS_ZERO } from "../constants";
 import { SwapContext } from "@/components/01-atoms";
-import { ComposeNftApproval, createArrayApproved } from "../blockchain-data";
+import { getNftsInfoToSwap } from "../blockchain-data";
 
 export const useSwaplace = () => {
-  const { nftAuthUser, setAllSelectedNftsAproved, setAllTokenApprovalStatus } =
-    useContext(SwapContext);
+  const {
+    nftAuthUser,
+    setAllSelectedNftsAreApproved,
+    setAuthedUserNftsApprovalStatus,
+  } = useContext(SwapContext);
 
-  const nftsAuthUserApproval = ComposeNftApproval(nftAuthUser);
-  const arraySelectedNftsToApprove = createArrayApproved(nftsAuthUserApproval);
+  const nftsToSwapFromAuthedUser = getNftsInfoToSwap(nftAuthUser);
 
-  const handleApprovedMulticall = async () => {
+  const updateNftsToSwapApprovalStatus = async () => {
     try {
-      const result = await getApprovedSwapMulticall(arraySelectedNftsToApprove);
+      const result = await getMultipleNftsApprovalStatus(
+        nftsToSwapFromAuthedUser,
+      );
 
-      console.log("result = ", result);
-      const arrayStatusTokenApproved = result.map((approved, index) => ({
+      const nftsApprovalStatus = result.map((approved, index) => ({
         approved,
-        tokenAddress: arraySelectedNftsToApprove[index].tokenAddress,
-        amountOrId: arraySelectedNftsToApprove[index].amountOrId,
+        tokenAddress: nftsToSwapFromAuthedUser[index].tokenAddress,
+        amountOrId: nftsToSwapFromAuthedUser[index].amountOrId,
       }));
-      const isInvalidApproved = !result.some(
+
+      const someNftIsNotApprovedForSwapping = !result.some(
         (approved) => approved === ADDRESS_ZERO,
       );
-      setAllTokenApprovalStatus(arrayStatusTokenApproved);
-      setAllSelectedNftsAproved(isInvalidApproved);
+
+      setAuthedUserNftsApprovalStatus(nftsApprovalStatus);
+      setAllSelectedNftsAreApproved(someNftIsNotApprovedForSwapping);
     } catch (error) {
       console.error("error ", error);
     }
   };
 
   return {
-    handleApprovedMulticall,
+    updateNftsToSwapApprovalStatus,
   };
 };
