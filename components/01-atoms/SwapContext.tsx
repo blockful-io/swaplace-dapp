@@ -2,6 +2,7 @@ import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
+import { IArrayStatusTokenApproved } from "@/lib/client/blockchain-data";
 
 interface SwapContextProps {
   inputAddress: string;
@@ -21,6 +22,12 @@ interface SwapContextProps {
   setDestinyChain: Dispatch<React.SetStateAction<SupportedNetworks>>;
   setTimeDate: Dispatch<React.SetStateAction<bigint>>;
   timeDate: bigint;
+  setAllSelectedNftsAproved: Dispatch<React.SetStateAction<boolean>>;
+  allSelectedNftsAproved: boolean;
+  setAllTokenApprovalStatus: Dispatch<
+    React.SetStateAction<IArrayStatusTokenApproved[]>
+  >;
+  allTokenApprovalStatus: IArrayStatusTokenApproved[];
 }
 
 export const SwapContext = React.createContext<SwapContextProps>({
@@ -41,6 +48,10 @@ export const SwapContext = React.createContext<SwapContextProps>({
   setDestinyChain: () => {},
   setTimeDate: () => {},
   timeDate: BigInt(1),
+  setAllSelectedNftsAproved: () => {},
+  allSelectedNftsAproved: false,
+  setAllTokenApprovalStatus: () => {},
+  allTokenApprovalStatus: [],
 });
 
 export const SwapContextProvider = ({ children }: any) => {
@@ -53,6 +64,12 @@ export const SwapContextProvider = ({ children }: any) => {
     SupportedNetworks.SEPOLIA,
   );
   const [timeDate, setTimeDate] = useState<bigint>(BigInt(1));
+
+  const [allSelectedNftsAproved, setAllSelectedNftsAproved] =
+    useState<boolean>(false);
+  const [allTokenApprovalStatus, setAllTokenApprovalStatus] = useState<
+    IArrayStatusTokenApproved[]
+  >([]);
 
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
@@ -128,6 +145,10 @@ export const SwapContextProvider = ({ children }: any) => {
       setDestinyChain,
       setTimeDate,
       timeDate,
+      setAllSelectedNftsAproved,
+      allSelectedNftsAproved,
+      setAllTokenApprovalStatus,
+      allTokenApprovalStatus,
     });
   }, [
     inputAddress,
@@ -137,6 +158,8 @@ export const SwapContextProvider = ({ children }: any) => {
     nftInputUser,
     destinyChain,
     timeDate,
+    allSelectedNftsAproved,
+    allTokenApprovalStatus,
   ]);
 
   const [swapData, setSwapData] = useState<SwapContextProps>({
@@ -154,6 +177,10 @@ export const SwapContextProvider = ({ children }: any) => {
     setDestinyChain,
     setTimeDate,
     timeDate,
+    setAllSelectedNftsAproved,
+    allSelectedNftsAproved,
+    setAllTokenApprovalStatus,
+    allTokenApprovalStatus,
   });
 
   return (

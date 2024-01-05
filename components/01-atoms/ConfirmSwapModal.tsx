@@ -18,9 +18,10 @@ import {
 } from "@/lib/client/blockchain-data";
 import { NftCard, NftCardActionType } from "../02-molecules";
 import { hexToNumber } from "viem";
-import { NFT } from "@/lib/client/constants";
+import { ADDRESS_ZERO, NFT } from "@/lib/client/constants";
 import cc from "classcat";
 import toast from "react-hot-toast";
+import { useSwaplace } from "@/lib/client/hooks/useSwaplace";
 
 export enum TransactionResult {
   "LOADING" = "LOADING",
@@ -38,8 +39,16 @@ export const ConfirmSwapModal = ({
   onClose,
 }: ConfirmSwapApprovalModalProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { nftInputUser, nftAuthUser, validatedAddressToSwap, timeDate } =
-    useContext(SwapContext);
+  const {
+    nftInputUser,
+    nftAuthUser,
+    validatedAddressToSwap,
+    timeDate,
+    allSelectedNftsAproved,
+    allTokenApprovalStatus,
+    setAllTokenApprovalStatus,
+    setAllSelectedNftsAproved,
+  } = useContext(SwapContext);
   const [createApprovalStatus, setCreateApprovalStatus] = useState(
     CreateApprovalStatus.CREATE_APPROVAL,
   );
@@ -52,14 +61,25 @@ export const ConfirmSwapModal = ({
   const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
 
-  const [allSelectedNftsAproved, setAllSelectedNftsAproved] =
-    useState<boolean>(false);
+  const { handleApprovedMulticall } = useSwaplace();
 
   useEffect(() => {
     if (!open) {
       setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
     }
   }, [open]);
+
+  useEffect(() => {
+    console.log("z");
+    if (createSwapStatus === CreateSwapStatus.WALLET_APPROVED) {
+      setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+    }
+
+    const fetchApprove = async () => {
+      await handleApprovedMulticall();
+    };
+    fetchApprove();
+  }, [nftAuthUser, allSelectedNftsAproved]);
 
   if (!authenticatedUserAddress?.address || !nftInputUser || !nftAuthUser) {
     onClose();
@@ -113,7 +133,9 @@ export const ConfirmSwapModal = ({
     };
 
     try {
-      creatingSwap(swapData);
+      if (allSelectedNftsAproved) {
+        creatingSwap(swapData);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -126,6 +148,13 @@ export const ConfirmSwapModal = ({
     } else {
       setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
     }
+  };
+
+  const validateApprovalTokens = (arraynftApproval: any[]) => {
+    const isValidApproved = !arraynftApproval.some(
+      (approved) => approved === ADDRESS_ZERO,
+    );
+    setAllSelectedNftsAproved(isValidApproved);
   };
 
   return (
@@ -162,17 +191,45 @@ export const ConfirmSwapModal = ({
               </p>
             </Dialog.Title>
 
-            <div className="flex justify-center items-center">
-              <div className="grid grid-cols-4 gap-8 mt-6">
+            <div className="flex justify-center items-center overflow-auto max-h-[400px]">
+              <div className="grid grid-cols-4 gap-8 mt-10">
                 {nftAuthUser.map((nft, index) => (
-                  <div className={cc(["flex justify-center items-center"])}>
+                  <div
+                    className={cc([
+                      "flex justify-center items-center",
+                      allSelectedNftsAproved && "bg-green-500 z-20 rounded-xl",
+                      allTokenApprovalStatus[index]?.approved === ADDRESS_ZERO
+                        ? "bg-red-500 z-20 rounded-xl"
+                        : "bg-green-500 z-20 rounded-xl",
+                    ])}
+                  >
                     <div
                       role="button"
-                      onClick={() => {
-                        handleApprove(nft).then((hashTransaction) => {
-                          console.log("hashTransaction = ", hashTransaction);
-                        });
+                      onClick={async () => {
+                        allTokenApprovalStatus[index]?.approved === ADDRESS_ZERO
+                          ? await handleApprove(nft)
+                              .then(() => {
+                                setAllTokenApprovalStatus(
+                                  (allTokenApprovalStatus[index].approved =
+                                    nft.contract?.address),
+                                );
+                                validateApprovalTokens(allTokenApprovalStatus);
+                              })
+                              .catch(() => {
+                                setAllTokenApprovalStatus(
+                                  (allTokenApprovalStatus[index].approved =
+                                    ADDRESS_ZERO as any),
+                                );
+                                validateApprovalTokens(allTokenApprovalStatus);
+                              })
+                          : toast.error("Token already approved.");
                       }}
+                      className={cc([
+                        allSelectedNftsAproved && "opacity-30",
+                        allTokenApprovalStatus[index]?.approved === ADDRESS_ZERO
+                          ? "opacity-30"
+                          : "opacity-30",
+                      ])}
                     >
                       <NftCard
                         withSelectionValidation={false}
