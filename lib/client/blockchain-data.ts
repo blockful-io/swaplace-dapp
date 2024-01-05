@@ -191,3 +191,22 @@ export async function makeSwap(
 
   return swap;
 }
+
+export function createArrayApproved(nftsAuthUserApproval: NftAddressAmount[]) {
+  const nftsApprove = [];
+  for (let i = 0; i < nftsAuthUserApproval.length; i++) {
+    const approveSwapData: IGetApproveSwap = {
+      tokenAddress: nftsAuthUserApproval[i][0],
+      amountOrId: nftsAuthUserApproval[i][1],
+    };
+    nftsApprove.push(approveSwapData);
+  }
+
+  return nftsApprove;
+}
+
+export interface IArrayStatusTokenApproved {
+  approved: any;
+  tokenAddress: `0x${string}`;
+  amountOrId: bigint;
+}
