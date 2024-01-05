@@ -164,23 +164,23 @@ export const ConfirmSwapModal = ({
       authedUserSelectedNftsApprovalStatus[index]?.approved !== ADDRESS_ZERO
     ) {
       toast.error("Token already approved.");
+    } else {
+      await handleApprove(nft)
+        .then(() => {
+          setAuthedUserNftsApprovalStatus(
+            (authedUserSelectedNftsApprovalStatus[index].approved =
+              nft.contract?.address),
+          );
+          validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
+        })
+        .catch(() => {
+          setAuthedUserNftsApprovalStatus(
+            (authedUserSelectedNftsApprovalStatus[index].approved =
+              ADDRESS_ZERO as any),
+          );
+          validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
+        });
     }
-
-    await handleApprove(nft)
-      .then(() => {
-        setAuthedUserNftsApprovalStatus(
-          (authedUserSelectedNftsApprovalStatus[index].approved =
-            nft.contract?.address),
-        );
-        validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
-      })
-      .catch(() => {
-        setAuthedUserNftsApprovalStatus(
-          (authedUserSelectedNftsApprovalStatus[index].approved =
-            ADDRESS_ZERO as any),
-        );
-        validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
-      });
   };
 
   return (
