@@ -6,11 +6,14 @@ import {
 import { publicClientViem } from "../wallet/wallet-config";
 import { MockERC721Abi } from "../client/abi";
 
-export async function getApprovedSwap({ nftUser, amountOrId }: IApproveSwap) {
+export async function getApprovedSwap({
+  tokenContractAddress,
+  amountOrId,
+}: IApproveSwap) {
   const data = await publicClientViem.readContract({
     abi: MockERC721Abi,
     functionName: "getApproved",
-    address: nftUser,
+    address: tokenContractAddress,
     args: [amountOrId],
   });
 

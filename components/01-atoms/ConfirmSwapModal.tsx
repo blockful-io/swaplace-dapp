@@ -18,7 +18,11 @@ import {
 } from "@/lib/client/blockchain-data";
 import { NftCard, NftCardActionType } from "../02-molecules";
 import { hexToNumber } from "viem";
-import { ADDRESS_ZERO, NFT } from "@/lib/client/constants";
+import {
+  ADDRESS_ZERO,
+  NFT,
+  SWAPLACE_SMART_CONTRACT_ADDRESS,
+} from "@/lib/client/constants";
 import cc from "classcat";
 import toast from "react-hot-toast";
 import { useSwaplace } from "@/lib/client/hooks/useSwaplace";
@@ -70,7 +74,6 @@ export const ConfirmSwapModal = ({
   }, [open]);
 
   useEffect(() => {
-    console.log("z");
     if (createSwapStatus === CreateSwapStatus.WALLET_APPROVED) {
       setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
     }
@@ -94,9 +97,8 @@ export const ConfirmSwapModal = ({
 
     const swapData: IApproveSwap = {
       walletClient: walletClient,
-      chain: chainId,
-      spender: authenticatedUserAddress.address,
-      nftUser: nft.contract?.address,
+      spender: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
+      tokenContractAddress: nft.contract?.address,
       amountOrId: BigInt(hexToNumber(nft.id?.tokenId)),
     };
 
@@ -105,9 +107,11 @@ export const ConfirmSwapModal = ({
       const transactionReceipt = await approveSwap(swapData);
       if (transactionReceipt != undefined) {
         setCreateApprovalStatus(CreateApprovalStatus.WALLET_APPROVED);
+        setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
         return transactionReceipt;
       } else {
         setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+        toast.error("Approval Failed");
       }
     } catch (error) {
       setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
@@ -117,7 +121,7 @@ export const ConfirmSwapModal = ({
 
   const nftsInputUser = ComposeNftSwap(nftInputUser);
   const nftsAuthUser = ComposeNftSwap(nftAuthUser);
-  const handleSwap = () => {
+  const handleSwap = async () => {
     if (typeof chain?.id != "undefined") {
       chainId = chain?.id;
     }
@@ -133,8 +137,16 @@ export const ConfirmSwapModal = ({
     };
 
     try {
+      setCreateSwapStatus(CreateSwapStatus.WAITING_WALLET_APPROVAL);
+
       if (allSelectedNftsAproved) {
-        creatingSwap(swapData);
+        const transactionReceipt = await creatingSwap(swapData);
+        if (transactionReceipt != undefined) {
+          setCreateSwapStatus(CreateSwapStatus.WALLET_APPROVED);
+        } else {
+          setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
+          toast.error("Create Swap Failed");
+        }
       }
     } catch (error) {
       console.error(error);
@@ -142,44 +154,44 @@ export const ConfirmSwapModal = ({
   };
 
   const validateApprovedTokensSwap = () => {
+    console.log("allSelectedNftsAproved", allSelectedNftsAproved);
     if (!allSelectedNftsAproved) {
       toast.error("You must approve the Tokens to create Swap.");
       return;
     } else {
-      setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
+      setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+      console.log("allSelectedNftsAproved", allSelectedNftsAproved);
     }
   };
 
   const validateApprovalTokens = (arraynftApproval: any[]) => {
-    const isValidApproved = !arraynftApproval.some(
-      (approved) => approved === ADDRESS_ZERO,
-    );
+    const isValidApproved = !arraynftApproval.some((token) => {
+      return token.approved != SWAPLACE_SMART_CONTRACT_ADDRESS[chainId];
+    });
+
+    console.log("isValidApproved", isValidApproved);
     setAllSelectedNftsAreApproved(isValidApproved);
   };
 
   const approveNftForSwapping = async (nft: NFT, index: number) => {
-    // Each token that is not yet approved is set as an ADDRESS_ZERO
-    // inside the authedUserSelectedNftsApprovalStatus state.
+    if (typeof chain?.id != "undefined") {
+      chainId = chain?.id;
+    }
     if (
-      authedUserSelectedNftsApprovalStatus[index]?.approved !== ADDRESS_ZERO
+      authedUserSelectedNftsApprovalStatus[index]?.approved ===
+      SWAPLACE_SMART_CONTRACT_ADDRESS[chainId]
     ) {
       toast.error("Token already approved.");
     } else {
-      await handleApprove(nft)
-        .then(() => {
+      await handleApprove(nft).then((result) => {
+        if (result != undefined) {
           setAuthedUserNftsApprovalStatus(
             (authedUserSelectedNftsApprovalStatus[index].approved =
-              nft.contract?.address),
+              SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as any),
           );
-          validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
-        })
-        .catch(() => {
-          setAuthedUserNftsApprovalStatus(
-            (authedUserSelectedNftsApprovalStatus[index].approved =
-              ADDRESS_ZERO as any),
-          );
-          validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
-        });
+        }
+        validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
+      });
     }
   };
 
@@ -223,23 +235,16 @@ export const ConfirmSwapModal = ({
                   <div
                     className={cc([
                       "flex justify-center items-center",
-                      allSelectedNftsAproved && "bg-green-500 z-20 rounded-xl",
                       authedUserSelectedNftsApprovalStatus[index]?.approved ===
                       ADDRESS_ZERO
-                        ? "bg-red-500 z-20 rounded-xl"
-                        : "bg-green-500 z-20 rounded-xl",
+                        ? "bg-red-400 z-20 rounded-xl"
+                        : "bg-green-400 z-20 rounded-xl",
                     ])}
                   >
                     <div
                       role="button"
                       onClick={() => approveNftForSwapping(nft, index)}
-                      className={cc([
-                        allSelectedNftsAproved && "opacity-30",
-                        authedUserSelectedNftsApprovalStatus[index]
-                          ?.approved === ADDRESS_ZERO
-                          ? "opacity-30"
-                          : "opacity-30",
-                      ])}
+                      className="opacity-60"
                     >
                       <NftCard
                         withSelectionValidation={false}
@@ -273,13 +278,17 @@ export const ConfirmSwapModal = ({
               <button
                 onClick={handleSwap}
                 disabled={!allSelectedNftsAproved}
-                className="disabled:pointer-events-none mt-4 rounded w-full disabled:bg-gray-100 bg-green-400 border-green-500 disabled:border-gray-200 border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:text-gray-300 text-green-900"
+                className="disabled:pointer-events-none mt-4 rounded w-full disabled:bg-gray-100 dark:disabled:bg-[#353836] bg-green-400 border-green-500  border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:border-gray-200  dark:disabled:border-[#434443] disabled:text-gray-300 text-green-900"
               >
                 {createApprovalStatus ===
-                CreateApprovalStatus.WAITING_WALLET_APPROVAL ? (
+                  CreateApprovalStatus.WAITING_WALLET_APPROVAL ||
+                createSwapStatus ===
+                  CreateSwapStatus.WAITING_WALLET_APPROVAL ? (
                   <LoadingIndicator />
                 ) : createSwapStatus === CreateSwapStatus.CREATE_SWAP ? (
                   <p>Create Swap</p>
+                ) : createSwapStatus === CreateSwapStatus.WALLET_APPROVED ? (
+                  <p>Swap Created</p>
                 ) : null}
               </button>
             </div>

@@ -25,10 +25,9 @@ export interface IGetApproveSwap {
 }
 export interface IApproveSwap {
   walletClient: any;
-  chain: number;
   spender: any;
   amountOrId: bigint;
-  nftUser: any;
+  tokenContractAddress: any;
 }
 
 export interface INftSwappingInfo {
@@ -200,7 +199,7 @@ export async function makeSwap(
 }
 
 export interface IArrayStatusTokenApproved {
-  approved: any;
+  approved: `0x${string}`;
   tokenAddress: `0x${string}`;
   amountOrId: bigint;
 }

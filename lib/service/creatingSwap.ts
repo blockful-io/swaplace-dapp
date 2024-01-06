@@ -1,8 +1,9 @@
 import { ICreateSwap } from "../client/blockchain-data";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
 import { encodeFunctionData } from "viem";
+import { publicClientViem } from "../wallet/wallet-config";
 
-export function creatingSwap({
+export async function creatingSwap({
   walletClient,
   expireDate,
   nftInputUser,
@@ -95,8 +96,20 @@ export function creatingSwap({
     ],
   });
 
-  return walletClient.sendTransaction({
-    data: data,
-    to: SWAPLACE_SMART_CONTRACT_ADDRESS[chain],
-  });
+  try {
+    const transactionHash = await walletClient.sendTransaction({
+      data: data,
+      to: SWAPLACE_SMART_CONTRACT_ADDRESS[chain],
+    });
+
+    const transactionReceipt = await publicClientViem.waitForTransactionReceipt(
+      {
+        hash: transactionHash,
+      },
+    );
+
+    return transactionReceipt;
+  } catch (error) {
+    console.error(error);
+  }
 }
