@@ -76,6 +76,7 @@ export const ConfirmSwapModal = ({
   useEffect(() => {
     if (createSwapStatus === CreateSwapStatus.WALLET_APPROVED) {
       setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+      setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
     }
 
     const fetchApprove = async () => {
@@ -277,7 +278,10 @@ export const ConfirmSwapModal = ({
             >
               <button
                 onClick={handleSwap}
-                disabled={!allSelectedNftsAproved}
+                disabled={
+                  !allSelectedNftsAproved ||
+                  createSwapStatus === CreateSwapStatus.WALLET_APPROVED
+                }
                 className="disabled:pointer-events-none mt-4 rounded w-full disabled:bg-gray-100 dark:disabled:bg-[#353836] bg-green-400 border-green-500  border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:border-gray-200  dark:disabled:border-[#434443] disabled:text-gray-300 text-green-900"
               >
                 {createApprovalStatus ===
