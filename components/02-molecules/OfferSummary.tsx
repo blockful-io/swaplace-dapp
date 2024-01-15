@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { useEnsName, useNetwork } from "wagmi";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ChainInfo } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import { PersonIcon } from "@/components/01-atoms/icons";
 import { NftCard } from "@/components/02-molecules";
@@ -63,7 +62,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
         )}
       </div>
 
-      <div className="w-full h-full min-h-[144px]  rounded p-4">
+      <div className="w-full h-full min-h-[144px] rounded p-4 overflow-auto max-h-52">
         <div className="w-full grid grid-cols-2 md:grid-cols-6  xl:grid-cols-4 gap-3 ">
           {(forAuthedUser && !authenticatedUserAddress?.address) ||
           (!forAuthedUser && !validatedAddressToSwap) ? null : (
