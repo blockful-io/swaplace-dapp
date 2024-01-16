@@ -33,6 +33,24 @@ input[type="search"]::-webkit-search-results-decoration {
     @apply font-onest font-normal text-[20px] leading-[25.5px] text-[#F6F6F6];
   }
 
+  .p-semibold-dark {
+    @apply font-onest font-semibold text-[16px] leading-[16px] text-[#F6F6F6];
+  }
+
+  .p-medium-2 {
+    @apply font-onest font-medium text-[16px] leading-[20px] text-[#212322];
+  }
+  .p-medium-2-dark {
+    @apply font-onest font-medium text-[16px] leading-[20px] text-[#F6F6F6];
+  }
+
+  .p-normal-2 {
+    @apply font-onest font-normal text-[16px] leading-[20px] text-[#707572];
+  }
+  .p-normal-2-dark {
+    @apply font-onest font-normal text-[16px] leading-[20px] text-[#F6F6F6];
+  }
+
   .p-medium-bold-2 {
     @apply font-onest font-medium text-[16px] leading-[20px] text-[#707572];
   }
@@ -62,6 +80,12 @@ input[type="search"]::-webkit-search-results-decoration {
   }
 
   .card-nft {
+    @apply shadow-inner mx-auto w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col;
+  }
+  .card-nft-small {
+    @apply shadow-inner mx-auto w-[44px] h-[44px] lg:w-[44px] lg:h-[44px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col;
+  }
+  .card-nft-large {
     @apply shadow-inner mx-auto w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col;
   }
 }

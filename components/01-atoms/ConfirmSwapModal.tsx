@@ -16,7 +16,7 @@ import {
   IApproveSwap,
   ICreateSwap,
 } from "@/lib/client/blockchain-data";
-import { NftCard, NftCardActionType } from "../02-molecules";
+import { NftCard, NftCardActionType, NftCardStyleType } from "../02-molecules";
 import { hexToNumber } from "viem";
 import {
   ADDRESS_ZERO,
@@ -26,6 +26,9 @@ import {
 import cc from "classcat";
 import toast from "react-hot-toast";
 import { useSwaplace } from "@/lib/client/hooks/useSwaplace";
+import { CloseIcon } from "./icons/CloseIcon";
+import { useTheme } from "next-themes";
+import { RightIcon } from "./icons/RightIcon";
 
 export enum TransactionResult {
   "LOADING" = "LOADING",
@@ -64,6 +67,7 @@ export const ConfirmSwapModal = ({
 
   const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
+  const { theme } = useTheme();
 
   const { updateNftsToSwapApprovalStatus } = useSwaplace();
 
@@ -196,6 +200,12 @@ export const ConfirmSwapModal = ({
     }
   };
 
+  // const percentageValue =
+  //   (authedUserSelectedNftsApprovalStatus.filter(
+  //     (item) => item.approved !== ADDRESS_ZERO,
+  //   ).length /
+  //     authedUserSelectedNftsApprovalStatus.length) *
+  //   100;
   return (
     <>
       <Transition
@@ -219,54 +229,125 @@ export const ConfirmSwapModal = ({
           leave="transition duration-75 ease-out"
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-95 opacity-0"
-          className="fixed left-1/2 top-1/2 z-50 bg-[#f8f8f8] dark:bg-[#1A1B1F] -translate-x-1/2 -translate-y-1/2 rounded-lg "
+          className="fixed left-1/2 top-1/2 z-50 bg-[#f8f8f8] dark:bg-[#1A1B1F] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[#353836] "
         >
-          <Dialog.Panel className={"p-6 flex flex-col min-w-[350px]"}>
-            <Dialog.Title
-              className={"dark:text-white text-black text-xl font-bold"}
-            >
-              <p className="items-center justify-center flex">
-                Approve Tokens below
-              </p>
-            </Dialog.Title>
+          <Dialog.Panel
+            className={
+              " flex flex-col min-w-[350px] max-w-[432px] max-h-[620px] border border-[#353836] rounded-[20px] shadow"
+            }
+          >
+            <div className="border-b border-[#353836]">
+              <Dialog.Title
+                className={
+                  "dark:text-white text-black text-xl font-bold h-[76px] justify-between flex p-6"
+                }
+              >
+                <p className="items-center flex dark:title-h3-normal-dark title-h3-normal">
+                  Swap offer confirmation
+                </p>
+                <div
+                  className="w-7 h-7 rounded-[100px] shadow border border-[#353836] justify-center items-center inline-flex dark:bg-[#282a29]"
+                  role="button"
+                  onClick={onClose}
+                >
+                  <CloseIcon
+                    fill={cc([theme == "light" ? "black" : "white"])}
+                  />
+                </div>
+              </Dialog.Title>
+            </div>
 
-            <div className="flex justify-center items-center overflow-auto max-h-[400px]">
-              <div className="grid grid-cols-4 gap-8 mt-10">
-                {nftAuthUser.map((nft, index) => (
-                  <div
-                    className={cc([
-                      "flex justify-center items-center",
-                      authedUserSelectedNftsApprovalStatus[index]?.approved ===
-                      ADDRESS_ZERO
-                        ? "bg-red-400 z-20 rounded-xl"
-                        : "bg-green-400 z-20 rounded-xl",
-                    ])}
-                  >
+            <div className="flex flex-col gap-6 p-6">
+              <div className="flex">
+                <Dialog.Description>
+                  <p className="dark:p-normal-2-dark p-normal-2">
+                    Before sending your offer, please approve the assets you
+                    want to trade by clicking on them.
+                  </p>
+                </Dialog.Description>
+              </div>
+
+              <div className="flex justify-center items-center overflow-y-auto  max-h-[250px]">
+                <div className="grid grid-cols-1 w-[100%] gap-3 ">
+                  {nftAuthUser.map((nft, index) => (
                     <div
+                      className={cc([
+                        "flex p-4 items-center gap-4 h-[68px]",
+                        authedUserSelectedNftsApprovalStatus[index]
+                          ?.approved === ADDRESS_ZERO
+                          ? "bg-[#353836] z-20 rounded-xl"
+                          : "dark:bg-[#DDF23D] bg-[#97a529] z-20 rounded-xl disabled cursor-not-allowed",
+                      ])}
                       role="button"
                       onClick={() => approveNftForSwapping(nft, index)}
-                      className="opacity-60"
                     >
-                      <NftCard
-                        withSelectionValidation={false}
-                        onClickAction={NftCardActionType.NFT_ONCLICK}
-                        ownerAddress={authenticatedUserAddress.address}
-                        nftData={nftAuthUser[index]}
-                      />
+                      <div>
+                        <NftCard
+                          withSelectionValidation={false}
+                          onClickAction={NftCardActionType.NFT_ONCLICK}
+                          ownerAddress={authenticatedUserAddress.address}
+                          nftData={nftAuthUser[index]}
+                          styleType={NftCardStyleType.SMALL}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex">
+                          {authedUserSelectedNftsApprovalStatus[index]
+                            ?.approved === ADDRESS_ZERO ? (
+                            <p className="p-medium-2-dark">
+                              {nftAuthUser[index].contractMetadata?.name}
+                            </p>
+                          ) : (
+                            <p className="p-medium-2">
+                              {nftAuthUser[index].contractMetadata?.name}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex p-semibold-dark">
+                          {authedUserSelectedNftsApprovalStatus[index]
+                            ?.approved === ADDRESS_ZERO ? (
+                            <p className=" bg-[#505150] px-1 w-fit flex rounded-[4px]">
+                              PENDING APPROVAL
+                            </p>
+                          ) : (
+                            <div className="bg-[#505150] px-1 w-fit opacity-30 rounded-[4px]">
+                              <p className="text-white">APPROVED</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
-            <Dialog.Description
-              className={
-                "dark:text-white text-black text-base mt-2 flex justify-center "
-              }
-            >
-              <p>Are you sure you want to create this Swap?</p>
-            </Dialog.Description>
-            <div
+            <div className="flex justify-between w-full p-6 border-t border-[#353836]">
+              <div>
+                {
+                  authedUserSelectedNftsApprovalStatus.filter(
+                    (item) => item.approved !== ADDRESS_ZERO,
+                  ).length
+                }
+                /{authedUserSelectedNftsApprovalStatus.length}
+              </div>
+              {/* <div className="w-full bg-slate-500  rounded-full h-1.5 mb-4 dark:bg-gray-200">
+                <div
+                  className="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
+                  style={{ width: percentageValue }}
+                ></div>
+              </div> */}
+              <div>
+                <button className="border border-[#353836] bg-[#282B29] rounded-[10px] px-4 py-2 dark:p-medium p-medium-dark">
+                  <div className="flex justify-center items-center gap-3">
+                    <p>Continue</p>
+                    <RightIcon />
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* <div
               role="button"
               onClick={validateApprovedTokensSwap}
               className={cc([
@@ -278,10 +359,7 @@ export const ConfirmSwapModal = ({
             >
               <button
                 onClick={handleSwap}
-                disabled={
-                  !allSelectedNftsAproved ||
-                  createSwapStatus === CreateSwapStatus.WALLET_APPROVED
-                }
+                disabled={!allSelectedNftsAproved}
                 className="disabled:pointer-events-none mt-4 rounded w-full disabled:bg-gray-100 dark:disabled:bg-[#353836] bg-green-400 border-green-500  border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:border-gray-200  dark:disabled:border-[#434443] disabled:text-gray-300 text-green-900"
               >
                 {createApprovalStatus ===
@@ -295,7 +373,7 @@ export const ConfirmSwapModal = ({
                   <p>Swap Created</p>
                 ) : null}
               </button>
-            </div>
+            </div> */}
           </Dialog.Panel>
         </Transition>
       </Dialog>
