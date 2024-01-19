@@ -8,6 +8,16 @@ import {
   IArrayStatusTokenApproved,
 } from "@/lib/client/blockchain-data";
 
+enum SwapModalSteps {
+  APPROVE_NFTS,
+  CREATE_SWAP,
+}
+
+enum ButtonClickPossibilities {
+  PREVIOUS_SET,
+  NEXT_STEP,
+}
+
 interface SwapContextProps {
   inputAddress: string;
   validatedAddressToSwap: string;
@@ -27,7 +37,7 @@ interface SwapContextProps {
   setTimeDate: Dispatch<React.SetStateAction<bigint>>;
   timeDate: bigint;
   setAllSelectedNftsAreApproved: Dispatch<React.SetStateAction<boolean>>;
-  allSelectedNftsAproved: boolean;
+  allSelectedNftsApproved: boolean;
   setAuthedUserNftsApprovalStatus: Dispatch<
     React.SetStateAction<IArrayStatusTokenApproved[]>
   >;
@@ -36,6 +46,8 @@ interface SwapContextProps {
   createApprovalStatus: CreateApprovalStatus;
   setCreateSwapStatus: Dispatch<React.SetStateAction<CreateSwapStatus>>;
   createSwapStatus: CreateSwapStatus;
+  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
+  currentSwapModalStep: SwapModalSteps;
 }
 
 export const SwapContext = React.createContext<SwapContextProps>({
@@ -57,13 +69,15 @@ export const SwapContext = React.createContext<SwapContextProps>({
   setTimeDate: () => {},
   timeDate: BigInt(1),
   setAllSelectedNftsAreApproved: () => {},
-  allSelectedNftsAproved: false,
+  allSelectedNftsApproved: false,
   setAuthedUserNftsApprovalStatus: () => {},
   authedUserSelectedNftsApprovalStatus: [],
   setCreateApprovalStatus: () => {},
   createApprovalStatus: CreateApprovalStatus.CREATE_APPROVAL,
   setCreateSwapStatus: () => {},
   createSwapStatus: CreateSwapStatus.CREATE_SWAP,
+  currentSwapModalStep: SwapModalSteps.APPROVE_NFTS,
+  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
 });
 
 export const SwapContextProvider = ({ children }: any) => {
@@ -77,7 +91,9 @@ export const SwapContextProvider = ({ children }: any) => {
   );
   const [timeDate, setTimeDate] = useState<bigint>(BigInt(1));
 
-  const [allSelectedNftsAproved, setAllSelectedNftsAreApproved] =
+  const [currentSwapModalStep, setCurrentSwapModalStep] =
+    useState<SwapModalSteps>(SwapModalSteps.APPROVE_NFTS);
+  const [allSelectedNftsApproved, setAllSelectedNftsAreApproved] =
     useState<boolean>(false);
   const [
     authedUserSelectedNftsApprovalStatus,
@@ -138,6 +154,16 @@ export const SwapContextProvider = ({ children }: any) => {
     setUserJustValidatedInput(true);
   };
 
+  // Created to make progress on a yet to be created state (which will live inside SwapContext)
+  // and control in which modal step the user is in
+  const updateSwapStep = (buttonClicked: ButtonClickPossibilities) => {
+    if (buttonClicked === ButtonClickPossibilities.PREVIOUS_SET) {
+      setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
+    } else {
+      setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+    }
+  };
+
   useEffect(() => {
     setNftInputUser([]);
     setUserJustValidatedInput(false);
@@ -164,13 +190,15 @@ export const SwapContextProvider = ({ children }: any) => {
       setTimeDate,
       timeDate,
       setAllSelectedNftsAreApproved,
-      allSelectedNftsAproved,
+      allSelectedNftsApproved,
       setAuthedUserNftsApprovalStatus,
       authedUserSelectedNftsApprovalStatus,
       createApprovalStatus,
       createSwapStatus,
       setCreateApprovalStatus,
       setCreateSwapStatus,
+      updateSwapStep,
+      currentSwapModalStep,
     });
   }, [
     inputAddress,
@@ -180,8 +208,9 @@ export const SwapContextProvider = ({ children }: any) => {
     nftInputUser,
     destinyChain,
     timeDate,
-    allSelectedNftsAproved,
+    allSelectedNftsApproved,
     authedUserSelectedNftsApprovalStatus,
+    currentSwapModalStep,
   ]);
 
   const [swapData, setSwapData] = useState<SwapContextProps>({
@@ -200,13 +229,15 @@ export const SwapContextProvider = ({ children }: any) => {
     setTimeDate,
     timeDate,
     setAllSelectedNftsAreApproved,
-    allSelectedNftsAproved,
+    allSelectedNftsApproved,
     setAuthedUserNftsApprovalStatus,
     authedUserSelectedNftsApprovalStatus,
     createApprovalStatus,
     createSwapStatus,
     setCreateApprovalStatus,
     setCreateSwapStatus,
+    updateSwapStep,
+    currentSwapModalStep,
   });
 
   return (

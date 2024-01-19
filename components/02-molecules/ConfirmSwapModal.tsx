@@ -7,23 +7,23 @@ import {
   SwapContext,
   TransactionResultModal,
 } from "@/components/01-atoms";
-import { creatingSwap } from "@/lib/service/creatingSwap";
+import { createSwap } from "@/lib/service/createSwap";
 import {
   ComposeNftSwap,
   CreateApprovalStatus,
   CreateSwapStatus,
   ICreateSwap,
 } from "@/lib/client/blockchain-data";
-import { ADDRESS_ZERO } from "@/lib/client/constants";
 import cc from "classcat";
 import toast from "react-hot-toast";
-import { useSwaplace } from "@/lib/client/hooks/useSwaplace";
 import { CloseIcon } from "../01-atoms/icons/CloseIcon";
 import { useTheme } from "next-themes";
 import { RightIcon } from "../01-atoms/icons/RightIcon";
-import { ProgressBar } from "../01-atoms/ProgressBar";
 import { NftsCardApprovedList } from "../01-atoms/NftsCardApprovedList";
 import { LeftIcon } from "../01-atoms/icons/LeftIcon";
+import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
+import { ProgressStatus } from "./ProgressStatus";
+import { Body } from "node-fetch";
 
 export enum TransactionResult {
   "LOADING" = "LOADING",
@@ -42,16 +42,18 @@ export const ConfirmSwapModal = ({
 }: ConfirmSwapApprovalModalProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const {
-    nftInputUser,
-    nftAuthUser,
-    validatedAddressToSwap,
     timeDate,
-    allSelectedNftsAproved,
+    nftAuthUser,
+    nftInputUser,
+    allSelectedNftsApproved,
+    validatedAddressToSwap,
     authedUserSelectedNftsApprovalStatus,
+    setAuthedUserNftsApprovalStatus,
+    setAllSelectedNftsAreApproved,
     setCreateApprovalStatus,
     createApprovalStatus,
-    createSwapStatus,
     setCreateSwapStatus,
+    createSwapStatus,
   } = useContext(SwapContext);
 
   const [continueSwapModal, setContinueSwapModal] = useState(false);
@@ -62,14 +64,15 @@ export const ConfirmSwapModal = ({
   const { data: walletClient } = useWalletClient();
   const { theme } = useTheme();
 
-  const { updateNftsToSwapApprovalStatus } = useSwaplace();
-
   useEffect(() => {
     if (!open) {
       setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
       setContinueSwapModal(false);
     }
   }, [open]);
+
+  const nftsInputUser = ComposeNftSwap(nftInputUser);
+  const nftsAuthUser = ComposeNftSwap(nftAuthUser);
 
   useEffect(() => {
     if (createSwapStatus === CreateSwapStatus.WALLET_APPROVED) {
@@ -78,10 +81,14 @@ export const ConfirmSwapModal = ({
     }
 
     const fetchApprove = async () => {
-      await updateNftsToSwapApprovalStatus();
+      await updateNftsToSwapApprovalStatus(
+        nftAuthUser,
+        setAuthedUserNftsApprovalStatus,
+        setAllSelectedNftsAreApproved,
+      );
     };
     fetchApprove();
-  }, [nftAuthUser, allSelectedNftsAproved]);
+  }, [nftAuthUser, allSelectedNftsApproved]);
 
   if (!authenticatedUserAddress?.address || !nftInputUser || !nftAuthUser) {
     onClose();
@@ -90,8 +97,6 @@ export const ConfirmSwapModal = ({
 
   let chainId: number;
 
-  const nftsInputUser = ComposeNftSwap(nftInputUser);
-  const nftsAuthUser = ComposeNftSwap(nftAuthUser);
   const handleSwap = async () => {
     if (typeof chain?.id != "undefined") {
       chainId = chain?.id;
@@ -110,8 +115,8 @@ export const ConfirmSwapModal = ({
     try {
       setCreateSwapStatus(CreateSwapStatus.WAITING_WALLET_APPROVAL);
 
-      if (allSelectedNftsAproved) {
-        const transactionReceipt = await creatingSwap(swapData);
+      if (allSelectedNftsApproved) {
+        const transactionReceipt = await createSwap(swapData);
         if (transactionReceipt != undefined) {
           setCreateSwapStatus(CreateSwapStatus.WALLET_APPROVED);
         } else {
@@ -125,32 +130,25 @@ export const ConfirmSwapModal = ({
   };
 
   const validateApprovedTokensSwap = () => {
-    console.log("allSelectedNftsAproved", allSelectedNftsAproved);
-    if (!allSelectedNftsAproved) {
+    console.log("allSelectedNftsApproved", allSelectedNftsApproved);
+    if (!allSelectedNftsApproved) {
       toast.error("You must approve the Tokens to create Swap.");
       return;
     } else {
       setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
       handleSwap();
-      console.log("allSelectedNftsAproved", allSelectedNftsAproved);
+      console.log("allSelectedNftsApproved", allSelectedNftsApproved);
     }
   };
 
-  const authedUserSelectedApprovedItemsLenght =
-    authedUserSelectedNftsApprovalStatus.filter(
-      (item) => item.approved !== ADDRESS_ZERO,
-    ).length;
-
-  const authedUserSelectedApprovalLenght =
-    authedUserSelectedNftsApprovalStatus.length;
-
   const handleToggleContinueSwap = () => {
-    if (allSelectedNftsAproved) {
+    if (allSelectedNftsApproved) {
       if (continueSwapModal) {
         setContinueSwapModal(false);
       } else setContinueSwapModal(true);
     }
   };
+
   return (
     <>
       <Transition
@@ -219,29 +217,15 @@ export const ConfirmSwapModal = ({
                 </div>
 
                 <div className="flex justify-between items-center w-full p-6 border-t border-[#353836]">
-                  <div className="flex gap-2 md:w-[200px] justify-center items-center">
-                    <div className="flex">
-                      <p>
-                        {authedUserSelectedApprovedItemsLenght +
-                          "/" +
-                          authedUserSelectedApprovalLenght}
-                      </p>
-                    </div>
-                    <div className="flex w-full">
-                      <ProgressBar
-                        currentStep={authedUserSelectedApprovedItemsLenght}
-                        numberOfItems={authedUserSelectedApprovalLenght}
-                      />
-                    </div>
-                  </div>
+                  <ProgressStatus />
 
                   <div className="flex">
                     <button
-                      disabled={!allSelectedNftsAproved}
+                      disabled={!allSelectedNftsApproved}
                       className={cc([
                         "border border-[#353836] bg-[#282B29] rounded-[10px] px-4 py-2 dark:p-medium p-medium-dark ",
 
-                        !allSelectedNftsAproved
+                        !allSelectedNftsApproved
                           ? "cursor-not-allowed"
                           : "bg-[#DDF23D] ",
                       ])}
@@ -250,7 +234,7 @@ export const ConfirmSwapModal = ({
                       <div className="flex justify-center items-center gap-3">
                         <p
                           className={cc([
-                            !allSelectedNftsAproved
+                            !allSelectedNftsApproved
                               ? "p-medium-bold"
                               : "p-medium-bold-dark !text-black",
                           ])}
@@ -290,7 +274,7 @@ export const ConfirmSwapModal = ({
                         <LeftIcon />
                         <p
                           className={cc([
-                            !allSelectedNftsAproved
+                            !allSelectedNftsApproved
                               ? "p-medium-bold"
                               : "p-medium-bold-dark !text-[#DDF23D] ",
                           ])}
@@ -305,16 +289,16 @@ export const ConfirmSwapModal = ({
                     className={cc([
                       "flex",
                       {
-                        "cursor-not-allowed": !allSelectedNftsAproved,
+                        "cursor-not-allowed": !allSelectedNftsApproved,
                       },
                     ])}
                   >
                     <button
-                      disabled={!allSelectedNftsAproved}
+                      disabled={!allSelectedNftsApproved}
                       className={cc([
                         "border border-[#353836] bg-[#282B29] rounded-[10px] px-4 py-2 dark:p-medium p-medium-dark disabled:pointer-events-none",
 
-                        !allSelectedNftsAproved
+                        !allSelectedNftsApproved
                           ? "cursor-not-allowed"
                           : "bg-[#DDF23D] ",
                       ])}
@@ -330,7 +314,7 @@ export const ConfirmSwapModal = ({
                           CreateSwapStatus.CREATE_SWAP ? (
                           <p
                             className={cc([
-                              !allSelectedNftsAproved
+                              !allSelectedNftsApproved
                                 ? "p-medium-bold"
                                 : "p-medium-bold-dark !text-black",
                             ])}
@@ -341,7 +325,7 @@ export const ConfirmSwapModal = ({
                           CreateSwapStatus.WALLET_APPROVED ? (
                           <p
                             className={cc([
-                              !allSelectedNftsAproved
+                              !allSelectedNftsApproved
                                 ? "p-medium-bold"
                                 : "p-medium-bold-dark !text-black",
                             ])}

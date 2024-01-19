@@ -17,7 +17,7 @@ import {
 } from "@/lib/client/blockchain-data";
 import { approveSwap } from "@/lib/service/approveSwap";
 import { hexToNumber } from "viem";
-import { useSwaplace } from "@/lib/client/hooks/useSwaplace";
+import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
 
 export const NftsCardApprovedList = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -36,8 +36,6 @@ export const NftsCardApprovedList = () => {
     setCreateSwapStatus,
   } = useContext(SwapContext);
 
-  const { updateNftsToSwapApprovalStatus } = useSwaplace();
-
   //   useEffect(() => {
   //     if (!open) {
   //       setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
@@ -51,7 +49,11 @@ export const NftsCardApprovedList = () => {
     }
 
     const fetchApprove = async () => {
-      await updateNftsToSwapApprovalStatus();
+      await updateNftsToSwapApprovalStatus(
+        nftAuthUser,
+        setAuthedUserNftsApprovalStatus,
+        setAllSelectedNftsAreApproved,
+      );
     };
     fetchApprove();
   }, [nftAuthUser, allSelectedNftsAproved]);
