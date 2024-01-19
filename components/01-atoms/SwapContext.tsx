@@ -2,7 +2,11 @@ import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
-import { IArrayStatusTokenApproved } from "@/lib/client/blockchain-data";
+import {
+  CreateApprovalStatus,
+  CreateSwapStatus,
+  IArrayStatusTokenApproved,
+} from "@/lib/client/blockchain-data";
 
 interface SwapContextProps {
   inputAddress: string;
@@ -28,6 +32,10 @@ interface SwapContextProps {
     React.SetStateAction<IArrayStatusTokenApproved[]>
   >;
   authedUserSelectedNftsApprovalStatus: IArrayStatusTokenApproved[];
+  setCreateApprovalStatus: Dispatch<React.SetStateAction<CreateApprovalStatus>>;
+  createApprovalStatus: CreateApprovalStatus;
+  setCreateSwapStatus: Dispatch<React.SetStateAction<CreateSwapStatus>>;
+  createSwapStatus: CreateSwapStatus;
 }
 
 export const SwapContext = React.createContext<SwapContextProps>({
@@ -52,6 +60,10 @@ export const SwapContext = React.createContext<SwapContextProps>({
   allSelectedNftsAproved: false,
   setAuthedUserNftsApprovalStatus: () => {},
   authedUserSelectedNftsApprovalStatus: [],
+  setCreateApprovalStatus: () => {},
+  createApprovalStatus: CreateApprovalStatus.CREATE_APPROVAL,
+  setCreateSwapStatus: () => {},
+  createSwapStatus: CreateSwapStatus.CREATE_SWAP,
 });
 
 export const SwapContextProvider = ({ children }: any) => {
@@ -71,7 +83,12 @@ export const SwapContextProvider = ({ children }: any) => {
     authedUserSelectedNftsApprovalStatus,
     setAuthedUserNftsApprovalStatus,
   ] = useState<IArrayStatusTokenApproved[]>([]);
-
+  const [createApprovalStatus, setCreateApprovalStatus] = useState(
+    CreateApprovalStatus.CREATE_APPROVAL,
+  );
+  const [createSwapStatus, setCreateSwapStatus] = useState(
+    CreateSwapStatus.CREATE_SWAP,
+  );
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
     _inputEnsAddress: string | null | undefined,
@@ -150,6 +167,10 @@ export const SwapContextProvider = ({ children }: any) => {
       allSelectedNftsAproved,
       setAuthedUserNftsApprovalStatus,
       authedUserSelectedNftsApprovalStatus,
+      createApprovalStatus,
+      createSwapStatus,
+      setCreateApprovalStatus,
+      setCreateSwapStatus,
     });
   }, [
     inputAddress,
@@ -182,6 +203,10 @@ export const SwapContextProvider = ({ children }: any) => {
     allSelectedNftsAproved,
     setAuthedUserNftsApprovalStatus,
     authedUserSelectedNftsApprovalStatus,
+    createApprovalStatus,
+    createSwapStatus,
+    setCreateApprovalStatus,
+    setCreateSwapStatus,
   });
 
   return (

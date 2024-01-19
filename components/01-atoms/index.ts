@@ -4,7 +4,7 @@ export * from "./StatusOffers";
 export * from "./SearchBar";
 export * from "./SelectAuthedUserChain";
 export * from "./SelectDestinyChain";
-export * from "./ConfirmSwapModal";
+export * from "../02-molecules/ConfirmSwapModal";
 export * from "./TransactionResultModal";
 export * from "./LoadingIndicator";
 export * from "./SwapContext";
