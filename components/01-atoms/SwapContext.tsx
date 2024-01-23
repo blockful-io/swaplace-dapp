@@ -4,10 +4,9 @@ import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
 import {
   ButtonClickPossibilities,
-  CreateApprovalStatus,
-  CreateSwapStatus,
   IArrayStatusTokenApproved,
   SwapModalSteps,
+  TransactionStatus,
 } from "@/lib/client/blockchain-data";
 
 interface SwapContextProps {
@@ -34,10 +33,10 @@ interface SwapContextProps {
     React.SetStateAction<IArrayStatusTokenApproved[]>
   >;
   authedUserSelectedNftsApprovalStatus: IArrayStatusTokenApproved[];
-  setCreateApprovalStatus: Dispatch<React.SetStateAction<CreateApprovalStatus>>;
-  createApprovalStatus: CreateApprovalStatus;
-  setCreateSwapStatus: Dispatch<React.SetStateAction<CreateSwapStatus>>;
-  createSwapStatus: CreateSwapStatus;
+  setCreateApprovalStatus: Dispatch<React.SetStateAction<TransactionStatus>>;
+  createApprovalStatus: TransactionStatus;
+  setCreateSwapStatus: Dispatch<React.SetStateAction<TransactionStatus>>;
+  createSwapStatus: TransactionStatus;
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
   currentSwapModalStep: SwapModalSteps;
 }
@@ -65,9 +64,9 @@ export const SwapContext = React.createContext<SwapContextProps>({
   setAuthedUserNftsApprovalStatus: () => {},
   authedUserSelectedNftsApprovalStatus: [],
   setCreateApprovalStatus: () => {},
-  createApprovalStatus: CreateApprovalStatus.CREATE_APPROVAL,
+  createApprovalStatus: TransactionStatus.SEND_TRANSACTION,
   setCreateSwapStatus: () => {},
-  createSwapStatus: CreateSwapStatus.CREATE_SWAP,
+  createSwapStatus: TransactionStatus.SEND_TRANSACTION,
   currentSwapModalStep: SwapModalSteps.APPROVE_NFTS,
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
 });
@@ -92,10 +91,10 @@ export const SwapContextProvider = ({ children }: any) => {
     setAuthedUserNftsApprovalStatus,
   ] = useState<IArrayStatusTokenApproved[]>([]);
   const [createApprovalStatus, setCreateApprovalStatus] = useState(
-    CreateApprovalStatus.CREATE_APPROVAL,
+    TransactionStatus.SEND_TRANSACTION,
   );
   const [createSwapStatus, setCreateSwapStatus] = useState(
-    CreateSwapStatus.CREATE_SWAP,
+    TransactionStatus.SEND_TRANSACTION,
   );
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
@@ -149,10 +148,20 @@ export const SwapContextProvider = ({ children }: any) => {
   // Created to make progress on a yet to be created state (which will live inside SwapContext)
   // and control in which modal step the user is in
   const updateSwapStep = (buttonClicked: ButtonClickPossibilities) => {
-    if (buttonClicked === ButtonClickPossibilities.PREVIOUS_SET) {
-      setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
-    } else {
-      setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+    switch (currentSwapModalStep) {
+      case SwapModalSteps.APPROVE_NFTS:
+        if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
+        }
+        break;
+      case SwapModalSteps.CREATE_SWAP:
+        if (buttonClicked === ButtonClickPossibilities.PREVIOUS_SET) {
+          setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+        } else {
+          alert("Create blockchain transaction");
+          // submit swap
+        }
+        break;
     }
   };
 

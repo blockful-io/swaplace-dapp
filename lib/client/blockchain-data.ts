@@ -3,16 +3,6 @@ import { NFT, NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
 import { getTimestamp } from "./utils";
 import { hexToNumber } from "viem";
 
-export enum SwapModalSteps {
-  APPROVE_NFTS,
-  CREATE_SWAP,
-}
-
-export enum ButtonClickPossibilities {
-  PREVIOUS_SET,
-  NEXT_STEP,
-}
-
 export interface ICreateSwap {
   walletClient: any;
   expireDate: bigint;
@@ -45,16 +35,21 @@ export interface INftSwappingInfo {
   amountOrId: bigint;
 }
 
-export enum CreateApprovalStatus {
-  "CREATE_APPROVAL" = "CREATE_APPROVAL",
-  "WAITING_WALLET_APPROVAL" = "WAITING_WALLET_APPROVAL",
-  "WALLET_APPROVED" = "WALLET_APPROVED",
+export enum SwapModalSteps {
+  APPROVE_NFTS,
+  CREATE_SWAP,
 }
 
-export enum CreateSwapStatus {
-  "CREATE_SWAP" = "CREATE_SWAP",
-  "WAITING_WALLET_APPROVAL" = "WAITING_WALLET_APPROVAL",
-  "WALLET_APPROVED" = "WALLET_APPROVED",
+export enum ButtonClickPossibilities {
+  PREVIOUS_SET,
+  NEXT_STEP,
+}
+
+export enum TransactionStatus {
+  SEND_TRANSACTION,
+  WAITING_WALLET_APPROVAL,
+  TRANSACTION_APPROVED,
+  SUCCESSFUL_TRANSACTION,
 }
 
 export type NftSwappingInfo = {

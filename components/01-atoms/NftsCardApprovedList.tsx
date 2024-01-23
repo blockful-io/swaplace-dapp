@@ -10,11 +10,7 @@ import toast from "react-hot-toast";
 import { SwapContext } from ".";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork, useWalletClient } from "wagmi";
-import {
-  IApproveSwap,
-  CreateApprovalStatus,
-  CreateSwapStatus,
-} from "@/lib/client/blockchain-data";
+import { IApproveSwap, TransactionStatus } from "@/lib/client/blockchain-data";
 import { approveSwap } from "@/lib/service/approveSwap";
 import { hexToNumber } from "viem";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
@@ -29,7 +25,7 @@ export const NftsCardApprovedList = () => {
     authedUserSelectedNftsApprovalStatus,
     setAuthedUserNftsApprovalStatus,
     setAllSelectedNftsAreApproved,
-    allSelectedNftsAproved,
+    allSelectedNftsApproved,
     createApprovalStatus,
     setCreateApprovalStatus,
     createSwapStatus,
@@ -43,9 +39,9 @@ export const NftsCardApprovedList = () => {
   //   }, [open]);
 
   useEffect(() => {
-    if (createSwapStatus === CreateSwapStatus.WALLET_APPROVED) {
-      setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
-      setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
+    if (createSwapStatus === TransactionStatus.TRANSACTION_APPROVED) {
+      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
+      setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
     }
 
     const fetchApprove = async () => {
@@ -56,7 +52,7 @@ export const NftsCardApprovedList = () => {
       );
     };
     fetchApprove();
-  }, [nftAuthUser, allSelectedNftsAproved]);
+  }, [nftAuthUser, allSelectedNftsApproved]);
   if (!authenticatedUserAddress?.address) {
     return null;
   }
@@ -74,18 +70,18 @@ export const NftsCardApprovedList = () => {
     };
 
     try {
-      setCreateApprovalStatus(CreateApprovalStatus.WAITING_WALLET_APPROVAL);
+      setCreateApprovalStatus(TransactionStatus.WAITING_WALLET_APPROVAL);
       const transactionReceipt = await approveSwap(swapData);
       if (transactionReceipt != undefined) {
-        setCreateApprovalStatus(CreateApprovalStatus.WALLET_APPROVED);
-        setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
+        setCreateApprovalStatus(TransactionStatus.TRANSACTION_APPROVED);
+        setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
         return transactionReceipt;
       } else {
-        setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+        setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
         toast.error("Approval Failed");
       }
     } catch (error) {
-      setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
       console.error(error);
     }
   };
@@ -111,10 +107,12 @@ export const NftsCardApprovedList = () => {
     } else {
       await handleApprove(nft).then((result) => {
         if (result != undefined) {
-          setAuthedUserNftsApprovalStatus(
-            (authedUserSelectedNftsApprovalStatus[index].approved =
-              SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as any),
-          );
+          // heron todo: update the nft status
+          const nftWasApproved =
+            authedUserSelectedNftsApprovalStatus[index].approved ==
+            (SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as any);
+
+          setAuthedUserNftsApprovalStatus([]);
         }
         validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
       });

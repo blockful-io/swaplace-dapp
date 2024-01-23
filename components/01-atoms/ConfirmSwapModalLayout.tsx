@@ -3,9 +3,8 @@ import React, { Fragment, useEffect, useContext, useState } from "react";
 import { CloseIcon } from "./icons/CloseIcon";
 import {
   ButtonClickPossibilities,
-  CreateApprovalStatus,
-  CreateSwapStatus,
   SwapModalSteps,
+  TransactionStatus,
 } from "@/lib/client/blockchain-data";
 import { LoadingIndicator, SwapContext } from "@/components/01-atoms";
 import cc from "classcat";
@@ -57,16 +56,18 @@ export const ConfirmSwapModalLayout = ({
 
   useEffect(() => {
     if (!open) {
-      setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
       updateSwapStep(ButtonClickPossibilities.PREVIOUS_SET);
     }
   }, [open]);
 
-  const handleToggleContinueSwap = () => {
-    if (allSelectedNftsApproved) {
-      if (currentSwapModalStep) {
-        updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
-      } else updateSwapStep(ButtonClickPossibilities.PREVIOUS_SET);
+  const handleContinueSwapProcess = () => {
+    switch (currentSwapModalStep) {
+      case SwapModalSteps.APPROVE_NFTS:
+        if (allSelectedNftsApproved) {
+          updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
+        }
+      case SwapModalSteps.CREATE_SWAP:
     }
   };
 
@@ -147,7 +148,7 @@ export const ConfirmSwapModalLayout = ({
                           ? "cursor-not-allowed"
                           : "bg-[#DDF23D] ",
                       ])}
-                      onClick={() => handleToggleContinueSwap()}
+                      onClick={() => handleContinueSwapProcess()}
                     >
                       <div className="flex justify-center items-center gap-3">
                         <p

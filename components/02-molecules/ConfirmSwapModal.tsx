@@ -10,10 +10,9 @@ import {
 import { createSwap } from "@/lib/service/createSwap";
 import {
   ComposeNftSwap,
-  CreateApprovalStatus,
-  CreateSwapStatus,
   ICreateSwap,
   SwapModalSteps,
+  TransactionStatus,
 } from "@/lib/client/blockchain-data";
 import cc from "classcat";
 import toast from "react-hot-toast";
@@ -68,7 +67,7 @@ export const ConfirmSwapModal = ({
 
   useEffect(() => {
     if (!open) {
-      setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
       setContinueSwapModal(false);
     }
   }, [open]);
@@ -77,9 +76,9 @@ export const ConfirmSwapModal = ({
   const nftsAuthUser = ComposeNftSwap(nftAuthUser);
 
   useEffect(() => {
-    if (createSwapStatus === CreateSwapStatus.WALLET_APPROVED) {
-      setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
-      setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
+    if (createSwapStatus === TransactionStatus.TRANSACTION_APPROVED) {
+      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
+      setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
     }
 
     const fetchApprove = async () => {
@@ -115,14 +114,14 @@ export const ConfirmSwapModal = ({
     };
 
     try {
-      setCreateSwapStatus(CreateSwapStatus.WAITING_WALLET_APPROVAL);
+      setCreateSwapStatus(TransactionStatus.WAITING_WALLET_APPROVAL);
 
       if (allSelectedNftsApproved) {
         const transactionReceipt = await createSwap(swapData);
         if (transactionReceipt != undefined) {
-          setCreateSwapStatus(CreateSwapStatus.WALLET_APPROVED);
+          setCreateSwapStatus(TransactionStatus.TRANSACTION_APPROVED);
         } else {
-          setCreateSwapStatus(CreateSwapStatus.CREATE_SWAP);
+          setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
           toast.error("Create Swap Failed");
         }
       }
@@ -137,7 +136,7 @@ export const ConfirmSwapModal = ({
       toast.error("You must approve the Tokens to create Swap.");
       return;
     } else {
-      setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
+      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
       handleSwap();
       console.log("allSelectedNftsApproved", allSelectedNftsApproved);
     }
@@ -164,7 +163,14 @@ export const ConfirmSwapModal = ({
           component: <NftsCardApprovedList />,
         }}
         footer={{
-          component: <ProgressStatus />,
+          component: (
+            <>
+              <ProgressStatus />
+
+              {/* Render Progress button here */}
+              <div />
+            </>
+          ),
         }}
       />
     ),
