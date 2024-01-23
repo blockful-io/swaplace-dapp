@@ -3,20 +3,12 @@ import toast from "react-hot-toast";
 import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
 import {
+  ButtonClickPossibilities,
   CreateApprovalStatus,
   CreateSwapStatus,
   IArrayStatusTokenApproved,
+  SwapModalSteps,
 } from "@/lib/client/blockchain-data";
-
-enum SwapModalSteps {
-  APPROVE_NFTS,
-  CREATE_SWAP,
-}
-
-enum ButtonClickPossibilities {
-  PREVIOUS_SET,
-  NEXT_STEP,
-}
 
 interface SwapContextProps {
   inputAddress: string;

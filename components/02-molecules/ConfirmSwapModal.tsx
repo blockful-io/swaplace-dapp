@@ -13,6 +13,7 @@ import {
   CreateApprovalStatus,
   CreateSwapStatus,
   ICreateSwap,
+  SwapModalSteps,
 } from "@/lib/client/blockchain-data";
 import cc from "classcat";
 import toast from "react-hot-toast";
@@ -23,7 +24,7 @@ import { NftsCardApprovedList } from "../01-atoms/NftsCardApprovedList";
 import { LeftIcon } from "../01-atoms/icons/LeftIcon";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
 import { ProgressStatus } from "./ProgressStatus";
-import { Body } from "node-fetch";
+import { ConfirmSwapModalLayout } from "../01-atoms/ConfirmSwapModalLayout";
 
 export enum TransactionResult {
   "LOADING" = "LOADING",
@@ -54,6 +55,7 @@ export const ConfirmSwapModal = ({
     createApprovalStatus,
     setCreateSwapStatus,
     createSwapStatus,
+    currentSwapModalStep,
   } = useContext(SwapContext);
 
   const [continueSwapModal, setContinueSwapModal] = useState(false);
@@ -149,9 +151,44 @@ export const ConfirmSwapModal = ({
     }
   };
 
-  return (
-    <>
-      <Transition
+  const ConfirmSwapModalStep: Partial<Record<SwapModalSteps, JSX.Element>> = {
+    [SwapModalSteps.APPROVE_NFTS]: (
+      <ConfirmSwapModalLayout
+        toggleCloseButton={{ open: open, onClose: onClose }}
+        text={{
+          title: "Swap offer confirmation",
+          description:
+            "Before sending your offer, please approve the assets you want to trade by clicking on them.",
+        }}
+        body={{
+          component: <NftsCardApprovedList />,
+        }}
+        footer={{
+          component: <ProgressStatus />,
+        }}
+      />
+    ),
+    [SwapModalSteps.CREATE_SWAP]: (
+      <ConfirmSwapModalLayout
+        toggleCloseButton={{ open: open, onClose: onClose }}
+        text={{
+          title: "Swap offer confirmation",
+          description: "Please review your final proposal.",
+        }}
+        body={{
+          component: <NftsCardApprovedList />,
+        }}
+        footer={{
+          component: <ProgressStatus />,
+        }}
+      />
+    ),
+  };
+
+  return ConfirmSwapModalStep[currentSwapModalStep];
+
+  {
+    /* <Transition
         show={open}
         as={Fragment}
         enter="ease-out duration-300"
@@ -342,12 +379,10 @@ export const ConfirmSwapModal = ({
             )}
           </Dialog.Panel>
         </Transition>
-      </Dialog>
-
-      <TransactionResultModal
-        onClose={onClose}
-        transactionResult={transactionResult}
-      />
-    </>
-  );
+      </Dialog> */
+  }
+  // <TransactionResultModal
+  //   onClose={onClose}
+  //   transactionResult={transactionResult}
+  // />
 };

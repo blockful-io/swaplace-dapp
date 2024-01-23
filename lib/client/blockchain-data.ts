@@ -3,6 +3,16 @@ import { NFT, NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
 import { getTimestamp } from "./utils";
 import { hexToNumber } from "viem";
 
+export enum SwapModalSteps {
+  APPROVE_NFTS,
+  CREATE_SWAP,
+}
+
+export enum ButtonClickPossibilities {
+  PREVIOUS_SET,
+  NEXT_STEP,
+}
+
 export interface ICreateSwap {
   walletClient: any;
   expireDate: bigint;
