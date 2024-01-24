@@ -91,7 +91,6 @@ export const NftsCardApprovedList = () => {
       return token.approved != SWAPLACE_SMART_CONTRACT_ADDRESS[chainId];
     });
 
-    console.log("isValidApproved", isValidApproved);
     setAllSelectedNftsAreApproved(isValidApproved);
   };
 
@@ -107,12 +106,12 @@ export const NftsCardApprovedList = () => {
     } else {
       await handleApprove(nft).then((result) => {
         if (result != undefined) {
-          // heron todo: update the nft status
-          const nftWasApproved =
-            authedUserSelectedNftsApprovalStatus[index].approved ==
-            (SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as any);
+          setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
+          const nftWasApproved = (authedUserSelectedNftsApprovalStatus[
+            index
+          ].approved = SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as any);
 
-          setAuthedUserNftsApprovalStatus([]);
+          setAuthedUserNftsApprovalStatus([nftWasApproved]);
         }
         validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
       });
