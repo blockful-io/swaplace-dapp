@@ -11,7 +11,7 @@ interface INftCard {
   ownerAddress: string | null;
   onClickAction?: NftCardActionType;
   withSelectionValidation?: boolean;
-  styleType: NftCardStyleType;
+  styleType?: NftCardStyleType;
 }
 
 /**
