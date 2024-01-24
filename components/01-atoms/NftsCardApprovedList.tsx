@@ -114,12 +114,13 @@ export const NftsCardApprovedList = () => {
 
   return (
     <div className="flex justify-center items-center relative">
-      <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[340px]">
+      <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[370px]">
         {nftAuthUser.map((nft, index) => (
           <div
             className={cc([
-              "flex p-4 items-center gap-4 h-[68px]",
-              nftAuthUser.length <= 3 ? "flex h-[136px] w-full" : "flex",
+              nftAuthUser.length <= 3
+                ? "flex h-[136px] w-full items-center  gap-4 px-4"
+                : "flex p-4 items-center gap-4 h-[68px]",
               authedUserSelectedNftsApprovalStatus[index]?.approved ===
               ADDRESS_ZERO
                 ? "bg-[#353836]  rounded-xl"

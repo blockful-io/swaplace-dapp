@@ -64,7 +64,7 @@ export const ConfirmSwapModalLayout = ({
         >
           <Dialog.Panel
             className={
-              "flex flex-col md:min-w-[480px] md:max-w-[480px] md:max-h-[620px] border border-[#353836] rounded-[20px] shadow"
+              "flex flex-col md:min-w-[480px] md:max-w-[480px] md:max-h-[620px] w-[300px] border border-[#353836] rounded-[20px] shadow"
             }
           >
             <div className="border-b border-[#353836]">
@@ -88,22 +88,20 @@ export const ConfirmSwapModalLayout = ({
               </Dialog.Title>
             </div>
 
-            <div className="w-[300px] md:w-full ">
-              <div className="flex flex-col gap-6 p-6 h-[412px] ">
-                <div className="flex">
-                  <Dialog.Description>
-                    <p className="dark:p-normal-2-dark p-normal-2">
-                      {text.description}
-                    </p>
-                  </Dialog.Description>
-                </div>
-
-                <div>{body.component}</div>
+            <div className="flex flex-col gap-6 p-6 h-[460px] ">
+              <div className="flex">
+                <Dialog.Description>
+                  <p className="dark:p-normal-2-dark p-normal-2">
+                    {text.description}
+                  </p>
+                </Dialog.Description>
               </div>
 
-              <div className="flex justify-between items-center w-full p-6 border-t border-[#353836]">
-                {footer.component}
-              </div>
+              <div>{body.component}</div>
+            </div>
+
+            <div className="flex justify-between items-center w-full p-6 border-t border-[#353836]">
+              {footer.component}
             </div>
           </Dialog.Panel>
         </Transition>

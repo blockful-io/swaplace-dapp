@@ -189,7 +189,7 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: <NftsCardApprovedList />,
+          component: "",
         }}
         footer={{
           component: (
