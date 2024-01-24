@@ -32,12 +32,6 @@ export const NftsCardApprovedList = () => {
     setCreateSwapStatus,
   } = useContext(SwapContext);
 
-  //   useEffect(() => {
-  //     if (!open) {
-  //       setCreateApprovalStatus(CreateApprovalStatus.CREATE_APPROVAL);
-  //     }
-  //   }, [open]);
-
   useEffect(() => {
     if (createSwapStatus === TransactionStatus.TRANSACTION_APPROVED) {
       setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
@@ -158,11 +152,11 @@ export const NftsCardApprovedList = () => {
               <div className="flex p-semibold-dark">
                 {authedUserSelectedNftsApprovalStatus[index]?.approved ===
                 ADDRESS_ZERO ? (
-                  <p className=" bg-[#505150] px-1 w-fit flex rounded-[4px]">
+                  <p className=" bg-[#505150] px-1 w-fit rounded-[4px] h-5 items-center flex">
                     PENDING APPROVAL
                   </p>
                 ) : (
-                  <div className="bg-[#505150] px-1 w-fit opacity-30 rounded-[4px]">
+                  <div className="bg-[#505150] px-1 w-fit bg-opacity-30 rounded-[4px] h-5 items-center flex">
                     <p className="text-white">APPROVED</p>
                   </div>
                 )}

@@ -162,15 +162,19 @@ export const ConfirmSwapModal = ({
         footer={{
           component: (
             <>
-              <div className="flex w-full justify-between">
-                <ProgressStatus />
-                <GenericButton
-                  label={"Continue"}
-                  onClick={() => handleContinueSwapProcess()}
-                  aditionalStyle={
-                    theme === "light" ? "text-black" : "text-yellow"
-                  }
-                />
+              <div className="flex w-full justify-between items-center">
+                <div>
+                  <ProgressStatus />
+                </div>
+                <div>
+                  <GenericButton
+                    label={"Continue"}
+                    onClick={() => handleContinueSwapProcess()}
+                    aditionalStyle={
+                      theme === "light" ? "text-black" : "text-yellow"
+                    }
+                  />
+                </div>
               </div>
             </>
           ),

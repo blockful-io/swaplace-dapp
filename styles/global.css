@@ -34,7 +34,7 @@ input[type="search"]::-webkit-search-results-decoration {
   }
 
   .p-semibold-dark {
-    @apply font-onest font-semibold text-[16px] leading-[16px] text-[#F6F6F6];
+    @apply font-onest font-semibold text-[12px] leading-[16px] text-[#F6F6F6];
   }
 
   .p-medium-2 {
