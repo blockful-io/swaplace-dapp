@@ -113,16 +113,17 @@ export const NftsCardApprovedList = () => {
   };
 
   return (
-    <div className="flex justify-center items-center overflow-y-auto max-h-[250px] relative">
-      <div className="grid grid-cols-1 w-[100%] gap-3 relative ">
+    <div className="flex justify-center items-center relative">
+      <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[340px]">
         {nftAuthUser.map((nft, index) => (
           <div
             className={cc([
               "flex p-4 items-center gap-4 h-[68px]",
+              nftAuthUser.length <= 3 ? "flex h-[136px] w-full" : "flex",
               authedUserSelectedNftsApprovalStatus[index]?.approved ===
               ADDRESS_ZERO
                 ? "bg-[#353836]  rounded-xl"
-                : "dark:bg-[#DDF23D] bg-[#97a529]  rounded-xl disabled cursor-not-allowed",
+                : "dark:bg-[#DDF23D] bg-[#97a529] rounded-xl disabled cursor-not-allowed",
             ])}
             role="button"
             onClick={() => approveNftForSwapping(nft, index)}
@@ -133,7 +134,11 @@ export const NftsCardApprovedList = () => {
                 onClickAction={NftCardActionType.NFT_ONCLICK}
                 ownerAddress={authenticatedUserAddress.address}
                 nftData={nftAuthUser[index]}
-                styleType={NftCardStyleType.SMALL}
+                styleType={
+                  nftAuthUser.length <= 3
+                    ? NftCardStyleType.LARGE
+                    : NftCardStyleType.SMALL
+                }
               />
             </div>
             <div className="flex flex-col gap-1">

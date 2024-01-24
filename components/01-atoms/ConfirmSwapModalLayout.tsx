@@ -88,8 +88,8 @@ export const ConfirmSwapModalLayout = ({
               </Dialog.Title>
             </div>
 
-            <div className="w-[300px] md:w-full">
-              <div className="flex flex-col gap-6 p-6">
+            <div className="w-[300px] md:w-full ">
+              <div className="flex flex-col gap-6 p-6 h-[412px] ">
                 <div className="flex">
                   <Dialog.Description>
                     <p className="dark:p-normal-2-dark p-normal-2">
