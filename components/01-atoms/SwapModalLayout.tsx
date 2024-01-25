@@ -22,19 +22,19 @@ interface ConfirmSwapApprovalModalFooter {
   component: React.ReactNode;
 }
 
-interface IConfirmSwapModalLayout {
+interface ISwapModalLayout {
   toggleCloseButton: ConfirmSwapModalToggle;
   text: ConfirmSwapModalText;
   body: ConfirmSwapApprovalModalBody;
   footer: ConfirmSwapApprovalModalFooter;
 }
 
-export const ConfirmSwapModalLayout = ({
+export const SwapModalLayout = ({
   toggleCloseButton,
   text,
   body,
   footer,
-}: IConfirmSwapModalLayout) => {
+}: ISwapModalLayout) => {
   const { theme } = useTheme();
 
   return (

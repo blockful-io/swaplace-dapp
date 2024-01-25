@@ -1,4 +1,4 @@
-export * from "./ConfirmSwapModalLayout";
+export * from "./SwapModalLayout";
 export * from "./ConnectWallet";
 export * from "./EmptyNftsCards";
 export * from "./GenericButton";

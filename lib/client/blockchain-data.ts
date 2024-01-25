@@ -38,10 +38,12 @@ export interface INftSwappingInfo {
 export enum SwapModalSteps {
   APPROVE_NFTS,
   CREATE_SWAP,
+  CREATING_SWAP,
+  CREATED_SWAP,
 }
 
 export enum ButtonClickPossibilities {
-  PREVIOUS_SET,
+  PREVIOUS_STEP,
   NEXT_STEP,
 }
 

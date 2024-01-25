@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import { NftsCardApprovedList } from "../01-atoms/NftsCardApprovedList";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
 import { ProgressStatus } from "./ProgressStatus";
-import { ConfirmSwapModalLayout } from "../01-atoms/ConfirmSwapModalLayout";
+import { SwapModalLayout } from "../01-atoms/SwapModalLayout";
 import { ButtonVariant, GenericButton } from "../01-atoms/GenericButton";
 import { useTheme } from "next-themes";
 
@@ -58,7 +58,7 @@ export const ConfirmSwapModal = ({
 
   useEffect(() => {
     if (!open) {
-      updateSwapStep(ButtonClickPossibilities.PREVIOUS_SET);
+      updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
       setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
     }
   }, [open]);
@@ -92,6 +92,8 @@ export const ConfirmSwapModal = ({
   const handleSwap = async () => {
     if (typeof chain?.id != "undefined") {
       chainId = chain?.id;
+    } else {
+      throw new Error("Chain ID is undefined");
     }
 
     const swapData: ICreateSwap = {
@@ -105,51 +107,40 @@ export const ConfirmSwapModal = ({
     };
 
     try {
-      setCreateSwapStatus(TransactionStatus.WAITING_WALLET_APPROVAL);
-
       if (allSelectedNftsApproved) {
-        setCreateSwapStatus(TransactionStatus.TRANSACTION_APPROVED);
-
         const transactionReceipt = await createSwap(swapData);
+
         if (transactionReceipt != undefined) {
           toast.success("Created Swap");
-          setCreateSwapStatus(TransactionStatus.SUCCESSFUL_TRANSACTION);
+          updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
         } else {
-          setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
+          updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
           toast.error("Create Swap Failed");
         }
+      } else {
+        toast.error("You must approve the Tokens to create Swap.");
+        updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
       }
     } catch (error) {
+      toast.error("You must approve the Tokens to create Swap.");
+      updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
       console.error(error);
     }
   };
 
-  const validateAllTokensApprovalSwap = () => {
-    if (!allSelectedNftsApproved) {
-      toast.error("You must approve the Tokens to create Swap.");
-      return;
+  const validateTokensAreApproved = () => {
+    if (allSelectedNftsApproved) {
+      if (currentSwapModalStep === SwapModalSteps.APPROVE_NFTS) {
+        updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
+      }
     } else {
-      setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
-      handleSwap();
-    }
-  };
-
-  const handleContinueSwapProcess = () => {
-    switch (currentSwapModalStep) {
-      case SwapModalSteps.APPROVE_NFTS:
-        if (allSelectedNftsApproved) {
-          updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
-        } else {
-          toast.error("You must approve the Tokens to create Swap.");
-        }
-      case SwapModalSteps.CREATE_SWAP:
-        updateSwapStep(ButtonClickPossibilities.PREVIOUS_SET);
+      toast.error("You must approve the Tokens to create Swap.");
     }
   };
 
   const ConfirmSwapModalStep: Partial<Record<SwapModalSteps, JSX.Element>> = {
     [SwapModalSteps.APPROVE_NFTS]: (
-      <ConfirmSwapModalLayout
+      <SwapModalLayout
         toggleCloseButton={{ open: open, onClose: onClose }}
         text={{
           title: "Swap offer confirmation",
@@ -169,7 +160,7 @@ export const ConfirmSwapModal = ({
                 <div>
                   <GenericButton
                     label={"Continue"}
-                    onClick={() => handleContinueSwapProcess()}
+                    onClick={validateTokensAreApproved}
                     aditionalStyle={
                       theme === "light" ? "text-black" : "text-yellow"
                     }
@@ -182,7 +173,7 @@ export const ConfirmSwapModal = ({
       />
     ),
     [SwapModalSteps.CREATE_SWAP]: (
-      <ConfirmSwapModalLayout
+      <SwapModalLayout
         toggleCloseButton={{ open: open, onClose: onClose }}
         text={{
           title: "Swap offer confirmation",
@@ -197,17 +188,74 @@ export const ConfirmSwapModal = ({
               <div className="flex w-full justify-end gap-3">
                 <GenericButton
                   label={"Back"}
-                  onClick={() => handleContinueSwapProcess()}
                   variant={ButtonVariant.ALTERNATIVE}
+                  onClick={() =>
+                    updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP)
+                  }
                 />
 
                 <GenericButton
                   label={"Confirm and send"}
                   disabled={!allSelectedNftsApproved}
-                  onClick={() => {
-                    validateAllTokensApprovalSwap();
-                  }}
                   variant={ButtonVariant.SECONDARY}
+                  onClick={() => {
+                    updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
+                    handleSwap();
+                  }}
+                />
+              </div>
+            </>
+          ),
+        }}
+      />
+    ),
+    [SwapModalSteps.CREATING_SWAP]: (
+      <SwapModalLayout
+        toggleCloseButton={{ open: open, onClose: onClose }}
+        text={{
+          title: "Swap offer confirmation",
+          description: "Please review your final proposal.",
+        }}
+        body={{
+          component: "",
+        }}
+        footer={{
+          component: (
+            <>
+              <div className="flex w-full justify-end gap-3">
+                {/* 
+                  TODO > Replace variant names with context related names
+                  e.g. GenericButton -> SwapModalButton
+                */}
+                <GenericButton
+                  label={"Waiting wallet approval..."}
+                  variant={ButtonVariant.SECONDARY}
+                  disabled={true}
+                />
+              </div>
+            </>
+          ),
+        }}
+      />
+    ),
+    [SwapModalSteps.CREATED_SWAP]: (
+      <SwapModalLayout
+        toggleCloseButton={{ open: open, onClose: onClose }}
+        text={{
+          title: "Swap offer confirmed!",
+          description: "Congrats, your swap offer was submitted.",
+        }}
+        body={{
+          component: "",
+        }}
+        footer={{
+          component: (
+            <>
+              <div className="flex w-full justify-end gap-3">
+                <GenericButton
+                  label={"Close swap modal"}
+                  variant={ButtonVariant.SECONDARY}
+                  onClick={onClose}
                 />
               </div>
             </>

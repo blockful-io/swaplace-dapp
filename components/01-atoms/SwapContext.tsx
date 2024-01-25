@@ -96,6 +96,7 @@ export const SwapContextProvider = ({ children }: any) => {
   const [createSwapStatus, setCreateSwapStatus] = useState(
     TransactionStatus.SEND_TRANSACTION,
   );
+
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
     _inputEnsAddress: string | null | undefined,
@@ -145,8 +146,6 @@ export const SwapContextProvider = ({ children }: any) => {
     setUserJustValidatedInput(true);
   };
 
-  // Created to make progress on a yet to be created state (which will live inside SwapContext)
-  // and control in which modal step the user is in
   const updateSwapStep = (buttonClicked: ButtonClickPossibilities) => {
     switch (currentSwapModalStep) {
       case SwapModalSteps.APPROVE_NFTS:
@@ -155,11 +154,17 @@ export const SwapContextProvider = ({ children }: any) => {
         }
         break;
       case SwapModalSteps.CREATE_SWAP:
-        if (buttonClicked === ButtonClickPossibilities.PREVIOUS_SET) {
+        if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
           setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
-        } else {
-          alert("Create blockchain transaction");
-          // submit swap
+        } else if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.CREATING_SWAP);
+        }
+        break;
+      case SwapModalSteps.CREATING_SWAP:
+        if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.CREATED_SWAP);
+        } else if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
         }
         break;
     }
