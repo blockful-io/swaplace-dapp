@@ -6,6 +6,7 @@ import { SwapContext } from "@/components/01-atoms";
 import { PersonIcon } from "@/components/01-atoms/icons";
 import { NftCard } from "@/components/02-molecules";
 import { EmptyNftsCards } from "@/components/01-atoms";
+import { SwapOfferDetails } from "../01-atoms/SwapOfferDetails";
 
 interface IOfferSummary {
   forAuthedUser: boolean;
@@ -88,6 +89,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
           )}
         </div>
       </div>
+      {forAuthedUser && <SwapOfferDetails />}
     </div>
   );
 };

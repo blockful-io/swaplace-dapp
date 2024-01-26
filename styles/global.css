@@ -61,6 +61,10 @@ input[type="search"]::-webkit-search-results-decoration {
     @apply font-onest font-normal text-[14px] leading-[20px] text-[#F6F6F6];
   }
 
+  .p-xsmall {
+    @apply font-onest font-normal text-[12px] leading-[20px];
+  }
+
   .card-nft {
     @apply shadow-inner mx-auto w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col;
   }
