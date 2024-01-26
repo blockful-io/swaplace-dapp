@@ -2,7 +2,11 @@ import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
-import { IArrayStatusTokenApproved } from "@/lib/client/blockchain-data";
+import {
+  ButtonClickPossibilities,
+  IArrayStatusTokenApproved,
+  SwapModalSteps,
+} from "@/lib/client/blockchain-data";
 
 interface SwapContextProps {
   inputAddress: string;
@@ -23,11 +27,13 @@ interface SwapContextProps {
   setTimeDate: Dispatch<React.SetStateAction<bigint>>;
   timeDate: bigint;
   setAllSelectedNftsAreApproved: Dispatch<React.SetStateAction<boolean>>;
-  allSelectedNftsAproved: boolean;
+  allSelectedNftsApproved: boolean;
   setAuthedUserNftsApprovalStatus: Dispatch<
     React.SetStateAction<IArrayStatusTokenApproved[]>
   >;
   authedUserSelectedNftsApprovalStatus: IArrayStatusTokenApproved[];
+  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
+  currentSwapModalStep: SwapModalSteps;
 }
 
 export const SwapContext = React.createContext<SwapContextProps>({
@@ -49,9 +55,11 @@ export const SwapContext = React.createContext<SwapContextProps>({
   setTimeDate: () => {},
   timeDate: BigInt(1),
   setAllSelectedNftsAreApproved: () => {},
-  allSelectedNftsAproved: false,
+  allSelectedNftsApproved: false,
   setAuthedUserNftsApprovalStatus: () => {},
   authedUserSelectedNftsApprovalStatus: [],
+  currentSwapModalStep: SwapModalSteps.APPROVE_NFTS,
+  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
 });
 
 export const SwapContextProvider = ({ children }: any) => {
@@ -65,7 +73,9 @@ export const SwapContextProvider = ({ children }: any) => {
   );
   const [timeDate, setTimeDate] = useState<bigint>(BigInt(1));
 
-  const [allSelectedNftsAproved, setAllSelectedNftsAreApproved] =
+  const [currentSwapModalStep, setCurrentSwapModalStep] =
+    useState<SwapModalSteps>(SwapModalSteps.APPROVE_NFTS);
+  const [allSelectedNftsApproved, setAllSelectedNftsAreApproved] =
     useState<boolean>(false);
   const [
     authedUserSelectedNftsApprovalStatus,
@@ -121,6 +131,35 @@ export const SwapContextProvider = ({ children }: any) => {
     setUserJustValidatedInput(true);
   };
 
+  const updateSwapStep = (buttonClicked: ButtonClickPossibilities) => {
+    switch (currentSwapModalStep) {
+      case SwapModalSteps.APPROVE_NFTS:
+        if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
+        }
+        break;
+      case SwapModalSteps.CREATE_SWAP:
+        if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+        } else if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.CREATING_SWAP);
+        }
+        break;
+      case SwapModalSteps.CREATING_SWAP:
+        if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.CREATED_SWAP);
+        } else if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
+        }
+        break;
+      case SwapModalSteps.CREATED_SWAP:
+        if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+        }
+        break;
+    }
+  };
+
   useEffect(() => {
     setNftInputUser([]);
     setUserJustValidatedInput(false);
@@ -147,9 +186,11 @@ export const SwapContextProvider = ({ children }: any) => {
       setTimeDate,
       timeDate,
       setAllSelectedNftsAreApproved,
-      allSelectedNftsAproved,
+      allSelectedNftsApproved,
       setAuthedUserNftsApprovalStatus,
       authedUserSelectedNftsApprovalStatus,
+      updateSwapStep,
+      currentSwapModalStep,
     });
   }, [
     inputAddress,
@@ -159,8 +200,9 @@ export const SwapContextProvider = ({ children }: any) => {
     nftInputUser,
     destinyChain,
     timeDate,
-    allSelectedNftsAproved,
+    allSelectedNftsApproved,
     authedUserSelectedNftsApprovalStatus,
+    currentSwapModalStep,
   ]);
 
   const [swapData, setSwapData] = useState<SwapContextProps>({
@@ -179,9 +221,11 @@ export const SwapContextProvider = ({ children }: any) => {
     setTimeDate,
     timeDate,
     setAllSelectedNftsAreApproved,
-    allSelectedNftsAproved,
+    allSelectedNftsApproved,
     setAuthedUserNftsApprovalStatus,
     authedUserSelectedNftsApprovalStatus,
+    updateSwapStep,
+    currentSwapModalStep,
   });
 
   return (
