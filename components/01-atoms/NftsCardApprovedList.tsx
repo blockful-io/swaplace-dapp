@@ -3,14 +3,18 @@ import {
   NFT,
   SWAPLACE_SMART_CONTRACT_ADDRESS,
 } from "@/lib/client/constants";
-import { NftCard, NftCardActionType, NftCardStyleType } from "../02-molecules";
+import { SwapContext } from "@/components/01-atoms";
+import {
+  NftCard,
+  NftCardActionType,
+  NftCardStyleType,
+} from "@/components/02-molecules";
 import cc from "classcat";
 import { useContext, useEffect } from "react";
 import toast from "react-hot-toast";
-import { SwapContext } from ".";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork, useWalletClient } from "wagmi";
-import { IApproveSwap, TransactionStatus } from "@/lib/client/blockchain-data";
+import { IApproveSwap } from "@/lib/client/blockchain-data";
 import { approveSwap } from "@/lib/service/approveSwap";
 import { hexToNumber } from "viem";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
@@ -26,18 +30,9 @@ export const NftsCardApprovedList = () => {
     setAuthedUserNftsApprovalStatus,
     setAllSelectedNftsAreApproved,
     allSelectedNftsApproved,
-    createApprovalStatus,
-    setCreateApprovalStatus,
-    createSwapStatus,
-    setCreateSwapStatus,
   } = useContext(SwapContext);
 
   useEffect(() => {
-    if (createSwapStatus === TransactionStatus.TRANSACTION_APPROVED) {
-      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
-      setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
-    }
-
     const fetchApprove = async () => {
       await updateNftsToSwapApprovalStatus(
         nftAuthUser,
@@ -64,18 +59,15 @@ export const NftsCardApprovedList = () => {
     };
 
     try {
-      setCreateApprovalStatus(TransactionStatus.WAITING_WALLET_APPROVAL);
       const transactionReceipt = await approveSwap(swapData);
       if (transactionReceipt != undefined) {
-        setCreateApprovalStatus(TransactionStatus.TRANSACTION_APPROVED);
-        setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
+        toast.success("Approval successfully");
         return transactionReceipt;
       } else {
-        setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
         toast.error("Approval Failed");
       }
     } catch (error) {
-      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
+      toast.error("Approval Rejected");
       console.error(error);
     }
   };
@@ -100,7 +92,6 @@ export const NftsCardApprovedList = () => {
     } else {
       await handleApprove(nft).then((result) => {
         if (result != undefined) {
-          setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
           const nftWasApproved = (authedUserSelectedNftsApprovalStatus[
             index
           ].approved = SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as any);

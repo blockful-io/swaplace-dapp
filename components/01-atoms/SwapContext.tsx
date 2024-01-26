@@ -6,7 +6,6 @@ import {
   ButtonClickPossibilities,
   IArrayStatusTokenApproved,
   SwapModalSteps,
-  TransactionStatus,
 } from "@/lib/client/blockchain-data";
 
 interface SwapContextProps {
@@ -33,10 +32,6 @@ interface SwapContextProps {
     React.SetStateAction<IArrayStatusTokenApproved[]>
   >;
   authedUserSelectedNftsApprovalStatus: IArrayStatusTokenApproved[];
-  setCreateApprovalStatus: Dispatch<React.SetStateAction<TransactionStatus>>;
-  createApprovalStatus: TransactionStatus;
-  setCreateSwapStatus: Dispatch<React.SetStateAction<TransactionStatus>>;
-  createSwapStatus: TransactionStatus;
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
   currentSwapModalStep: SwapModalSteps;
 }
@@ -63,10 +58,6 @@ export const SwapContext = React.createContext<SwapContextProps>({
   allSelectedNftsApproved: false,
   setAuthedUserNftsApprovalStatus: () => {},
   authedUserSelectedNftsApprovalStatus: [],
-  setCreateApprovalStatus: () => {},
-  createApprovalStatus: TransactionStatus.SEND_TRANSACTION,
-  setCreateSwapStatus: () => {},
-  createSwapStatus: TransactionStatus.SEND_TRANSACTION,
   currentSwapModalStep: SwapModalSteps.APPROVE_NFTS,
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
 });
@@ -90,12 +81,6 @@ export const SwapContextProvider = ({ children }: any) => {
     authedUserSelectedNftsApprovalStatus,
     setAuthedUserNftsApprovalStatus,
   ] = useState<IArrayStatusTokenApproved[]>([]);
-  const [createApprovalStatus, setCreateApprovalStatus] = useState(
-    TransactionStatus.SEND_TRANSACTION,
-  );
-  const [createSwapStatus, setCreateSwapStatus] = useState(
-    TransactionStatus.SEND_TRANSACTION,
-  );
 
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
@@ -167,6 +152,11 @@ export const SwapContextProvider = ({ children }: any) => {
           setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
         }
         break;
+      case SwapModalSteps.CREATED_SWAP:
+        if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
+          setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+        }
+        break;
     }
   };
 
@@ -199,10 +189,6 @@ export const SwapContextProvider = ({ children }: any) => {
       allSelectedNftsApproved,
       setAuthedUserNftsApprovalStatus,
       authedUserSelectedNftsApprovalStatus,
-      createApprovalStatus,
-      createSwapStatus,
-      setCreateApprovalStatus,
-      setCreateSwapStatus,
       updateSwapStep,
       currentSwapModalStep,
     });
@@ -238,10 +224,6 @@ export const SwapContextProvider = ({ children }: any) => {
     allSelectedNftsApproved,
     setAuthedUserNftsApprovalStatus,
     authedUserSelectedNftsApprovalStatus,
-    createApprovalStatus,
-    createSwapStatus,
-    setCreateApprovalStatus,
-    setCreateSwapStatus,
     updateSwapStep,
     currentSwapModalStep,
   });

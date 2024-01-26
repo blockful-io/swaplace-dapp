@@ -1,7 +1,6 @@
 export * from "./SwapModalLayout";
 export * from "./ConnectWallet";
 export * from "./EmptyNftsCards";
-export * from "./GenericButton";
 export * from "./LoadingIndicator";
 export * from "./NftsCardApprovedList";
 export * from "./ProgressBar";
@@ -11,6 +10,7 @@ export * from "./SelectDestinyChain";
 export * from "./StatusOffers";
 export * from "./SwapContext";
 export * from "./SwapExpireTime";
+export * from "./SwapModalButton";
 export * from "./SwappingIcons";
 export * from "./Tab";
 export * from "./TransactionResultModal";

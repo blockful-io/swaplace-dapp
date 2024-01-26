@@ -65,7 +65,7 @@ interface Props<T> extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
 }
 
-export function GenericButton<T>({
+export function SwapModalButton<T>({
   variant = ButtonVariant.DEFAULT,
   label,
   onClick = () => {},
@@ -79,7 +79,9 @@ export function GenericButton<T>({
 
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        onClick();
+      }}
       className={cc([
         ButtonVariantsConfigs[variant].style,
         "flex items-center gap-2 disabled:pointer-events-none",

@@ -1,28 +1,24 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork, useWalletClient } from "wagmi";
-import { SwapContext } from "@/components/01-atoms";
+import {
+  ButtonVariant,
+  NftsCardApprovedList,
+  SwapContext,
+  SwapModalButton,
+  SwapModalLayout,
+} from "@/components/01-atoms";
+import { ProgressStatus } from "@/components/02-molecules";
 import { createSwap } from "@/lib/service/createSwap";
 import {
   ButtonClickPossibilities,
   ComposeNftSwap,
   ICreateSwap,
   SwapModalSteps,
-  TransactionStatus,
 } from "@/lib/client/blockchain-data";
 import toast from "react-hot-toast";
-import { NftsCardApprovedList } from "../01-atoms/NftsCardApprovedList";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
-import { ProgressStatus } from "./ProgressStatus";
-import { SwapModalLayout } from "../01-atoms/SwapModalLayout";
-import { ButtonVariant, GenericButton } from "../01-atoms/GenericButton";
 import { useTheme } from "next-themes";
-
-export enum TransactionResult {
-  "LOADING" = "LOADING",
-  "SUCCESS" = "SUCCESS",
-  "FAILURE" = "FAILURE",
-}
 
 interface ConfirmSwapApprovalModalProps {
   open: boolean;
@@ -42,24 +38,23 @@ export const ConfirmSwapModal = ({
     validatedAddressToSwap,
     setAuthedUserNftsApprovalStatus,
     setAllSelectedNftsAreApproved,
-    setCreateApprovalStatus,
-    setCreateSwapStatus,
-    createSwapStatus,
     currentSwapModalStep,
     updateSwapStep,
   } = useContext(SwapContext);
-
-  const [transactionResult, displayTransactionResultModal] =
-    useState<null | TransactionResult>(null);
 
   const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
   const { theme } = useTheme();
 
   useEffect(() => {
+    if (currentSwapModalStep === SwapModalSteps.CREATING_SWAP) {
+      handleSwap();
+    }
+  }, [currentSwapModalStep]);
+
+  useEffect(() => {
     if (!open) {
       updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
-      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
     }
   }, [open]);
 
@@ -67,10 +62,7 @@ export const ConfirmSwapModal = ({
   const nftsAuthUser = ComposeNftSwap(nftAuthUser);
 
   useEffect(() => {
-    if (createSwapStatus === TransactionStatus.TRANSACTION_APPROVED) {
-      setCreateApprovalStatus(TransactionStatus.SEND_TRANSACTION);
-      setCreateSwapStatus(TransactionStatus.SEND_TRANSACTION);
-    }
+    updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
 
     const fetchApprove = async () => {
       await updateNftsToSwapApprovalStatus(
@@ -114,8 +106,8 @@ export const ConfirmSwapModal = ({
           toast.success("Created Swap");
           updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
         } else {
-          updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
           toast.error("Create Swap Failed");
+          updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
         }
       } else {
         toast.error("You must approve the Tokens to create Swap.");
@@ -158,7 +150,7 @@ export const ConfirmSwapModal = ({
                   <ProgressStatus />
                 </div>
                 <div>
-                  <GenericButton
+                  <SwapModalButton
                     label={"Continue"}
                     onClick={validateTokensAreApproved}
                     aditionalStyle={
@@ -186,21 +178,20 @@ export const ConfirmSwapModal = ({
           component: (
             <>
               <div className="flex w-full justify-end gap-3">
-                <GenericButton
+                <SwapModalButton
                   label={"Back"}
                   variant={ButtonVariant.ALTERNATIVE}
-                  onClick={() =>
-                    updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP)
-                  }
+                  onClick={() => {
+                    updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
+                  }}
                 />
 
-                <GenericButton
+                <SwapModalButton
                   label={"Confirm and send"}
                   disabled={!allSelectedNftsApproved}
                   variant={ButtonVariant.SECONDARY}
                   onClick={() => {
                     updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
-                    handleSwap();
                   }}
                 />
               </div>
@@ -223,14 +214,11 @@ export const ConfirmSwapModal = ({
           component: (
             <>
               <div className="flex w-full justify-end gap-3">
-                {/* 
-                  TODO > Replace variant names with context related names
-                  e.g. GenericButton -> SwapModalButton
-                */}
-                <GenericButton
+                <SwapModalButton
                   label={"Waiting wallet approval..."}
                   variant={ButtonVariant.SECONDARY}
                   disabled={true}
+                  isLoading={true}
                 />
               </div>
             </>
@@ -252,8 +240,8 @@ export const ConfirmSwapModal = ({
           component: (
             <>
               <div className="flex w-full justify-end gap-3">
-                <GenericButton
-                  label={"Close swap modal"}
+                <SwapModalButton
+                  label={"Close"}
                   variant={ButtonVariant.SECONDARY}
                   onClick={onClose}
                 />
