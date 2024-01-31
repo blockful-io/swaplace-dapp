@@ -109,9 +109,7 @@ export const NftsCardApprovedList = () => {
         {nftAuthUser.map((nft, index) => (
           <div
             className={cc([
-              nftAuthUser.length <= 3
-                ? "flex h-[136px] w-full items-center  gap-4 px-4"
-                : "flex p-4 items-center gap-4 h-[68px]",
+              "flex p-4 items-center gap-4 h-[68px]",
               authedUserSelectedNftsApprovalStatus[index]?.approved ===
               ADDRESS_ZERO
                 ? "bg-[#353836]  rounded-xl"
@@ -126,11 +124,7 @@ export const NftsCardApprovedList = () => {
                 onClickAction={NftCardActionType.NFT_ONCLICK}
                 ownerAddress={authenticatedUserAddress.address}
                 nftData={nftAuthUser[index]}
-                styleType={
-                  nftAuthUser.length <= 3
-                    ? NftCardStyleType.LARGE
-                    : NftCardStyleType.SMALL
-                }
+                styleType={NftCardStyleType.SMALL}
               />
             </div>
             <div className="flex flex-col gap-1">

@@ -3,7 +3,7 @@ import cc from "classcat";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useTheme } from "next-themes";
-import { ConnectWallet, SwappingIcons } from "@/components/01-atoms";
+import { ConnectWallet, SwappingIcons, Tooltip } from "@/components/01-atoms";
 import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
 import Link from "next/link";
 
@@ -13,6 +13,8 @@ export const TheHeader = () => {
   const [showFullNav, setShowFullNav] = useState(
     !isDesktop && !!authenticatedUserAddress?.address,
   );
+
+  const { isWideScreen } = useScreenSize();
 
   useEffect(() => {
     setShowFullNav(!isDesktop);
@@ -57,9 +59,19 @@ export const TheHeader = () => {
           )}
         </div>
         <div>
-          <button className="h-10 w-10  rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
-            <WalletIcon />
-          </button>
+          {isWideScreen ? (
+            <Tooltip position={"right"} content={"Connect a Wallet"}>
+              <button className="h-10 w-10  rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
+                <WalletIcon />
+              </button>
+            </Tooltip>
+          ) : (
+            <Tooltip position={"left"} content={"Connect a Wallet"}>
+              <button className="h-10 w-10  rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
+                <WalletIcon />
+              </button>
+            </Tooltip>
+          )}
         </div>
       </div>
     </header>
