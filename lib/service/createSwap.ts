@@ -3,7 +3,7 @@ import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
 import { encodeFunctionData } from "viem";
 import { publicClientViem } from "../wallet/wallet-config";
 
-export async function creatingSwap({
+export async function createSwap({
   walletClient,
   expireDate,
   nftInputUser,

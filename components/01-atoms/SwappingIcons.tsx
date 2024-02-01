@@ -7,7 +7,9 @@ import {
   ChatIcon,
   NotificationsIcon,
 } from "@/components/01-atoms/icons";
+import { Tooltip } from "@/components/01-atoms";
 import cc from "classcat";
+import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 
 export interface IconSwap {
   id: number;
@@ -28,6 +30,7 @@ export const SwappingIcons = () => {
   const [isActiveTab, setIsActiveTab] = useState(
     SwappingIconsID.SWAPLACE_STATION,
   );
+  const { isWideScreen } = useScreenSize();
 
   const swappingTabs: Array<IconSwap> = [
     {
@@ -86,22 +89,47 @@ export const SwappingIcons = () => {
     <>
       {swappingTabs.map((swapIcons) => {
         return (
-          <div
-            key={swapIcons.id}
-            className={cc([
-              isActiveTab == swapIcons.id
-                ? "dark:p-medium-bold-dark p-medium-bold border-l dark:border-[#DDF23D] border-black "
-                : "dark:p-medium-bold p-medium-bold opacity-50 border-l dark:border-[#313131]",
-              "flex-1 md:p-4 cursor-pointer",
-            ])}
-            onClick={() => {
-              handleClick(swapIcons);
-            }}
-          >
-            <div className="flex items-center justify-center w-full">
-              {swapIcons.icon}
-            </div>
-          </div>
+          <>
+            {isWideScreen ? (
+              <Tooltip position={"right"} content={swapIcons.name}>
+                <div
+                  key={swapIcons.id}
+                  className={cc([
+                    isActiveTab == swapIcons.id
+                      ? "dark:p-medium-bold-dark p-medium-bold border-l dark:border-[#DDF23D] border-black hover:dark:bg-[#333534]"
+                      : "dark:p-medium-bold p-medium-bold opacity-50 border-l dark:border-[#313131]",
+                    "flex-1 md:p-4 cursor-pointer hover:dark:bg-[#343635] hover:bg-[#eff3cf]",
+                  ])}
+                  onClick={() => {
+                    handleClick(swapIcons);
+                  }}
+                >
+                  <div className="flex items-center justify-center w-full">
+                    {swapIcons.icon}
+                  </div>
+                </div>
+              </Tooltip>
+            ) : (
+              <Tooltip position={"bottom"} content={swapIcons.name}>
+                <div
+                  key={swapIcons.id}
+                  className={cc([
+                    isActiveTab == swapIcons.id
+                      ? "dark:p-medium-bold-dark p-medium-bold border-l dark:border-[#DDF23D] border-black hover:dark:bg-[#333534]"
+                      : "dark:p-medium-bold p-medium-bold opacity-50 border-l dark:border-[#313131]",
+                    "flex-1 md:p-4 cursor-pointer hover:dark:bg-[#343635] hover:bg-[#eff3cf]",
+                  ])}
+                  onClick={() => {
+                    handleClick(swapIcons);
+                  }}
+                >
+                  <div className="flex items-center justify-center w-full">
+                    {swapIcons.icon}
+                  </div>
+                </div>
+              </Tooltip>
+            )}
+          </>
         );
       })}
     </>

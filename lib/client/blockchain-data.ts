@@ -35,16 +35,23 @@ export interface INftSwappingInfo {
   amountOrId: bigint;
 }
 
-export enum CreateApprovalStatus {
-  "CREATE_APPROVAL" = "CREATE_APPROVAL",
-  "WAITING_WALLET_APPROVAL" = "WAITING_WALLET_APPROVAL",
-  "WALLET_APPROVED" = "WALLET_APPROVED",
+export enum SwapModalSteps {
+  APPROVE_NFTS,
+  CREATE_SWAP,
+  CREATING_SWAP,
+  CREATED_SWAP,
 }
 
-export enum CreateSwapStatus {
-  "CREATE_SWAP" = "CREATE_SWAP",
-  "WAITING_WALLET_APPROVAL" = "WAITING_WALLET_APPROVAL",
-  "WALLET_APPROVED" = "WALLET_APPROVED",
+export enum ButtonClickPossibilities {
+  PREVIOUS_STEP,
+  NEXT_STEP,
+}
+
+export enum TransactionStatus {
+  SEND_TRANSACTION,
+  WAITING_WALLET_APPROVAL,
+  TRANSACTION_APPROVED,
+  SUCCESSFUL_TRANSACTION,
 }
 
 export type NftSwappingInfo = {

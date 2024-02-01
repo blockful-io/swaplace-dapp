@@ -11,6 +11,7 @@ interface INftCard {
   ownerAddress: string | null;
   onClickAction?: NftCardActionType;
   withSelectionValidation?: boolean;
+  styleType?: NftCardStyleType;
 }
 
 /**
@@ -28,11 +29,18 @@ export enum NftCardActionType {
   "NFT_ONCLICK",
 }
 
+export enum NftCardStyleType {
+  "SMALL",
+  "NORMAL",
+  "LARGE",
+}
+
 export const NftCard = ({
   nftData,
   ownerAddress,
   withSelectionValidation = true,
   onClickAction = NftCardActionType.SELECT_NFT_FOR_SWAP,
+  styleType,
 }: INftCard) => {
   if (!nftData || !nftData.id || !nftData.contract || !ownerAddress)
     return null;
@@ -119,7 +127,11 @@ export const NftCard = ({
       <button
         onClick={setNftAsActiveOne}
         className={cc([
-          "card-nft",
+          styleType === NftCardStyleType.SMALL
+            ? "card-nft-small"
+            : styleType === NftCardStyleType.LARGE
+            ? "card-nft-large"
+            : "card-nft",
           {
             "border-green-500": currentNftIsSelected && withSelectionValidation,
           },
