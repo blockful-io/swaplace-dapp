@@ -50,6 +50,51 @@ export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
   },
 };
 
+export interface ERC20 {
+  balance?: Record<string, any>;
+  contractAddress?: Record<string, any>;
+  decimals?: Record<number, any>;
+  logo?: Record<string, any>;
+  name?: Record<string, any>;
+  symbol?: Record<string, any>;
+  ownerAddress: string | null;
+}
+
+// export interface ERC721 {
+//   id?: Record<string, any>;
+//   metadata?: Record<string, any>;
+//   contract?: Record<string, any>;
+//   contractMetadata?: Record<string, any>;
+// }
+
+// export interface ERC721Token {
+//   data: ERC721[];
+//   ownerAddress: string | null;
+// }
+
+// export interface ERC20Token {
+//   data: ERC20[];
+//   ownerAddress: string | null;
+// }
+
+// export interface Token {
+//   fungibleToken: ERC20Token;
+//   nonFungibleToken: ERC721Token;
+// }
+
+// export interface ITokenCard {
+//   token: Token;
+//   onClickAction?: NftCardActionType;
+//   withSelectionValidation?: boolean;
+//   styleType?: NftCardStyleType;
+// }
+
+export let getApiKeyForNetwork: Map<number, string> = new Map([
+  [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_KEY ?? ""],
+  [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_KEY ?? ""],
+  [ChainInfo.HARDHAT.id, "http://127.0.0.1:8545/"],
+]);
+
 export let getRpcHttpUrlForNetwork: Map<number, string> = new Map([
   [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP ?? ""],
   [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? ""],

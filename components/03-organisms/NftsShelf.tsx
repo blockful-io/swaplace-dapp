@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { NFT, ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
+import { NFT, ChainInfo, NFTsQueryStatus, ERC20 } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork } from "wagmi";
-import { getNftsFrom } from "@/lib/client/blockchain-data";
+import { getNftsFrom, getTokensFrom } from "@/lib/client/blockchain-data";
 import { useTheme } from "next-themes";
 import { EthereumAddress } from "@/lib/shared/types";
 import { SwapContext } from "@/components/01-atoms";
@@ -23,6 +23,7 @@ interface INftsShelfProps {
 export const NftsShelf = ({ address }: INftsShelfProps) => {
   const { chain } = useNetwork();
   const [nftsList, setNftsList] = useState<NFT[]>();
+  const [erc20Tokens, setErc20Tokens] = useState<ERC20[]>();
   const [nftsQueryStatus, setNftsQueryStatus] = useState<NFTsQueryStatus>(
     NFTsQueryStatus.EMPTY_QUERY,
   );
@@ -46,6 +47,14 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
         .catch(() => {
           setNftsList([]);
         });
+
+      getTokensFrom(address, chainId)
+        .then((erc20Tokens) => {
+          setErc20Tokens(erc20Tokens);
+        })
+        .catch(() => {
+          setErc20Tokens([]);
+        });
     }
   }, [address, chain, destinyChain]);
 
@@ -56,6 +65,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
       authenticatedUserAddress.equals(new EthereumAddress(address))
     ) {
       setNftsList([]);
+      setErc20Tokens([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
   }, [destinyChain]);
@@ -63,6 +73,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   useEffect(() => {
     if (address !== authenticatedUserAddress?.address) {
       setNftsList([]);
+      setErc20Tokens([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
   }, [chain]);
@@ -73,6 +84,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
       validatedAddressToSwap !== authenticatedUserAddress?.address
     ) {
       setNftsList([]);
+      setErc20Tokens([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
   }, [inputAddress]);
@@ -88,6 +100,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
       {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
         <div className="w-full h-full">
           <NftsList ownerAddress={address} nftsList={nftsList} />
+          <>{erc20Tokens[0]?.name}</>
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
         <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">

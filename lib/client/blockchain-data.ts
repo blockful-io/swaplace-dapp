@@ -1,5 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { NFT, NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
+import {
+  NFT,
+  NFTsQueryStatus,
+  getApiKeyForNetwork,
+  getRpcHttpUrlForNetwork,
+} from "./constants";
 import { getTimestamp } from "./utils";
 import { hexToNumber } from "viem";
 
@@ -146,6 +151,28 @@ export const getNftsFrom = async (
       stateSetter(NFTsQueryStatus.ERROR);
       return error;
     });
+};
+
+export const getTokensFrom = async (address: string, chainId: number) => {
+  const { Alchemy } = require("alchemy-sdk");
+
+  const config = {
+    apiKey: getApiKeyForNetwork.get(chainId),
+    network: getRpcHttpUrlForNetwork
+      .get(chainId)
+      ?.split("https://")[1]
+      .split(".")[0], // The network from alchemy needs to be like 'eth-sepolia' | 'eth-goerli'
+  };
+  const alchemy = new Alchemy(config);
+
+  const main = async () => {
+    const ownerAddress = address;
+
+    let response = await alchemy.core.getTokensForOwner(ownerAddress);
+
+    return response.tokens;
+  };
+  return main();
 };
 
 export interface Swap {
