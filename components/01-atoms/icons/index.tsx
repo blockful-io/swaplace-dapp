@@ -1,4 +1,5 @@
 export * from "./ChatIcon";
+export * from "./CheckIcon";
 export * from "./DangerIcon";
 export * from "./EthereumIcon";
 export * from "./LeftIcon";
@@ -13,4 +14,5 @@ export * from "./SelectUserIcon";
 export * from "./SwapIcon";
 export * from "./SwaplaceIcon";
 export * from "./SwappingIcon";
+export * from "./XMarkIcon";
 export * from "./WalletIcon";
