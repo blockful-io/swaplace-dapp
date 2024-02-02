@@ -2,7 +2,7 @@ export * from "./CardHome";
 export * from "./ConfirmSwapModal";
 export * from "./FilterOffers";
 export * from "./NftCard";
-export * from "./NftsList";
+export * from "./TokensList";
 export * from "./OfferSummary";
 export * from "./ProgressStatus";
 export * from "./SwapStation";

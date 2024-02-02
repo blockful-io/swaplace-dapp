@@ -1,12 +1,19 @@
 import { Dispatch, SetStateAction } from "react";
 import {
-  NFT,
+  ERC20,
+  ERC721,
   NFTsQueryStatus,
+  Token,
   getApiKeyForNetwork,
   getRpcHttpUrlForNetwork,
 } from "./constants";
 import { getTimestamp } from "./utils";
 import { hexToNumber } from "viem";
+import {
+  GetTokensForOwnerResponse,
+  OwnedNftsResponse,
+  OwnedToken,
+} from "alchemy-sdk";
 
 export interface ICreateSwap {
   walletClient: any;
@@ -64,19 +71,19 @@ export type NftSwappingInfo = {
   amountOrId: bigint;
 };
 
-export function ComposeNftSwap(nftUser: NFT[]): INftSwappingInfo[] {
+export function ComposeNftSwap(nftUser: Token[]): INftSwappingInfo[] {
   let nftTokenContractArray: INftSwappingInfo[] = [];
 
   for (let i = 0; i < nftUser.length; i += 2) {
     const amountOrId = BigInt(hexToNumber(nftUser[i]?.id?.tokenId));
-    const addr = nftUser[i]?.contract?.address as `0x${string}`;
+    const addr = nftUser[i]?.contract as `0x${string}`;
     if (amountOrId !== undefined && addr !== undefined) {
       nftTokenContractArray.push({ addr, amountOrId });
     }
 
     if (i + 1 < nftUser.length) {
       const nextAmountOrId = BigInt(hexToNumber(nftUser[i + 1]?.id?.tokenId));
-      const nextAddr = nftUser[i + 1]?.contract?.address as `0x${string}`;
+      const nextAddr = nftUser[i + 1]?.contract as `0x${string}`;
 
       if (nextAmountOrId !== undefined && nextAddr !== undefined) {
         nftTokenContractArray.push({
@@ -90,12 +97,12 @@ export function ComposeNftSwap(nftUser: NFT[]): INftSwappingInfo[] {
   return nftTokenContractArray;
 }
 
-export function getNftsInfoToSwap(userNfts: NFT[]): NftSwappingInfo[] {
+export function getNftsInfoToSwap(userNfts: Token[]): NftSwappingInfo[] {
   let nftsInfoArray: NftSwappingInfo[] = [];
 
   for (let i = 0; i < userNfts.length; i++) {
     const nftAmountOrTokenId = BigInt(hexToNumber(userNfts[i]?.id?.tokenId));
-    const nftContractAddress = userNfts[i]?.contract?.address as `0x${string}`;
+    const nftContractAddress = userNfts[i]?.contract as `0x${string}`;
 
     if (nftAmountOrTokenId !== undefined && nftContractAddress !== undefined) {
       nftsInfoArray.push({
@@ -117,43 +124,11 @@ export function getNftsInfoToSwap(userNfts: NFT[]): NftSwappingInfo[] {
   return nftsInfoArray;
 }
 
-export const getNftsFrom = async (
+export const getERC721TokensFromAddress = async (
   address: string,
   chainId: number,
   stateSetter: Dispatch<SetStateAction<NFTsQueryStatus>>,
 ) => {
-  const baseUrl = getRpcHttpUrlForNetwork.get(chainId);
-
-  if (!baseUrl) throw new Error("No RPC URL defined for connected chain");
-
-  const requestOptions = {
-    method: "get",
-  };
-
-  const url = `${baseUrl}/getNFTsForOwner?owner=${address}&withMetadata=true`;
-
-  stateSetter(NFTsQueryStatus.LOADING);
-
-  return fetch(url, requestOptions)
-    .then(async (response) => {
-      const data = await response.json();
-
-      if (!data.ownedNfts.length) {
-        stateSetter(NFTsQueryStatus.NO_RESULTS);
-      } else {
-        stateSetter(NFTsQueryStatus.WITH_RESULTS);
-      }
-
-      return data.ownedNfts;
-    })
-    .catch((error) => {
-      console.error(error);
-      stateSetter(NFTsQueryStatus.ERROR);
-      return error;
-    });
-};
-
-export const getTokensFrom = async (address: string, chainId: number) => {
   const { Alchemy } = require("alchemy-sdk");
 
   const config = {
@@ -165,21 +140,67 @@ export const getTokensFrom = async (address: string, chainId: number) => {
   };
   const alchemy = new Alchemy(config);
 
-  const main = async () => {
-    const ownerAddress = address;
+  const ownerAddress = address;
 
-    let response = await alchemy.core.getTokensForOwner(ownerAddress);
+  return alchemy.core
+    .getNFTsForOwner(ownerAddress)
+    .then((response: OwnedNftsResponse) => {
+      return parseAlchemyERC721Tokens(response.ownedNfts);
+    });
+};
 
-    return response.tokens;
+const parseAlchemyERC721Tokens = (tokens: any[]): ERC721[] => {
+  return tokens.map((token) => {
+    return {
+      id: token.id,
+      metadata: token.metadata,
+      contract: token.contractAddress,
+      contractMetadata: token.contractMetadata,
+    };
+  });
+};
+
+export const getERC20TokensFromAddress = async (
+  address: string,
+  chainId: number,
+): Promise<ERC20[]> => {
+  const { Alchemy } = require("alchemy-sdk");
+
+  const config = {
+    apiKey: getApiKeyForNetwork.get(chainId),
+    network: getRpcHttpUrlForNetwork
+      .get(chainId)
+      ?.split("https://")[1]
+      .split(".")[0], // The network from alchemy needs to be like 'eth-sepolia' | 'eth-goerli'
   };
-  return main();
+  const alchemy = new Alchemy(config);
+
+  const ownerAddress = address;
+
+  return alchemy.core
+    .getTokensForOwner(ownerAddress)
+    .then((response: GetTokensForOwnerResponse) => {
+      return parseAlchemyERC20Tokens(response.tokens);
+    });
+};
+
+const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
+  return tokens.map((token) => {
+    return {
+      name: token.name,
+      logo: token.logo,
+      symbol: token.symbol,
+      rawBalance: token.rawBalance,
+      contract: token.contractAddress,
+    };
+  });
 };
 
 export interface Swap {
   owner: string;
   config: any;
-  biding: NFT[];
-  asking: NFT[];
+  biding: Token[];
+  asking: Token[];
 }
 
 export async function makeConfig(
@@ -202,8 +223,8 @@ export async function makeSwap(
   allowed: any,
   destinationChainSelector: any,
   expiration: any,
-  biding: NFT[],
-  asking: NFT[],
+  biding: Token[],
+  asking: Token[],
   chainId: number,
 ) {
   const timestamp = await getTimestamp(chainId);

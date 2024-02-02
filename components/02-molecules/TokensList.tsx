@@ -1,19 +1,24 @@
-import { INftsList, NFT } from "@/lib/client/constants";
+import { Token } from "@/lib/client/constants";
 import { NftCard } from "@/components/02-molecules";
 import { EmptyNftsCards } from "@/components/01-atoms";
+
+export interface TokensListProps {
+  tokensList: Token[];
+  ownerAddress: string | null;
+}
 
 /**
  *
  * This component receives the data of multiple nfts and create its cards
- * @param nftsList
+ * @param tokensList
  * @param ownerAddress
  *
- * @returns NftsList
+ * @returns TokensList
  */
 
-export const NftsList = ({ nftsList, ownerAddress }: INftsList) => {
-  const emptySquares = EmptyNftsCards(nftsList.length, 15, 30, 30, 30);
-  const nftSquares = nftsList.map((nft: NFT, index) => (
+export const TokensList = ({ tokensList, ownerAddress }: TokensListProps) => {
+  const emptySquares = EmptyNftsCards(tokensList.length, 15, 30, 30, 30);
+  const nftSquares = tokensList.map((nft: Token, index) => (
     <div key={`nft-${index}`}>
       <NftCard ownerAddress={ownerAddress} nftData={nft} />
     </div>

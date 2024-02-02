@@ -4,17 +4,7 @@ export const WIDE_SCREEN_SIZE = 1279;
 export const DESKTOP_SCREEN_SIZE = 1023;
 export const TABLET_SCREEN_SIZE = 768;
 
-export interface NFT {
-  id?: Record<string, any>;
-  metadata?: Record<string, any>;
-  contract?: Record<string, any>;
-  contractMetadata?: Record<string, any>;
-}
-
-export interface INftsList {
-  nftsList: NFT[];
-  ownerAddress: string | null;
-}
+export type Token = ERC20 | ERC721;
 
 export enum NFTsQueryStatus {
   EMPTY_QUERY = "EMPTY_QUERY",
@@ -50,22 +40,28 @@ export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
   },
 };
 
-export interface ERC20 {
-  balance?: Record<string, any>;
-  contractAddress?: Record<string, any>;
-  decimals?: Record<number, any>;
-  logo?: Record<string, any>;
-  name?: Record<string, any>;
-  symbol?: Record<string, any>;
-  ownerAddress: string | null;
+export interface AlchemyERC721 {
+  id?: Record<string, any>;
+  metadata?: Record<string, any>;
+  contract?: Record<string, any>;
+  contractMetadata?: Record<string, any>;
 }
 
-// export interface ERC721 {
-//   id?: Record<string, any>;
-//   metadata?: Record<string, any>;
-//   contract?: Record<string, any>;
-//   contractMetadata?: Record<string, any>;
-// }
+export interface ERC721 {
+  contract?: string;
+  id?: Record<string, any>;
+  metadata?: Record<string, any>;
+  contractMetadata?: Record<string, any>;
+}
+
+export interface ERC20 {
+  id?: string;
+  name?: string;
+  logo?: string;
+  symbol?: string;
+  contract?: string;
+  rawBalance?: string;
+}
 
 // export interface ERC721Token {
 //   data: ERC721[];

@@ -1,7 +1,8 @@
 import {
   ADDRESS_ZERO,
-  NFT,
+  ERC20,
   SWAPLACE_SMART_CONTRACT_ADDRESS,
+  Token,
 } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import {
@@ -46,7 +47,7 @@ export const NftsCardApprovedList = () => {
     return null;
   }
   let chainId: number;
-  const handleApprove = async (nft: NFT) => {
+  const handleApprove = async (token: Token) => {
     if (typeof chain?.id != "undefined") {
       chainId = chain?.id;
     }
@@ -54,8 +55,8 @@ export const NftsCardApprovedList = () => {
     const swapData: IApproveSwap = {
       walletClient: walletClient,
       spender: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
-      tokenContractAddress: nft.contract?.address,
-      amountOrId: BigInt(hexToNumber(nft.id?.tokenId)),
+      tokenContractAddress: token.contract?.address,
+      amountOrId: BigInt(hexToNumber(token.id?.tokenId)),
     };
 
     try {
@@ -80,7 +81,7 @@ export const NftsCardApprovedList = () => {
     setAllSelectedNftsAreApproved(isValidApproved);
   };
 
-  const approveNftForSwapping = async (nft: NFT, index: number) => {
+  const approveNftForSwapping = async (token: Token, index: number) => {
     if (typeof chain?.id != "undefined") {
       chainId = chain?.id;
     }
@@ -90,7 +91,7 @@ export const NftsCardApprovedList = () => {
     ) {
       toast.error("Token already approved.");
     } else {
-      await handleApprove(nft).then((result) => {
+      await handleApprove(token).then((result) => {
         if (result != undefined) {
           const nftWasApproved = (authedUserSelectedNftsApprovalStatus[
             index
@@ -106,7 +107,7 @@ export const NftsCardApprovedList = () => {
   return (
     <div className="flex justify-center items-center relative">
       <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[370px]">
-        {nftAuthUser.map((nft, index) => (
+        {nftAuthUser.map((token, index) => (
           <div
             className={cc([
               "flex p-4 items-center gap-4 h-[68px]",
@@ -116,7 +117,7 @@ export const NftsCardApprovedList = () => {
                 : "dark:bg-[#DDF23D] bg-[#97a529] rounded-xl disabled cursor-not-allowed",
             ])}
             role="button"
-            onClick={() => approveNftForSwapping(nft, index)}
+            onClick={() => approveNftForSwapping(token, index)}
           >
             <div>
               <NftCard
