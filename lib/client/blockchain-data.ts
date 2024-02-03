@@ -13,6 +13,7 @@ import {
   GetTokensForOwnerResponse,
   OwnedNftsResponse,
   OwnedToken,
+  OwnedNft,
 } from "alchemy-sdk";
 
 export interface ICreateSwap {
@@ -75,14 +76,14 @@ export function ComposeNftSwap(nftUser: Token[]): INftSwappingInfo[] {
   let nftTokenContractArray: INftSwappingInfo[] = [];
 
   for (let i = 0; i < nftUser.length; i += 2) {
-    const amountOrId = BigInt(hexToNumber(nftUser[i]?.id?.tokenId));
+    const amountOrId = BigInt(nftUser[i].id as unknown as number);
     const addr = nftUser[i]?.contract as `0x${string}`;
     if (amountOrId !== undefined && addr !== undefined) {
       nftTokenContractArray.push({ addr, amountOrId });
     }
 
     if (i + 1 < nftUser.length) {
-      const nextAmountOrId = BigInt(hexToNumber(nftUser[i + 1]?.id?.tokenId));
+      const nextAmountOrId = BigInt(nftUser[i + 1]?.id as unknown as number);
       const nextAddr = nftUser[i + 1]?.contract as `0x${string}`;
 
       if (nextAmountOrId !== undefined && nextAddr !== undefined) {
@@ -101,7 +102,7 @@ export function getNftsInfoToSwap(userNfts: Token[]): NftSwappingInfo[] {
   let nftsInfoArray: NftSwappingInfo[] = [];
 
   for (let i = 0; i < userNfts.length; i++) {
-    const nftAmountOrTokenId = BigInt(hexToNumber(userNfts[i]?.id?.tokenId));
+    const nftAmountOrTokenId = BigInt(userNfts[i]?.id as unknown as number);
     const nftContractAddress = userNfts[i]?.contract as `0x${string}`;
 
     if (nftAmountOrTokenId !== undefined && nftContractAddress !== undefined) {
@@ -124,6 +125,7 @@ export function getNftsInfoToSwap(userNfts: Token[]): NftSwappingInfo[] {
   return nftsInfoArray;
 }
 
+// Check out the Alchemy Documentation https://docs.alchemy.com/reference/getnfts-sdk-v3
 export const getERC721TokensFromAddress = async (
   address: string,
   chainId: number,
@@ -140,26 +142,30 @@ export const getERC721TokensFromAddress = async (
   };
   const alchemy = new Alchemy(config);
 
-  const ownerAddress = address;
-
-  return alchemy.core
-    .getNFTsForOwner(ownerAddress)
+  return alchemy.nft
+    .getNftsForOwner(address)
     .then((response: OwnedNftsResponse) => {
       return parseAlchemyERC721Tokens(response.ownedNfts);
+    })
+    .catch((error: any) => {
+      console.error("Error getNftsForOwner:", error);
+      throw new Error();
     });
 };
 
-const parseAlchemyERC721Tokens = (tokens: any[]): ERC721[] => {
+const parseAlchemyERC721Tokens = (tokens: OwnedNft[]): ERC721[] => {
   return tokens.map((token) => {
     return {
-      id: token.id,
-      metadata: token.metadata,
-      contract: token.contractAddress,
-      contractMetadata: token.contractMetadata,
+      id: token.tokenId,
+      name: token.contract.name,
+      metadata: token.raw.metadata,
+      contract: token.contract.address,
+      contractMetadata: token.contract,
     };
   });
 };
 
+// Check out the Alchemy Documentation https://docs.alchemy.com/reference/gettokensforowner-sdk-v3
 export const getERC20TokensFromAddress = async (
   address: string,
   chainId: number,

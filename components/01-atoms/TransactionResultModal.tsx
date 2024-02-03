@@ -1,7 +1,10 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { TransactionResult, LoadingIndicator } from "@/components/01-atoms";
-import { DangerIcon } from "@/components/01-atoms/icons";
+import {
+  TransactionResult,
+  LoadingIndicator,
+  DangerIcon,
+} from "@/components/01-atoms";
 import { CheckmarkIcon } from "react-hot-toast";
 
 interface TransactionResultModalProps {

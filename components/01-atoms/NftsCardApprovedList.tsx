@@ -55,8 +55,8 @@ export const NftsCardApprovedList = () => {
     const swapData: IApproveSwap = {
       walletClient: walletClient,
       spender: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
-      tokenContractAddress: token.contract?.address,
-      amountOrId: BigInt(hexToNumber(token.id?.tokenId)),
+      tokenContractAddress: token.contract,
+      amountOrId: BigInt(hexToNumber(token?.id as `0x${string}`)),
     };
 
     try {

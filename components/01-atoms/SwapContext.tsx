@@ -1,6 +1,10 @@
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
+import {
+  ADDRESS_ZERO,
+  ERC721,
+  SupportedNetworks,
+} from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
 import {
   ButtonClickPossibilities,
@@ -18,10 +22,10 @@ interface SwapContextProps {
   ) => void;
   setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
   userJustValidatedInput: boolean;
-  setNftAuthUser: Dispatch<React.SetStateAction<NFT[]>>;
-  nftAuthUser: NFT[];
-  setNftInputUser: Dispatch<React.SetStateAction<NFT[]>>;
-  nftInputUser: NFT[];
+  setNftAuthUser: Dispatch<React.SetStateAction<ERC721[]>>;
+  nftAuthUser: ERC721[];
+  setNftInputUser: Dispatch<React.SetStateAction<ERC721[]>>;
+  nftInputUser: ERC721[];
   destinyChain: SupportedNetworks;
   setDestinyChain: Dispatch<React.SetStateAction<SupportedNetworks>>;
   setTimeDate: Dispatch<React.SetStateAction<bigint>>;
@@ -66,8 +70,8 @@ export const SwapContextProvider = ({ children }: any) => {
   const [inputAddress, setInputAddress] = useState<string>("");
   const [validatedAddressToSwap, setValidatedAddressToSwap] = useState("");
   const [userJustValidatedInput, setUserJustValidatedInput] = useState(true);
-  const [nftAuthUser, setNftAuthUser] = useState<NFT[]>([]);
-  const [nftInputUser, setNftInputUser] = useState<NFT[]>([]);
+  const [nftAuthUser, setNftAuthUser] = useState<ERC721[]>([]);
+  const [nftInputUser, setNftInputUser] = useState<ERC721[]>([]);
   const [destinyChain, setDestinyChain] = useState<SupportedNetworks>(
     SupportedNetworks.SEPOLIA,
   );

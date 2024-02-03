@@ -1,7 +1,6 @@
 import cc from "classcat";
 import { useContext, useEffect, useState } from "react";
-import { MagnifyingGlassIcon } from "@/components/01-atoms/icons";
-import { SwapContext } from "@/components/01-atoms";
+import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { ENS } from "web3-eth-ens";
 import Web3 from "web3";

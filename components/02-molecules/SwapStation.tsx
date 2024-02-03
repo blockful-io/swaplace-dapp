@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { SwapContext, SwapExpireTime } from "@/components/01-atoms";
-import { PaperPlane } from "@/components/01-atoms/icons";
+import { PaperPlane, SwapContext, SwapExpireTime } from "@/components/01-atoms";
 import { ConfirmSwapModal, OfferSummary } from "@/components/02-molecules";
 import cc from "classcat";
 import toast from "react-hot-toast";

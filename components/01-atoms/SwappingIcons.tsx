@@ -2,12 +2,12 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import {
-  SwappingIcon,
-  OffersIcon,
   ChatIcon,
   NotificationsIcon,
-} from "@/components/01-atoms/icons";
-import { Tooltip } from "@/components/01-atoms";
+  OffersIcon,
+  SwappingIcon,
+  Tooltip,
+} from "@/components/01-atoms";
 import cc from "classcat";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 

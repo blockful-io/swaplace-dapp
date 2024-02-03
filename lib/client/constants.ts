@@ -48,8 +48,9 @@ export interface AlchemyERC721 {
 }
 
 export interface ERC721 {
+  id?: string;
+  name?: string;
   contract?: string;
-  id?: Record<string, any>;
   metadata?: Record<string, any>;
   contractMetadata?: Record<string, any>;
 }

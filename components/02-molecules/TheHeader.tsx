@@ -3,8 +3,13 @@ import cc from "classcat";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useTheme } from "next-themes";
-import { ConnectWallet, SwappingIcons, Tooltip } from "@/components/01-atoms";
-import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
+import {
+  ConnectWallet,
+  SwaplaceIcon,
+  SwappingIcons,
+  Tooltip,
+  WalletIcon,
+} from "@/components/01-atoms";
 import Link from "next/link";
 
 export const TheHeader = () => {

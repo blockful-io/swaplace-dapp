@@ -4,10 +4,10 @@ import {
   IArrayStatusTokenApproved,
   getNftsInfoToSwap,
 } from "./blockchain-data";
-import { ADDRESS_ZERO, NFT } from "./constants";
+import { ADDRESS_ZERO, ERC721 } from "./constants";
 
 export const updateNftsToSwapApprovalStatus = async (
-  nftsList: NFT[],
+  nftsList: ERC721[],
   setNftsApprovalStatus: Dispatch<SetStateAction<IArrayStatusTokenApproved[]>>,
   setNftsAreAllApproved: (areApproved: boolean) => void,
 ) => {

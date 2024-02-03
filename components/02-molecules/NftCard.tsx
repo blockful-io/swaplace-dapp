@@ -1,4 +1,4 @@
-import { NFT } from "@/lib/client/constants";
+import { ERC721 } from "@/lib/client/constants";
 import React, { useContext, useEffect, useState } from "react";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
@@ -7,7 +7,7 @@ import cc from "classcat";
 import toast from "react-hot-toast";
 
 interface INftCard {
-  nftData: NFT;
+  nftData: ERC721;
   ownerAddress: string | null;
   onClickAction?: NftCardActionType;
   withSelectionValidation?: boolean;
@@ -164,15 +164,15 @@ export const NftCard = ({
         </div>,
       )}
     </>
-  ) : nftData.contract.name && nftData.id.tokenId ? (
+  ) : nftData.name && nftData.id ? (
     <>
       {ButtonLayout(
         <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll">
-          {nftData.metadata?.name}
+          {nftData.name}
         </div>,
       )}
     </>
-  ) : nftData.contractMetadata?.name && nftData.id.tokenId ? (
+  ) : nftData.contractMetadata?.name && nftData.id ? (
     <>
       {ButtonLayout(
         <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll ">

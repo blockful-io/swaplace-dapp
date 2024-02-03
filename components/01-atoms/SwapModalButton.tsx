@@ -1,8 +1,7 @@
 import React, { ButtonHTMLAttributes, useContext } from "react";
-import { LeftIcon, RightIcon } from "@/components/01-atoms/icons";
 import cc from "classcat";
 import { LoadingIndicator } from "./LoadingIndicator";
-import { SwapContext } from ".";
+import { LeftIcon, RightIcon, SwapContext } from ".";
 import { useTheme } from "next-themes";
 
 export enum ButtonVariant {

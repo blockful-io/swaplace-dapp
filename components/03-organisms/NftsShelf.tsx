@@ -54,7 +54,7 @@ export const NftsShelf = ({ address }: TokensShelfProps) => {
           (nftsList) => {
             setNftsList(nftsList);
 
-            if (!nftsList.ownedNfts.length) {
+            if (!nftsList.length) {
               setNftsQueryStatus(NFTsQueryStatus.NO_RESULTS);
             } else {
               setNftsQueryStatus(NFTsQueryStatus.WITH_RESULTS);
