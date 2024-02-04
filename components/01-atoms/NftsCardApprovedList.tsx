@@ -17,7 +17,6 @@ import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork, useWalletClient } from "wagmi";
 import { IApproveSwap } from "@/lib/client/blockchain-data";
 import { approveSwap } from "@/lib/service/approveSwap";
-import { hexToNumber } from "viem";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
 
 export const NftsCardApprovedList = () => {
@@ -56,7 +55,7 @@ export const NftsCardApprovedList = () => {
       walletClient: walletClient,
       spender: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
       tokenContractAddress: token.contract,
-      amountOrId: BigInt(hexToNumber(token?.id as `0x${string}`)),
+      amountOrId: BigInt(token?.id as string),
     };
 
     try {

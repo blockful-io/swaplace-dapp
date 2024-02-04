@@ -1,4 +1,4 @@
-import { encodeFunctionData } from "viem";
+import { Hash, TransactionReceipt, encodeFunctionData } from "viem";
 import { MockERC721Abi } from "../client/abi";
 import { IApproveSwap } from "../client/blockchain-data";
 import { publicClientViem } from "../wallet/wallet-config";
@@ -8,7 +8,7 @@ export async function approveSwap({
   spender,
   tokenContractAddress,
   amountOrId,
-}: IApproveSwap) {
+}: IApproveSwap): Promise<TransactionReceipt | undefined> {
   const data = encodeFunctionData({
     abi: MockERC721Abi,
     functionName: "approve",
@@ -16,7 +16,7 @@ export async function approveSwap({
   });
 
   try {
-    const transactionHash = await walletClient.sendTransaction({
+    const transactionHash: Hash = await walletClient.sendTransaction({
       data: data,
       to: tokenContractAddress,
     });
