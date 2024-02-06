@@ -6,7 +6,6 @@ import {
   useDisconnect,
   useEnsName,
   useNetwork,
-  useWalletClient,
 } from "wagmi";
 import { ADDRESS_ZERO, getRpcHttpUrlForNetwork } from "../constants";
 
