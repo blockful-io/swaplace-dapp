@@ -36,7 +36,7 @@ export const SwappingIcons = () => {
     {
       id: SwappingIconsID.SWAPLACE_STATION,
       name: "Swaplace Station",
-      href: "/",
+      href: "/swap",
       icon: (
         <SwappingIcon
           className="w-5 h-5 "
@@ -86,7 +86,7 @@ export const SwappingIcons = () => {
   };
 
   return (
-    <>
+    <div key={isActiveTab}>
       {swappingTabs.map((swapIcons) => {
         return (
           <>
@@ -132,6 +132,6 @@ export const SwappingIcons = () => {
           </>
         );
       })}
-    </>
+    </ div>
   );
 };
