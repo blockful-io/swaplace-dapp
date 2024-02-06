@@ -264,3 +264,12 @@ export interface IArrayStatusTokenApproved {
   tokenAddress: `0x${string}`;
   amountOrId: bigint;
 }
+
+export async function packingData(
+  Contract: any,
+  allowed: any,
+  expiration: any,
+) {
+  const config = await Contract.read.packData([allowed, expiration]);
+  return config;
+}

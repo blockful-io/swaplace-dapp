@@ -38,7 +38,13 @@ export const SwaplaceAbi = [
       {
         indexed: true,
         internalType: "address",
-        name: "acceptee",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "allowed",
         type: "address",
       },
     ],
@@ -81,9 +87,9 @@ export const SwaplaceAbi = [
       },
       {
         indexed: true,
-        internalType: "uint256",
-        name: "expiry",
-        type: "uint256",
+        internalType: "address",
+        name: "allowed",
+        type: "address",
       },
     ],
     name: "SwapCreated",
@@ -95,6 +101,11 @@ export const SwaplaceAbi = [
         internalType: "uint256",
         name: "swapId",
         type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "receiver",
+        type: "address",
       },
     ],
     name: "acceptSwap",
@@ -131,13 +142,8 @@ export const SwaplaceAbi = [
             type: "address",
           },
           {
-            internalType: "address",
-            name: "allowed",
-            type: "address",
-          },
-          {
             internalType: "uint256",
-            name: "expiry",
+            name: "config",
             type: "uint256",
           },
           {
@@ -209,13 +215,8 @@ export const SwaplaceAbi = [
             type: "address",
           },
           {
-            internalType: "address",
-            name: "allowed",
-            type: "address",
-          },
-          {
             internalType: "uint256",
-            name: "expiry",
+            name: "config",
             type: "uint256",
           },
           {
@@ -359,13 +360,8 @@ export const SwaplaceAbi = [
             type: "address",
           },
           {
-            internalType: "address",
-            name: "allowed",
-            type: "address",
-          },
-          {
             internalType: "uint256",
-            name: "expiry",
+            name: "config",
             type: "uint256",
           },
           {
@@ -409,6 +405,54 @@ export const SwaplaceAbi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "allowed",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "expiry",
+        type: "uint256",
+      },
+    ],
+    name: "packData",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "config",
+        type: "uint256",
+      },
+    ],
+    name: "parseData",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "pure",
     type: "function",
   },
   {

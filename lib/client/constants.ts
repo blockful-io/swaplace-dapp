@@ -100,8 +100,8 @@ export let getRpcHttpUrlForNetwork: Map<number, string> = new Map([
 
 export const SWAPLACE_SMART_CONTRACT_ADDRESS = {
   [ChainInfo.HARDHAT.id]: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-  [ChainInfo.SEPOLIA.id]: "0xD8E3580C1b6f117c5b35DdD01dd9e50d9487501D",
-  [ChainInfo.MUMBAI.id]: "0xcB003ed4Df4679D15b8863BB8F7609855A6a380d",
+  [ChainInfo.SEPOLIA.id]: "0x24809b2b374c5d70c2BdA6d65290e3fa3a2b378d",
+  [ChainInfo.MUMBAI.id]: "0x420696541dc0ec9643409C64d0Ba39dD429Eb34b",
 };
 
 //SEPOLIA MOCKS

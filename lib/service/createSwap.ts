@@ -1,7 +1,8 @@
-import { ICreateSwap } from "../client/blockchain-data";
+import { ICreateSwap, packingData } from "../client/blockchain-data";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
-import { encodeFunctionData } from "viem";
+import { encodeFunctionData, getContract } from "viem";
 import { publicClientViem } from "../wallet/wallet-config";
+import { SwaplaceAbi } from "../client/abi";
 
 export async function createSwap({
   walletClient,
@@ -12,6 +13,17 @@ export async function createSwap({
   authenticatedUserAddress,
   chain,
 }: ICreateSwap) {
+  const SwaplaceContract = getContract({
+    address: SWAPLACE_SMART_CONTRACT_ADDRESS[chain] as `0x${string}`,
+    abi: SwaplaceAbi,
+    publicClient: publicClientViem,
+  });
+  const config = await packingData(
+    SwaplaceContract,
+    validatedAddressToSwap as `0x${string}`,
+    expireDate,
+  );
+
   const data = encodeFunctionData({
     abi: [
       {
@@ -24,13 +36,8 @@ export async function createSwap({
                 type: "address",
               },
               {
-                internalType: "address",
-                name: "allowed",
-                type: "address",
-              },
-              {
                 internalType: "uint256",
-                name: "expiry",
+                name: "config",
                 type: "uint256",
               },
               {
@@ -88,8 +95,7 @@ export async function createSwap({
     args: [
       {
         owner: authenticatedUserAddress.address as `0x${string}`,
-        allowed: validatedAddressToSwap as `0x${string}`,
-        expiry: expireDate,
+        config: config,
         biding: nftAuthUser,
         asking: nftInputUser,
       },
