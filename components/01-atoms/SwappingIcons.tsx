@@ -27,9 +27,6 @@ export enum SwappingIconsID {
 
 export const SwappingIcons = () => {
   const { theme } = useTheme();
-  const [isActiveTab, setIsActiveTab] = useState(
-    SwappingIconsID.SWAPLACE_STATION,
-  );
   const { isWideScreen } = useScreenSize();
 
   const swappingTabs: Array<IconSwap> = [
@@ -78,14 +75,25 @@ export const SwappingIcons = () => {
       ),
     },
   ];
-
   const router = useRouter();
-  const handleClick = (e: IconSwap) => {
+
+  const findInitialActiveTab = () => {
+    const matchingTab = swappingTabs.find(tab => router.pathname === tab.href);
+    console.log("matching ",matchingTab)
+    return matchingTab ? matchingTab.id : SwappingIconsID.SWAPLACE_STATION;
+  };
+
+  const [isActiveTab, setIsActiveTab] = useState(
+    findInitialActiveTab()
+  );
+
+  
+  const handleClick = async (e: IconSwap) => {
     setIsActiveTab(e.id);
     router.push(e.href);
   };
 
-  return (
+    return (
     <div key={isActiveTab}>
       {swappingTabs.map((swapIcons) => {
         return (
