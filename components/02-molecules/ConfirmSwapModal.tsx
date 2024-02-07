@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork, useWalletClient } from "wagmi";
 import {
@@ -9,16 +9,26 @@ import {
   SwapModalLayout,
 } from "@/components/01-atoms";
 import { ProgressStatus } from "@/components/02-molecules";
-import { createSwap } from "@/lib/service/createSwap";
+import { SwapUserConfiguration, createSwap } from "@/lib/service/createSwap";
 import {
   ButtonClickPossibilities,
-  ComposeNftSwap,
+  ComposeTokenUserAssets,
   ICreateSwap,
   SwapModalSteps,
+  packingData,
 } from "@/lib/client/blockchain-data";
 import toast from "react-hot-toast";
-import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
+import {
+  Asset,
+  Swap,
+  makeSwap,
+  updateNftsToSwapApprovalStatus,
+} from "@/lib/client/swap-utils";
 import { useTheme } from "next-themes";
+import { SwaplaceAbi } from "@/lib/client/abi";
+import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
+import { publicClientViem } from "@/lib/wallet/wallet-config";
+import { getContract } from "viem";
 
 interface ConfirmSwapApprovalModalProps {
   open: boolean;
@@ -42,6 +52,9 @@ export const ConfirmSwapModal = ({
     updateSwapStep,
   } = useContext(SwapContext);
 
+  const [nftsInputUser, setNftsInputUser] = useState<Asset[]>([]); // asking
+  const [nftsAuthUser, setNftsAuthUser] = useState<Asset[]>([]); // biding
+
   const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
   const { theme } = useTheme();
@@ -58,8 +71,23 @@ export const ConfirmSwapModal = ({
     }
   }, [open]);
 
-  const nftsInputUser = ComposeNftSwap(nftInputUser);
-  const nftsAuthUser = ComposeNftSwap(nftAuthUser);
+  useEffect(() => {
+    const fetchUserTokenAssets = async () => {
+      try {
+        const [nftsInputUserResult, nftsAuthUserResult] = await Promise.all([
+          ComposeTokenUserAssets(nftInputUser),
+          ComposeTokenUserAssets(nftAuthUser),
+        ]);
+
+        setNftsInputUser(nftsInputUserResult);
+        setNftsAuthUser(nftsAuthUserResult);
+      } catch (error) {
+        console.error("Error fetching User Tokens Assets:", error);
+      }
+    };
+
+    fetchUserTokenAssets();
+  }, [nftInputUser, nftAuthUser]);
 
   useEffect(() => {
     updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
@@ -80,27 +108,53 @@ export const ConfirmSwapModal = ({
   }
 
   let chainId: number;
+  let userWalletClient: any;
 
   const handleSwap = async () => {
-    if (typeof chain?.id != "undefined") {
+    if (typeof chain?.id != "undefined" && walletClient != undefined) {
       chainId = chain?.id;
+      userWalletClient = walletClient;
     } else {
       throw new Error("Chain ID is undefined");
     }
 
-    const swapData: ICreateSwap = {
-      walletClient: walletClient,
-      expireDate: timeDate,
-      nftInputUser: nftsInputUser,
-      nftAuthUser: nftsAuthUser,
-      validatedAddressToSwap: validatedAddressToSwap,
-      authenticatedUserAddress: authenticatedUserAddress,
+    const SwaplaceContract = getContract({
+      address: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
+      abi: SwaplaceAbi,
+      publicClient: publicClientViem,
+    });
+    const config = await packingData(
+      SwaplaceContract,
+      validatedAddressToSwap as `0x${string}`,
+      timeDate,
+    );
+
+    const swap = await makeSwap(
+      userWalletClient.account.address,
+      config,
+      nftsAuthUser,
+      nftsInputUser,
+      chainId,
+    );
+
+    const configurations: SwapUserConfiguration = {
+      walletClient: userWalletClient,
       chain: chainId,
     };
 
+    // const swapData: ICreateSwap = {
+    //   walletClient: walletClient, // owner
+    //   expireDate: timeDate,
+    //   nftInputUser: nftsInputUser, // asking
+    //   nftAuthUser: nftsAuthUser, // biding
+    //   validatedAddressToSwap: validatedAddressToSwap,
+    //   authenticatedUserAddress: authenticatedUserAddress,
+    //   chain: chainId,
+    // };
+
     try {
       if (allSelectedNftsApproved) {
-        const transactionReceipt = await createSwap(swapData);
+        const transactionReceipt = await createSwap(swap, configurations);
 
         if (transactionReceipt != undefined) {
           toast.success("Created Swap");

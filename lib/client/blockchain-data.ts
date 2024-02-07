@@ -8,13 +8,13 @@ import {
   getRpcHttpUrlForNetwork,
 } from "./constants";
 import { getTimestamp } from "./utils";
-import { hexToNumber } from "viem";
 import {
   GetTokensForOwnerResponse,
   OwnedNftsResponse,
   OwnedToken,
   OwnedNft,
 } from "alchemy-sdk";
+import { Asset, makeAsset } from "./swap-utils";
 
 export interface ICreateSwap {
   walletClient: any;
@@ -43,11 +43,6 @@ export interface IApproveSwap {
   tokenContractAddress: any;
 }
 
-export interface INftSwappingInfo {
-  addr: `0x${string}`;
-  amountOrId: bigint;
-}
-
 export enum SwapModalSteps {
   APPROVE_NFTS,
   CREATE_SWAP,
@@ -72,30 +67,27 @@ export type NftSwappingInfo = {
   amountOrId: bigint;
 };
 
-export function ComposeNftSwap(nftUser: Token[]): INftSwappingInfo[] {
-  let nftTokenContractArray: INftSwappingInfo[] = [];
+export async function ComposeTokenUserAssets(
+  nftUser: Token[],
+): Promise<Asset[]> {
+  let tokenAssetArray: Asset[] = [];
+  const assetPromisesArray: Promise<void>[] = [];
 
-  for (let i = 0; i < nftUser.length; i += 2) {
-    const amountOrId = BigInt(nftUser[i].id as unknown as number);
+  for (let i = 0; i < nftUser.length; i += 1) {
     const addr = nftUser[i]?.contract as `0x${string}`;
+    const amountOrId = BigInt(nftUser[i].id as unknown as number);
+
     if (amountOrId !== undefined && addr !== undefined) {
-      nftTokenContractArray.push({ addr, amountOrId });
-    }
-
-    if (i + 1 < nftUser.length) {
-      const nextAmountOrId = BigInt(nftUser[i + 1]?.id as unknown as number);
-      const nextAddr = nftUser[i + 1]?.contract as `0x${string}`;
-
-      if (nextAmountOrId !== undefined && nextAddr !== undefined) {
-        nftTokenContractArray.push({
-          addr: nextAddr,
-          amountOrId: nextAmountOrId,
-        });
-      }
+      const assetPromise = makeAsset(addr, amountOrId).then((asset) => {
+        tokenAssetArray.push(asset);
+      });
+      assetPromisesArray.push(assetPromise);
     }
   }
 
-  return nftTokenContractArray;
+  await Promise.all(assetPromisesArray);
+
+  return tokenAssetArray;
 }
 
 export function getNftsInfoToSwap(userNfts: Token[]): NftSwappingInfo[] {
@@ -202,62 +194,62 @@ const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
   });
 };
 
-export interface Swap {
-  owner: string;
-  config: any;
-  biding: Token[];
-  asking: Token[];
-}
+// export interface Swap {
+//   owner: string;
+//   config: any;
+//   biding: Token[];
+//   asking: Token[];
+// }
 
-export async function makeConfig(
-  Contract: any,
-  allowed: any,
-  destinationChainSelector: any,
-  expiration: any,
-) {
-  const config = await Contract.packData(
-    allowed,
-    destinationChainSelector,
-    expiration,
-  );
-  return config;
-}
+// export async function makeConfig(
+//   Contract: any,
+//   allowed: any,
+//   destinationChainSelector: any,
+//   expiration: any,
+// ) {
+//   const config = await Contract.packData(
+//     allowed,
+//     destinationChainSelector,
+//     expiration,
+//   );
+//   return config;
+// }
 
-export async function makeSwap(
-  Contract: any,
-  owner: any,
-  allowed: any,
-  destinationChainSelector: any,
-  expiration: any,
-  biding: Token[],
-  asking: Token[],
-  chainId: number,
-) {
-  const timestamp = await getTimestamp(chainId);
-  if (expiration < timestamp) {
-    throw new Error("InvalidExpiry");
-  }
+// export async function makeSwap(
+//   Contract: any,
+//   owner: any,
+//   allowed: any,
+//   destinationChainSelector: any,
+//   expiration: any,
+//   biding: Token[],
+//   asking: Token[],
+//   chainId: number,
+// ) {
+//   const timestamp = await getTimestamp(chainId);
+//   if (expiration < timestamp) {
+//     throw new Error("InvalidExpiry");
+//   }
 
-  if (biding.length == 0 || asking.length == 0) {
-    throw new Error("InvalidNFTsLength");
-  }
+//   if (biding.length == 0 || asking.length == 0) {
+//     throw new Error("InvalidAssetsLength");
+//   }
 
-  const config = await makeConfig(
-    Contract,
-    allowed,
-    destinationChainSelector,
-    expiration,
-  );
+//   const config = await makeConfig(
+//     Contract,
+//     allowed,
+//     destinationChainSelector,
+//     expiration,
+//   );
 
-  const swap: Swap = {
-    owner: owner,
-    config: config,
-    biding: biding,
-    asking: asking,
-  };
+//   const swap: Swap = {
+//     owner: owner,
+//     config: config,
+//     biding: biding,
+//     asking: asking,
+//   };
 
-  return swap;
-}
+//   return swap;
+// }
 
 export interface IArrayStatusTokenApproved {
   approved: `0x${string}`;

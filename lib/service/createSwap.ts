@@ -3,26 +3,27 @@ import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
 import { encodeFunctionData, getContract } from "viem";
 import { publicClientViem } from "../wallet/wallet-config";
 import { SwaplaceAbi } from "../client/abi";
+import { Swap } from "../client/swap-utils";
 
-export async function createSwap({
-  walletClient,
-  expireDate,
-  nftInputUser,
-  nftAuthUser,
-  validatedAddressToSwap,
-  authenticatedUserAddress,
-  chain,
-}: ICreateSwap) {
-  const SwaplaceContract = getContract({
-    address: SWAPLACE_SMART_CONTRACT_ADDRESS[chain] as `0x${string}`,
-    abi: SwaplaceAbi,
-    publicClient: publicClientViem,
-  });
-  const config = await packingData(
-    SwaplaceContract,
-    validatedAddressToSwap as `0x${string}`,
-    expireDate,
-  );
+export interface SwapUserConfiguration {
+  walletClient: any;
+  chain: number;
+}
+
+export async function createSwap(
+  swap: Swap,
+  configurations: SwapUserConfiguration,
+) {
+  // const SwaplaceContract = getContract({
+  //   address: SWAPLACE_SMART_CONTRACT_ADDRESS[chain] as `0x${string}`,
+  //   abi: SwaplaceAbi,
+  //   publicClient: publicClientViem,
+  // });
+  // const config = await packingData(
+  //   SwaplaceContract,
+  //   validatedAddressToSwap as `0x${string}`,
+  //   expireDate,
+  // );
 
   const data = encodeFunctionData({
     abi: [
@@ -94,18 +95,20 @@ export async function createSwap({
     ],
     args: [
       {
-        owner: authenticatedUserAddress.address as `0x${string}`,
-        config: config,
-        biding: nftAuthUser,
-        asking: nftInputUser,
+        owner: swap.owner as `0x${string}`,
+        config: swap.config as unknown as bigint,
+        biding: swap.biding,
+        asking: swap.asking,
       },
     ],
   });
 
   try {
-    const transactionHash = await walletClient.sendTransaction({
+    const transactionHash = await configurations.walletClient.sendTransaction({
       data: data,
-      to: SWAPLACE_SMART_CONTRACT_ADDRESS[chain],
+      to: SWAPLACE_SMART_CONTRACT_ADDRESS[
+        configurations.chain
+      ] as `0x${string}`,
     });
 
     const transactionReceipt = await publicClientViem.waitForTransactionReceipt(
