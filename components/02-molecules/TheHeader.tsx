@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import cc from "classcat";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useTheme } from "next-themes";
 import { ConnectWallet, SwappingIcons, Tooltip } from "@/components/01-atoms";
 import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
+import { useTheme } from "next-themes";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import cc from "classcat";
 
 export const TheHeader = () => {
   const { isDesktop } = useScreenSize();
@@ -29,7 +29,7 @@ export const TheHeader = () => {
 
   if (!mounted) return null;
   const currentTheme = theme === "system" ? systemTheme : theme;
-  
+
   return (
     <header className="bg-[#F2F2F2] dark:bg-[#212322] z-40 w-screen h-auto xl:w-[62px] xl:h-screen py-6 flex xl:flex-col justify-between items-center xl:items-center  xl:px-0 md:px-8 xl:pt-5 xl:pb-4 font-medium shadow-lg absolute left-0 top-0">
       <div className="flex">

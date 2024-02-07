@@ -1,20 +1,18 @@
-import { useContext } from "react";
-import { useEnsName, useNetwork } from "wagmi";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { SwapContext } from "@/components/01-atoms";
 import { PersonIcon } from "@/components/01-atoms/icons";
 import { NftCard } from "@/components/02-molecules";
-import { EmptyNftsCards } from "@/components/01-atoms";
+import { EmptyNftsCards, SwapContext } from "@/components/01-atoms";
+import { useEnsName } from "wagmi";
+import { useContext } from "react";
 
 interface IOfferSummary {
   forAuthedUser: boolean;
 }
 
 export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
-  const { validatedAddressToSwap, nftAuthUser, nftInputUser, destinyChain } =
+  const { validatedAddressToSwap, nftAuthUser, nftInputUser } =
     useContext(SwapContext);
-  const { chain } = useNetwork();
   const { data } = useEnsName({
     address: validatedAddressToSwap as `0x${string}`,
   });

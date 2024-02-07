@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from "react";
 import { SwapContext } from "../01-atoms";
-import { ADDRESS_ZERO } from "@/lib/client/constants";
 import { ProgressBar } from "../01-atoms/ProgressBar";
+import { ADDRESS_ZERO } from "@/lib/client/constants";
+import { useContext, useEffect, useState } from "react";
 
 export const ProgressStatus = () => {
   const { authedUserSelectedNftsApprovalStatus } = useContext(SwapContext);

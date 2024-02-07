@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
-import { getMultipleNftsApprovalStatus } from "../service/verifyTokensSwapApproval";
 import {
   IArrayStatusTokenApproved,
   getNftsInfoToSwap,
 } from "./blockchain-data";
 import { ADDRESS_ZERO, NFT } from "./constants";
+import { getMultipleNftsApprovalStatus } from "../service/verifyTokensSwapApproval";
+import { Dispatch, SetStateAction } from "react";
 
 export const updateNftsToSwapApprovalStatus = async (
   nftsList: NFT[],

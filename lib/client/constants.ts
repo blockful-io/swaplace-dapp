@@ -50,7 +50,7 @@ export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
   },
 };
 
-export let getRpcHttpUrlForNetwork: Map<number, string> = new Map([
+export const getRpcHttpUrlForNetwork: Map<number, string> = new Map([
   [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP ?? ""],
   [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? ""],
   [ChainInfo.HARDHAT.id, "http://127.0.0.1:8545/"],

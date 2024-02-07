@@ -1,6 +1,6 @@
+import { CloseIcon } from "./icons/CloseIcon";
 import { Transition, Dialog } from "@headlessui/react";
 import React, { Fragment } from "react";
-import { CloseIcon } from "./icons/CloseIcon";
 import cc from "classcat";
 import { useTheme } from "next-themes";
 

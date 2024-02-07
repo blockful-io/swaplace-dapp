@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { SwapContext } from ".";
+import { getTimestamp } from "@/lib/client/utils";
+import { TimeStampDate, ExpireDate } from "@/lib/client/constants";
 import React, { useContext, useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
-import { SwapContext } from ".";
-import { TimeStampDate, ExpireDate } from "@/lib/client/constants";
-import { getTimestamp } from "@/lib/client/utils";
 
 export const SwapExpireTime = () => {
   const { chain } = useNetwork();

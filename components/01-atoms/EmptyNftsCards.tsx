@@ -9,7 +9,7 @@ export const EmptyNftsCards = (
 ) => {
   const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
 
-  let totalSquares: number = 0;
+  let totalSquares = 0;
 
   isMobile
     ? (totalSquares = ismobileTotalSquares)
