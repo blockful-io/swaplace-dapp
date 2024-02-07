@@ -5,7 +5,6 @@ export * from "./LoadingIndicator";
 export * from "./NftsCardApprovedList";
 export * from "./ProgressBar";
 export * from "./SearchBar";
-// export * from "./TransactionResultModal";
 export * from "./SelectAuthedUserChain";
 export * from "./SelectDestinyChain";
 export * from "./StatusOffers";
