@@ -1,5 +1,6 @@
-import { NFT } from "@/lib/client/constants";
+/* eslint-disable react/jsx-key */
 import { NftCard } from "../01-atoms";
+import { NFT } from "@/lib/client/constants";
 
 interface INftsList {
   nftsList: NFT[];

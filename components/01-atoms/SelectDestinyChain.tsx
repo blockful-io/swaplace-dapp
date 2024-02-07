@@ -1,7 +1,7 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useContext, useState } from "react";
 import { EthereumIcon, PolygonIcon, SwapContext } from ".";
 import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useContext, useState } from "react";
 import cc from "classcat";
 
 export const SelectDestinyChain = () => {

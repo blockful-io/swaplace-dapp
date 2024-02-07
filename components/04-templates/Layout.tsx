@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useAuthedAccess } from "@/lib/client/hooks/useAuthedAccess";
 import { useRouter } from "next/router";
 import { useEffect } from "react";

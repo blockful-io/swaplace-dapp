@@ -1,9 +1,9 @@
-import { Dialog, Transition } from "@headlessui/react";
 import { TransactionResult } from ".";
-import { Fragment, useState } from "react";
 import LoadingIndicator from "./LoadingIndicator";
-import { CheckmarkIcon } from "react-hot-toast";
 import { DangerIcon } from "./icons/DangerIcon";
+import { Dialog, Transition } from "@headlessui/react";
+import { CheckmarkIcon } from "react-hot-toast";
+import { Fragment, useState } from "react";
 
 interface TransactionResultModalProps {
   onClose: () => void;
@@ -14,11 +14,11 @@ export const TransactionResultModal = ({
   transactionResult,
   onClose,
 }: TransactionResultModalProps) => {
+  const [open, setOpen] = useState(true);
+
   if (!transactionResult) {
     return null;
   }
-
-  const [open, setOpen] = useState(true);
 
   const closeModal = () => {
     setOpen(false);

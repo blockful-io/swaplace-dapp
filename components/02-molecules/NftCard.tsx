@@ -1,8 +1,9 @@
-import { NFT } from "@/lib/client/constants";
-import React, { useContext, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
 import { SwapContext } from "../01-atoms";
+import { NFT } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EthereumAddress } from "@/lib/shared/types";
+import React, { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import toast from "react-hot-toast";
 
@@ -33,12 +34,38 @@ export const NftCard = ({
   withSelectionValidation = true,
   onClickAction = NftCardActionType.SELECT_NFT_FOR_SWAP,
 }: INftCard) => {
-  if (!nftData || !nftData.id || !nftData.contract || !ownerAddress)
-    return null;
-
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { setNftAuthUser, setNftInputUser, nftAuthUser, nftInputUser } =
     useContext(SwapContext);
+  const [couldntLoadNftImage, setCouldntLoadNftImage] = useState(false);
+  const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
+
+  useEffect(() => {
+    setCouldntLoadNftImage(false);
+  }, [nftData]);
+
+  useEffect(() => {
+    const currentNftIsFromAuthedUser = ownerAddress
+      ? authenticatedUserAddress?.equals(new EthereumAddress(ownerAddress))
+      : null;
+
+    if (currentNftIsFromAuthedUser) {
+      if (nftAuthUser.length) {
+        setCurrentNftIsSelected(nftAuthUser[0].id === nftData.id);
+      } else {
+        setCurrentNftIsSelected(false);
+      }
+    } else {
+      if (nftInputUser.length) {
+        setCurrentNftIsSelected(nftInputUser[0].id === nftData.id);
+      } else {
+        setCurrentNftIsSelected(false);
+      }
+    }
+  }, [authenticatedUserAddress, ownerAddress, nftAuthUser, nftInputUser]);
+
+  if (!nftData || !nftData.id || !nftData.contract || !ownerAddress)
+    return null;
 
   const setNftAsActiveOne = () => {
     if (onClickAction === NftCardActionType.SELECT_NFT_FOR_SWAP) {
@@ -65,35 +92,9 @@ export const NftCard = ({
     }
   };
 
-  const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
-  useEffect(() => {
-    const currentNftIsFromAuthedUser = authenticatedUserAddress?.equals(
-      new EthereumAddress(ownerAddress)
-    );
-
-    if (currentNftIsFromAuthedUser) {
-      if (nftAuthUser.length) {
-        setCurrentNftIsSelected(nftAuthUser[0].id === nftData.id);
-      } else {
-        setCurrentNftIsSelected(false);
-      }
-    } else {
-      if (nftInputUser.length) {
-        setCurrentNftIsSelected(nftInputUser[0].id === nftData.id);
-      } else {
-        setCurrentNftIsSelected(false);
-      }
-    }
-  }, [authenticatedUserAddress, ownerAddress, nftAuthUser, nftInputUser]);
-
-  const [couldntLoadNftImage, setCouldntLoadNftImage] = useState(false);
   const handleImageLoadError = () => {
     setCouldntLoadNftImage(true);
   };
-
-  useEffect(() => {
-    setCouldntLoadNftImage(false);
-  }, [nftData]);
 
   const ButtonLayout = (children: React.ReactNode) => {
     return (
