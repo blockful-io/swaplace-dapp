@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
 import { NFT, NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
 import { getTimestamp } from "./utils";
 import { hexToNumber } from "viem";
+import { Dispatch, SetStateAction } from "react";
 
 export interface ICreateSwap {
   walletClient: any;
@@ -60,7 +60,7 @@ export type NftSwappingInfo = {
 };
 
 export function ComposeNftSwap(nftUser: NFT[]): INftSwappingInfo[] {
-  let nftTokenContractArray: INftSwappingInfo[] = [];
+  const nftTokenContractArray: INftSwappingInfo[] = [];
 
   for (let i = 0; i < nftUser.length; i += 2) {
     const amountOrId = BigInt(hexToNumber(nftUser[i]?.id?.tokenId));
@@ -86,7 +86,7 @@ export function ComposeNftSwap(nftUser: NFT[]): INftSwappingInfo[] {
 }
 
 export function getNftsInfoToSwap(userNfts: NFT[]): NftSwappingInfo[] {
-  let nftsInfoArray: NftSwappingInfo[] = [];
+  const nftsInfoArray: NftSwappingInfo[] = [];
 
   for (let i = 0; i < userNfts.length; i++) {
     const nftAmountOrTokenId = BigInt(hexToNumber(userNfts[i]?.id?.tokenId));

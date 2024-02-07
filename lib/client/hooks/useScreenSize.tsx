@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
 import {
   DESKTOP_SCREEN_SIZE,
   TABLET_SCREEN_SIZE,
   WIDE_SCREEN_SIZE,
 } from "../constants";
+import { useState, useEffect } from "react";
 
 export const useScreenSize = () => {
   const [isMobile, setIsMobile] = useState(false);

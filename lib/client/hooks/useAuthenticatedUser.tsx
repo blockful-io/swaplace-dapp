@@ -1,13 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { ADDRESS_ZERO, getRpcHttpUrlForNetwork } from "../constants";
 import { EthereumAddress } from "../../shared/types";
 import { signOut, useSession } from "next-auth/react";
-import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
-import {
-  useAccount,
-  useDisconnect,
-  useEnsName,
-  useNetwork,
-} from "wagmi";
-import { ADDRESS_ZERO, getRpcHttpUrlForNetwork } from "../constants";
+import { useEffect, useState } from "react";
+import { useAccount, useDisconnect, useEnsName, useNetwork } from "wagmi";
 
 interface AuthenticatedUserHook {
   loadingEnsName: boolean;

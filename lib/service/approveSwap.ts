@@ -1,7 +1,7 @@
-import { encodeFunctionData } from "viem";
 import { MockERC721Abi } from "../client/abi";
 import { IApproveSwap } from "../client/blockchain-data";
 import { publicClientViem } from "../wallet/wallet-config";
+import { encodeFunctionData } from "viem";
 
 export async function approveSwap({
   walletClient,

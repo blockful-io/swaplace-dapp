@@ -1,6 +1,5 @@
-import { useContext, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useNetwork, useWalletClient } from "wagmi";
 import {
   ButtonVariant,
   NftsCardApprovedList,
@@ -16,9 +15,11 @@ import {
   ICreateSwap,
   SwapModalSteps,
 } from "@/lib/client/blockchain-data";
-import toast from "react-hot-toast";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
+import { useNetwork, useWalletClient } from "wagmi";
+import { useContext, useEffect } from "react";
 import { useTheme } from "next-themes";
+import toast from "react-hot-toast";
 
 interface ConfirmSwapApprovalModalProps {
   open: boolean;
