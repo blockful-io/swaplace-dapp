@@ -1,9 +1,9 @@
-import { useContext } from "react";
-import { EthereumIcon, NftCard, PolygonIcon, SwapContext } from "../01-atoms";
-import { useEnsName, useNetwork } from "wagmi";
+import { NftCard, SwapContext } from "../01-atoms";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
+import { ChainInfo } from "@/lib/client/constants";
+import { useEnsName, useNetwork } from "wagmi";
+import { useContext } from "react";
 
 interface IOfferSummary {
   forAuthedUser: boolean;

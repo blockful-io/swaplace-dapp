@@ -1,5 +1,3 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useContext, useEffect, useState } from "react";
 import {
   NftCard,
   NftCardActionType,
@@ -8,11 +6,10 @@ import {
   TransactionResultModal,
 } from ".";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { makeSwap } from "@/lib/client/blockchain-data";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useNetwork, useWalletClient } from "wagmi";
-import { getTimestamp } from "@/lib/client/utils";
-import { signTransaction } from "viem/actions";
 import toast from "react-hot-toast";
 
 interface ConfirmSwapModalProps {
@@ -33,7 +30,7 @@ export enum TransactionResult {
 
 export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { nftInputUser, nftAuthUser, validatedAddressToSwap, destinyChain } =
+  const { nftInputUser, nftAuthUser, validatedAddressToSwap } =
     useContext(SwapContext);
 
   const [createOfferStatus, setCreateOfferStatus] = useState(
@@ -61,7 +58,7 @@ export const ConfirmSwapModal = ({ open, onClose }: ConfirmSwapModalProps) => {
       chain && SWAPLACE_SMART_CONTRACT_ADDRESS[chain?.id];
 
     if (swaplaceContractForCurrentChain && walletClient) {
-      const farFarInTheFuture = getTimestamp(chain.id);
+      // const farFarInTheFuture = getTimestamp(chain.id);
 
       setCreateOfferStatus(CreateOfferStatus.WAITING_WALLET_APPROVAL);
       walletClient

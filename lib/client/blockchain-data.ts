@@ -1,8 +1,6 @@
-import { ethers } from "ethers";
-import { Dispatch, SetStateAction } from "react";
-import { NFT, NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
-import { publicClient } from "../wallet/wallet-config";
 import { getTimestamp } from "./utils";
+import { NFT, NFTsQueryStatus, getRpcHttpUrlForNetwork } from "./constants";
+import { Dispatch, SetStateAction } from "react";
 
 export const getNftsFrom = async (
   address: string,
