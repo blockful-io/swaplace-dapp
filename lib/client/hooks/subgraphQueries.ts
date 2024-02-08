@@ -1,9 +1,7 @@
-const axios = require("axios");
 require("dotenv").config();
+import axios from "axios";
 
-const { ENDPOINT_URL, AUTHORIZATION_KEY } = process.env;
-
-async function main() {
+export const getGraphQuery = async () => {
   const endpoint = process.env.ENDPOINT_URL;
   const headers = {
     "content-type": "application/json",
@@ -37,13 +35,11 @@ async function main() {
     console.log(response.data.errors);
   } catch (error) {
     console.error(error);
-    process.exit(1);
   }
-}
+};
 
-main()
-  .then(() => process.exit(0))
+getGraphQuery()
+  .then((result) => console.log(result))
   .catch((error) => {
     console.error(error);
-    process.exit(1);
   });
