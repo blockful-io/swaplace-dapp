@@ -1,17 +1,17 @@
 ---
-name: Feature Request
-about: Suggest an idea or enhancement for this project
-title: "feat:"
+name: Refactor Request
+about: Suggest the refactoring for this project
+title: "refactor:"
 labels: enhancement
 assignees: ""
 ---
 
-## Feature Request
+## Refactor Request
 
-### Describe the Feature Request
+### Describe the Refactor Request
 
-<!-- A clear and concise description of the feature request.
-Please include if your feature request is related to a problem. -->
+<!-- A clear and concise description of the refactor request.
+Please include if your refactor request is related to a problem. -->
 
 ### Describe Preferred Solution
 
@@ -24,7 +24,7 @@ features you've considered. -->
 
 ### Related Code
 
-<!-- If you can illustrate the bug or feature request with an
+<!-- If you can illustrate the bug or refactor request with an
 example, please provide it here. -->
 
 ### Additional Context
