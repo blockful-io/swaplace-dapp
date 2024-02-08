@@ -1,6 +1,6 @@
 import { useTheme } from "next-themes";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { NextRouter, useRouter } from "next/router";
+import { SVGProps, useState } from "react";
 import {
   SwappingIcon,
   OffersIcon,
@@ -15,7 +15,7 @@ export interface IconSwap {
   id: number;
   name: string;
   href: string;
-  icon: React.ReactNode;
+  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
 }
 
 export enum SwappingIconsID {
@@ -24,6 +24,12 @@ export enum SwappingIconsID {
   "CHAT",
   "NOTIFICATIONS",
 }
+
+const findInitialActiveTab = (swappingTabs: Array<IconSwap>, router: NextRouter) => {
+  const matchingTab = swappingTabs.find(tab => router.pathname === tab.href);
+  console.log("matching ", matchingTab)
+  return matchingTab ? matchingTab.id : SwappingIconsID.SWAPLACE_STATION;
+};
 
 export const SwappingIcons = () => {
   const { theme } = useTheme();
@@ -34,105 +40,91 @@ export const SwappingIcons = () => {
       id: SwappingIconsID.SWAPLACE_STATION,
       name: "Swaplace Station",
       href: "/swap",
-      icon: (
-        <SwappingIcon
-          className="w-5 h-5 "
-          fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
-        />
-      ),
+      icon: SwappingIcon,
     },
     {
       id: SwappingIconsID.OFFERS,
       name: "Offers",
       href: "/swap/offers",
-      icon: (
-        <OffersIcon
-          className="w-5 h-5 "
-          fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
-        />
-      ),
+      icon: OffersIcon,
     },
     {
       id: SwappingIconsID.CHAT,
       name: "Chat",
       href: "/",
-      icon: (
-        <ChatIcon
-          className="w-5 h-5 disabled cursor-not-allowed"
-          fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
-        />
-      ),
+      icon: ChatIcon,
     },
     {
       id: SwappingIconsID.NOTIFICATIONS,
       name: "Notifications",
       href: "/",
-      icon: (
-        <NotificationsIcon
-          className="w-5 h-5  disabled cursor-not-allowed"
-          fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
-        />
-      ),
+      icon: NotificationsIcon,
     },
   ];
+
+
   const router = useRouter();
 
-  const findInitialActiveTab = () => {
-    const matchingTab = swappingTabs.find(tab => router.pathname === tab.href);
-    console.log("matching ",matchingTab)
-    return matchingTab ? matchingTab.id : SwappingIconsID.SWAPLACE_STATION;
-  };
-
-  const [isActiveTab, setIsActiveTab] = useState(
-    findInitialActiveTab()
+  const [activeTab, setActiveTab] = useState(
+    findInitialActiveTab(swappingTabs, router)
   );
 
-  
   const handleClick = async (e: IconSwap) => {
-    setIsActiveTab(e.id);
+    setActiveTab(e.id);
     router.push(e.href);
   };
 
-    return (
-    <div key={isActiveTab}>
-      {swappingTabs.map((swapIcons) => {
+  return (
+    <div key={activeTab}>
+      {swappingTabs.map((swappingTab) => {
+        const IconComponent = swappingTab.icon;
+
+
+        const isSelected = activeTab == swappingTab.id
+
+
         return (
           <>
             {isWideScreen ? (
-              <Tooltip position={"right"} content={swapIcons.name}>
+              <Tooltip position={"right"} content={swappingTab.name}>
                 <div
-                  key={swapIcons.id}
+                  key={swappingTab.id}
                   className={cc([
-                    isActiveTab == swapIcons.id
-                      ? "dark:p-medium-bold-dark p-medium-bold border-l dark:border-[#DDF23D] border-black hover:dark:bg-[#333534]"
-                      : "dark:p-medium-bold p-medium-bold opacity-50 border-l dark:border-[#313131]",
-                    "flex-1 md:p-4 cursor-pointer hover:dark:bg-[#343635] hover:bg-[#eff3cf]",
+                    isSelected
+                      ? "dark:p-medium-bold-dark p-medium-bold border-l dark:border-[#DDF23D] border-[#AABE13] hover:dark:bg-[#333534]"
+                      : "dark:p-medium-bold p-medium-bold border-l dark:border-[#313131]",
+                    "flex-1 md:p-4 cursor-pointer hover:dark:bg-[#343635] hover:bg-[#eff3cf] group",
                   ])}
                   onClick={() => {
-                    handleClick(swapIcons);
+                    handleClick(swappingTab);
                   }}
                 >
                   <div className="flex items-center justify-center w-full">
-                    {swapIcons.icon}
+                    <IconComponent
+                      className={cc([
+                        "w-5 h-5",
+                        theme === "dark" ? (isSelected ? "text-[#DDF23D]" : "text-white opacity-100") : (isSelected ? "text-[#AABE13]" : "text-[#4F4F4F]")
+                      ])}
+                    />
                   </div>
                 </div>
               </Tooltip>
             ) : (
-              <Tooltip position={"bottom"} content={swapIcons.name}>
+              <Tooltip position={"bottom"} content={swappingTab.name}>
                 <div
-                  key={swapIcons.id}
+                  key={swappingTab.id}
                   className={cc([
-                    isActiveTab == swapIcons.id
+                    activeTab == swappingTab.id
                       ? "dark:p-medium-bold-dark p-medium-bold border-l dark:border-[#DDF23D] border-black hover:dark:bg-[#333534]"
                       : "dark:p-medium-bold p-medium-bold opacity-50 border-l dark:border-[#313131]",
                     "flex-1 md:p-4 cursor-pointer hover:dark:bg-[#343635] hover:bg-[#eff3cf]",
                   ])}
                   onClick={() => {
-                    handleClick(swapIcons);
+                    handleClick(swappingTab);
                   }}
                 >
                   <div className="flex items-center justify-center w-full">
-                    {swapIcons.icon}
+                    <IconComponent className="w-5 h-5 " fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])} />
                   </div>
                 </div>
               </Tooltip>
