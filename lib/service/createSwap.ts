@@ -1,7 +1,7 @@
 import { ICreateSwap } from "../client/blockchain-data";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
-import { encodeFunctionData } from "viem";
 import { publicClientViem } from "../wallet/wallet-config";
+import { encodeFunctionData } from "viem";
 
 export async function createSwap({
   walletClient,

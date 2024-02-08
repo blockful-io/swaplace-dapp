@@ -1,6 +1,7 @@
 import { useTheme } from "next-themes";
 import { NextRouter, useRouter } from "next/router";
 import { SVGProps, useState } from "react";
+import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import {
   SwappingIcon,
   OffersIcon,
@@ -8,8 +9,10 @@ import {
   NotificationsIcon,
 } from "@/components/01-atoms/icons";
 import { Tooltip } from "@/components/01-atoms";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import cc from "classcat";
-import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 
 export interface IconSwap {
   id: number;
@@ -132,6 +135,6 @@ export const SwappingIcons = () => {
           </>
         );
       })}
-    </ div>
+    </div>
   );
 };

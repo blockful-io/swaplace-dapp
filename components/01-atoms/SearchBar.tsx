@@ -1,20 +1,18 @@
-import cc from "classcat";
-import { useContext, useEffect, useState } from "react";
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-named-as-default-member */
 import { MagnifyingGlassIcon } from "@/components/01-atoms/icons";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ENS } from "web3-eth-ens";
-import Web3 from "web3";
+import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { ENS } from "web3-eth-ens";
+import cc from "classcat";
+import Web3 from "web3";
 
 export const SearchBar = () => {
-  const {
-    setInputAddress,
-    inputAddress,
-    validatedAddressToSwap,
-    validateAddressToSwap,
-    userJustValidatedInput,
-  } = useContext(SwapContext);
+  const { setInputAddress, inputAddress, validateAddressToSwap } =
+    useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 

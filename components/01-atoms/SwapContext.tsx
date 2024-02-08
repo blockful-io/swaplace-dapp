@@ -1,5 +1,7 @@
-import React, { Dispatch, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable unused-imports/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress } from "@/lib/shared/types";
 import {
@@ -7,6 +9,8 @@ import {
   IArrayStatusTokenApproved,
   SwapModalSteps,
 } from "@/lib/client/blockchain-data";
+import React, { Dispatch, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 interface SwapContextProps {
   inputAddress: string;

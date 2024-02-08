@@ -14,4 +14,3 @@ export * from "./SwapModalButton";
 export * from "./SwappingIcons";
 export * from "./Tab";
 export * from "./Tooltip";
-export * from "./TransactionResultModal";
