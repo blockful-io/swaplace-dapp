@@ -92,7 +92,7 @@ export const SwappingIcons = () => {
                   className={cc([
                     isSelected
                       ? "dark:p-medium-bold-dark p-medium-bold border-l dark:border-[#DDF23D] border-[#AABE13] hover:dark:bg-[#333534]"
-                      : "dark:p-medium-bold p-medium-bold border-l dark:border-[#313131]",
+                      : "dark:p-medium-bold p-medium-bold",
                     `flex-1 md:p-4 cursor-pointer ${!isDisabled && "hover:dark:bg-[#343635] hover:bg-[#eff3cf]"} group`,
                     isDisabled && "disabled hover:cursor-not-allowed hover:none",
                   ])}
@@ -104,7 +104,7 @@ export const SwappingIcons = () => {
                     <IconComponent
                       className={cc([
                         "w-5 h-5",
-                        theme === "dark" ? (isSelected ? "text-[#DDF23D]" : "text-white opacity-100") : (isSelected ? "text-[#AABE13]" : "text-[#4F4F4F]"),
+                        theme === "dark" ? (isSelected ? "text-[#DDF23D]" : "text-[#F6F6F6]") : (isSelected ? "text-[#AABE13]" : "text-[#4F4F4F]"),
                         isDisabled && "disabled cursor-not-allowed"
                       ])}
                     />
