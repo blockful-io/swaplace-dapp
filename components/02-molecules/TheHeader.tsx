@@ -1,6 +1,11 @@
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ConnectWallet, SwappingIcons, Tooltip } from "@/components/01-atoms";
+import {
+  ConnectWallet,
+  ENSAvatar,
+  SwappingIcons,
+  Tooltip,
+} from "@/components/01-atoms";
 import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
@@ -58,19 +63,45 @@ export const TheHeader = () => {
             </button>
           )}
         </div>
-        <div>
+        <div className="h-10 w-10">
           {isWideScreen ? (
-            <Tooltip position={"right"} content={"Connect a Wallet"}>
-              <button className="h-10 w-10  rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
-                <WalletIcon />
-              </button>
-            </Tooltip>
+            <>
+              {!!authenticatedUserAddress ? (
+                <Tooltip position={"right"} content={"Your wallet"}>
+                  <button className="rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
+                    <ENSAvatar avatarENSAddress={authenticatedUserAddress} />
+                  </button>
+                </Tooltip>
+              ) : (
+                <Tooltip position={"right"} content={"Connect a Wallet"}>
+                  <div className="h-10 w-10 rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
+                    <ConnectWallet
+                      customStyle="w-full flex justify-center items-center"
+                      walletIcon={true}
+                    />
+                  </div>
+                </Tooltip>
+              )}
+            </>
           ) : (
-            <Tooltip position={"left"} content={"Connect a Wallet"}>
-              <button className="h-10 w-10  rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
-                <WalletIcon />
-              </button>
-            </Tooltip>
+            <>
+              {!!authenticatedUserAddress ? (
+                <Tooltip position={"right"} content={"Your wallet"}>
+                  <button className="rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
+                    <ENSAvatar avatarENSAddress={authenticatedUserAddress} />
+                  </button>
+                </Tooltip>
+              ) : (
+                <Tooltip position={"left"} content={"Connect a Wallet"}>
+                  <div className="h-10 w-10 rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
+                    <ConnectWallet
+                      customStyle="w-full flex justify-center items-center"
+                      walletIcon={true}
+                    />
+                  </div>
+                </Tooltip>
+              )}
+            </>
           )}
         </div>
       </div>

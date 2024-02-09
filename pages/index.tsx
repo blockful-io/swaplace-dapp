@@ -1,15 +1,18 @@
-import { HomeSection, Layout } from "@/components/04-templates";
+import { TheHeader } from "@/components/02-molecules";
+import { Layout, SwapSection } from "@/components/04-templates";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import cc from "classcat";
 
-export default function Index() {
+export default function IndexPage() {
   return (
     <Layout>
       <div
         className={cc([
-          "w-full min-h-[100vh] h-full flex flex-col justify-center items-center",
+          "w-full h-full mt-32 md:mt-40 xl:mt-16 flex flex-col justify-center items-center",
         ])}
       >
-        <HomeSection />
+        <TheHeader />
+        <SwapSection />
       </div>
     </Layout>
   );
