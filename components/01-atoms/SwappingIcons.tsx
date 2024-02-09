@@ -16,6 +16,7 @@ export interface IconSwap {
   name: string;
   href: string;
   icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  disabled?: boolean;
 }
 
 export enum SwappingIconsID {
@@ -27,7 +28,6 @@ export enum SwappingIconsID {
 
 const findInitialActiveTab = (swappingTabs: Array<IconSwap>, router: NextRouter) => {
   const matchingTab = swappingTabs.find(tab => router.pathname === tab.href);
-  console.log("matching ", matchingTab)
   return matchingTab ? matchingTab.id : SwappingIconsID.SWAPLACE_STATION;
 };
 
@@ -53,12 +53,14 @@ export const SwappingIcons = () => {
       name: "Chat",
       href: "/",
       icon: ChatIcon,
+      disabled: true,
     },
     {
       id: SwappingIconsID.NOTIFICATIONS,
       name: "Notifications",
       href: "/",
       icon: NotificationsIcon,
+      disabled: true,
     },
   ];
 
@@ -78,10 +80,8 @@ export const SwappingIcons = () => {
     <div key={activeTab}>
       {swappingTabs.map((swappingTab) => {
         const IconComponent = swappingTab.icon;
-
-
         const isSelected = activeTab == swappingTab.id
-
+        const isDisabled = swappingTab.disabled
 
         return (
           <>
@@ -93,17 +93,19 @@ export const SwappingIcons = () => {
                     isSelected
                       ? "dark:p-medium-bold-dark p-medium-bold border-l dark:border-[#DDF23D] border-[#AABE13] hover:dark:bg-[#333534]"
                       : "dark:p-medium-bold p-medium-bold border-l dark:border-[#313131]",
-                    "flex-1 md:p-4 cursor-pointer hover:dark:bg-[#343635] hover:bg-[#eff3cf] group",
+                    `flex-1 md:p-4 cursor-pointer ${!isDisabled && "hover:dark:bg-[#343635] hover:bg-[#eff3cf]"} group`,
+                    isDisabled && "disabled hover:cursor-not-allowed hover:none",
                   ])}
                   onClick={() => {
-                    handleClick(swappingTab);
+                    !isDisabled && handleClick(swappingTab);
                   }}
                 >
                   <div className="flex items-center justify-center w-full">
                     <IconComponent
                       className={cc([
                         "w-5 h-5",
-                        theme === "dark" ? (isSelected ? "text-[#DDF23D]" : "text-white opacity-100") : (isSelected ? "text-[#AABE13]" : "text-[#4F4F4F]")
+                        theme === "dark" ? (isSelected ? "text-[#DDF23D]" : "text-white opacity-100") : (isSelected ? "text-[#AABE13]" : "text-[#4F4F4F]"),
+                        isDisabled && "disabled cursor-not-allowed"
                       ])}
                     />
                   </div>
