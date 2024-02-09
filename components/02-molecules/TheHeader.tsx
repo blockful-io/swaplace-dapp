@@ -1,12 +1,10 @@
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { ConnectWallet, SwappingIcons, Tooltip } from "@/components/01-atoms";
-import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
+import { MoonIcon, SunIcon, SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { SunIcon } from "../01-atoms/icons/SunIcon";
-import { MoonIcon } from "../01-atoms/icons/MoonIcon";
 import cc from "classcat";
 
 export const TheHeader = () => {

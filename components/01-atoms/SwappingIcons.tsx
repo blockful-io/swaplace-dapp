@@ -9,9 +9,6 @@ import {
   NotificationsIcon,
 } from "@/components/01-atoms/icons";
 import { Tooltip } from "@/components/01-atoms";
-import { useTheme } from "next-themes";
-import { useRouter } from "next/router";
-import { useState } from "react";
 import cc from "classcat";
 
 export interface IconSwap {
