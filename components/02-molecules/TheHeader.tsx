@@ -1,7 +1,7 @@
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { ConnectWallet, SwappingIcons, Tooltip } from "@/components/01-atoms";
-import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
+import { MoonIcon, SunIcon, SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -29,6 +29,7 @@ export const TheHeader = () => {
 
   if (!mounted) return null;
   const currentTheme = theme === "system" ? systemTheme : theme;
+  const isDark = currentTheme === "dark"
 
   return (
     <header className="bg-[#F2F2F2] dark:bg-[#212322] z-40 w-screen h-auto xl:w-[62px] xl:h-screen py-6 flex xl:flex-col justify-between items-center xl:items-center  xl:px-0 md:px-8 xl:pt-5 xl:pb-4 font-medium shadow-lg absolute left-0 top-0">
@@ -46,16 +47,20 @@ export const TheHeader = () => {
       <div className="xl:flex-col flex-row flex">
         <SwappingIcons />
       </div>
-      <div className="md:flex-col ">
+      <div className="flex md:flex-col gap-[16px]">
         <div className="flex justify-center">
-          {currentTheme === "dark" ? (
-            <button className="bg-black-500" onClick={() => setTheme("light")}>
-              light
-            </button>
+          {isDark ? (
+            <Tooltip position={"right"} content={"Light Mode"}>
+              <button className="cursor-pointer bg-black-500 hover:bg-[#353836] transition-colors duration-200 rounded-[10px]" onClick={() => setTheme("light")}>
+                <SunIcon className="w-10 p-2 text-[#f6f6f6]" />
+              </button>
+            </ Tooltip>
           ) : (
-            <button className="bg-black-500 " onClick={() => setTheme("dark")}>
-              dark
-            </button>
+            <Tooltip position={"right"} content={"DarK Mode"}>
+              <button className="bg-black-500 outline-none hover:bg-[#E4E4E4] transition-colors duration-200 rounded-[10px]" onClick={() => setTheme("dark")}>
+                <MoonIcon className="w-10 p-2 text-black" />
+              </button>
+            </Tooltip>
           )}
         </div>
         <div>

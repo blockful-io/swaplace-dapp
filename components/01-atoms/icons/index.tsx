@@ -16,3 +16,5 @@ export * from "./SwaplaceIcon";
 export * from "./SwappingIcon";
 export * from "./XMarkIcon";
 export * from "./WalletIcon";
+export * from "./SunIcon";
+export * from "./MoonIcon";
