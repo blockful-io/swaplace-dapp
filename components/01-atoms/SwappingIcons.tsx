@@ -1,7 +1,3 @@
-import { useTheme } from "next-themes";
-import { NextRouter, useRouter } from "next/router";
-import { SVGProps, useState } from "react";
-import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import {
   SwappingIcon,
   OffersIcon,
@@ -9,6 +5,10 @@ import {
   NotificationsIcon,
 } from "@/components/01-atoms/icons";
 import { Tooltip } from "@/components/01-atoms";
+import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
+import { useTheme } from "next-themes";
+import { NextRouter, useRouter } from "next/router";
+import { SVGProps, useState } from "react";
 import cc from "classcat";
 
 export interface IconSwap {
@@ -25,9 +25,11 @@ export enum SwappingIconsID {
   "NOTIFICATIONS",
 }
 
-const findInitialActiveTab = (swappingTabs: Array<IconSwap>, router: NextRouter) => {
-  const matchingTab = swappingTabs.find(tab => router.pathname === tab.href);
-  console.log("matching ", matchingTab)
+const findInitialActiveTab = (
+  swappingTabs: Array<IconSwap>,
+  router: NextRouter,
+) => {
+  const matchingTab = swappingTabs.find((tab) => router.pathname === tab.href);
   return matchingTab ? matchingTab.id : SwappingIconsID.SWAPLACE_STATION;
 };
 
@@ -62,11 +64,10 @@ export const SwappingIcons = () => {
     },
   ];
 
-
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState(
-    findInitialActiveTab(swappingTabs, router)
+    findInitialActiveTab(swappingTabs, router),
   );
 
   const handleClick = async (e: IconSwap) => {
@@ -79,9 +80,7 @@ export const SwappingIcons = () => {
       {swappingTabs.map((swappingTab) => {
         const IconComponent = swappingTab.icon;
 
-
-        const isSelected = activeTab == swappingTab.id
-
+        const isSelected = activeTab == swappingTab.id;
 
         return (
           <>
@@ -103,7 +102,13 @@ export const SwappingIcons = () => {
                     <IconComponent
                       className={cc([
                         "w-5 h-5",
-                        theme === "dark" ? (isSelected ? "text-[#DDF23D]" : "text-white opacity-100") : (isSelected ? "text-[#AABE13]" : "text-[#4F4F4F]")
+                        theme === "dark"
+                          ? isSelected
+                            ? "text-[#DDF23D]"
+                            : "text-[#747474] group-hover:text-white"
+                          : isSelected
+                          ? "text-[#AABE13]"
+                          : "text-[#c1c3c2] group-hover:text-[#4F4F4F]",
                       ])}
                     />
                   </div>
@@ -124,7 +129,10 @@ export const SwappingIcons = () => {
                   }}
                 >
                   <div className="flex items-center justify-center w-full">
-                    <IconComponent className="w-5 h-5 " fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])} />
+                    <IconComponent
+                      className="w-5 h-5 "
+                      fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
+                    />
                   </div>
                 </div>
               </Tooltip>
