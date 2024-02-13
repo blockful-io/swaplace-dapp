@@ -118,6 +118,7 @@ export const SwappingIcons = () => {
                           ? "text-[#AABE13]"
                           : "text-[#c1c3c2] group-hover:text-[#4F4F4F]",
                         isDisabled && "disabled cursor-not-allowed",
+
                       ])}
                     />
                   </div>
