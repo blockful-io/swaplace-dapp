@@ -1,9 +1,9 @@
-import { mainnet } from "viem/chains";
-import { useEffect, useState } from "react";
 import { EthereumAddress } from "@/lib/shared/types";
-import { publicClient } from "@/lib/wallet/wallet-config";
 import BoringAvatar from "boring-avatars";
-import { createPublicClient, http } from "viem";
+import {
+  ENSAvatarQueryStatus,
+  useEnsData,
+} from "@/lib/client/hooks/useENSData";
 
 enum ENSAvatarSize {
   SMALL = "small",
@@ -24,32 +24,13 @@ export const ENSAvatar = ({
   avatarENSAddress,
   size = ENSAvatarSize.MEDIUM,
 }: ENSAvatarProps) => {
-  const [primaryName, setPrimaryName] = useState<string | null | undefined>(
-    undefined,
-  );
-
-  useEffect(() => {
-    const mainnetClient = createPublicClient({
-      chain: mainnet,
-      transport: http(),
-    });
-
-    mainnetClient
-      .getEnsName({
-        address: avatarENSAddress.address as `0x${string}`,
-      })
-      .then((name) => {
-        console.log(name);
-        setPrimaryName(name);
-      })
-      .catch(() => {
-        setPrimaryName(null);
-      });
-  }, []);
+  const { avatarQueryStatus, avatarSrc } = useEnsData({
+    ensAddress: avatarENSAddress,
+  });
 
   return (
     <div>
-      {typeof primaryName === undefined ? (
+      {avatarQueryStatus === ENSAvatarQueryStatus.LOADING ? (
         <div className={ENSAvatarClassName[size]}>
           <BoringAvatar
             variant="sunset"
@@ -58,7 +39,7 @@ export const ENSAvatar = ({
             name={avatarENSAddress.toString()}
           />
         </div>
-      ) : primaryName === null ? (
+      ) : avatarQueryStatus === ENSAvatarQueryStatus.ERROR ? (
         <div className={ENSAvatarClassName[size]}>
           <BoringAvatar
             variant="bauhaus"
@@ -75,14 +56,20 @@ export const ENSAvatar = ({
             ]}
           />
         </div>
-      ) : (
+      ) : /* 
+          Below condition will always be true since we only have 3 possible values 
+          for avatarQueryStatus, being the third one ENSAvatarQueryStatus.SUCCESS:
+          
+          When the query is successful, avatarSrc will be defined
+        */
+      avatarSrc ? (
         <img
+          src={avatarSrc}
           placeholder="empty"
           className={ENSAvatarClassName[size]}
           alt={`ENS Avatar for ${avatarENSAddress}`}
-          src={`https://metadata.ens.domains/mainnet/avatar/${primaryName}`}
         />
-      )}
+      ) : null}
     </div>
   );
 };
