@@ -136,11 +136,16 @@ export const SwapAddManuallyModalLayout = ({
   const { theme } = useTheme();
   const { isMobile } = useScreenSize();
   return (
-    <>
-      {open && (
+    <dialog open={open} onClose={onClose} className={cc(["rounded-[20px]"])}>
+      <div
+        className={cc([
+          open &&
+            "z-40 fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center ",
+        ])}
+      >
         <div
           className={cc([
-            "dark:bg-[#212322] min-h-[256px] min-w-[400px] border rounded-[20px] border-[#353836] shadow-add-manually-card",
+            "dark:bg-[#212322] bg-white min-h-[256px] min-w-[400px] border rounded-[20px] border-[#353836] shadow-add-manually-card",
             isMobile && "min-w-[90%] w-[300px]",
           ])}
         >
@@ -154,7 +159,7 @@ export const SwapAddManuallyModalLayout = ({
           </div>
           <div className="p-6">{AddManuallyVariantConfig[variant].body}</div>
         </div>
-      )}
-    </>
+      </div>
+    </dialog>
   );
 };
