@@ -26,7 +26,7 @@ const SwapBody = () => {
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex flex-col gap-2">
-        <div className="dark:p-small-dark p-small">Swap ID</div>
+        <div className="dark:p-small-dark p-small-variant-black">Swap ID</div>
         <div>
           <input className="w-full p-3 dark:bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
         </div>
@@ -85,7 +85,9 @@ const TokenBody = () => {
       <div>
         {token === "ERC20" ? (
           <div className="flex flex-col gap-2">
-            <div className="dark:p-small-dark p-small">Contract address</div>
+            <div className="dark:p-small-dark p-small-variant-black">
+              Contract address
+            </div>
             <div>
               <input className="w-full p-3 dark:bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
             </div>
@@ -93,13 +95,17 @@ const TokenBody = () => {
         ) : (
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <div className="dark:p-small-dark p-small">Contract address</div>
+              <div className="dark:p-small-dark p-small-variant-black">
+                Contract address
+              </div>
               <div>
                 <input className="w-full p-3 dark:bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="dark:p-small-dark p-small ">Token ID</div>
+              <div className="dark:p-small-dark p-small-variant-black ">
+                Token ID
+              </div>
               <div>
                 <input className="w-full p-3 dark:bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
               </div>
