@@ -23,7 +23,7 @@ export const EmptyNftsCards = (
 
   const emptySquares = Array.from({ length: emptySquaresCount }, (_, index) => (
     <>
-      <div key={`empty-${index}`} className="card-nft" />
+      <div key={`empty-${index}`} className="card-nft-normal" />
     </>
   ));
 
