@@ -1,6 +1,5 @@
 import { TheHeader } from "@/components/02-molecules";
 import { Layout, SwapSection } from "@/components/04-templates";
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import cc from "classcat";
 
 export default function IndexPage() {
