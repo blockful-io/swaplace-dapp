@@ -1,4 +1,5 @@
 import { CloseIcon } from "./icons/CloseIcon";
+import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import React, { useState } from "react";
 import cc from "classcat";
 import { useTheme } from "next-themes";
@@ -17,6 +18,8 @@ interface AddManuallyConfig {
 
 interface AddManuallyProps {
   variant?: Variant;
+  open: boolean;
+  onClose: () => void;
 }
 
 const SwapBody = () => {
@@ -127,26 +130,31 @@ const AddManuallyVariantConfig: Record<AddManuallyVariant, AddManuallyConfig> =
 
 export const SwapAddManuallyModalLayout = ({
   variant = AddManuallyVariant.TOKEN,
+  open,
+  onClose,
 }: AddManuallyProps) => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
   const { theme } = useTheme();
+  const { isMobile } = useScreenSize();
   return (
-    <div className="dark:bg-[#212322] min-h-[256px] min-w-[400px] border rounded-[20px] border-[#353836] shadow-add-manually-card">
-      <div className="w-full p-6 flex gap-5 justify-center items-center border-b border-[#353836]">
-        <div className="flex w-[304px]  dark:title-h3-normal-dark title-h3-normal">
-          {AddManuallyVariantConfig[variant].header}
-        </div>
+    <>
+      {open && (
         <div
-          className="flex"
-          role="button"
-          onClick={() => {
-            setOpenModal(!openModal);
-          }}
+          className={cc([
+            "dark:bg-[#212322] min-h-[256px] min-w-[400px] border rounded-[20px] border-[#353836] shadow-add-manually-card",
+            isMobile && "min-w-[90%] w-[300px]",
+          ])}
         >
-          <CloseIcon fill={cc([theme == "light" ? "black" : "white"])} />
+          <div className="w-full p-6 flex gap-5 justify-center items-center border-b border-[#353836]">
+            <div className="flex w-[304px]  dark:title-h3-normal-dark title-h3-normal">
+              {AddManuallyVariantConfig[variant].header}
+            </div>
+            <div className="flex" role="button" onClick={onClose}>
+              <CloseIcon fill={cc([theme == "light" ? "black" : "white"])} />
+            </div>
+          </div>
+          <div className="p-6">{AddManuallyVariantConfig[variant].body}</div>
         </div>
-      </div>
-      <div className="p-6">{AddManuallyVariantConfig[variant].body}</div>
-    </div>
+      )}
+    </>
   );
 };
