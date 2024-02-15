@@ -1,6 +1,6 @@
+import { WalletIcon } from "./icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
-import { WalletIcon } from "./icons";
 
 interface IConnectWallet {
   customStyle?: string;

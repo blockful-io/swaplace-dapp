@@ -6,7 +6,7 @@ import {
   SwappingIcons,
   Tooltip,
 } from "@/components/01-atoms";
-import { SwaplaceIcon, WalletIcon } from "@/components/01-atoms/icons/";
+import { SwaplaceIcon } from "@/components/01-atoms/icons/";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
