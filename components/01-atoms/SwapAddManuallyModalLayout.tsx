@@ -28,7 +28,7 @@ const SwapBody = () => {
       <div className="flex flex-col gap-2">
         <div className="dark:p-small-dark p-small">Swap ID</div>
         <div>
-          <input className="w-full p-3 bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
+          <input className="w-full p-3 dark:bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
         </div>
       </div>
       <div className="flex h-[36px]">
@@ -56,10 +56,10 @@ const TokenBody = () => {
         <div className="flex justify-between gap-3 ">
           <button
             className={cc([
-              "w-full border border-[#353836] rounded-lg py-3 pl-3 pr-4 text-start bg-[#282B29]",
+              "w-full border border-[#353836] rounded-lg py-3 pl-3 pr-4 text-start dark:bg-[#282B29]",
               token === "ERC20"
-                ? "bg-[#ddf23d]  p-medium-2"
-                : "dark:p-medium-2-dark hover:bg-[#353836]",
+                ? "dark:bg-[#ddf23d] bg-[#ddf23d] p-medium-2"
+                : "dark:p-medium-2-dark dark:hover:bg-[#353836] hover:bg-[#35383617]",
             ])}
             onClick={() => {
               setToken("ERC20");
@@ -69,10 +69,10 @@ const TokenBody = () => {
           </button>
           <button
             className={cc([
-              "w-full  border border-[#353836] rounded-lg py-3 pl-3 pr-4 text-start bg-[#282B29]",
+              "w-full  border border-[#353836] rounded-lg py-3 pl-3 pr-4 text-start dark:bg-[#282B29]",
               token === "ERC721"
-                ? "bg-[#ddf23d]  p-medium-2"
-                : "dark:p-medium-2-dark hover:bg-[#353836]",
+                ? "dark:bg-[#ddf23d] bg-[#ddf23d] p-medium-2"
+                : "dark:p-medium-2-dark dark:hover:bg-[#353836] hover:bg-[#35383617]",
             ])}
             onClick={() => {
               setToken("ERC721");
@@ -87,7 +87,7 @@ const TokenBody = () => {
           <div className="flex flex-col gap-2">
             <div className="dark:p-small-dark p-small">Contract address</div>
             <div>
-              <input className="w-full p-3 bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
+              <input className="w-full p-3 dark:bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
             </div>
           </div>
         ) : (
@@ -95,13 +95,13 @@ const TokenBody = () => {
             <div className="flex flex-col gap-2">
               <div className="dark:p-small-dark p-small">Contract address</div>
               <div>
-                <input className="w-full p-3 bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
+                <input className="w-full p-3 dark:bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
               </div>
             </div>
             <div className="flex flex-col gap-2">
               <div className="dark:p-small-dark p-small ">Token ID</div>
               <div>
-                <input className="w-full p-3 bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
+                <input className="w-full p-3 dark:bg-[#282a29] border border-[#353836] rounded-lg h-[44px]" />
               </div>
             </div>
           </div>
