@@ -1,5 +1,6 @@
 export * from "./CardHome";
 export * from "./ConfirmSwapModal";
+export * from "./ErrorFindingSwapOffers";
 export * from "./FilterOffers";
 export * from "./NftCard";
 export * from "./NftsList";

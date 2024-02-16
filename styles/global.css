@@ -71,6 +71,9 @@ input[type="search"]::-webkit-search-results-decoration {
   .p-medium-bold-2-dark {
     @apply font-onest font-medium text-[16px] leading-[20px] text-[#F6F6F6];
   }
+  .p-medium-bold-2-dark-variant-black {
+    @apply font-onest font-medium text-[16px] leading-[20px] text-black;
+  }
 
   .p-medium-bold-variant-black {
     @apply font-onest font-medium text-[14px] leading-[16px] text-[#181A19];
