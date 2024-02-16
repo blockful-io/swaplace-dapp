@@ -8,6 +8,7 @@ export * from "./SearchBar";
 export * from "./SelectAuthedUserChain";
 export * from "./SelectDestinyChain";
 export * from "./StatusOffers";
+export * from "./SwapAddManuallyModalLayout";
 export * from "./SwapContext";
 export * from "./SwapExpireTime";
 export * from "./SwapModalButton";
