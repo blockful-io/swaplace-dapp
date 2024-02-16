@@ -8,7 +8,9 @@ export const ErrorIcon = (props: SVGProps<SVGSVGElement>) => {
     <div
       className={cc([
         "w-20 h-20 rounded-[100px] shadow border-[3px] dark:border-[#DDF23D] justify-center items-center gap-2.5 inline-flex",
-        theme == "light" && "border-black",
+        {
+          "border-black": theme === "light",
+        },
       ])}
     >
       <svg
@@ -21,8 +23,8 @@ export const ErrorIcon = (props: SVGProps<SVGSVGElement>) => {
         <g id="Error Illustration">
           <g id="Vector">
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M38 9H10C7.79086 9 6 10.7909 6 13V29C6 31.2091 7.79086 33 10 33H38C40.2091 33 42 31.2091 42 29V13C42 10.7909 40.2091 9 38 9ZM10 5C5.58172 5 2 8.58172 2 13V29C2 33.4183 5.58172 37 10 37H38C42.4183 37 46 33.4183 46 29V13C46 8.58172 42.4183 5 38 5H10Z"
               fill={props.fill ? props.fill : "#DDF23D"}
             />

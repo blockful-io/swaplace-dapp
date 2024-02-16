@@ -10,7 +10,7 @@ export const ErrorFindingSwapOffers = () => {
   return (
     <div className="md:w-[676px] md:h-[656px] w-[95%] h-full py-10 px-5 border border-[#353836] dark:bg-[#212322] bg-[#F6F6F6] rounded-lg flex flex-col justify-center items-center gap-5">
       <div className="flex ">
-        <ErrorIcon fill={cc([theme == "light" && "black"])} />
+        <ErrorIcon fill={cc([{ black: theme === "light" }])} />
       </div>
       <div className="flex flex-col text-center items-center">
         <p className="dark:p-medium-bold-2-dark p-medium-bold-2-dark-variant-black ">
