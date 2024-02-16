@@ -1,3 +1,4 @@
+import { LoadingIndicator } from ".";
 import {
   ENSAvatarQueryStatus,
   useEnsData,
@@ -5,7 +6,6 @@ import {
 import { EthereumAddress } from "@/lib/shared/types";
 import BoringAvatar from "boring-avatars";
 import cc from "classcat";
-import { LoadingIndicator } from ".";
 
 enum ENSAvatarSize {
   SMALL = "small",
