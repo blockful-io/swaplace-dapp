@@ -1,11 +1,11 @@
-{
-  "plugins": ["@typescript-eslint", "unused-imports"],
-  "extends": [
+module.exports = {
+  plugins: ["@typescript-eslint", "unused-imports"],
+  extends: [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended"
   ],
-  "rules": {
+  rules: {
     "@typescript-eslint/no-unused-vars": [
       "error",
       { "ignoreRestSiblings": true }
