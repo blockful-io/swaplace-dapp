@@ -34,8 +34,13 @@ export const useEnsData = ({ ensAddress }: Props) => {
           address: ensAddress.address as `0x${string}`,
         })
         .then((name) => {
-          setAvatarQueryStatus(ENSAvatarQueryStatus.SUCCESS);
-          setPrimaryName(name);
+          if (name) {
+            setAvatarQueryStatus(ENSAvatarQueryStatus.SUCCESS);
+            setPrimaryName(name);
+          } else {
+            setAvatarQueryStatus(ENSAvatarQueryStatus.SUCCESS);
+            setPrimaryName(null);
+          }
         })
         .catch(() => {
           setAvatarQueryStatus(ENSAvatarQueryStatus.ERROR);
