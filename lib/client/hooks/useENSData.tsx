@@ -38,7 +38,7 @@ export const useEnsData = ({ ensAddress }: Props) => {
             setAvatarQueryStatus(ENSAvatarQueryStatus.SUCCESS);
             setPrimaryName(name);
           } else {
-            setAvatarQueryStatus(ENSAvatarQueryStatus.SUCCESS);
+            setAvatarQueryStatus(ENSAvatarQueryStatus.ERROR);
             setPrimaryName(null);
           }
         })
