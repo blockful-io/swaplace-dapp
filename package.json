@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint --config .eslintrc"
   },
   "dependencies": {
     "@headlessui-float/react": "^0.13.0",
@@ -18,6 +18,7 @@
     "boring-avatars": "1.7.0",
     "classcat": "^5.0.4",
     "eslint-plugin-unused-imports": "2.0.0",
+    "ethers": "^6.11.1",
     "next": "14.0.3",
     "next-auth": "^4.20.1",
     "next-themes": "^0.2.1",
@@ -35,11 +36,11 @@
     "@types/node-fetch": "^2.6.9",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "8.7.0",
-    "eslint-config-next": "13.4.19",
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "autoprefixer": "^10.0.1",
     "dotenv": "^16.4.1",
+    "eslint": "8.7.0",
+    "eslint-config-next": "13.4.19",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
