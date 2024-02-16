@@ -1,15 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import {
-  NFT,
-  ChainInfo,
-  NFTsQueryStatus,
-  ADDRESS_ZERO,
-} from "@/lib/client/constants";
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+/* eslint-disable react-hooks/exhaustive-deps */
 import { NftsList } from "../02-molecules";
-import { getNftsFrom } from "@/lib/client/blockchain-data";
 import { SwapContext, SwapIcon } from "../01-atoms";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+
+import { NFT, ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
+import { getNftsFrom } from "@/lib/client/blockchain-data";
 import { EthereumAddress } from "@/lib/shared/types";
+import { useContext, useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
 
 /**

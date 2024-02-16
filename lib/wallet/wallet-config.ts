@@ -1,3 +1,4 @@
+import { getRpcHttpUrlForNetwork } from "../client/constants";
 import { polygonMumbai, sepolia } from "@wagmi/core/chains";
 import { configureChains, createConfig } from "wagmi";
 import {
@@ -10,7 +11,6 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-import { getRpcHttpUrlForNetwork } from "../client/constants";
 
 export const { chains, webSocketPublicClient, publicClient } = configureChains(
   [sepolia, polygonMumbai],

@@ -1,5 +1,6 @@
-import cc from "classcat";
-import { useContext, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 import {
   MagnifyingGlassIcon,
   SelectAuthedUserChain,
@@ -7,14 +8,15 @@ import {
   SwapContext,
 } from ".";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { useContext, useEffect, useState } from "react";
 import { ENS } from "web3-eth-ens";
+import cc from "classcat";
 import Web3 from "web3";
 
 export const SearchBar = () => {
   const {
     setInputAddress,
     inputAddress,
-    validatedAddressToSwap,
     validateAddressToSwap,
     userJustValidatedInput,
   } = useContext(SwapContext);
