@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { NFT } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
@@ -35,12 +36,18 @@ export enum NftCardStyleType {
   "LARGE",
 }
 
+const NftSizeClassNames = {
+  [NftCardStyleType.SMALL]: "card-nft-small",
+  [NftCardStyleType.NORMAL]: "card-nft-normal",
+  [NftCardStyleType.LARGE]: "card-nft-large",
+};
+
 export const NftCard = ({
   nftData,
   ownerAddress,
   withSelectionValidation = true,
+  styleType = NftCardStyleType.NORMAL,
   onClickAction = NftCardActionType.SELECT_NFT_FOR_SWAP,
-  styleType,
 }: INftCard) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { setNftAuthUser, setNftInputUser, nftAuthUser, nftInputUser } =
@@ -126,11 +133,7 @@ export const NftCard = ({
       <button
         onClick={setNftAsActiveOne}
         className={cc([
-          styleType === NftCardStyleType.SMALL
-            ? "card-nft-small"
-            : styleType === NftCardStyleType.LARGE
-            ? "card-nft-large"
-            : "card-nft",
+          NftSizeClassNames[styleType],
           {
             "border-green-500": currentNftIsSelected && withSelectionValidation,
           },

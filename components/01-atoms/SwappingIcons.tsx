@@ -42,13 +42,13 @@ export const SwappingIcons = () => {
     {
       id: SwappingIconsID.SWAPLACE_STATION,
       name: "Swaplace Station",
-      href: "/swap",
+      href: "/",
       icon: SwappingIcon,
     },
     {
       id: SwappingIconsID.OFFERS,
       name: "Offers",
-      href: "/swap/offers",
+      href: "/offers",
       icon: OffersIcon,
     },
     {
@@ -79,15 +79,16 @@ export const SwappingIcons = () => {
   };
 
   return (
-    <div key={activeTab}>
+    <>
       {swappingTabs.map((swappingTab) => {
         const IconComponent = swappingTab.icon;
         const isSelected = activeTab == swappingTab.id;
         const isDisabled = swappingTab.disabled;
 
         return (
-          <>
+          <div key={swappingTab.id}>
             {isWideScreen ? (
+
               <Tooltip position={"right"} content={swappingTab.name}>
                 <div
                   key={swappingTab.id}
@@ -125,6 +126,7 @@ export const SwappingIcons = () => {
                 </div>
               </Tooltip>
             ) : (
+
               <Tooltip position={"bottom"} content={swappingTab.name}>
                 <div
                   key={swappingTab.id}
@@ -135,6 +137,7 @@ export const SwappingIcons = () => {
                     "flex-1 md:p-4 cursor-pointer hover:dark:bg-[#343635] hover:bg-[#eff3cf]",
                   ])}
                   onClick={() => {
+
                     handleClick(swappingTab);
                   }}
                 >
@@ -147,9 +150,9 @@ export const SwappingIcons = () => {
                 </div>
               </Tooltip>
             )}
-          </>
+          </ div>
         );
       })}
-    </div>
+    </>
   );
 };

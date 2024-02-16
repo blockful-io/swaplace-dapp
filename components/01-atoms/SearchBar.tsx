@@ -1,8 +1,10 @@
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-named-as-default-member */
-import { MagnifyingGlassIcon } from "@/components/01-atoms/icons";
-import { SwapContext } from "@/components/01-atoms";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
+import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
@@ -93,7 +95,7 @@ export const SearchBar = () => {
           name="search"
           type="search"
           className={cc([
-            "dark:bg-[#212322] w-full h-11 px-4 py-3 border-2 border-gray-100 dark:border-[#353836]   focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded-xl placeholder:p-small dark:placeholder:p-small ",
+            "dark:bg-[#212322] w-full h-11 px-4 py-3 border-2 border-gray-100 dark:border-[#353836] focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded-xl placeholder:p-small dark:placeholder:p-small ",
           ])}
           placeholder="Search username, address or ENS"
           onChange={(e) => setInputAddress(e.target.value)}
