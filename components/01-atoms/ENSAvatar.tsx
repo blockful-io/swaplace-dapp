@@ -1,9 +1,11 @@
-import { EthereumAddress } from "@/lib/shared/types";
-import BoringAvatar from "boring-avatars";
 import {
   ENSAvatarQueryStatus,
   useEnsData,
 } from "@/lib/client/hooks/useENSData";
+import { EthereumAddress } from "@/lib/shared/types";
+import BoringAvatar from "boring-avatars";
+import cc from "classcat";
+import { LoadingIndicator } from ".";
 
 enum ENSAvatarSize {
   SMALL = "small",
@@ -31,13 +33,13 @@ export const ENSAvatar = ({
   return (
     <div>
       {avatarQueryStatus === ENSAvatarQueryStatus.LOADING ? (
-        <div className={ENSAvatarClassName[size]}>
-          <BoringAvatar
-            variant="sunset"
-            colors={["#A3A9A5"]}
-            data-atropos-offset="2"
-            name={avatarENSAddress.toString()}
-          />
+        <div
+          className={cc([
+            ENSAvatarClassName[size],
+            "flex justify-center items-center",
+          ])}
+        >
+          <LoadingIndicator />
         </div>
       ) : avatarQueryStatus === ENSAvatarQueryStatus.ERROR ? (
         <div className={ENSAvatarClassName[size]}>
