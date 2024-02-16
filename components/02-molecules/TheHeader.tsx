@@ -34,7 +34,7 @@ export const TheHeader = () => {
 
   if (!mounted) return null;
   const currentTheme = theme === "system" ? systemTheme : theme;
-  const isDark = currentTheme === "dark"
+  const isDark = currentTheme === "dark";
 
   return (
     <header className="bg-[#F2F2F2] dark:bg-[#212322] z-40 w-screen h-auto xl:w-[62px] xl:h-screen py-6 flex xl:flex-col justify-between items-center xl:items-center  xl:px-0 md:px-8 xl:pt-5 xl:pb-4 font-medium shadow-lg absolute left-0 top-0">
@@ -56,13 +56,19 @@ export const TheHeader = () => {
         <div className="flex justify-center">
           {isDark ? (
             <Tooltip position={"right"} content={"Light Mode"}>
-              <button className="cursor-pointer bg-black-500 hover:bg-[#353836] transition-colors duration-200 rounded-[10px]" onClick={() => setTheme("light")}>
+              <button
+                className="cursor-pointer bg-black-500 hover:bg-[#353836] transition-colors duration-200 rounded-[10px]"
+                onClick={() => setTheme("light")}
+              >
                 <SunIcon className="w-10 p-2 text-[#f6f6f6]" />
               </button>
-            </ Tooltip>
+            </Tooltip>
           ) : (
-            <Tooltip position={"right"} content={"DarK Mode"}>
-              <button className="bg-black-500 outline-none hover:bg-[#E4E4E4] transition-colors duration-200 rounded-[10px]" onClick={() => setTheme("dark")}>
+            <Tooltip position={"right"} content={"Dark Mode"}>
+              <button
+                className="bg-black-500 outline-none hover:bg-[#E4E4E4] transition-colors duration-200 rounded-[10px]"
+                onClick={() => setTheme("dark")}
+              >
                 <MoonIcon className="w-10 p-2 text-black" />
               </button>
             </Tooltip>
