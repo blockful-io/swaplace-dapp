@@ -1,6 +1,7 @@
 export * from "./ChatIcon";
 export * from "./CheckIcon";
 export * from "./DangerIcon";
+export * from "./ErrorIcon";
 export * from "./EthereumIcon";
 export * from "./LeftIcon";
 export * from "./MagnifyingGlassIcon";
