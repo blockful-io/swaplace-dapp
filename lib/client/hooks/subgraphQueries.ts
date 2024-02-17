@@ -6,7 +6,7 @@ export const getGraphQuery = async () => {
   const endpoint = process.env.ENDPOINT_URL;
   const headers = {
     "content-type": "application/json",
-    Authorization: process.env.AUTHORIZATION_KEY,
+    Authorization: process.env.SUBGRAPH_AUTH_KEY,
   };
 
   //Example of query
