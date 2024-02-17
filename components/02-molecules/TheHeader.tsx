@@ -10,6 +10,7 @@ import {
 } from "@/components/01-atoms";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -21,11 +22,8 @@ export const TheHeader = () => {
   const [showFullNav, setShowFullNav] = useState(
     !isDesktop && !!authenticatedUserAddress?.address,
   );
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const { toggleSidebar, isSidebarOpen } = useSidebar();
 
   const { isWideScreen } = useScreenSize();
 

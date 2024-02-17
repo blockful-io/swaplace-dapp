@@ -1,5 +1,6 @@
 import { CloseIcon } from "../01-atoms/icons/CloseIcon";
-import { PowerIcon } from "../01-atoms/icons/PowerIcon";
+import { DisconnectWallet } from "../01-atoms/DisconnectWallet";
+import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
 import React from "react";
 import cc from "classcat";
 import { useTheme } from "next-themes";
@@ -8,10 +9,13 @@ export const TheSidebarHeader = () => {
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark";
+  const { toggleSidebar } = useSidebar();
+
 
   return (
     <div className="w-full p-6 gap-5 flex flex-col">
       <button
+        onClick={toggleSidebar}
         className={cc([
           "rounded-full w-7 h-7 flex items-center justify-center",
           isDark
@@ -32,10 +36,7 @@ export const TheSidebarHeader = () => {
         >
           Your wallet
         </h3>
-        <div className={cc(["flex gap-2 justify-center items-center", isDark ? "text-[#DDF23D]" : "text-[#AABE13]"])}>
-            <PowerIcon />
-            <h3 className="text-sm">Disconnect</h3>
-        </div>
+        <DisconnectWallet />
       </div>
     </div>
   );
