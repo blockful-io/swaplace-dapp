@@ -24,3 +24,4 @@ export * from "./icons/SunIcon";
 export * from "./icons/PaperPlane";
 export * from "./icons/MagnifyingGlassIcon";
 export * from "./icons/SelectUserIcon";
+export * from "./WalletSidebarTemplate";
