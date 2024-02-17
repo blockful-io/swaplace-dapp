@@ -24,7 +24,6 @@ export const TheHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
-    console.log("toggle");
     setIsSidebarOpen(!isSidebarOpen);
   };
 
