@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { NFT } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";

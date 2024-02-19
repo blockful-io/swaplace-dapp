@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 export const WIDE_SCREEN_SIZE = 1279;
@@ -9,11 +10,6 @@ export interface NFT {
   metadata?: Record<string, any>;
   contract?: Record<string, any>;
   contractMetadata?: Record<string, any>;
-}
-
-export interface INftsList {
-  nftsList: NFT[];
-  ownerAddress: string | null;
 }
 
 export enum NFTsQueryStatus {

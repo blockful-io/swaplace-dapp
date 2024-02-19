@@ -15,6 +15,13 @@ input[type="search"]::-webkit-search-results-decoration {
 @tailwind utilities;
 
 @layer utilities {
+  .shadow-add-manually-card {
+    box-shadow: 0px 0px 12px 1px #00000066;
+  }
+  .shadow-add-manually-button {
+    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.3);
+  }
+
   .title-h1 {
   }
 
@@ -64,7 +71,13 @@ input[type="search"]::-webkit-search-results-decoration {
   .p-medium-bold-2-dark {
     @apply font-onest font-medium text-[16px] leading-[20px] text-[#F6F6F6];
   }
+  .p-medium-bold-2-dark-variant-black {
+    @apply font-onest font-medium text-[16px] leading-[20px] text-black;
+  }
 
+  .p-medium-bold-variant-black {
+    @apply font-onest font-medium text-[14px] leading-[16px] text-[#181A19];
+  }
   .p-medium-bold {
     @apply font-onest font-medium text-[14px] leading-[16px] text-[#707572];
   }
@@ -79,6 +92,9 @@ input[type="search"]::-webkit-search-results-decoration {
     @apply font-onest font-medium text-[14px] leading-[20px] text-[#F6F6F6];
   }
 
+  .p-small-variant-black {
+    @apply font-onest font-normal text-[14px] leading-[20px] text-[#181A19];
+  }
   .p-small {
     @apply font-onest font-normal text-[14px] leading-[20px] text-[#707572];
   }

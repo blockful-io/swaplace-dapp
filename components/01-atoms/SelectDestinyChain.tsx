@@ -1,5 +1,4 @@
-import { SwapContext } from "@/components/01-atoms";
-import { EthereumIcon, PolygonIcon } from "@/components/01-atoms/icons";
+import { EthereumIcon, PolygonIcon, SwapContext } from "@/components/01-atoms";
 import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
 import { Fragment, useContext, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
