@@ -1,7 +1,4 @@
-import {
-  ErrorFindingSwapOffers,
-  FilterOffers,
-} from "@/components/02-molecules";
+import { FilterOffers, SwapOffersLayout } from "@/components/02-molecules";
 
 export const OfferSection = () => {
   return (
@@ -10,7 +7,7 @@ export const OfferSection = () => {
         <FilterOffers />
       </div>
       <div className="flex justify-center items-center">
-        <ErrorFindingSwapOffers />
+        <SwapOffersLayout variant={"error"} />
       </div>
     </section>
   );
