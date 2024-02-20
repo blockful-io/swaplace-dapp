@@ -1,8 +1,8 @@
 import { NFT } from "@/lib/client/constants";
 import { NftCard } from "@/components/02-molecules";
 import { EmptyNftsCards } from "@/components/01-atoms";
-/* eslint-disable react/jsx-key */
 
+/* eslint-disable react/jsx-key */
 interface INftsList {
   nftsList: NFT[];
   ownerAddress: string | null;

@@ -2,7 +2,7 @@
 import { NFT, ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EthereumAddress } from "@/lib/shared/types";
-import { SwapContext, SelectUserIcon } from "@/components/01-atoms";
+import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
 import { NftsList } from "@/components/02-molecules";
 import { getNftsFrom } from "@/lib/client/blockchain-data";
 import { useContext, useEffect, useState } from "react";

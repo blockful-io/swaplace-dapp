@@ -12,11 +12,6 @@ export interface NFT {
   contractMetadata?: Record<string, any>;
 }
 
-export interface INftsList {
-  nftsList: NFT[];
-  ownerAddress: string | null;
-}
-
 export enum NFTsQueryStatus {
   EMPTY_QUERY = "EMPTY_QUERY",
   LOADING = "LOADING",
