@@ -1,4 +1,5 @@
 import { TheSidebarHeader } from "../02-molecules/TheSidebarHeader";
+import { UserInfo } from "../02-molecules";
 import React from "react";
 import cc from "classcat";
 import { useTheme } from "next-themes";
@@ -36,6 +37,7 @@ export const WalletSidebarTemplate = ({
         ])}
       >
         <TheSidebarHeader />
+        <UserInfo />
       </div>
     </>
   );

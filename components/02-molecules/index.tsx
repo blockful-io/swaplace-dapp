@@ -8,3 +8,4 @@ export * from "./OfferSummary";
 export * from "./ProgressStatus";
 export * from "./SwapStation";
 export * from "./TheHeader";
+export * from "./UserInfo";
