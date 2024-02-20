@@ -80,7 +80,7 @@ export const SearchBar = () => {
   }, [loadingENSaddress]);
 
   return (
-    <div className="w-[95%] h-auto p-5 gap-3 flex flex-col rounded  ">
+    <div className="w-[95%] h-auto py-5 gap-3 flex flex-col rounded  ">
       <div className="w-full flex justify-between space-x-6">
         <h2 className="title-h3-normal dark:title-h3-normal-dark">
           Who are you swapping with today?
