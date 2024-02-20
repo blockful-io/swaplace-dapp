@@ -1,8 +1,7 @@
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { PersonIcon } from "@/components/01-atoms/icons";
 import { NftCard } from "@/components/02-molecules";
-import { EmptyNftsCards, SwapContext } from "@/components/01-atoms";
+import { EmptyNftsCards, PersonIcon, SwapContext } from "@/components/01-atoms";
 import { useEnsName } from "wagmi";
 import { useContext } from "react";
 

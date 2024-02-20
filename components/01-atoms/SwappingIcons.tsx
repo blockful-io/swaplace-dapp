@@ -3,8 +3,9 @@ import {
   OffersIcon,
   ChatIcon,
   NotificationsIcon,
-} from "@/components/01-atoms/icons";
-import { Tooltip } from "@/components/01-atoms";
+  Tooltip,
+} from "@/components/01-atoms";
+
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useTheme } from "next-themes";
 import { NextRouter, useRouter } from "next/router";
@@ -88,7 +89,6 @@ export const SwappingIcons = () => {
         return (
           <div key={swappingTab.id}>
             {isWideScreen ? (
-
               <Tooltip position={"right"} content={swappingTab.name}>
                 <div
                   key={swappingTab.id}
@@ -119,14 +119,12 @@ export const SwappingIcons = () => {
                           ? "text-[#AABE13]"
                           : "text-[#c1c3c2] group-hover:text-[#4F4F4F]",
                         isDisabled && "disabled cursor-not-allowed",
-
                       ])}
                     />
                   </div>
                 </div>
               </Tooltip>
             ) : (
-
               <Tooltip position={"bottom"} content={swappingTab.name}>
                 <div
                   key={swappingTab.id}
@@ -137,7 +135,6 @@ export const SwappingIcons = () => {
                     "flex-1 md:p-4 cursor-pointer hover:dark:bg-[#343635] hover:bg-[#eff3cf]",
                   ])}
                   onClick={() => {
-
                     handleClick(swappingTab);
                   }}
                 >
@@ -150,7 +147,7 @@ export const SwappingIcons = () => {
                 </div>
               </Tooltip>
             )}
-          </ div>
+          </div>
         );
       })}
     </>
