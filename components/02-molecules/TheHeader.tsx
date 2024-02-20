@@ -10,29 +10,16 @@ import {
   Tooltip,
   WalletSidebarTemplate,
 } from "@/components/01-atoms";
+import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import cc from "classcat";
 
 export const TheHeader = () => {
-  const { isDesktop } = useScreenSize();
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const [showFullNav, setShowFullNav] = useState(
-    !isDesktop && !!authenticatedUserAddress?.address,
-  );
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
+  const { toggleSidebar, isSidebarOpen } = useSidebar();
   const { isWideScreen } = useScreenSize();
-
-  useEffect(() => {
-    setShowFullNav(!isDesktop);
-  }, [isDesktop]);
-
   const { systemTheme, theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -54,9 +41,6 @@ export const TheHeader = () => {
               fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
             />
           </Link>
-          <div className={cc([showFullNav ? "block" : "hidden"])}>
-            <ConnectWallet />
-          </div>
         </div>
         <div className="xl:flex-col flex-row flex">
           <SwappingIcons />
