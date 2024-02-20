@@ -43,7 +43,7 @@ export const StatusOffers = () => {
 
         return (
           <div
-            className="h-11 shadow border hover:border-[#505150] group  border-[#353836] rounded-[10px] flex justify-between items-center px-3 dark:bg-[#212322] bg-[#F2F2F2] mb-3"
+            className="h-11 shadow border hover:border-[#505150] group border-[#353836] rounded-[10px] flex justify-between items-center px-3 dark:bg-[#212322] bg-[#F2F2F2] mb-3 dark:active:shadow-[rgba(131,152,0,.15)] dark:active:shadow-[0_0_8px_1px]"
             key={index}
           >
             <div className="dark:group-hover:text-[#DDF23D] group-hover:text-[#212322] dark:p-medium-bold-2-dark p-medium-bold-2">
