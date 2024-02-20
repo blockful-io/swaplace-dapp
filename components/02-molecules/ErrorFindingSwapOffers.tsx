@@ -1,5 +1,4 @@
-import { SwapAddManuallyModalLayout } from "@/components/01-atoms";
-import { ErrorIcon } from "@/components/01-atoms/icons";
+import { ErrorIcon, SwapAddManuallyModalLayout } from "@/components/01-atoms";
 import cc from "classcat";
 import { useTheme } from "next-themes";
 import { useState } from "react";

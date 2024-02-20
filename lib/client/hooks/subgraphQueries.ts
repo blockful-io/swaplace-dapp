@@ -3,10 +3,10 @@ require("dotenv").config();
 import axios from "axios";
 
 export const getGraphQuery = async () => {
-  const endpoint = process.env.ENDPOINT_URL;
+  const endpoint = process.env.NEXT_PUBLIC_ENDPOINT_URL;
   const headers = {
     "content-type": "application/json",
-    Authorization: process.env.AUTHORIZATION_KEY,
+    Authorization: process.env.NEXT_PUBLIC_SUBGRAPH_AUTH_KEY,
   };
 
   //Example of query

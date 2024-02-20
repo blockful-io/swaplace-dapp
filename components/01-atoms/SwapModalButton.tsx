@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { SwapContext } from ".";
 import { LoadingIndicator } from "./LoadingIndicator";
-import { LeftIcon, RightIcon } from "@/components/01-atoms/icons";
+import { LeftIcon, RightIcon, SwapContext } from "@/components/01-atoms";
 import React, { ButtonHTMLAttributes, useContext } from "react";
 import { useTheme } from "next-themes";
 import cc from "classcat";
