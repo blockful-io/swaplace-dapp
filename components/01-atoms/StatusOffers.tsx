@@ -1,9 +1,16 @@
+import { useState } from "react";
+import cc from "classcat";
+
 export const StatusOffers = () => {
+
+  const [OfferIsActive, setOfferIsActive] = useState(0);
+
   enum FilterOptions {
     ALL_OFFERS = "All offers",
-    ACTIVE = "Active",
+    CREATED = "Created",
+    RECEIVED = "Received",
     ACCEPTED = "Accepted",
-    REJECTED = "Rejected",
+    CANCELED = "Canceled",
     EXPIRED = "Expired",
   }
 
@@ -17,20 +24,24 @@ export const StatusOffers = () => {
       id: 1,
       name: FilterOptions.ALL_OFFERS,
     },
-    [FilterOptions.ACTIVE]: {
+    [FilterOptions.CREATED]: {
       id: 2,
-      name: FilterOptions.ACTIVE,
+      name: FilterOptions.CREATED,
+    },
+    [FilterOptions.RECEIVED]: {
+      id: 3,
+      name: FilterOptions.RECEIVED,
     },
     [FilterOptions.ACCEPTED]: {
-      id: 3,
+      id: 4,
       name: FilterOptions.ACCEPTED,
     },
-    [FilterOptions.REJECTED]: {
-      id: 4,
-      name: FilterOptions.REJECTED,
+    [FilterOptions.CANCELED]: {
+      id: 5,
+      name: FilterOptions.CANCELED,
     },
     [FilterOptions.EXPIRED]: {
-      id: 5,
+      id: 6,
       name: FilterOptions.EXPIRED,
     },
   };
@@ -43,13 +54,16 @@ export const StatusOffers = () => {
 
         return (
           <div
-            className="h-11 shadow border hover:border-[#505150] group border-[#353836] rounded-[10px] flex justify-between items-center px-3 dark:bg-[#212322] bg-[#F2F2F2] mb-3 dark:active:shadow-[rgba(131,152,0,.15)] dark:active:shadow-[0_0_8px_1px]"
-            key={index}
+            className={ cc(["h-11 shadow border border-solid border-[#353836] flex justify-between items-center px-3 bg-[#F2F2F2] group rounded-[10px] dark:bg-[#212322] mb-3 dark:hover:bg-[#282B29] font-onest leading-5 ",
+             OfferIsActive === index && "dark:shadow-[0px_0px_8px_1px_#83980026] dark:border-[#505150] dark:bg-[#212322]"])}
+            key={index} onClick={()=> setOfferIsActive(index)}
           >
-            <div className="dark:group-hover:text-[#DDF23D] group-hover:text-[#212322] dark:p-medium-bold-2-dark p-medium-bold-2">
+            <div className={cc(["dark:group-hover:text-[#F6F6F6]",
+            OfferIsActive === index ? "dark:text-[#DDF23D]" : "dark:text-[#A3A9A5]"])}>
               {name}
             </div>
-            <div className=" dark:bg-[#353836] bg-[#c7c7c7] rounded px-2 w-9 h-6 flex justify-center items-center dark:p-small-dark p-small  ">
+            <div className={cc(["bg-[#c7c7c7] rounded px-2 w-9 h-6 flex justify-center items-center dark:p-small-dark p-small dark:group-hover:bg-[#353836]",
+            OfferIsActive === index ? "dark:bg-[#353836]" : "dark:bg-[#282B29]"])}>
               {id}
             </div>
           </div>
