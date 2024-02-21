@@ -1,5 +1,6 @@
 export * from "./CardHome";
 export * from "./ConfirmSwapModal";
+export * from "./EnsNameAndAddressWallet";
 export * from "./ErrorFindingSwapOffers";
 export * from "./FilterOffers";
 export * from "./NftCard";
@@ -8,4 +9,5 @@ export * from "./OfferSummary";
 export * from "./ProgressStatus";
 export * from "./SwapStation";
 export * from "./TheHeader";
+export * from "./TheSidebarHeader";
 export * from "./UserInfo";
