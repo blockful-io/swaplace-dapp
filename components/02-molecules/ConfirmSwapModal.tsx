@@ -6,6 +6,7 @@ import {
   SwapContext,
   SwapModalButton,
   SwapModalLayout,
+  OfferExpiryConfirmSwap
 } from "@/components/01-atoms";
 import { ProgressStatus } from "@/components/02-molecules";
 import { createSwap } from "@/lib/service/createSwap";
@@ -173,7 +174,7 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: "",
+          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
         }}
         footer={{
           component: (
@@ -209,7 +210,7 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: "",
+          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
         }}
         footer={{
           component: (
@@ -235,7 +236,7 @@ export const ConfirmSwapModal = ({
           description: "Congrats, your swap offer was submitted.",
         }}
         body={{
-          component: "",
+          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
         }}
         footer={{
           component: (
