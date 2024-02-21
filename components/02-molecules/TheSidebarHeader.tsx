@@ -13,7 +13,7 @@ export const TheSidebarHeader = () => {
 
 
   return (
-    <div className="w-full p-6 gap-5 flex flex-col">
+    <div className="w-full gap-5 flex flex-col">
       <button
         onClick={toggleSidebar}
         className={cc([
