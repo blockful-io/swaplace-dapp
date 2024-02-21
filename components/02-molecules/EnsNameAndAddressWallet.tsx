@@ -6,20 +6,23 @@ import React from "react";
 
 export const EnsNameAndAddressWallet = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
+  const stringAddress = authenticatedUserAddress?.toString()
 
   const { primaryName } = useEnsData({
     ensAddress: authenticatedUserAddress,
   });
 
+  const blockExplorer = `https://etherscan.io/address/${stringAddress}`
+
+
   const displayAddress =
-    collapseAddress(authenticatedUserAddress?.toString() ?? "") || "";
+    collapseAddress(stringAddress ?? "") || "";
 
   return (
     <div className="flex gap-3">
       {authenticatedUserAddress && (
         <>
           <ENSAvatar avatarENSAddress={authenticatedUserAddress} />
-
           <div className="flex flex-col">
             <div className="flex gap-2">
               {primaryName && (
@@ -45,14 +48,14 @@ export const EnsNameAndAddressWallet = () => {
                 </button>
               </div>
             </div>
-            <div className="flex gap-1 items-center justify-start">
+            <a href={blockExplorer} target="_blank" className="flex gap-1 items-center justify-start">
               <h3 className="text-sm font-medium text-[#A3A9A5] ">
                 View on explorer
               </h3>
               <div className="p-1">
                 <ExternalLinkIcon className="dark:text-[#A3A9A5] text-[#AABE13] font-medium" />
               </div>
-            </div>
+            </a>
           </div>
         </>
       )}
