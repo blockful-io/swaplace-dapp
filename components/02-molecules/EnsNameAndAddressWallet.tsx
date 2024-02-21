@@ -3,20 +3,21 @@ import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useEnsData } from "@/lib/client/hooks/useENSData";
 import { collapseAddress } from "@/lib/client/utils";
 import React from "react";
+import { useNetwork } from "wagmi";
 
 export const EnsNameAndAddressWallet = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const stringAddress = authenticatedUserAddress?.toString()
+  const stringAddress = authenticatedUserAddress?.toString();
 
   const { primaryName } = useEnsData({
     ensAddress: authenticatedUserAddress,
   });
 
-  const blockExplorer = `https://etherscan.io/address/${stringAddress}`
+  const { chain } = useNetwork();
 
+  const blockExplorer = `${chain?.blockExplorers?.default.url}/address/${stringAddress}`;
 
-  const displayAddress =
-    collapseAddress(stringAddress ?? "") || "";
+  const displayAddress = collapseAddress(stringAddress ?? "") || "";
 
   return (
     <div className="flex gap-3">
@@ -48,7 +49,11 @@ export const EnsNameAndAddressWallet = () => {
                 </button>
               </div>
             </div>
-            <a href={blockExplorer} target="_blank" className="flex gap-1 items-center justify-start">
+            <a
+              href={blockExplorer}
+              target="_blank"
+              className="flex gap-1 items-center justify-start"
+            >
               <h3 className="text-sm font-medium text-[#A3A9A5] ">
                 View on explorer
               </h3>
