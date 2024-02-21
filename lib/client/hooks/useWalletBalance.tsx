@@ -1,8 +1,7 @@
-import { weiToEther } from "../utils";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useEffect, useState } from "react";
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { createPublicClient, formatUnits, http } from "viem";
+import { useNetwork } from "wagmi";
 
 export enum WalletBalanceQueryStatus {
   LOADING,
@@ -18,22 +17,24 @@ export const useWalletBalance = ({ walletAddress }: Props) => {
   const [balance, setBalance] = useState<string | null>(null);
   const [balanceQueryStatus, setBalanceQueryStatus] = useState<WalletBalanceQueryStatus>(WalletBalanceQueryStatus.LOADING);
 
+  const { chain } = useNetwork();
+
   useEffect(() => {
-    if (walletAddress) {
-      const mainnetClient = createPublicClient({
-        chain: mainnet,
+    if (walletAddress && chain) {
+      const client = createPublicClient({
+        chain: chain,
         transport: http(),
       });
 
       setBalanceQueryStatus(WalletBalanceQueryStatus.LOADING);
 
-      mainnetClient
+      client
         .getBalance({
           address: walletAddress.address as `0x${string}`,
         })
         .then((fetchedBalance) => {
           setBalanceQueryStatus(WalletBalanceQueryStatus.SUCCESS);
-          setBalance(weiToEther(fetchedBalance));
+          !!chain && setBalance(formatUnits(fetchedBalance, chain.nativeCurrency.decimals));
         })
         .catch(() => {
           setBalanceQueryStatus(WalletBalanceQueryStatus.ERROR);
@@ -43,7 +44,7 @@ export const useWalletBalance = ({ walletAddress }: Props) => {
       setBalance(null);
       setBalanceQueryStatus(WalletBalanceQueryStatus.ERROR);
     }
-  }, [walletAddress]);
+  }, [walletAddress, chain]);
 
   return {
     balance,
