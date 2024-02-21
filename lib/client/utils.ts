@@ -38,3 +38,20 @@ export const collapseAddress = (address: string, startLength = 4, endLength = 4)
 
   return collapsedAddress;
 }
+
+export const weiToEther = (weiBalance: bigint) => {
+  const weiString = weiBalance.toString();
+  // Ensure the balance has at least 18 characters, padding with zeros if necessary, to represent the wei accurately
+  const paddedWeiString = weiString.padStart(19, '0'); // Pad to ensure we always have an 18+ digit string
+  const etherPart = paddedWeiString.slice(0, -18);
+  const fractionalPart = paddedWeiString.slice(-18);
+
+  // Convert fractional part into a number, divide by 10^18 to get the actual value, then round to 3 decimal places
+  const fractionalNumber = parseFloat(fractionalPart) / 1e18;
+  const roundedFractionalPart = fractionalNumber.toFixed(3).slice(2); // Get the rounded fractional part as a string without the '0.' prefix
+
+  // Concatenate the ether part with the rounded fractional part, adding a decimal point only if fractional part is non-zero
+  const result = etherPart + (roundedFractionalPart !== '000' ? '.' + roundedFractionalPart : '');
+
+  return result;
+};

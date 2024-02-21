@@ -15,7 +15,7 @@ export const EnsNameAndAddressWallet = () => {
     collapseAddress(authenticatedUserAddress?.toString() ?? "") || "";
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 pb-5">
       {authenticatedUserAddress && (
         <>
           <ENSAvatar avatarENSAddress={authenticatedUserAddress} />

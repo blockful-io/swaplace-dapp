@@ -11,3 +11,4 @@ export * from "./SwapStation";
 export * from "./TheHeader";
 export * from "./TheSidebarHeader";
 export * from "./UserInfo";
+export * from "./AccountBalanceWalletSidebar";
