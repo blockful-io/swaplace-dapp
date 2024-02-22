@@ -34,20 +34,21 @@ export const EnsNameAndAddressWallet = () => {
                   </h3>
                 </>
               )}
-              <div className="flex items-center justify-start gap-1">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    authenticatedUserAddress.toString(),
+                  );
+                }}
+                className="flex items-center justify-start gap-1"
+              >
                 <h3 className="text-sm">{`  ${displayAddress}`}</h3>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      authenticatedUserAddress.toString(),
-                    );
-                  }}
-                >
+                <div>
                   <div className="p-1">
                     <CopyIcon className="dark:text-[#F6F6F6] text-[#AABE13] w-4 h-4 " />
                   </div>
-                </button>
-              </div>
+                </div>
+              </button>
             </div>
             <a
               href={blockExplorer}
