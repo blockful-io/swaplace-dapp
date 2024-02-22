@@ -67,7 +67,6 @@ export const ENSAvatar = ({
       avatarSrc ? (
         <img
           src={avatarSrc}
-          placeholder="empty"
           className={ENSAvatarClassName[size]}
           alt={`ENS Avatar for ${avatarENSAddress}`}
         />
