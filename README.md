@@ -4,7 +4,7 @@ This repository contains the core frontend for the Swaplace Protocol; The lighte
 
 ## Setup
 
-ATTENTION: After cloning the repository, you must change the branch into the `develop` branch to get the latest version.  
+ATTENTION: After forking the repository, you must change the branch into the `develop` branch to get the latest version.  
 WARNING: `main` branch is not stable at the moment.
 
 You should install the dependencies using legacy mode and then run the development server.
