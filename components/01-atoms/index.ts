@@ -2,6 +2,7 @@ export * from "./SwapModalLayout";
 export * from "./ConnectWallet";
 export * from "./EmptyNftsCards";
 export * from "./LoadingIndicator";
+export * from "./OfferExpiryConfirmSwap";
 export * from "./NftsCardApprovedList";
 export * from "./ProgressBar";
 export * from "./SearchBar";
