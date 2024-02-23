@@ -1,7 +1,11 @@
-import { NftCard } from ".";
+import { TokenCard } from ".";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { PersonIcon, EmptyNftsCards, SwapContext } from "@/components/01-atoms";
+import {
+  PersonIcon,
+  TokenCardsPlaceholder,
+  SwapContext,
+} from "@/components/01-atoms";
 import { useEnsName } from "wagmi";
 import { useContext } from "react";
 
@@ -20,14 +24,14 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
   });
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const emptySquaresAuthUser = EmptyNftsCards(
+  const emptySquaresAuthUser = TokenCardsPlaceholder(
     authenticatedUserTokensList.length,
     4,
     8,
     12,
     12,
   );
-  const emptySquaresInputUser = EmptyNftsCards(
+  const emptySquaresInputUser = TokenCardsPlaceholder(
     searchedUserTokensList.length,
     4,
     8,
@@ -76,7 +80,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
           (!forAuthedUser && !validatedAddressToSwap) ? null : (
             <>
               {nftUser.map((nft, index) => (
-                <NftCard
+                <TokenCard
                   key={index}
                   withSelectionValidation={false}
                   ownerAddress={
@@ -86,7 +90,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
                         : null
                       : validatedAddressToSwap
                   }
-                  nftData={nft}
+                  tokenData={nft}
                 />
               ))}
 

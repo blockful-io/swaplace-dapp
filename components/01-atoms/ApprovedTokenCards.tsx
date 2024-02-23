@@ -5,12 +5,12 @@ import {
 } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import {
-  NftCard,
+  TokenCard,
   NftCardActionType,
   NftCardStyleType,
 } from "@/components/02-molecules";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
+import { approveTokensBeforeSwap } from "@/lib/client/swap-utils";
 import { IApproveSwap } from "@/lib/client/blockchain-data";
 import { approveSwap } from "@/lib/service/approveSwap";
 import { getTokenName } from "@/lib/client/tokens";
@@ -20,7 +20,7 @@ import { useContext, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNetwork, useWalletClient } from "wagmi";
 
-export const NftsCardApprovedList = () => {
+export const ApprovedTokenCards = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
@@ -35,7 +35,7 @@ export const NftsCardApprovedList = () => {
 
   useEffect(() => {
     const fetchApprove = async () => {
-      await updateNftsToSwapApprovalStatus(
+      await approveTokensBeforeSwap(
         authenticatedUserTokensList,
         setAuthedUserNftsApprovalStatus,
         setAllSelectedNftsAreApproved,
@@ -122,11 +122,11 @@ export const NftsCardApprovedList = () => {
             onClick={() => approveNftForSwapping(token, index)}
           >
             <div>
-              <NftCard
+              <TokenCard
                 withSelectionValidation={false}
                 onClickAction={NftCardActionType.NFT_ONCLICK}
                 ownerAddress={authenticatedUserAddress.address}
-                nftData={authenticatedUserTokensList[index]}
+                tokenData={authenticatedUserTokensList[index]}
                 styleType={NftCardStyleType.SMALL}
               />
             </div>

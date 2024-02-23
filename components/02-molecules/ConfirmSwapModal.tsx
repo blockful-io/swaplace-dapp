@@ -3,7 +3,7 @@ import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import {
   SwapModalLayout,
   SwapContext,
-  NftsCardApprovedList,
+  ApprovedTokenCards,
   SwapModalButton,
   ButtonVariant,
   OfferExpiryConfirmSwap,
@@ -19,7 +19,7 @@ import {
 import {
   Asset,
   makeSwap,
-  updateNftsToSwapApprovalStatus,
+  approveTokensBeforeSwap,
 } from "@/lib/client/swap-utils";
 import { SwaplaceAbi } from "@/lib/client/abi";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
@@ -93,7 +93,7 @@ export const ConfirmSwapModal = ({
     updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
 
     const fetchApprove = async () => {
-      await updateNftsToSwapApprovalStatus(
+      await approveTokensBeforeSwap(
         authenticatedUserTokensList,
         setAuthedUserNftsApprovalStatus,
         setAllSelectedNftsAreApproved,
@@ -180,7 +180,7 @@ export const ConfirmSwapModal = ({
 
   const validateTokensAreApproved = () => {
     if (allSelectedNftsApproved) {
-      if (currentSwapModalStep === SwapModalSteps.APPROVE_NFTS) {
+      if (currentSwapModalStep === SwapModalSteps.APPROVE_TOKENS) {
         updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
       }
     } else {
@@ -189,7 +189,7 @@ export const ConfirmSwapModal = ({
   };
 
   const ConfirmSwapModalStep: Partial<Record<SwapModalSteps, JSX.Element>> = {
-    [SwapModalSteps.APPROVE_NFTS]: (
+    [SwapModalSteps.APPROVE_TOKENS]: (
       <SwapModalLayout
         toggleCloseButton={{ open: open, onClose: onClose }}
         text={{
@@ -198,7 +198,7 @@ export const ConfirmSwapModal = ({
             "Before sending your offer, please approve the assets you want to trade by clicking on them.",
         }}
         body={{
-          component: <NftsCardApprovedList />,
+          component: <ApprovedTokenCards />,
         }}
         footer={{
           component: (

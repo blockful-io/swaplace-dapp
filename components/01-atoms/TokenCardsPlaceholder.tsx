@@ -1,6 +1,6 @@
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 
-export const EmptyNftsCards = (
+export const TokenCardsPlaceholder = (
   len: number,
   ismobileTotalSquares: number,
   isWideScreenTotalSquares: number,

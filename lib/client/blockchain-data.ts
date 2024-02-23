@@ -38,7 +38,7 @@ export interface IApproveSwap {
 }
 
 export enum SwapModalSteps {
-  APPROVE_NFTS,
+  APPROVE_TOKENS,
   CREATE_SWAP,
   CREATING_SWAP,
   CREATED_SWAP,
@@ -56,20 +56,31 @@ export enum TransactionStatus {
   SUCCESSFUL_TRANSACTION,
 }
 
-export type NftSwappingInfo = {
+export type TokensWithSwapInfo = {
   tokenAddress: `0x${string}`;
   amountOrId: bigint;
 };
 
 export async function ComposeTokenUserAssets(
-  nftUser: Token[],
+  tokensList: Token[],
 ): Promise<Asset[]> {
   const tokenAssetArray: Asset[] = [];
   const assetPromisesArray: Promise<void>[] = [];
 
-  for (let i = 0; i < nftUser.length; i += 1) {
-    const addr = nftUser[i]?.contract as `0x${string}`;
-    const amountOrId = BigInt(nftUser[i].id as unknown as number);
+  for (let i = 0; i < tokensList.length; i += 1) {
+    const addr = tokensList[i]?.contract as `0x${string}`;
+    let amountOrId = undefined;
+
+    switch (tokensList[i].tokenType) {
+      case TokenType.ERC20:
+        if ((tokensList[i] as ERC20).rawBalance) {
+          amountOrId = BigInt((tokensList[i] as ERC20).rawBalance as string);
+        }
+      case TokenType.ERC721:
+        if (tokensList[i]?.id as unknown as number) {
+          amountOrId = tokensList[i]?.id as unknown as number;
+        }
+    }
 
     if (amountOrId !== undefined && addr !== undefined) {
       const assetPromise = makeAsset(addr, amountOrId).then((asset) => {
@@ -84,31 +95,39 @@ export async function ComposeTokenUserAssets(
   return tokenAssetArray;
 }
 
-export function getNftsInfoToSwap(userNfts: Token[]): NftSwappingInfo[] {
-  const nftsInfoArray: NftSwappingInfo[] = [];
+export function getTokensInfoBeforeSwap(
+  tokensList: Token[],
+): TokensWithSwapInfo[] {
+  const tokensWithInfo: TokensWithSwapInfo[] = [];
 
-  for (let i = 0; i < userNfts.length; i++) {
-    const nftAmountOrTokenId = BigInt(userNfts[i]?.id as unknown as number);
-    const nftContractAddress = userNfts[i]?.contract as `0x${string}`;
+  for (let i = 0; i < tokensList.length; i++) {
+    let nftAmountOrTokenId = undefined;
 
-    if (nftAmountOrTokenId !== undefined && nftContractAddress !== undefined) {
-      nftsInfoArray.push({
-        tokenAddress: nftContractAddress,
-        amountOrId: nftAmountOrTokenId,
-      });
+    switch (tokensList[i].tokenType) {
+      case TokenType.ERC20:
+        if ((tokensList[i] as ERC20).rawBalance) {
+          nftAmountOrTokenId = (tokensList[i] as ERC20).rawBalance;
+        }
+      case TokenType.ERC721:
+        if (tokensList[i]?.id as unknown as number) {
+          nftAmountOrTokenId = tokensList[i]?.id as unknown as number;
+        }
     }
 
-    // if (i + 1 < userNfts.length) {
-    //   const nextAmountOrId = BigInt(hexToNumber(userNfts[i + 1]?.id?.tokenId));
-    //   const nextAddr = userNfts[i + 1]?.contract?.address as `0x${string}`;
+    const tokenContractAddress = tokensList[i]?.contract as `0x${string}`;
 
-    //   if (nextAmountOrId !== undefined && nextAddr !== undefined) {
-    //     nftsInfoArray.push([nextAddr, nextAmountOrId]);
-    //   }
-    // }
+    if (
+      nftAmountOrTokenId !== undefined &&
+      tokenContractAddress !== undefined
+    ) {
+      tokensWithInfo.push({
+        tokenAddress: tokenContractAddress,
+        amountOrId: BigInt(nftAmountOrTokenId),
+      });
+    }
   }
 
-  return nftsInfoArray;
+  return tokensWithInfo;
 }
 
 // Check out the Alchemy Documentation https://docs.alchemy.com/reference/getnfts-sdk-v3
@@ -192,6 +211,14 @@ const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
   return tokens.map((token) => {
     return {
       tokenType: TokenType.ERC20,
+      /*
+        This ID is only used for TokenCard selection, in the Ui of the dApp.
+        We want it to be as randomic and unique as possible besides being 
+        yet, mathematically possible to have same IDs on two different
+        tokens. Possible, but very unlikely to generate non-unique 
+        IDs, below maths solve our ID generation goal, today.
+      */
+      id: ((Date.now() * Math.random()) / Math.random()).toFixed(0),
       name: token.name,
       logo: token.logo,
       symbol: token.symbol,

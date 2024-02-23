@@ -1,12 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { getTokenName } from "@/lib/client/tokens";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { EthereumAddress, ERC721 } from "@/lib/shared/types";
+import {
+  ERC20,
+  ERC721,
+  EthereumAddress,
+  Token,
+  TokenType,
+} from "@/lib/shared/types";
 import React, { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import toast from "react-hot-toast";
 
-interface INftCard {
-  nftData: ERC721;
+interface TokenCardProps {
+  tokenData: Token;
   ownerAddress: string | null;
   onClickAction?: NftCardActionType;
   withSelectionValidation?: boolean;
@@ -16,10 +24,10 @@ interface INftCard {
 /**
  *
  * This component receives the data of an nft and create a card NFT
- * @param nftData
+ * @param tokenData
  * @param ownerAddress
  *
- * @returns NftCard
+ * @returns TokenCard
  */
 
 export enum NftCardActionType {
@@ -44,13 +52,13 @@ const NftSizeClassNames = {
   [NftCardStyleType.LARGE]: "card-nft-large",
 };
 
-export const NftCard = ({
-  nftData,
+export const TokenCard = ({
+  tokenData,
   ownerAddress,
   withSelectionValidation = true,
   styleType = NftCardStyleType.NORMAL,
   onClickAction = NftCardActionType.SELECT_NFT_FOR_SWAP,
-}: INftCard) => {
+}: TokenCardProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const {
     setAuthenticatedUsedTokensList,
@@ -61,6 +69,35 @@ export const NftCard = ({
   const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
   const [couldntLoadNftImage, setCouldntLoadNftImage] = useState(false);
 
+  const [tokenDisplayableData, setDisplayableData] = useState({
+    id: "",
+    image: "",
+  });
+
+  useEffect(() => {
+    const displayableData = { ...tokenDisplayableData };
+
+    switch (tokenData.tokenType) {
+      case TokenType.ERC20:
+        if ((tokenData as ERC20).symbol) {
+          displayableData.image = (tokenData as ERC20).symbol as string;
+        }
+        if ((tokenData as ERC20).id) {
+          displayableData.id = (tokenData as ERC20).id as string;
+        }
+      case TokenType.ERC721:
+        if ((tokenData as ERC721).metadata?.image) {
+          displayableData.image = (tokenData as ERC721).metadata
+            ?.image as string;
+        }
+        if ((tokenData as ERC721).id) {
+          displayableData.id = (tokenData as ERC721).id as string;
+        }
+    }
+
+    setDisplayableData(displayableData);
+  }, [tokenData]);
+
   useEffect(() => {
     const currentNftIsFromAuthedUser = ownerAddress
       ? authenticatedUserAddress?.equals(new EthereumAddress(ownerAddress))
@@ -69,74 +106,73 @@ export const NftCard = ({
     if (currentNftIsFromAuthedUser) {
       setCurrentNftIsSelected(
         authenticatedUserTokensList.some(
-          (selectedNft) => selectedNft.id === nftData.id,
+          (selectedNft) => selectedNft.id === tokenData.id,
         ),
       );
     } else {
       setCurrentNftIsSelected(
         searchedUserTokensList.some(
-          (selectedNft) => selectedNft.id === nftData.id,
+          (selectedNft) => selectedNft.id === tokenData.id,
         ),
       );
     }
   }, [
     authenticatedUserAddress,
-    ownerAddress,
     authenticatedUserTokensList,
     searchedUserTokensList,
-    nftData,
+    ownerAddress,
+    tokenData,
   ]);
 
   useEffect(() => {
     setCouldntLoadNftImage(false);
-  }, [nftData]);
-
-  if (!nftData || !nftData.id || !nftData.contract || !ownerAddress)
-    return null;
+  }, [tokenData]);
 
   const setNftAsActiveOne = () => {
-    if (onClickAction === NftCardActionType.SELECT_NFT_FOR_SWAP) {
+    if (
+      onClickAction === NftCardActionType.SELECT_NFT_FOR_SWAP &&
+      ownerAddress
+    ) {
       const ownerEthAddress = new EthereumAddress(ownerAddress);
 
       if (authenticatedUserAddress?.equals(ownerEthAddress)) {
         const isSelected = authenticatedUserTokensList.some(
-          (selectedNft) => selectedNft.id === nftData.id,
+          (selectedNft) => selectedNft.id === tokenData.id,
         );
 
         if (isSelected) {
           setAuthenticatedUsedTokensList((prevNftAuthUser) =>
             prevNftAuthUser.filter(
-              (selectedNft) => selectedNft.id !== nftData.id,
+              (selectedNft) => selectedNft.id !== tokenData.id,
             ),
           );
         } else {
           setAuthenticatedUsedTokensList((prevNftAuthUser) => [
             ...prevNftAuthUser,
-            nftData,
+            tokenData,
           ]);
         }
       } else {
         const isSelected = searchedUserTokensList.some(
-          (selectedNft) => selectedNft.id === nftData.id,
+          (selectedNft) => selectedNft.id === tokenData.id,
         );
 
         if (isSelected) {
           setSearchedUserTokensList((prevNftInputUser) =>
             prevNftInputUser.filter(
-              (selectedNft) => selectedNft.id !== nftData.id,
+              (selectedNft) => selectedNft.id !== tokenData.id,
             ),
           );
         } else {
           setSearchedUserTokensList((prevNftInputUser) => [
             ...prevNftInputUser,
-            nftData,
+            tokenData,
           ]);
         }
       }
     } else if (onClickAction === NftCardActionType.SHOW_NFT_DETAILS) {
-      navigator.clipboard.writeText(JSON.stringify(nftData));
+      navigator.clipboard.writeText(JSON.stringify(tokenData));
       toast.success("NFT data copied to your clipboard");
-    } else if (onClickAction === NftCardActionType.NFT_ONCLICK) {
     }
   };
 
@@ -163,40 +199,24 @@ export const NftCard = ({
     );
   };
 
-  return nftData.metadata?.image && !couldntLoadNftImage ? (
+  return tokenDisplayableData.image && !couldntLoadNftImage ? (
     <>
       {ButtonLayout(
         <img
           onError={handleImageLoadError}
-          src={nftData.metadata?.image}
-          alt={nftData.metadata?.name}
-          className="static z-10 w-full overflow-y-auto rounded-xl"
+          src={tokenDisplayableData.image}
+          alt={getTokenName(tokenData)}
+          className="text-center static z-10 w-full overflow-y-auto rounded-xl"
         />,
       )}
     </>
-  ) : nftData.metadata?.name ? (
+  ) : (
     <>
       {ButtonLayout(
-        <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll">
-          {nftData.metadata?.name}
+        <div className="flex justify-center items-center w-full h-full text-[10px] font-medium oveflow-y-scroll break-all">
+          {getTokenName(tokenData)}
         </div>,
       )}
     </>
-  ) : nftData.name && nftData.id ? (
-    <>
-      {ButtonLayout(
-        <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll">
-          {nftData.name}
-        </div>,
-      )}
-    </>
-  ) : nftData.contractMetadata?.name && nftData.id ? (
-    <>
-      {ButtonLayout(
-        <div className="text-center text-[10px] mt-2 font-medium max-h-[40px] oveflow-y-scroll ">
-          {nftData.contractMetadata?.name}
-        </div>,
-      )}
-    </>
-  ) : null;
+  );
 };

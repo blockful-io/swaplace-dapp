@@ -31,7 +31,7 @@ export const SwapStation = () => {
   const validateSwapSending = () => {
     if (!isValidSwap) {
       if (!validatedAddressToSwap) {
-        toast.error("You must select a destiny wallet to swap NFTs with");
+        toast.error("You must select a destiny wallet to swap tokens with");
         return;
       }
 

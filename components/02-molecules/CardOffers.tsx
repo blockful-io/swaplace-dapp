@@ -1,4 +1,4 @@
-import { NftCard, UserOfferInfo } from "@/components/02-molecules";
+import { TokenCard, UserOfferInfo } from "@/components/02-molecules";
 import { SwapContext, TokenCardProperties } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EthereumAddress } from "@/lib/shared/types";
@@ -10,7 +10,7 @@ interface CardOffersProps {
 
 export const CardOffers = ({ address }: CardOffersProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { nftAuthUser } = useContext(SwapContext);
+  const { authenticatedUserTokensList } = useContext(SwapContext);
 
   return (
     <div className="md:p-4 ">
@@ -19,14 +19,14 @@ export const CardOffers = ({ address }: CardOffersProps) => {
           <UserOfferInfo address={address} />
         </div>
         <div>
-          {authenticatedUserAddress && ( // That div needs change to render the given Tokens by Subgraph, shouldn't be the <NftCard here/> , for now, just visualization
+          {authenticatedUserAddress && ( // That div needs change to render the given Tokens by Subgraph, shouldn't be the <TokenCard here/> , for now, just visualization
             <div className="grid md:grid-cols-4 md:gap-4 ">
-              {nftAuthUser.map((nft, index) => (
-                <NftCard
+              {authenticatedUserTokensList.map((token, index) => (
+                <TokenCard
                   key={index}
                   withSelectionValidation={false}
                   ownerAddress={authenticatedUserAddress?.address}
-                  nftData={nft}
+                  tokenData={token}
                   styleType="medium"
                 />
               ))}

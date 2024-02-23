@@ -1,5 +1,5 @@
-import { NftCard } from "@/components/02-molecules";
-import { EmptyNftsCards } from "@/components/01-atoms";
+import { TokenCard } from "@/components/02-molecules";
+import { TokenCardsPlaceholder } from "@/components/01-atoms";
 import { Token } from "@/lib/shared/types";
 
 export interface TokensListProps {
@@ -9,7 +9,7 @@ export interface TokensListProps {
 
 /**
  *
- * This component receives the data of multiple nfts and create its cards
+ * This component receives the data of multiple tokens and create its cards
  * @param tokensList
  * @param ownerAddress
  *
@@ -17,14 +17,14 @@ export interface TokensListProps {
  */
 
 export const TokensList = ({ tokensList, ownerAddress }: TokensListProps) => {
-  const emptySquares = EmptyNftsCards(tokensList.length, 15, 30, 30, 30);
-  const nftSquares = tokensList.map((nft: Token, index) => (
+  const placeholders = TokenCardsPlaceholder(tokensList.length, 15, 30, 30, 30);
+  const tokenCards = tokensList.map((token: Token, index) => (
     <div key={`nft-${index}`}>
-      <NftCard ownerAddress={ownerAddress} nftData={nft} />
+      <TokenCard ownerAddress={ownerAddress} tokenData={token} />
     </div>
   ));
 
-  const allSquares = [...nftSquares, ...emptySquares];
+  const allSquares = [...tokenCards, ...placeholders];
 
   return (
     <div className="w-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-3 py-6 px-4">

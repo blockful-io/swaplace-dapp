@@ -22,12 +22,19 @@ export const AccountBalanceWalletSidebar = () => {
   const displayBalance = match ? match[0] : balance;
 
   return (
-    <div className={cc(["flex flex-col pt-5 border-t", isDark ? "border-[#353836]" : "border-[#E4E4E4]"])}>
-        <p className={cc([isDark ? "text-[#A3A9A5]" : "text-[#505150]"])}>Current balance</p>
-        <div className="flex items-end gap-2">
-          <h2 className="text-3xl font-medium">{displayBalance}</h2>
-          <p className="text-base	font-medium">{chain?.nativeCurrency.symbol}</p>
-        </div>
+    <div
+      className={cc([
+        "flex flex-col pt-5 border-t",
+        isDark ? "border-[#353836]" : "border-[#E4E4E4]",
+      ])}
+    >
+      <p className={cc([isDark ? "text-[#A3A9A5]" : "text-[#505150]"])}>
+        Current balance
+      </p>
+      <div className="flex items-end gap-2">
+        <h2 className="text-3xl font-medium">{displayBalance || "0"}</h2>
+        <p className="text-base	font-medium">{chain?.nativeCurrency.symbol}</p>
       </div>
+    </div>
   );
 };

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { NftsShelf } from "@/components/03-organisms";
+import { TokensShelf } from "@/components/03-organisms";
 import { SwapContext, SwappingShelfID, Tab } from "@/components/01-atoms/";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useContext, useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import cc from "classcat";
 /**
  * SwappingShelfs Component
  *
- * React component that display of nfts swapping shelves.
+ * React component that display of tokens swapping shelves.
  *
  * @return The rendered SwappingShelfs component.
  */
@@ -38,10 +38,10 @@ export const SwappingShelfs = () => {
         setActiveSwappingShelfID={(input) => setActiveSwappingShelfID(input)}
       />
       <div className={cc([activeSwappingShelfID ? "hidden" : "block"])}>
-        <NftsShelf address={validatedAddressToSwap} />
+        <TokensShelf address={validatedAddressToSwap} />
       </div>
       <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
-        <NftsShelf address={authenticatedUserAddress?.address ?? null} />
+        <TokensShelf address={authenticatedUserAddress?.address ?? null} />
       </div>
     </div>
   );

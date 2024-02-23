@@ -62,7 +62,7 @@ export const SwapContext = React.createContext<SwapContextProps>({
   allSelectedNftsApproved: false,
   setAuthedUserNftsApprovalStatus: () => {},
   authedUserSelectedNftsApprovalStatus: [],
-  currentSwapModalStep: SwapModalSteps.APPROVE_NFTS,
+  currentSwapModalStep: SwapModalSteps.APPROVE_TOKENS,
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
 });
 
@@ -81,7 +81,7 @@ export const SwapContextProvider = ({ children }: any) => {
   const [timeDate, setTimeDate] = useState<bigint>(BigInt(1));
 
   const [currentSwapModalStep, setCurrentSwapModalStep] =
-    useState<SwapModalSteps>(SwapModalSteps.APPROVE_NFTS);
+    useState<SwapModalSteps>(SwapModalSteps.APPROVE_TOKENS);
   const [allSelectedNftsApproved, setAllSelectedNftsAreApproved] =
     useState<boolean>(false);
   const [
@@ -140,14 +140,14 @@ export const SwapContextProvider = ({ children }: any) => {
 
   const updateSwapStep = (buttonClicked: ButtonClickPossibilities) => {
     switch (currentSwapModalStep) {
-      case SwapModalSteps.APPROVE_NFTS:
+      case SwapModalSteps.APPROVE_TOKENS:
         if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
           setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
         }
         break;
       case SwapModalSteps.CREATE_SWAP:
         if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
-          setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+          setCurrentSwapModalStep(SwapModalSteps.APPROVE_TOKENS);
         } else if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
           setCurrentSwapModalStep(SwapModalSteps.CREATING_SWAP);
         }
@@ -161,7 +161,7 @@ export const SwapContextProvider = ({ children }: any) => {
         break;
       case SwapModalSteps.CREATED_SWAP:
         if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
-          setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+          setCurrentSwapModalStep(SwapModalSteps.APPROVE_TOKENS);
         }
         break;
     }
