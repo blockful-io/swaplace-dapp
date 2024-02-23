@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   ADDRESS_ZERO,
-  ERC20,
   SWAPLACE_SMART_CONTRACT_ADDRESS,
   Token,
 } from "@/lib/client/constants";
@@ -10,14 +10,14 @@ import {
   NftCardActionType,
   NftCardStyleType,
 } from "@/components/02-molecules";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
+import { IApproveSwap } from "@/lib/client/blockchain-data";
+import { approveSwap } from "@/lib/service/approveSwap";
 import cc from "classcat";
 import { useContext, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useNetwork, useWalletClient } from "wagmi";
-import { IApproveSwap } from "@/lib/client/blockchain-data";
-import { approveSwap } from "@/lib/service/approveSwap";
-import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
 
 export const NftsCardApprovedList = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -42,6 +42,7 @@ export const NftsCardApprovedList = () => {
     };
     fetchApprove();
   }, [nftAuthUser, allSelectedNftsApproved]);
+
   if (!authenticatedUserAddress?.address) {
     return null;
   }
@@ -108,6 +109,7 @@ export const NftsCardApprovedList = () => {
       <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[370px]">
         {nftAuthUser.map((token, index) => (
           <div
+            key={index}
             className={cc([
               "flex p-4 items-center gap-4 h-[68px]",
               authedUserSelectedNftsApprovalStatus[index]?.approved ===

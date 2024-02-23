@@ -1,3 +1,6 @@
+import { Network } from "alchemy-sdk";
+
+/* eslint-disable prefer-const */
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 export const WIDE_SCREEN_SIZE = 1279;
@@ -92,10 +95,9 @@ export let getApiKeyForNetwork: Map<number, string> = new Map([
   [ChainInfo.HARDHAT.id, "http://127.0.0.1:8545/"],
 ]);
 
-export let getRpcHttpUrlForNetwork: Map<number, string> = new Map([
-  [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP ?? ""],
-  [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_HTTP ?? ""],
-  [ChainInfo.HARDHAT.id, "http://127.0.0.1:8545/"],
+export let getRpcHttpUrlForNetwork: Map<number, Network> = new Map([
+  [ChainInfo.SEPOLIA.id, Network.ETH_SEPOLIA],
+  [ChainInfo.MUMBAI.id, Network.MATIC_MUMBAI],
 ]);
 
 export const SWAPLACE_SMART_CONTRACT_ADDRESS = {

@@ -1,34 +1,33 @@
-import { useContext, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useNetwork, useWalletClient } from "wagmi";
 import {
-  ButtonVariant,
-  NftsCardApprovedList,
-  SwapContext,
-  SwapModalButton,
   SwapModalLayout,
+  SwapContext,
+  NftsCardApprovedList,
+  SwapModalButton,
+  ButtonVariant,
 } from "@/components/01-atoms";
 import { ProgressStatus } from "@/components/02-molecules";
 import { SwapUserConfiguration, createSwap } from "@/lib/service/createSwap";
 import {
   ButtonClickPossibilities,
   ComposeTokenUserAssets,
-  ICreateSwap,
   SwapModalSteps,
   packingData,
 } from "@/lib/client/blockchain-data";
-import toast from "react-hot-toast";
 import {
   Asset,
-  Swap,
   makeSwap,
   updateNftsToSwapApprovalStatus,
 } from "@/lib/client/swap-utils";
-import { useTheme } from "next-themes";
 import { SwaplaceAbi } from "@/lib/client/abi";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
 import { publicClientViem } from "@/lib/wallet/wallet-config";
 import { getContract } from "viem";
+import { useNetwork, useWalletClient } from "wagmi";
+import { useContext, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import toast from "react-hot-toast";
 
 interface ConfirmSwapApprovalModalProps {
   open: boolean;

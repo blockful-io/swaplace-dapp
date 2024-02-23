@@ -1,4 +1,3 @@
-import { useContext, useEffect, useState } from "react";
 import {
   ChainInfo,
   NFTsQueryStatus,
@@ -6,15 +5,17 @@ import {
   Token,
 } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useNetwork } from "wagmi";
 import {
   getERC721TokensFromAddress,
   getERC20TokensFromAddress,
 } from "@/lib/client/blockchain-data";
-import { useTheme } from "next-themes";
 import { EthereumAddress } from "@/lib/shared/types";
 import { SwapContext, SelectUserIcon } from "@/components/01-atoms";
 import { TokensList } from "@/components/02-molecules";
+import { useNetwork } from "wagmi";
+import { useTheme } from "next-themes";
+import { useContext, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
 
 interface TokensShelfProps {
   address: string | null;
@@ -50,17 +51,15 @@ export const NftsShelf = ({ address }: TokensShelfProps) => {
       setNftsQueryStatus(NFTsQueryStatus.LOADING);
 
       Promise.all([
-        getERC721TokensFromAddress(address, chainId, setNftsQueryStatus).then(
-          (nftsList) => {
-            setNftsList(nftsList);
+        getERC721TokensFromAddress(address, chainId).then((nftsList) => {
+          setNftsList(nftsList);
 
-            if (!nftsList.length) {
-              setNftsQueryStatus(NFTsQueryStatus.NO_RESULTS);
-            } else {
-              setNftsQueryStatus(NFTsQueryStatus.WITH_RESULTS);
-            }
-          },
-        ),
+          if (!nftsList.length) {
+            setNftsQueryStatus(NFTsQueryStatus.NO_RESULTS);
+          } else {
+            setNftsQueryStatus(NFTsQueryStatus.WITH_RESULTS);
+          }
+        }),
         getERC20TokensFromAddress(address, chainId).then((erc20Tokens) => {
           setErc20Tokens(erc20Tokens);
         }),

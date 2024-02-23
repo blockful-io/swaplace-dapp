@@ -1,11 +1,13 @@
+import { WalletIcon } from "./icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 
 interface IConnectWallet {
   customStyle?: string;
+  walletIcon?: boolean;
 }
 
-export const ConnectWallet = ({ customStyle }: IConnectWallet) => {
+export const ConnectWallet = ({ customStyle, walletIcon }: IConnectWallet) => {
   const router = useRouter();
 
   return (
@@ -44,10 +46,10 @@ export const ConnectWallet = ({ customStyle }: IConnectWallet) => {
                 return (
                   <button
                     onClick={openConnectModal}
-                    type="button"
                     className={customStyle}
+                    type="button"
                   >
-                    Connect Wallet
+                    {walletIcon ? <WalletIcon /> : <p>Connect Wallet</p>}
                   </button>
                 );
               }

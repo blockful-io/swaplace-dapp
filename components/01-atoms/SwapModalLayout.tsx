@@ -1,6 +1,6 @@
+import { CloseIcon } from "./icons/CloseIcon";
 import { Transition, Dialog } from "@headlessui/react";
 import React, { Fragment } from "react";
-import { CloseIcon } from "./icons/CloseIcon";
 import cc from "classcat";
 import { useTheme } from "next-themes";
 
@@ -76,11 +76,7 @@ export const SwapModalLayout = ({
                 <p className="items-center flex dark:title-h3-normal-dark title-h3-normal">
                   {text.title}
                 </p>
-                <div
-                  className="w-7 h-7 rounded-[100px] shadow border border-[#353836] justify-center items-center inline-flex dark:bg-[#282a29]"
-                  role="button"
-                  onClick={toggleCloseButton.onClose}
-                >
+                <div role="button" onClick={toggleCloseButton.onClose}>
                   <CloseIcon
                     fill={cc([theme == "light" ? "black" : "white"])}
                   />

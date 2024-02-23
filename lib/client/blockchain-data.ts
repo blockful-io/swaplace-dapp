@@ -1,20 +1,19 @@
-import { Dispatch, SetStateAction } from "react";
 import {
+  ChainInfo,
   ERC20,
   ERC721,
-  NFTsQueryStatus,
   Token,
   getApiKeyForNetwork,
   getRpcHttpUrlForNetwork,
 } from "./constants";
-import { getTimestamp } from "./utils";
-import {
-  GetTokensForOwnerResponse,
-  OwnedNftsResponse,
-  OwnedToken,
-  OwnedNft,
-} from "alchemy-sdk";
 import { Asset, makeAsset } from "./swap-utils";
+import {
+  type GetTokensForOwnerResponse,
+  type OwnedNftsResponse,
+  type OwnedToken,
+  type OwnedNft,
+  Alchemy,
+} from "alchemy-sdk";
 
 export interface ICreateSwap {
   walletClient: any;
@@ -70,7 +69,7 @@ export type NftSwappingInfo = {
 export async function ComposeTokenUserAssets(
   nftUser: Token[],
 ): Promise<Asset[]> {
-  let tokenAssetArray: Asset[] = [];
+  const tokenAssetArray: Asset[] = [];
   const assetPromisesArray: Promise<void>[] = [];
 
   for (let i = 0; i < nftUser.length; i += 1) {
@@ -91,7 +90,7 @@ export async function ComposeTokenUserAssets(
 }
 
 export function getNftsInfoToSwap(userNfts: Token[]): NftSwappingInfo[] {
-  let nftsInfoArray: NftSwappingInfo[] = [];
+  const nftsInfoArray: NftSwappingInfo[] = [];
 
   for (let i = 0; i < userNfts.length; i++) {
     const nftAmountOrTokenId = BigInt(userNfts[i]?.id as unknown as number);
@@ -121,17 +120,28 @@ export function getNftsInfoToSwap(userNfts: Token[]): NftSwappingInfo[] {
 export const getERC721TokensFromAddress = async (
   address: string,
   chainId: number,
-  stateSetter: Dispatch<SetStateAction<NFTsQueryStatus>>,
 ) => {
-  const { Alchemy } = require("alchemy-sdk");
+  const networkAPIKey = getApiKeyForNetwork.get(chainId);
+  const networkRPCHttpURL = getRpcHttpUrlForNetwork.get(chainId);
+
+  if (!networkAPIKey) {
+    throw new Error("No API Key for this network.");
+  }
+
+  if (!networkRPCHttpURL) {
+    throw new Error("No RPC URL for this network.");
+  }
 
   const config = {
-    apiKey: getApiKeyForNetwork.get(chainId),
-    network: getRpcHttpUrlForNetwork
-      .get(chainId)
-      ?.split("https://")[1]
-      .split(".")[0], // The network from alchemy needs to be like 'eth-sepolia' | 'eth-goerli'
+    apiKey: networkAPIKey,
+    network: networkRPCHttpURL,
   };
+
+  if (chainId === ChainInfo.HARDHAT.id) {
+    // TODO: Create mock array return for Hardhat testing scenarios
+    return [];
+  }
+
   const alchemy = new Alchemy(config);
 
   return alchemy.nft
@@ -162,14 +172,19 @@ export const getERC20TokensFromAddress = async (
   address: string,
   chainId: number,
 ): Promise<ERC20[]> => {
-  const { Alchemy } = require("alchemy-sdk");
+  const alchemyApiKey = getApiKeyForNetwork.get(chainId);
+  const alchemyRPCHttpURL = getRpcHttpUrlForNetwork.get(chainId);
+
+  if (!alchemyApiKey) {
+    throw new Error("No API Key for this network.");
+  }
+  if (!alchemyRPCHttpURL) {
+    throw new Error("No RPC URL for this network.");
+  }
 
   const config = {
-    apiKey: getApiKeyForNetwork.get(chainId),
-    network: getRpcHttpUrlForNetwork
-      .get(chainId)
-      ?.split("https://")[1]
-      .split(".")[0], // The network from alchemy needs to be like 'eth-sepolia' | 'eth-goerli'
+    apiKey: alchemyApiKey,
+    network: alchemyRPCHttpURL,
   };
   const alchemy = new Alchemy(config);
 

@@ -1,9 +1,7 @@
-import { ICreateSwap, packingData } from "../client/blockchain-data";
-import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
-import { encodeFunctionData, getContract } from "viem";
-import { publicClientViem } from "../wallet/wallet-config";
-import { SwaplaceAbi } from "../client/abi";
 import { Swap } from "../client/swap-utils";
+import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
+import { publicClientViem } from "../wallet/wallet-config";
+import { encodeFunctionData } from "viem";
 
 export interface SwapUserConfiguration {
   walletClient: any;

@@ -1,19 +1,20 @@
-import cc from "classcat";
-import { useContext, useEffect, useState } from "react";
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ENS } from "web3-eth-ens";
-import Web3 from "web3";
+import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { ENS } from "web3-eth-ens";
+import cc from "classcat";
+import Web3 from "web3";
 
 export const SearchBar = () => {
-  const {
-    setInputAddress,
-    inputAddress,
-    validatedAddressToSwap,
-    validateAddressToSwap,
-    userJustValidatedInput,
-  } = useContext(SwapContext);
+  const { setInputAddress, inputAddress, validateAddressToSwap } =
+    useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
@@ -82,7 +83,7 @@ export const SearchBar = () => {
   }, [loadingENSaddress]);
 
   return (
-    <div className="w-[95%] h-auto p-5 gap-3 flex flex-col rounded  ">
+    <div className="w-[95%] h-auto py-5 gap-3 flex flex-col rounded  ">
       <div className="w-full flex justify-between space-x-6">
         <h2 className="title-h3-normal dark:title-h3-normal-dark">
           Who are you swapping with today?
@@ -94,7 +95,7 @@ export const SearchBar = () => {
           name="search"
           type="search"
           className={cc([
-            "dark:bg-[#212322] w-full h-11 px-4 py-3 border-2 border-gray-100 dark:border-[#353836]   focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded-xl placeholder:p-small dark:placeholder:p-small ",
+            "dark:bg-[#212322] w-full h-11 px-4 py-3 border-2 border-gray-100 dark:border-[#353836] focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded-xl placeholder:p-small dark:placeholder:p-small ",
           ])}
           placeholder="Search username, address or ENS"
           onChange={(e) => setInputAddress(e.target.value)}

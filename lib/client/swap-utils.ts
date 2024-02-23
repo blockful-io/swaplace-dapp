@@ -1,12 +1,12 @@
-import { Dispatch, SetStateAction } from "react";
-import { getMultipleNftsApprovalStatus } from "../service/verifyTokensSwapApproval";
 import {
   IArrayStatusTokenApproved,
   getNftsInfoToSwap,
 } from "./blockchain-data";
 import { ADDRESS_ZERO, ERC721 } from "./constants";
-import { ethers } from "ethers";
 import { getTimestamp } from "./utils";
+import { getMultipleNftsApprovalStatus } from "../service/verifyTokensSwapApproval";
+import { Dispatch, SetStateAction } from "react";
+import { ethers } from "ethers";
 
 export const updateNftsToSwapApprovalStatus = async (
   nftsList: ERC721[],
@@ -53,7 +53,7 @@ export async function makeAsset(
   amountOrId: number | bigint,
 ): Promise<Asset> {
   // validate if its an ethereum address
-  if (!ethers.utils.isAddress(addr)) {
+  if (!ethers.isAddress(addr)) {
     throw new Error("InvalidAddressFormat");
   }
 
@@ -159,7 +159,7 @@ export async function composeSwap(
     asking.push(await makeAsset(addr, askingAmountOrId[index]));
   });
 
-  let chainId: number = 0;
+  const chainId = 0;
 
   return await makeSwap(owner, config, biding, asking, chainId); // To Do remove thee chainId in params
 }

@@ -1,8 +1,9 @@
-import React, { ButtonHTMLAttributes, useContext } from "react";
-import cc from "classcat";
-import { LoadingIndicator } from "./LoadingIndicator";
 import { LeftIcon, RightIcon, SwapContext } from ".";
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { LoadingIndicator } from "./LoadingIndicator";
+import React, { ButtonHTMLAttributes, useContext } from "react";
 import { useTheme } from "next-themes";
+import cc from "classcat";
 
 export enum ButtonVariant {
   DEFAULT,
@@ -56,7 +57,7 @@ const ButtonVariantsConfigs: Record<ButtonVariant, ButtonVariantConfig> = {
   },
 };
 
-interface Props<T> extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   label: string;
   onClick?: () => void;
@@ -64,14 +65,14 @@ interface Props<T> extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
 }
 
-export function SwapModalButton<T>({
+export function SwapModalButton({
   variant = ButtonVariant.DEFAULT,
   label,
   onClick = () => {},
   aditionalStyle,
   isLoading = false,
   ...props
-}: Props<T>) {
+}: Props) {
   const { allSelectedNftsApproved } = useContext(SwapContext);
   const { theme } = useTheme();
   if (theme === undefined) return false;

@@ -1,9 +1,10 @@
-import cc from "classcat";
-import { useContext, useEffect, useState } from "react";
-import { SwapContext, SwappingShelfID, Tab } from "@/components/01-atoms/";
+/* eslint-disable react-hooks/exhaustive-deps */
 import { NftsShelf } from "@/components/03-organisms";
+import { SwapContext, SwappingShelfID, Tab } from "@/components/01-atoms/";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { useContext, useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
+import cc from "classcat";
 
 /**
  * SwappingShelfs Component
