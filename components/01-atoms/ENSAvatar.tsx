@@ -12,6 +12,8 @@ enum ENSAvatarSize {
   MEDIUM = "medium",
 }
 
+type Size = ENSAvatarSize | "small" | "medium";
+
 const ENSAvatarClassName = {
   [ENSAvatarSize.SMALL]: "ens-avatar-small",
   [ENSAvatarSize.MEDIUM]: "ens-avatar-medium",
@@ -19,7 +21,7 @@ const ENSAvatarClassName = {
 
 interface ENSAvatarProps {
   avatarENSAddress: EthereumAddress;
-  size?: ENSAvatarSize;
+  size?: Size;
 }
 
 export const ENSAvatar = ({

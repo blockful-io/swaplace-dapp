@@ -19,7 +19,7 @@ export const TokenCardProperties = ({
             {properties.value} ETH
           </p>
           <p className="dark:p-small-dark dark:!text-[#A3A9A5] p-small-variant-black">
-            &nbsp; ($){properties.value}
+            &nbsp; (${properties.value})
           </p>
         </div>
       </div>
