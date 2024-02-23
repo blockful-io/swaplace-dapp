@@ -23,7 +23,7 @@ export const TokensOfferSkeleton = () => {
     );
   };
 
-  const SwapOfferDetailsSkeleton = () => {
+  const TokenOfferDetailsSkeleton = () => {
     return (
       <div className="flex justify-between px-3 p-2">
         <div className="flex p-small dark:!text-[#A3A9A5] items-center gap-2">
@@ -49,7 +49,7 @@ export const TokensOfferSkeleton = () => {
           <TokenCardSkeleton />
         </div>
       </div>
-      <SwapOfferDetailsSkeleton />
+      <TokenOfferDetailsSkeleton />
     </div>
   );
 };

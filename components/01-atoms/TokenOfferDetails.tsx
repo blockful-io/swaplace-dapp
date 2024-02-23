@@ -5,7 +5,7 @@ import {
 } from "@/components/01-atoms";
 import React from "react";
 
-export const SwapOfferDetails = () => (
+export const TokenOfferDetails = () => (
   <div className="flex w-full justify-between items-center py-2 px-3">
     <div>
       <ul className="flex p-small dark:!text-[#A3A9A5] items-center gap-2">
