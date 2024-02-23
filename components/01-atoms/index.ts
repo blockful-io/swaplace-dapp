@@ -18,6 +18,7 @@ export * from "./SwapOfferDetails";
 export * from "./SwappingIcons";
 export * from "./Tab";
 export * from "./TokenCardProperties";
+export * from "./Tooltip";
 export * from "./TokensOfferSkeleton";
 export * from "./ThreeDotsCardOffersOptions";
 export * from "./WalletSidebarTemplate";
