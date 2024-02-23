@@ -14,7 +14,7 @@ export * from "./SwapAddManuallyModalLayout";
 export * from "./SwapContext";
 export * from "./SwapExpireTime";
 export * from "./SwapModalButton";
-export * from "./SwapOfferDetails";
+export * from "./TokenOfferDetails";
 export * from "./SwappingIcons";
 export * from "./Tab";
 export * from "./TokenCardProperties";

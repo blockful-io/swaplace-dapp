@@ -1,6 +1,5 @@
 import { SearchBar } from "@/components/01-atoms";
-import { SwapStation } from "@/components/02-molecules";
-import { SwappingShelfs } from "@/components/03-organisms";
+import { SwapStation, SwappingShelfs } from "@/components/03-organisms";
 
 export const SwapSection = () => {
   return (
