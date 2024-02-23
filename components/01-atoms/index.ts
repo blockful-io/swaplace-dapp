@@ -9,6 +9,7 @@ export * from "./SearchBar";
 export * from "./SelectAuthedUserChain";
 export * from "./SelectDestinyChain";
 export * from "./StatusOffers";
+export * from "./SwapAddTokenCard";
 export * from "./SwapAddManuallyModalLayout";
 export * from "./SwapContext";
 export * from "./SwapExpireTime";
