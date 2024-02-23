@@ -3,30 +3,31 @@ import { SVGProps } from "react";
 export const SwapIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="100"
-      height="100"
-      viewBox="0 0 100 100"
-      fill="none"
       {...props}
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_35_481)" filter="url(#filter0_i_35_481)">
+      <g id="Swap" filter="url(#filter0_i_565_513)">
         <path
-          d="M91.6666 50C91.6666 27 72.9999 8.33331 49.9999 8.33331C26.9999 8.33331 8.33325 27 8.33325 50C8.33325 73 26.9999 91.6667 49.9999 91.6667C72.9999 91.6667 91.6666 73 91.6666 50ZM62.4999 27.0833L77.0833 41.6666L62.4999 56.25V45.8333H45.8333V37.5H62.4999V27.0833ZM37.4999 72.9166L22.9166 58.3333L37.4999 43.75V54.1666H54.1666V62.5H37.4999V72.9166Z"
-          fill="#D7D7D7"
+          id="Vector"
+          d="M1.83435 9.53489C1.53153 9.83564 1.53153 10.3241 1.83435 10.6248L4.16007 12.9346C4.4629 13.2353 4.95469 13.2353 5.25751 12.9346C5.56034 12.6338 5.56034 12.1454 5.25751 11.8447L4.25455 10.8486H11.6847C12.1135 10.8486 12.46 10.5045 12.46 10.0787C12.46 9.65279 12.1135 9.30873 11.6847 9.30873H4.25455L5.25751 8.31264C5.56034 8.01189 5.56034 7.52346 5.25751 7.22271C4.95469 6.92196 4.4629 6.92196 4.16007 7.22271L1.83435 9.53249V9.53489ZM9.90894 1.06572C9.60612 0.764968 9.11432 0.764968 8.8115 1.06572C8.50867 1.36647 8.50867 1.85489 8.8115 2.15564L9.81204 3.14933L2.38187 3.14933C1.95306 3.14933 1.60663 3.49339 1.60663 3.91925C1.60663 4.34512 1.95306 4.68918 2.38187 4.68918L9.81204 4.68918L8.80907 5.68527C8.50625 5.98602 8.50625 6.47444 8.80907 6.77519C9.1119 7.07595 9.60369 7.07595 9.90652 6.77519L12.2322 4.46542C12.5351 4.16467 12.5351 3.67625 12.2322 3.37549L9.90652 1.06572H9.90894Z"
+          fill="#F7F7F7"
         />
       </g>
       <defs>
         <filter
-          id="filter0_i_35_481"
+          id="filter0_i_565_513"
           x="0"
           y="0"
-          width="100"
-          height="102"
+          width="14"
+          height="15"
           filterUnits="userSpaceOnUse"
-          colorInterpolationFilters="sRGB"
+          color-interpolation-filters="sRGB"
         >
-          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -39,22 +40,19 @@ export const SwapIcon = (props: SVGProps<SVGSVGElement>) => {
             values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
             result="hardAlpha"
           />
-          <feOffset dy="2" />
+          <feOffset dy="1" />
           <feGaussianBlur stdDeviation="1" />
           <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
           <feColorMatrix
             type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"
           />
           <feBlend
             mode="normal"
             in2="shape"
-            result="effect1_innerShadow_35_481"
+            result="effect1_innerShadow_565_513"
           />
         </filter>
-        <clipPath id="clip0_35_481">
-          <rect width="100" height="100" fill="white" />
-        </clipPath>
       </defs>
     </svg>
   );
