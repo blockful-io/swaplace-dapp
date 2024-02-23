@@ -12,7 +12,7 @@ interface INftCard {
   ownerAddress: string | null;
   onClickAction?: NftCardActionType;
   withSelectionValidation?: boolean;
-  styleType?: NftCardStyleType;
+  styleType?: StyleVariant;
 }
 
 /**
@@ -31,14 +31,18 @@ export enum NftCardActionType {
 }
 
 export enum NftCardStyleType {
-  "SMALL",
-  "NORMAL",
-  "LARGE",
+  SMALL = "small",
+  NORMAL = "normal",
+  MEDIUM = "medium",
+  LARGE = "large",
 }
+
+type StyleVariant = NftCardStyleType | "small" | "normal" | "medium" | "large";
 
 const NftSizeClassNames = {
   [NftCardStyleType.SMALL]: "card-nft-small",
   [NftCardStyleType.NORMAL]: "card-nft-normal",
+  [NftCardStyleType.MEDIUM]: "card-nft-medium",
   [NftCardStyleType.LARGE]: "card-nft-large",
 };
 
