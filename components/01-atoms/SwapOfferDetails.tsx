@@ -1,4 +1,4 @@
-import { CheckIcon, XMarkIcon } from ".";
+import { CheckIcon, XMarkIcon } from "@/components/01-atoms";
 import React from "react";
 
 export const SwapOfferDetails = () => (

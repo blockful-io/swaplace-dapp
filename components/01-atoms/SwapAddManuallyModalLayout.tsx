@@ -160,7 +160,7 @@ export const SwapAddManuallyModalLayout = ({
               {AddManuallyVariantConfig[variant].header}
             </div>
             <div className="flex" role="button" onClick={onClose}>
-              <CloseIcon fill={cc([theme == "light" ? "black" : "white"])} />
+              <CloseIcon className={cc([theme == "light" ? "text-black" : "text-white"])} />
             </div>
           </div>
           <div className="p-6">{AddManuallyVariantConfig[variant].body}</div>

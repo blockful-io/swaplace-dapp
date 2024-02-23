@@ -6,6 +6,7 @@ import {
   NftsCardApprovedList,
   SwapModalButton,
   ButtonVariant,
+  OfferExpiryConfirmSwap,
 } from "@/components/01-atoms";
 import { ProgressStatus } from "@/components/02-molecules";
 import { SwapUserConfiguration, createSwap } from "@/lib/service/createSwap";
@@ -24,7 +25,7 @@ import { SwaplaceAbi } from "@/lib/client/abi";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
 import { publicClientViem } from "@/lib/wallet/wallet-config";
 import { getContract } from "viem";
-import { useNetwork, useWalletClient } from "wagmi";
+import { type WalletClient, useNetwork, useWalletClient } from "wagmi";
 import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import toast from "react-hot-toast";
@@ -41,8 +42,8 @@ export const ConfirmSwapModal = ({
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const {
     timeDate,
-    nftAuthUser,
-    nftInputUser,
+    authenticatedUserTokensList,
+    searchedUserTokensList,
     allSelectedNftsApproved,
     validatedAddressToSwap,
     setAuthedUserNftsApprovalStatus,
@@ -74,8 +75,8 @@ export const ConfirmSwapModal = ({
     const fetchUserTokenAssets = async () => {
       try {
         const [nftsInputUserResult, nftsAuthUserResult] = await Promise.all([
-          ComposeTokenUserAssets(nftInputUser),
-          ComposeTokenUserAssets(nftAuthUser),
+          ComposeTokenUserAssets(searchedUserTokensList),
+          ComposeTokenUserAssets(authenticatedUserTokensList),
         ]);
 
         setNftsInputUser(nftsInputUserResult);
@@ -86,28 +87,32 @@ export const ConfirmSwapModal = ({
     };
 
     fetchUserTokenAssets();
-  }, [nftInputUser, nftAuthUser]);
+  }, [searchedUserTokensList, authenticatedUserTokensList]);
 
   useEffect(() => {
     updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
 
     const fetchApprove = async () => {
       await updateNftsToSwapApprovalStatus(
-        nftAuthUser,
+        authenticatedUserTokensList,
         setAuthedUserNftsApprovalStatus,
         setAllSelectedNftsAreApproved,
       );
     };
     fetchApprove();
-  }, [nftAuthUser, allSelectedNftsApproved]);
+  }, [authenticatedUserTokensList, allSelectedNftsApproved]);
 
-  if (!authenticatedUserAddress?.address || !nftInputUser || !nftAuthUser) {
+  if (
+    !authenticatedUserAddress?.address ||
+    !searchedUserTokensList ||
+    !authenticatedUserTokensList
+  ) {
     onClose();
     return null;
   }
 
   let chainId: number;
-  let userWalletClient: any;
+  let userWalletClient: WalletClient;
 
   const handleSwap = async () => {
     if (typeof chain?.id != "undefined" && walletClient != undefined) {
@@ -144,8 +149,8 @@ export const ConfirmSwapModal = ({
     // const swapData: ICreateSwap = {
     //   walletClient: walletClient, // owner
     //   expireDate: timeDate,
-    //   nftInputUser: nftsInputUser, // asking
-    //   nftAuthUser: nftsAuthUser, // biding
+    //   searchedUserTokensList: nftsInputUser, // asking
+    //   authenticatedUserTokensList: nftsAuthUser, // biding
     //   validatedAddressToSwap: validatedAddressToSwap,
     //   authenticatedUserAddress: authenticatedUserAddress,
     //   chain: chainId,
@@ -225,7 +230,7 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: "",
+          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
         }}
         footer={{
           component: (
@@ -261,7 +266,7 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: "",
+          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
         }}
         footer={{
           component: (
@@ -287,7 +292,7 @@ export const ConfirmSwapModal = ({
           description: "Congrats, your swap offer was submitted.",
         }}
         body={{
-          component: "",
+          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
         }}
         footer={{
           component: (

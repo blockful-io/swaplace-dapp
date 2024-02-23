@@ -1,7 +1,6 @@
-import { ERC721 } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { EthereumAddress } from "@/lib/shared/types";
+import { EthereumAddress, ERC721 } from "@/lib/shared/types";
 import React, { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import toast from "react-hot-toast";
@@ -49,8 +48,12 @@ export const NftCard = ({
   onClickAction = NftCardActionType.SELECT_NFT_FOR_SWAP,
 }: INftCard) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { setNftAuthUser, setNftInputUser, nftAuthUser, nftInputUser } =
-    useContext(SwapContext);
+  const {
+    setAuthenticatedUsedTokensList,
+    setSearchedUserTokensList,
+    authenticatedUserTokensList,
+    searchedUserTokensList,
+  } = useContext(SwapContext);
   const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
   const [couldntLoadNftImage, setCouldntLoadNftImage] = useState(false);
 
@@ -61,18 +64,22 @@ export const NftCard = ({
 
     if (currentNftIsFromAuthedUser) {
       setCurrentNftIsSelected(
-        nftAuthUser.some((selectedNft) => selectedNft.id === nftData.id),
+        authenticatedUserTokensList.some(
+          (selectedNft) => selectedNft.id === nftData.id,
+        ),
       );
     } else {
       setCurrentNftIsSelected(
-        nftInputUser.some((selectedNft) => selectedNft.id === nftData.id),
+        searchedUserTokensList.some(
+          (selectedNft) => selectedNft.id === nftData.id,
+        ),
       );
     }
   }, [
     authenticatedUserAddress,
     ownerAddress,
-    nftAuthUser,
-    nftInputUser,
+    authenticatedUserTokensList,
+    searchedUserTokensList,
     nftData,
   ]);
 
@@ -88,32 +95,38 @@ export const NftCard = ({
       const ownerEthAddress = new EthereumAddress(ownerAddress);
 
       if (authenticatedUserAddress?.equals(ownerEthAddress)) {
-        const isSelected = nftAuthUser.some(
+        const isSelected = authenticatedUserTokensList.some(
           (selectedNft) => selectedNft.id === nftData.id,
         );
 
         if (isSelected) {
-          setNftAuthUser((prevNftAuthUser) =>
+          setAuthenticatedUsedTokensList((prevNftAuthUser) =>
             prevNftAuthUser.filter(
               (selectedNft) => selectedNft.id !== nftData.id,
             ),
           );
         } else {
-          setNftAuthUser((prevNftAuthUser) => [...prevNftAuthUser, nftData]);
+          setAuthenticatedUsedTokensList((prevNftAuthUser) => [
+            ...prevNftAuthUser,
+            nftData,
+          ]);
         }
       } else {
-        const isSelected = nftInputUser.some(
+        const isSelected = searchedUserTokensList.some(
           (selectedNft) => selectedNft.id === nftData.id,
         );
 
         if (isSelected) {
-          setNftInputUser((prevNftInputUser) =>
+          setSearchedUserTokensList((prevNftInputUser) =>
             prevNftInputUser.filter(
               (selectedNft) => selectedNft.id !== nftData.id,
             ),
           );
         } else {
-          setNftInputUser((prevNftInputUser) => [...prevNftInputUser, nftData]);
+          setSearchedUserTokensList((prevNftInputUser) => [
+            ...prevNftInputUser,
+            nftData,
+          ]);
         }
       }
     } else if (onClickAction === NftCardActionType.SHOW_NFT_DETAILS) {

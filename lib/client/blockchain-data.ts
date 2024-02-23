@@ -1,12 +1,6 @@
-import {
-  ChainInfo,
-  ERC20,
-  ERC721,
-  Token,
-  getApiKeyForNetwork,
-  getRpcHttpUrlForNetwork,
-} from "./constants";
+import { getApiKeyForNetwork, getRpcHttpUrlForNetwork } from "./constants";
 import { Asset, makeAsset } from "./swap-utils";
+import { Token, ERC20, ERC721, TokenType } from "../shared/types";
 import {
   type GetTokensForOwnerResponse,
   type OwnedNftsResponse,
@@ -14,12 +8,13 @@ import {
   type OwnedNft,
   Alchemy,
 } from "alchemy-sdk";
+import { type WalletClient } from "wagmi";
 
 export interface ICreateSwap {
-  walletClient: any;
+  walletClient: WalletClient;
   expireDate: bigint;
-  nftInputUser: any[];
-  nftAuthUser: any[];
+  searchedUserTokensList: any[];
+  authenticatedUserTokensList: any[];
   validatedAddressToSwap: string;
   authenticatedUserAddress: any;
   chain: number;
@@ -137,11 +132,6 @@ export const getERC721TokensFromAddress = async (
     network: networkRPCHttpURL,
   };
 
-  if (chainId === ChainInfo.HARDHAT.id) {
-    // TODO: Create mock array return for Hardhat testing scenarios
-    return [];
-  }
-
   const alchemy = new Alchemy(config);
 
   return alchemy.nft
@@ -158,6 +148,7 @@ export const getERC721TokensFromAddress = async (
 const parseAlchemyERC721Tokens = (tokens: OwnedNft[]): ERC721[] => {
   return tokens.map((token) => {
     return {
+      tokenType: TokenType.ERC721,
       id: token.tokenId,
       name: token.contract.name,
       metadata: token.raw.metadata,
@@ -200,6 +191,7 @@ export const getERC20TokensFromAddress = async (
 const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
   return tokens.map((token) => {
     return {
+      tokenType: TokenType.ERC20,
       name: token.name,
       logo: token.logo,
       symbol: token.symbol,

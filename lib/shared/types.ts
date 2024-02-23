@@ -1,4 +1,28 @@
-import { ERC20, ERC721 } from "../client/constants";
+export type Token = ERC20 | ERC721;
+
+export enum TokenType {
+  ERC20 = "ERC20",
+  ERC721 = "ERC721",
+}
+
+export interface ERC721 {
+  tokenType: TokenType;
+  id?: string;
+  name?: string;
+  contract?: string;
+  metadata?: Record<string, any>;
+  contractMetadata?: Record<string, any>;
+}
+
+export interface ERC20 {
+  tokenType: TokenType;
+  id?: string;
+  name?: string;
+  logo?: string;
+  symbol?: string;
+  contract?: string;
+  rawBalance?: string;
+}
 
 export class EthereumAddress {
   static readonly ETHEREUM_ADDRESS_LENGTH = 40;

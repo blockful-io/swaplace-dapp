@@ -10,23 +10,34 @@ interface IOfferSummary {
 }
 
 export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
-  const { validatedAddressToSwap, nftAuthUser, nftInputUser } =
-    useContext(SwapContext);
+  const {
+    validatedAddressToSwap,
+    authenticatedUserTokensList,
+    searchedUserTokensList,
+  } = useContext(SwapContext);
   const { data } = useEnsName({
     address: validatedAddressToSwap as `0x${string}`,
   });
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const emptySquaresAuthUser = EmptyNftsCards(nftAuthUser.length, 4, 8, 12, 12);
+  const emptySquaresAuthUser = EmptyNftsCards(
+    authenticatedUserTokensList.length,
+    4,
+    8,
+    12,
+    12,
+  );
   const emptySquaresInputUser = EmptyNftsCards(
-    nftInputUser.length,
+    searchedUserTokensList.length,
     4,
     8,
     12,
     12,
   );
 
-  const nftUser = forAuthedUser ? nftAuthUser : nftInputUser;
+  const nftUser = forAuthedUser
+    ? authenticatedUserTokensList
+    : searchedUserTokensList;
 
   return (
     <div className="w-full flex flex-col gap-4 px-3 pt-2 pb-4 dark:bg-[#212322] dark:border-[#434443] rounded-lg border">

@@ -1,5 +1,5 @@
 import { getRpcHttpUrlForNetwork } from "../client/constants";
-import { polygonMumbai, sepolia, hardhat } from "@wagmi/core/chains";
+import { polygonMumbai, sepolia } from "@wagmi/core/chains";
 import { configureChains, createConfig } from "wagmi";
 import {
   trustWallet,
@@ -14,7 +14,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { createPublicClient, http } from "viem";
 
 export const { chains, webSocketPublicClient, publicClient } = configureChains(
-  [sepolia, polygonMumbai, hardhat],
+  [sepolia, polygonMumbai],
   [
     jsonRpcProvider({
       rpc: (chain) => ({
@@ -31,7 +31,7 @@ export const publicClientViem = createPublicClient({
 
 const connectorArgs = {
   appName: "Swaplace dApp",
-  chains: [sepolia, polygonMumbai, hardhat],
+  chains: [sepolia, polygonMumbai],
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? "",
 };
 

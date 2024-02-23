@@ -1,20 +1,15 @@
-import {
-  ChainInfo,
-  NFTsQueryStatus,
-  ERC20,
-  Token,
-} from "@/lib/client/constants";
+import { ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import {
   getERC721TokensFromAddress,
   getERC20TokensFromAddress,
 } from "@/lib/client/blockchain-data";
-import { EthereumAddress } from "@/lib/shared/types";
-import { SwapContext, SelectUserIcon } from "@/components/01-atoms";
+import { ERC20, EthereumAddress, Token } from "@/lib/shared/types";
 import { TokensList } from "@/components/02-molecules";
-import { useNetwork } from "wagmi";
-import { useTheme } from "next-themes";
+import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
 import { useContext, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { useNetwork } from "wagmi";
 /* eslint-disable react-hooks/exhaustive-deps */
 
 interface TokensShelfProps {

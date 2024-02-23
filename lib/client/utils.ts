@@ -22,3 +22,19 @@ export const getTimestamp = async (chainId: number) => {
 
   return timestamp;
 };
+
+export const collapseAddress = (address: string, startLength = 4, endLength = 4) => {
+  // Check if the address is valid (starts with '0x' and is long enough)
+  if (!address.startsWith("0x") || address.length < startLength + endLength + 2) {
+    return address; // Return the original address if it's too short to collapse
+  }
+
+  // Extract the start and end parts of the address
+  const start = address.substring(2, 2 + startLength);
+  const end = address.substring(address.length - endLength);
+
+  // Concatenate with ellipsis
+  const collapsedAddress = `0x${start}...${end}`;
+
+  return collapsedAddress;
+}

@@ -7,8 +7,6 @@ export const WIDE_SCREEN_SIZE = 1279;
 export const DESKTOP_SCREEN_SIZE = 1023;
 export const TABLET_SCREEN_SIZE = 768;
 
-export type Token = ERC20 | ERC721;
-
 export enum NFTsQueryStatus {
   EMPTY_QUERY = "EMPTY_QUERY",
   LOADING = "LOADING",
@@ -20,7 +18,6 @@ export enum NFTsQueryStatus {
 export enum SupportedNetworks {
   SEPOLIA = "SEPOLIA",
   MUMBAI = "MUMBAI",
-  HARDHAT = "HARDHAT",
 }
 
 interface ChainProps {
@@ -37,10 +34,6 @@ export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
     id: 80001,
     name: "Polygon Mumbai",
   },
-  [SupportedNetworks.HARDHAT]: {
-    id: 31337,
-    name: "Hardhat",
-  },
 };
 
 export interface AlchemyERC721 {
@@ -48,23 +41,6 @@ export interface AlchemyERC721 {
   metadata?: Record<string, any>;
   contract?: Record<string, any>;
   contractMetadata?: Record<string, any>;
-}
-
-export interface ERC721 {
-  id?: string;
-  name?: string;
-  contract?: string;
-  metadata?: Record<string, any>;
-  contractMetadata?: Record<string, any>;
-}
-
-export interface ERC20 {
-  id?: string;
-  name?: string;
-  logo?: string;
-  symbol?: string;
-  contract?: string;
-  rawBalance?: string;
 }
 
 // export interface ERC721Token {
@@ -92,7 +68,6 @@ export interface ERC20 {
 export let getApiKeyForNetwork: Map<number, string> = new Map([
   [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_KEY ?? ""],
   [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_KEY ?? ""],
-  [ChainInfo.HARDHAT.id, "http://127.0.0.1:8545/"],
 ]);
 
 export let getRpcHttpUrlForNetwork: Map<number, Network> = new Map([
@@ -101,7 +76,6 @@ export let getRpcHttpUrlForNetwork: Map<number, Network> = new Map([
 ]);
 
 export const SWAPLACE_SMART_CONTRACT_ADDRESS = {
-  [ChainInfo.HARDHAT.id]: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
   [ChainInfo.SEPOLIA.id]: "0x24809b2b374c5d70c2BdA6d65290e3fa3a2b378d",
   [ChainInfo.MUMBAI.id]: "0x420696541dc0ec9643409C64d0Ba39dD429Eb34b",
 };

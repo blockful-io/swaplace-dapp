@@ -1,4 +1,4 @@
-import { SwapContext, SwapExpireTime, PaperPlane } from "@/components/01-atoms";
+import { PaperPlane, SwapContext, SwapExpireTime } from "@/components/01-atoms";
 import { ConfirmSwapModal, OfferSummary } from "@/components/02-molecules";
 import { useContext, useEffect, useState } from "react";
 import cc from "classcat";
@@ -7,14 +7,23 @@ import toast from "react-hot-toast";
 export const SwapStation = () => {
   const [isValidSwap, setIsValidSwap] = useState<boolean>(false);
 
-  const { nftAuthUser, nftInputUser, validatedAddressToSwap } =
-    useContext(SwapContext);
+  const {
+    authenticatedUserTokensList,
+    searchedUserTokensList,
+    validatedAddressToSwap,
+  } = useContext(SwapContext);
 
   useEffect(() => {
     setIsValidSwap(
-      !!nftAuthUser.length && !!nftInputUser.length && !!validatedAddressToSwap,
+      !!authenticatedUserTokensList.length &&
+        !!searchedUserTokensList.length &&
+        !!validatedAddressToSwap,
     );
-  }, [nftAuthUser, nftInputUser, validatedAddressToSwap]);
+  }, [
+    authenticatedUserTokensList,
+    searchedUserTokensList,
+    validatedAddressToSwap,
+  ]);
 
   const [openConfirmationModal, setOpenConfirmationModal] =
     useState<boolean>(false);
@@ -26,12 +35,12 @@ export const SwapStation = () => {
         return;
       }
 
-      if (!nftAuthUser.length) {
+      if (!authenticatedUserTokensList.length) {
         toast.error("You must select at least one NFT from yours to swap");
         return;
       }
 
-      if (!nftInputUser.length) {
+      if (!searchedUserTokensList.length) {
         toast.error(
           "You must select at least one NFT from the destiny wallet to swap",
         );

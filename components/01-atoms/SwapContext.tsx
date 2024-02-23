@@ -2,12 +2,8 @@
 /* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import {
-  ADDRESS_ZERO,
-  ERC721,
-  SupportedNetworks,
-} from "@/lib/client/constants";
-import { EthereumAddress } from "@/lib/shared/types";
+import { ADDRESS_ZERO, SupportedNetworks } from "@/lib/client/constants";
+import { EthereumAddress, Token } from "@/lib/shared/types";
 import {
   ButtonClickPossibilities,
   IArrayStatusTokenApproved,
@@ -26,10 +22,10 @@ interface SwapContextProps {
   ) => void;
   setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
   userJustValidatedInput: boolean;
-  setNftAuthUser: Dispatch<React.SetStateAction<ERC721[]>>;
-  nftAuthUser: ERC721[];
-  setNftInputUser: Dispatch<React.SetStateAction<ERC721[]>>;
-  nftInputUser: ERC721[];
+  setAuthenticatedUsedTokensList: Dispatch<React.SetStateAction<Token[]>>;
+  authenticatedUserTokensList: Token[];
+  setSearchedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
+  searchedUserTokensList: Token[];
   destinyChain: SupportedNetworks;
   setDestinyChain: Dispatch<React.SetStateAction<SupportedNetworks>>;
   setTimeDate: Dispatch<React.SetStateAction<bigint>>;
@@ -54,10 +50,10 @@ export const SwapContext = React.createContext<SwapContextProps>({
   setInputAddress: (address: string) => {},
   setUserJustValidatedInput: () => {},
   userJustValidatedInput: false,
-  setNftAuthUser: () => {},
-  nftAuthUser: [],
-  setNftInputUser: () => {},
-  nftInputUser: [],
+  setAuthenticatedUsedTokensList: () => {},
+  authenticatedUserTokensList: [],
+  setSearchedUserTokensList: () => {},
+  searchedUserTokensList: [],
   destinyChain: SupportedNetworks.SEPOLIA,
   setDestinyChain: () => {},
   setTimeDate: () => {},
@@ -74,8 +70,11 @@ export const SwapContextProvider = ({ children }: any) => {
   const [inputAddress, setInputAddress] = useState<string>("");
   const [validatedAddressToSwap, setValidatedAddressToSwap] = useState("");
   const [userJustValidatedInput, setUserJustValidatedInput] = useState(true);
-  const [nftAuthUser, setNftAuthUser] = useState<ERC721[]>([]);
-  const [nftInputUser, setNftInputUser] = useState<ERC721[]>([]);
+  const [authenticatedUserTokensList, setAuthenticatedUsedTokensList] =
+    useState<Token[]>([]);
+  const [searchedUserTokensList, setSearchedUserTokensList] = useState<Token[]>(
+    [],
+  );
   const [destinyChain, setDestinyChain] = useState<SupportedNetworks>(
     SupportedNetworks.SEPOLIA,
   );
@@ -169,12 +168,12 @@ export const SwapContextProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
-    setNftInputUser([]);
+    setSearchedUserTokensList([]);
     setUserJustValidatedInput(false);
   }, [inputAddress]);
 
   useEffect(() => {
-    setNftInputUser([]);
+    setSearchedUserTokensList([]);
   }, [destinyChain]);
 
   useEffect(() => {
@@ -185,10 +184,10 @@ export const SwapContextProvider = ({ children }: any) => {
       validateAddressToSwap,
       setUserJustValidatedInput,
       userJustValidatedInput,
-      setNftAuthUser,
-      nftAuthUser,
-      setNftInputUser,
-      nftInputUser,
+      setAuthenticatedUsedTokensList,
+      authenticatedUserTokensList,
+      setSearchedUserTokensList,
+      searchedUserTokensList,
       destinyChain,
       setDestinyChain,
       setTimeDate,
@@ -204,8 +203,8 @@ export const SwapContextProvider = ({ children }: any) => {
     inputAddress,
     validatedAddressToSwap,
     userJustValidatedInput,
-    nftAuthUser,
-    nftInputUser,
+    authenticatedUserTokensList,
+    searchedUserTokensList,
     destinyChain,
     timeDate,
     allSelectedNftsApproved,
@@ -220,10 +219,10 @@ export const SwapContextProvider = ({ children }: any) => {
     validateAddressToSwap,
     setUserJustValidatedInput,
     userJustValidatedInput,
-    setNftAuthUser,
-    nftAuthUser,
-    setNftInputUser,
-    nftInputUser,
+    setAuthenticatedUsedTokensList,
+    authenticatedUserTokensList,
+    setSearchedUserTokensList,
+    searchedUserTokensList,
     destinyChain,
     setDestinyChain,
     setTimeDate,

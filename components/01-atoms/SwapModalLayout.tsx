@@ -78,7 +78,7 @@ export const SwapModalLayout = ({
                 </p>
                 <div role="button" onClick={toggleCloseButton.onClose}>
                   <CloseIcon
-                    fill={cc([theme == "light" ? "black" : "white"])}
+                    className={cc([theme == "light" ? "text-black" : "text-white"])}
                   />
                 </div>
               </Dialog.Title>

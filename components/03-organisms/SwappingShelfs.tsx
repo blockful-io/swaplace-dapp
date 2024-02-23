@@ -21,14 +21,14 @@ export const SwappingShelfs = () => {
 
   const {
     validatedAddressToSwap,
-    setNftAuthUser,
-    setNftInputUser,
+    setAuthenticatedUsedTokensList,
+    setSearchedUserTokensList,
     setInputAddress,
   } = useContext(SwapContext);
 
   useEffect(() => {
-    setNftAuthUser([]);
-    setNftInputUser([]);
+    setAuthenticatedUsedTokensList([]);
+    setSearchedUserTokensList([]);
     setInputAddress("");
   }, [chain]);
 

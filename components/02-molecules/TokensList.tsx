@@ -1,7 +1,6 @@
-import { Token } from "@/lib/client/constants";
 import { NftCard } from "@/components/02-molecules";
 import { EmptyNftsCards } from "@/components/01-atoms";
-/* eslint-disable react/jsx-key */
+import { Token } from "@/lib/shared/types";
 
 export interface TokensListProps {
   tokensList: Token[];

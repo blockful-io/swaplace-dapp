@@ -2,7 +2,6 @@
 import {
   ADDRESS_ZERO,
   SWAPLACE_SMART_CONTRACT_ADDRESS,
-  Token,
 } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
 import {
@@ -14,6 +13,8 @@ import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
 import { IApproveSwap } from "@/lib/client/blockchain-data";
 import { approveSwap } from "@/lib/service/approveSwap";
+import { getTokenName } from "@/lib/client/tokens";
+import { Token } from "@/lib/shared/types";
 import cc from "classcat";
 import { useContext, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -25,7 +26,7 @@ export const NftsCardApprovedList = () => {
   const { data: walletClient } = useWalletClient();
 
   const {
-    nftAuthUser,
+    authenticatedUserTokensList,
     authedUserSelectedNftsApprovalStatus,
     setAuthedUserNftsApprovalStatus,
     setAllSelectedNftsAreApproved,
@@ -35,13 +36,13 @@ export const NftsCardApprovedList = () => {
   useEffect(() => {
     const fetchApprove = async () => {
       await updateNftsToSwapApprovalStatus(
-        nftAuthUser,
+        authenticatedUserTokensList,
         setAuthedUserNftsApprovalStatus,
         setAllSelectedNftsAreApproved,
       );
     };
     fetchApprove();
-  }, [nftAuthUser, allSelectedNftsApproved]);
+  }, [authenticatedUserTokensList, allSelectedNftsApproved]);
 
   if (!authenticatedUserAddress?.address) {
     return null;
@@ -107,7 +108,7 @@ export const NftsCardApprovedList = () => {
   return (
     <div className="flex justify-center items-center relative">
       <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[370px]">
-        {nftAuthUser.map((token, index) => (
+        {authenticatedUserTokensList.map((token, index) => (
           <div
             key={index}
             className={cc([
@@ -125,7 +126,7 @@ export const NftsCardApprovedList = () => {
                 withSelectionValidation={false}
                 onClickAction={NftCardActionType.NFT_ONCLICK}
                 ownerAddress={authenticatedUserAddress.address}
-                nftData={nftAuthUser[index]}
+                nftData={authenticatedUserTokensList[index]}
                 styleType={NftCardStyleType.SMALL}
               />
             </div>
@@ -134,11 +135,11 @@ export const NftsCardApprovedList = () => {
                 {authedUserSelectedNftsApprovalStatus[index]?.approved ===
                 ADDRESS_ZERO ? (
                   <p className="p-medium-2-dark">
-                    {nftAuthUser[index].contractMetadata?.name}
+                    {getTokenName(authenticatedUserTokensList[index])}
                   </p>
                 ) : (
                   <p className="p-medium-2">
-                    {nftAuthUser[index].contractMetadata?.name}
+                    {getTokenName(authenticatedUserTokensList[index])}
                   </p>
                 )}
               </div>
