@@ -12,10 +12,12 @@ export default function Offers() {
       {authenticatedUserAddress && (
         <div
           className={cc([
-            "w-full h-full mt-32 md:mt-40 xl:mt-16 flex flex-col justify-center items-center",
+            "xl:w-full w-full xl:mt-16 mt-12 xl:h-full space-y-6 flex xl:flex-row flex-col justify-items-stretch items-center mx-1",
           ])}
         >
+          <div className="xl:h-[656px] xl:w-[62px] w-full flex justify-center mr-4 ml-2">
           <TheHeader />
+          </div>
           <OfferSection />
         </div>
       )}
