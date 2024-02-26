@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { NFT, ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
+import { NFT, ChainInfo, NFTsQueryStatus, } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EthereumAddress } from "@/lib/shared/types";
 import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
@@ -29,25 +29,38 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   const { theme } = useTheme();
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { validatedAddressToSwap, inputAddress, destinyChain } =
+  const { validatedAddressToSwap, inputAddress, destinyChain, userJustValidatedInput } =
     useContext(SwapContext);
 
-  useEffect(() => {
+  const [addressSearchCount, setAddressSearchCount] = useState<number>(0)
+
+  const showUserItems = async () => {
     const chainId =
       address === authenticatedUserAddress?.address
         ? chain?.id
         : ChainInfo[destinyChain].id;
+    if(addressSearchCount > 1) return //When a new address is added, all useEffect parameters are updated
+                                    // addressSearchCount prevents multiple API calls from occurring, causing undesired behavior to occur.
+    if (address && chainId && inputAddress) {
+      try {
+        const nftsList = await getNftsFrom(address, chainId, setNftsQueryStatus)
 
-    if (address && chainId) {
-      getNftsFrom(address, chainId, setNftsQueryStatus)
-        .then((nftsList) => {
-          setNftsList(nftsList);
-        })
-        .catch(() => {
-          setNftsList([]);
-        });
+        setNftsList(nftsList);
+
+      } catch (_) {
+
+        setNftsList([]);
+      }
+
+      setAddressSearchCount((prev)=> prev + 1)
     }
-  }, [address, chain, destinyChain]);
+
+  }
+
+  useEffect(() => {
+    showUserItems()
+    console.log(userJustValidatedInput)
+  }, [address, chain, destinyChain, userJustValidatedInput]);
 
   useEffect(() => {
     if (
@@ -70,16 +83,18 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   useEffect(() => {
     if (
       address !== authenticatedUserAddress?.address &&
-      validatedAddressToSwap !== authenticatedUserAddress?.address
+      validatedAddressToSwap !== authenticatedUserAddress?.address || !inputAddress
     ) {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
+    setAddressSearchCount(0)
   }, [inputAddress]);
 
   useEffect(() => {
     if (!validatedAddressToSwap) {
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
+      console.log("entrou aqui")
     }
   }, [validatedAddressToSwap]);
 
