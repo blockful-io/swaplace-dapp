@@ -94,7 +94,6 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   useEffect(() => {
     if (!validatedAddressToSwap) {
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
-      console.log("entrou aqui")
     }
   }, [validatedAddressToSwap]);
 
