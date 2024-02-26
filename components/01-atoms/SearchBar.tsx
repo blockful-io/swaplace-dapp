@@ -3,34 +3,33 @@
 /* eslint-disable import/no-named-as-default-member */
 import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { ENS } from "web3-eth-ens";
 import cc from "classcat";
 import Web3 from "web3";
 
 export const SearchBar = () => {
-  const { setInputAddress, inputAddress, validateAddressToSwap } =
-    useContext(SwapContext);
+  const {
+    setInputAddress,
+    inputAddress,
+    validateAddressToSwap,
+    setUserJustValidatedInput,
+  } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
-  const [validateAfterENSaddressLoads, setValidateAfterENSaddressLoads] =
-    useState(false);
-  const validateInput = () => {
-    if (authenticatedUserAddress) {
-      if (loadingENSaddress) {
-        setValidateAfterENSaddressLoads(true);
-      } else {
-        validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
-      }
-    }
-  };
   const { theme } = useTheme();
 
-  const [ensNameAddress, setEnsNameAddress] = useState("");
-  const [loadingENSaddress, setLoadingENSaddress] = useState(false);
-  useEffect(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+
+  const validateUser = (ensNameAddress: string | null) => {
+    if (!authenticatedUserAddress) return;
+
+    validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
+  };
+
+  const getUserAddress = async () => {
     if (inputAddress) {
       if (!process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP) {
         throw new Error(
@@ -44,40 +43,37 @@ export const SearchBar = () => {
 
       const ens = new ENS(undefined, provider);
 
-      ens
-        .getOwner(
-          inputAddress.toLowerCase().includes(".")
-            ? inputAddress.toLowerCase().includes(".eth")
-              ? inputAddress.split(".")[1].length >= 3
-                ? inputAddress
-                : `${inputAddress.split(".")[0]}.eth`
-              : inputAddress.split(".")[1].length >= 3
-              ? inputAddress
-              : `${inputAddress.split(".")[0]}.eth`
-            : `${inputAddress}.eth`,
-        )
-        .then((address: unknown) => {
-          if (typeof address == "string") {
-            setEnsNameAddress(address);
-            setLoadingENSaddress(false);
-          } else {
-            setEnsNameAddress("");
-            setLoadingENSaddress(false);
-          }
-        })
-        .catch(() => {
-          setEnsNameAddress("");
-          setLoadingENSaddress(false);
-        });
+      const formattedAddress = inputAddress.toLowerCase().includes(".")
+        ? inputAddress.toLowerCase().includes(".eth")
+          ? inputAddress.split(".")[1].length >= 3
+            ? inputAddress
+            : `${inputAddress.split(".")[0]}.eth`
+          : inputAddress.split(".")[1].length >= 3
+          ? inputAddress
+          : `${inputAddress.split(".")[0]}.eth`
+        : `${inputAddress}.eth`;
+
+      try {
+        const address: unknown = await ens.getOwner(formattedAddress);
+
+        if (typeof address !== "string") return;
+        validateUser(address);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setUserJustValidatedInput(true);
+      }
     }
-  }, [inputAddress]);
+  };
 
   useEffect(() => {
-    if (!loadingENSaddress && validateAfterENSaddressLoads) {
-      validateInput();
-      setValidateAfterENSaddressLoads(false);
-    }
-  }, [loadingENSaddress]);
+    const requestDelay = setTimeout(() => {
+      setUserJustValidatedInput(false);
+
+      getUserAddress();
+    }, 2000);
+    return () => clearTimeout(requestDelay);
+  }, [inputAddress]);
 
   return (
     <div className="w-[95%] h-auto py-5 gap-3 flex flex-col rounded  ">
@@ -86,43 +82,28 @@ export const SearchBar = () => {
           Who are you swapping with today?
         </h2>
       </div>
-      <div className={cc(["flex relative items-center"])}>
+      <div
+        className={cc([
+          "flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-[0_0_6px_1px_#0000004b] dark:hover:shadow-[0_0_6px_1px_#84980027]",
+        ])}
+      >
+        <div className="justify-center items-center">
+          <MagnifyingGlassIcon
+            className="w-5"
+            fill={cc([theme == "dark" ? "#353836" : "#EEE"])}
+          />
+        </div>
         <input
           id="search"
           name="search"
           type="search"
           className={cc([
-            "dark:bg-[#212322] w-full h-11 px-4 py-3 border-2 border-gray-100 dark:border-[#353836] focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded-xl placeholder:p-small dark:placeholder:p-small ",
+            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small
+             dark:border-none dark:bg-transparent`,
           ])}
           placeholder="Search username, address or ENS"
-          onChange={(e) => setInputAddress(e.target.value)}
+          onChange={({ target }) => setInputAddress(target.value)}
         />
-        <div className="absolute right-2 justify-center items-center">
-          <div
-            role="button"
-            onClick={validateInput}
-            className={cc([!inputAddress && "cursor-not-allowed"])}
-          >
-            <button
-              disabled={!inputAddress}
-              className="pointer-events-none p-3 pr-1"
-              type="submit"
-            >
-              <MagnifyingGlassIcon
-                className="w-6"
-                fill={cc([
-                  theme == "light"
-                    ? !!inputAddress && theme == "light"
-                      ? "black"
-                      : "#EEE"
-                    : !!inputAddress && theme == "dark"
-                    ? "#EEE"
-                    : "black",
-                ])}
-              />
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
