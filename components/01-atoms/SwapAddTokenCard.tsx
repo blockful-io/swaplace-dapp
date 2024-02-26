@@ -1,5 +1,8 @@
-import { PlusIcon } from "./icons/PlusIcon";
-import { SwapAddManuallyModalLayout, Tooltip } from "@/components/01-atoms";
+import {
+  PlusIcon,
+  SwapAddManuallyModalLayout,
+  Tooltip,
+} from "@/components/01-atoms";
 import { useState } from "react";
 export const SwapAddTokenCard = () => {
   const [open, setOpen] = useState(false);
@@ -19,7 +22,7 @@ export const SwapAddTokenCard = () => {
           hover:bg-[#DDF23D20]
           transition-all duration-200
         "
-        >
+      >
         <Tooltip content="Add Token" position="top" />
         <div className="flex items-center justify-center h-full">
           <button

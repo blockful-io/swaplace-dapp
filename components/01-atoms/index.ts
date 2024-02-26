@@ -28,6 +28,7 @@ export * from "./icons/LeftIcon";
 export * from "./icons/NotificationsIcon";
 export * from "./icons/OffersIcon";
 export * from "./icons/PersonIcon";
+export * from "./icons/PlusIcon";
 export * from "./icons/PolygonIcon";
 export * from "./icons/RightIcon";
 export * from "./icons/SelectUserIcon";
