@@ -3,34 +3,30 @@
 /* eslint-disable import/no-named-as-default-member */
 import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useContext, useEffect, useState } from "react";
+import { SearchUserDelay } from "@/lib/client/constants";
+import { useContext, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { ENS } from "web3-eth-ens";
 import cc from "classcat";
 import Web3 from "web3";
 
 export const SearchBar = () => {
-  const { setInputAddress, inputAddress, validateAddressToSwap } =
+  const { setInputAddress, inputAddress, validateAddressToSwap, setUserJustValidatedInput } =
     useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
-  const [validateAfterENSaddressLoads, setValidateAfterENSaddressLoads] =
-    useState(false);
-  const validateInput = () => {
-    if (authenticatedUserAddress) {
-      if (loadingENSaddress) {
-        setValidateAfterENSaddressLoads(true);
-      } else {
-        validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
-      }
-    }
-  };
   const { theme } = useTheme();
 
-  const [ensNameAddress, setEnsNameAddress] = useState("");
-  const [loadingENSaddress, setLoadingENSaddress] = useState(false);
-  useEffect(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+
+  const validateUser = (ensNameAddress: string) => {
+    if (!authenticatedUserAddress) return
+
+    validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
+  }
+
+  const getUserAddress = async () => {
     if (inputAddress) {
       if (!process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP) {
         throw new Error(
@@ -44,40 +40,45 @@ export const SearchBar = () => {
 
       const ens = new ENS(undefined, provider);
 
-      ens
-        .getOwner(
-          inputAddress.toLowerCase().includes(".")
-            ? inputAddress.toLowerCase().includes(".eth")
-              ? inputAddress.split(".")[1].length >= 3
-                ? inputAddress
-                : `${inputAddress.split(".")[0]}.eth`
-              : inputAddress.split(".")[1].length >= 3
+      const formattedAddress =
+        inputAddress.toLowerCase().includes(".")
+          ? inputAddress.toLowerCase().includes(".eth")
+            ? inputAddress.split(".")[1].length >= 3
               ? inputAddress
               : `${inputAddress.split(".")[0]}.eth`
-            : `${inputAddress}.eth`,
-        )
-        .then((address: unknown) => {
-          if (typeof address == "string") {
-            setEnsNameAddress(address);
-            setLoadingENSaddress(false);
-          } else {
-            setEnsNameAddress("");
-            setLoadingENSaddress(false);
-          }
-        })
-        .catch(() => {
-          setEnsNameAddress("");
-          setLoadingENSaddress(false);
-        });
+            : inputAddress.split(".")[1].length >= 3
+              ? inputAddress
+              : `${inputAddress.split(".")[0]}.eth`
+          : `${inputAddress}.eth`;
+
+      try {
+        const address: unknown = await ens.getOwner(formattedAddress);
+
+        if (typeof address !== "string") return
+        validateUser(address);
+
+      }
+      catch (e) {
+        console.log(e);
+      }
+      finally {
+        setUserJustValidatedInput(true);
+      }
     }
-  }, [inputAddress]);
+  }
 
   useEffect(() => {
-    if (!loadingENSaddress && validateAfterENSaddressLoads) {
-      validateInput();
-      setValidateAfterENSaddressLoads(false);
-    }
-  }, [loadingENSaddress]);
+    const requestDelay = setTimeout(() => {
+
+      setUserJustValidatedInput(false);
+
+      getUserAddress();
+
+    }, SearchUserDelay);
+
+    return () => clearTimeout(requestDelay);
+
+  }, [inputAddress]);
 
   return (
     <div className="w-[95%] h-auto py-5 gap-3 flex flex-col rounded  ">
@@ -92,15 +93,14 @@ export const SearchBar = () => {
           name="search"
           type="search"
           className={cc([
-            "dark:bg-[#212322] w-full h-11 px-4 py-3 border-2 border-gray-100 dark:border-[#353836] focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded-xl placeholder:p-small dark:placeholder:p-small ",
+            "dark:bg-[#212322] w-full h-11 px-4 py-3 border-2 border-gray-100 dark:border-[#353836]   focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded-xl placeholder:p-small dark:placeholder:p-small ",
           ])}
           placeholder="Search username, address or ENS"
-          onChange={(e) => setInputAddress(e.target.value)}
+          onChange={({ target }) => setInputAddress(target.value)}
         />
         <div className="absolute right-2 justify-center items-center">
           <div
             role="button"
-            onClick={validateInput}
             className={cc([!inputAddress && "cursor-not-allowed"])}
           >
             <button
@@ -116,8 +116,8 @@ export const SearchBar = () => {
                       ? "black"
                       : "#EEE"
                     : !!inputAddress && theme == "dark"
-                    ? "#EEE"
-                    : "black",
+                      ? "#EEE"
+                      : "black",
                 ])}
               />
             </button>
@@ -127,3 +127,8 @@ export const SearchBar = () => {
     </div>
   );
 };
+
+
+
+//primeira busca após conectar wallet: Se for um ENS, irá (as vezes) não aparecer o inventário.
+//problema: TheirItems não mostra o inventário da mesma busca duas vezes consecutivas.
