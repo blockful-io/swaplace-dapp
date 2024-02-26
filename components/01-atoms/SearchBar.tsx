@@ -10,8 +10,12 @@ import cc from "classcat";
 import Web3 from "web3";
 
 export const SearchBar = () => {
-  const { setInputAddress, inputAddress, validateAddressToSwap, setUserJustValidatedInput } =
-    useContext(SwapContext);
+  const {
+    setInputAddress,
+    inputAddress,
+    validateAddressToSwap,
+    setUserJustValidatedInput,
+  } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
@@ -20,10 +24,10 @@ export const SearchBar = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 
   const validateUser = (ensNameAddress: string | null) => {
-    if (!authenticatedUserAddress) return
+    if (!authenticatedUserAddress) return;
 
     validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
-  }
+  };
 
   const getUserAddress = async () => {
     if (inputAddress) {
@@ -39,44 +43,36 @@ export const SearchBar = () => {
 
       const ens = new ENS(undefined, provider);
 
-      const formattedAddress =
-        inputAddress.toLowerCase().includes(".")
-          ? inputAddress.toLowerCase().includes(".eth")
-            ? inputAddress.split(".")[1].length >= 3
-              ? inputAddress
-              : `${inputAddress.split(".")[0]}.eth`
-            : inputAddress.split(".")[1].length >= 3
-              ? inputAddress
-              : `${inputAddress.split(".")[0]}.eth`
-          : `${inputAddress}.eth`;
+      const formattedAddress = inputAddress.toLowerCase().includes(".")
+        ? inputAddress.toLowerCase().includes(".eth")
+          ? inputAddress.split(".")[1].length >= 3
+            ? inputAddress
+            : `${inputAddress.split(".")[0]}.eth`
+          : inputAddress.split(".")[1].length >= 3
+          ? inputAddress
+          : `${inputAddress.split(".")[0]}.eth`
+        : `${inputAddress}.eth`;
 
       try {
         const address: unknown = await ens.getOwner(formattedAddress);
 
-        if (typeof address !== "string") return
+        if (typeof address !== "string") return;
         validateUser(address);
-
-      }
-      catch (e) {
-        console.log(e);
-      }
-      finally {
+      } catch (e) {
+        console.error(e);
+      } finally {
         setUserJustValidatedInput(true);
       }
     }
-  }
+  };
 
   useEffect(() => {
-
     const requestDelay = setTimeout(() => {
-
       setUserJustValidatedInput(false);
 
       getUserAddress();
-
     }, 2000);
     return () => clearTimeout(requestDelay);
-
   }, [inputAddress]);
 
   return (
@@ -86,15 +82,15 @@ export const SearchBar = () => {
           Who are you swapping with today?
         </h2>
       </div>
-      <div className={cc(["flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-[0_0_6px_1px_#0000004b] dark:hover:shadow-[0_0_6px_1px_#84980027]"])}>
+      <div
+        className={cc([
+          "flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-[0_0_6px_1px_#0000004b] dark:hover:shadow-[0_0_6px_1px_#84980027]",
+        ])}
+      >
         <div className="justify-center items-center">
           <MagnifyingGlassIcon
             className="w-5"
-            fill={cc([
-              theme == "dark"
-                ? "#353836"
-                : "#EEE",
-            ])}
+            fill={cc([theme == "dark" ? "#353836" : "#EEE"])}
           />
         </div>
         <input
