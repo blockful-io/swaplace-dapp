@@ -3,7 +3,6 @@
 /* eslint-disable import/no-named-as-default-member */
 import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { SearchUserDelay } from "@/lib/client/constants";
 import { useContext, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { ENS } from "web3-eth-ens";
@@ -20,7 +19,7 @@ export const SearchBar = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 
-  const validateUser = (ensNameAddress: string) => {
+  const validateUser = (ensNameAddress: string | null) => {
     if (!authenticatedUserAddress) return
 
     validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
@@ -68,14 +67,14 @@ export const SearchBar = () => {
   }
 
   useEffect(() => {
+
     const requestDelay = setTimeout(() => {
 
       setUserJustValidatedInput(false);
 
       getUserAddress();
 
-    }, SearchUserDelay);
-
+    }, 2000);
     return () => clearTimeout(requestDelay);
 
   }, [inputAddress]);
@@ -87,48 +86,29 @@ export const SearchBar = () => {
           Who are you swapping with today?
         </h2>
       </div>
-      <div className={cc(["flex relative items-center"])}>
+      <div className={cc(["flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-[0_0_6px_1px_#0000004b] dark:hover:shadow-[0_0_6px_1px_#84980027]"])}>
+        <div className="justify-center items-center">
+          <MagnifyingGlassIcon
+            className="w-5"
+            fill={cc([
+              theme == "dark"
+                ? "#353836"
+                : "#EEE",
+            ])}
+          />
+        </div>
         <input
           id="search"
           name="search"
           type="search"
           className={cc([
-            "dark:bg-[#212322] w-full h-11 px-4 py-3 border-2 border-gray-100 dark:border-[#353836]   focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded-xl placeholder:p-small dark:placeholder:p-small ",
+            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small
+             dark:border-none dark:bg-transparent`,
           ])}
           placeholder="Search username, address or ENS"
           onChange={({ target }) => setInputAddress(target.value)}
         />
-        <div className="absolute right-2 justify-center items-center">
-          <div
-            role="button"
-            className={cc([!inputAddress && "cursor-not-allowed"])}
-          >
-            <button
-              disabled={!inputAddress}
-              className="pointer-events-none p-3 pr-1"
-              type="submit"
-            >
-              <MagnifyingGlassIcon
-                className="w-6"
-                fill={cc([
-                  theme == "light"
-                    ? !!inputAddress && theme == "light"
-                      ? "black"
-                      : "#EEE"
-                    : !!inputAddress && theme == "dark"
-                      ? "#EEE"
-                      : "black",
-                ])}
-              />
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
-
-
-
-//primeira busca após conectar wallet: Se for um ENS, irá (as vezes) não aparecer o inventário.
-//problema: TheirItems não mostra o inventário da mesma busca duas vezes consecutivas.
