@@ -5,10 +5,10 @@ import { EthereumAddress } from "@/lib/shared/types";
 
 export enum UserOfferVariant {
   DEFAULT = "default",
-  SECUNDARY = "secundary",
+  SECONDARY = "secondary",
 }
 
-type UserOfferVariants = UserOfferVariant | "default" | "secundary";
+type UserOfferVariants = UserOfferVariant | "default" | "secondary";
 
 interface UserOfferInfoProps {
   address: EthereumAddress | null;
@@ -39,7 +39,7 @@ export const UserOfferInfo = ({
       </div>
     </div>
   ) : (
-    variant === UserOfferVariant.SECUNDARY && (
+    variant === UserOfferVariant.SECONDARY && (
       <div>
         <div className="flex justify-between">
           <div className="flex gap-2">

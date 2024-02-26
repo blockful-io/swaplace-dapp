@@ -6,10 +6,10 @@ import { useContext } from "react";
 
 export enum CardOfferVariant {
   DEFAULT = "default",
-  SECUNDARY = "secundary",
+  SECONDARY = "secondary",
 }
 
-type CardOfferVariants = CardOfferVariant | "default" | "secundary";
+type CardOfferVariants = CardOfferVariant | "default" | "secondary";
 
 interface CardOffersProps {
   address: EthereumAddress | null;
@@ -62,7 +62,7 @@ export const CardOffers = ({
       <div className="md:px-4 md:pt-4 md:pb-7  ">
         <div className="flex flex-col justify-content gap-4 md:w-[400px] max-h-[150px] overflow-y-auto no-scrollbar">
           <div>
-            <UserOfferInfo address={address} variant={"secundary"} />
+            <UserOfferInfo address={address} variant={"secondary"} />
           </div>
           <div>
             {authenticatedUserAddress && ( // That div needs change to render the given Tokens by Subgraph, shouldn't be the <NftCard here/> , for now, just visualization
@@ -88,7 +88,7 @@ export const CardOffers = ({
     [CardOfferVariant.DEFAULT]: {
       body: <DefaultVariant />,
     },
-    [CardOfferVariant.SECUNDARY]: {
+    [CardOfferVariant.SECONDARY]: {
       body: <SecundaryVariant />,
     },
   };
