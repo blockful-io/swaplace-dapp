@@ -17,7 +17,7 @@ interface IToolTip {
 }
 
 export const Tooltip = ({ position, content, children }: IToolTip) => (
-  <div id="tooltip" className="relative cursor-pointer group">
+  <div id="tooltip" className="relative cursor-default group ">
     <div>{children}</div>
     <span
       className={cc([

@@ -84,7 +84,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="w-full  flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
+    <div className="w-full  flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-full md:h-[540px]">
       {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
         <div className="w-full h-full">
           <NftsList ownerAddress={address} nftsList={nftsList} />

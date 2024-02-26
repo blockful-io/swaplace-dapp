@@ -48,7 +48,7 @@ export const TheHeader = () => {
           <div className="flex justify-center">
             {isDark ? (
               <Tooltip position={window.innerWidth > 1440 ? "right" : "bottom"} content={"Light Mode"}>
-                <button
+                <button 
                   className="cursor-pointer bg-black-500 hover:bg-[#353836] transition-colors duration-200 rounded-[10px]"
                   onClick={() => setTheme("light")}
                 >
@@ -61,7 +61,7 @@ export const TheHeader = () => {
                   className="bg-black-500 outline-none hover:bg-[#E4E4E4] transition-colors duration-200 rounded-[10px]"
                   onClick={() => setTheme("dark")}
                 >
-                  <MoonIcon className="w-10 p-2 text-black" />
+                  <MoonIcon className="w-10 p-2 text-black"/>
                 </button>
               </Tooltip>
             )}
