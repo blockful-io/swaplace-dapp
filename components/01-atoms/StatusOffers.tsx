@@ -2,8 +2,7 @@ import { useState } from "react";
 import cc from "classcat";
 
 export const StatusOffers = () => {
-
-  const [OfferIsActive, setOfferIsActive] = useState(0);
+  const [offerIsActive, setOfferIsActive] = useState<number>(0);
 
   enum FilterOptions {
     ALL_OFFERS = "All offers",
@@ -54,16 +53,32 @@ export const StatusOffers = () => {
 
         return (
           <div
-            className={ cc(["h-11 shadow border border-solid border-[#353836] flex justify-between items-center px-3 bg-[#F2F2F2] group rounded-[10px] dark:bg-[#212322] mb-3 dark:hover:bg-[#282B29] font-onest leading-5 ",
-             OfferIsActive === index && "dark:shadow-[0px_0px_8px_1px_#83980026] dark:border-[#505150] dark:bg-[#212322]"])}
-            key={index} onClick={()=> setOfferIsActive(index)}
+            className={cc([
+              "h-11 shadow border border-solid border-[#353836] flex justify-between items-center px-3 bg-[#F2F2F2] group rounded-[10px] dark:bg-[#212322] mb-3 font-onest leading-5",
+              offerIsActive === index
+                ? "dark:shadow-[0px_0px_8px_1px_#83980026] dark:border-[#505150] dark:bg-[#212322]"
+                : "dark:hover:bg-[#282B29]",
+            ])}
+            key={index}
+            onClick={() => setOfferIsActive(index)}
           >
-            <div className={cc(["dark:group-hover:text-[#F6F6F6]",
-            OfferIsActive === index ? "dark:text-[#DDF23D]" : "dark:text-[#A3A9A5]"])}>
+            <div
+              className={cc([
+                offerIsActive === index
+                  ? "dark:text-[#DDF23D]"
+                  : "dark:text-[#A3A9A5] dark:group-hover:text-[#F6F6F6]",
+              ])}
+            >
               {name}
             </div>
-            <div className={cc(["bg-[#c7c7c7] rounded px-2 w-9 h-6 flex justify-center items-center dark:p-small-dark p-small dark:group-hover:bg-[#353836]",
-            OfferIsActive === index ? "dark:bg-[#353836]" : "dark:bg-[#282B29]"])}>
+            <div
+              className={cc([
+                "bg-[#c7c7c7] rounded px-2 w-9 h-6 flex justify-center items-center dark:p-small-dark p-small dark:group-hover:bg-[#353836]",
+                offerIsActive === index
+                  ? "dark:bg-[#353836]"
+                  : "dark:bg-[#282B29]",
+              ])}
+            >
               {id}
             </div>
           </div>

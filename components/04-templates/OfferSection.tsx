@@ -1,7 +1,5 @@
-import {
-  ErrorFindingSwapOffers,
-  FilterOffers,
-} from "@/components/02-molecules";
+import { TokenOffers } from "@/components/03-organisms";
+import { FilterOffers } from "@/components/02-molecules";
 
 export const OfferSection = () => {
   return (
@@ -9,8 +7,8 @@ export const OfferSection = () => {
       <div className="flex">
         <FilterOffers />
       </div>
-      <div className="flex justify-center items-center">
-        <ErrorFindingSwapOffers />
+      <div className="flex flex-col justify-center items-center">
+        <TokenOffers />
       </div>
     </section>
   );
