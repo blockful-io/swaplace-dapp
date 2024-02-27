@@ -85,13 +85,17 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="w-full  flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-full md:h-[540px]">
+    <div className="w-full p-5 flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[600px] md:h-[540px] h-[300px] ">
       {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
-        <div className="w-full h-full">
-          <NftsList ownerAddress={address} nftsList={nftsList} variant={variant} />
+        <div className="w-full h-[372px] bg-yellow-500">
+          <NftsList
+            ownerAddress={address}
+            nftsList={nftsList}
+            variant={variant}
+          />
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
-        <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">
+        <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322]  justify-center items-center ">
           <div className="flex-col flex  items-center space-y-4">
             <div className="w-[80px] h-[80px] flex items-center border-[3px] rounded-full dark:border-[#DDF23D] border-[#A3A9A5] ">
               <SelectUserIcon

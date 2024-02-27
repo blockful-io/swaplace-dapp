@@ -33,7 +33,7 @@ export const SwappingShelfs = () => {
   }, [chain]);
 
   return (
-    <div className="w-[95%] mb-20 dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
+    <div className=" xl:w-full xl:h-full flex  flex-col dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
       <Tab
         setActiveSwappingShelfID={(input) => setActiveSwappingShelfID(input)}
       />
@@ -41,7 +41,10 @@ export const SwappingShelfs = () => {
         <NftsShelf address={validatedAddressToSwap} variant="their" />
       </div>
       <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
-        <NftsShelf address={authenticatedUserAddress?.address ?? null} variant="your" />
+        <NftsShelf
+          address={authenticatedUserAddress?.address ?? null}
+          variant="your"
+        />
       </div>
     </div>
   );

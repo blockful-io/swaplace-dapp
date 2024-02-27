@@ -32,7 +32,7 @@ export const TheHeader = () => {
   const isDark = currentTheme === "dark";
   return (
     <>
-      <header className="bg-[#F2F2F2] dark:bg-[#212322] dark:border-[#353836] border rounded-2xl z-40 w-full mx-3 h-auto xl:w-[62px] xl:h-full py-6 flex xl:flex-col justify-between items-center xl:px-0 px-8 xl:pt-5 xl:pb-4 font-medium shadow-lg">
+      <header className="bg-[#F2F2F2] dark:bg-[#212322] dark:border-[#353836] border rounded-2xl z-40 w-full h-auto xl:w-[62px] py-6 flex xl:flex-col justify-between items-center xl:px-0 px-8  xl:pb-4 font-medium shadow-lg">
         <div className="flex">
           <Link href="https://swaplace.xyz/">
             <SwaplaceIcon
@@ -47,8 +47,11 @@ export const TheHeader = () => {
         <div className="flex xl:flex-col gap-[16px]">
           <div className="flex justify-center">
             {isDark ? (
-              <Tooltip position={window.innerWidth > 1440 ? "right" : "bottom"} content={"Light Mode"}>
-                <button 
+              <Tooltip
+                position={window.innerWidth > 1440 ? "right" : "bottom"}
+                content={"Light Mode"}
+              >
+                <button
                   className="cursor-pointer bg-black-500 hover:bg-[#353836] transition-colors duration-200 rounded-[10px]"
                   onClick={() => setTheme("light")}
                 >
@@ -56,12 +59,15 @@ export const TheHeader = () => {
                 </button>
               </Tooltip>
             ) : (
-              <Tooltip position={window.innerWidth > 1440 ? "right" : "bottom"} content={"Dark Mode"}>
+              <Tooltip
+                position={window.innerWidth > 1440 ? "right" : "bottom"}
+                content={"Dark Mode"}
+              >
                 <button
                   className="bg-black-500 outline-none hover:bg-[#E4E4E4] transition-colors duration-200 rounded-[10px]"
                   onClick={() => setTheme("dark")}
                 >
-                  <MoonIcon className="w-10 p-2 text-black"/>
+                  <MoonIcon className="w-10 p-2 text-black" />
                 </button>
               </Tooltip>
             )}
@@ -70,7 +76,10 @@ export const TheHeader = () => {
             {isWideScreen ? (
               <>
                 {!!authenticatedUserAddress ? (
-                  <Tooltip position={window.innerWidth > 1440 ? "right" : "bottom"} content={"Your wallet"}>
+                  <Tooltip
+                    position={window.innerWidth > 1440 ? "right" : "bottom"}
+                    content={"Your wallet"}
+                  >
                     <button
                       onClick={toggleSidebar}
                       className="rounded-[10px] bg-[#DDF23D] flex items-center justify-center"
@@ -79,7 +88,10 @@ export const TheHeader = () => {
                     </button>
                   </Tooltip>
                 ) : (
-                  <Tooltip position={window.innerWidth > 1440 ? "right" : "bottom"} content={"Connect a Wallet"}>
+                  <Tooltip
+                    position={window.innerWidth > 1440 ? "right" : "bottom"}
+                    content={"Connect a Wallet"}
+                  >
                     <div className="h-10 w-10 rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
                       <ConnectWallet
                         customStyle="w-full flex justify-center items-center"
@@ -92,7 +104,10 @@ export const TheHeader = () => {
             ) : (
               <>
                 {!!authenticatedUserAddress ? (
-                  <Tooltip position={window.innerWidth > 1440 ? "right" : "bottom"} content={"Your wallet"}>
+                  <Tooltip
+                    position={window.innerWidth > 1440 ? "right" : "bottom"}
+                    content={"Your wallet"}
+                  >
                     <button
                       onClick={toggleSidebar}
                       className="rounded-[10px] bg-[#DDF23D] flex items-center justify-center"
@@ -101,7 +116,10 @@ export const TheHeader = () => {
                     </button>
                   </Tooltip>
                 ) : (
-                  <Tooltip position={window.innerWidth > 1440 ? "right" : "bottom"} content={"Connect a Wallet"}>
+                  <Tooltip
+                    position={window.innerWidth > 1440 ? "right" : "bottom"}
+                    content={"Connect a Wallet"}
+                  >
                     <div className="h-10 w-10 rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
                       <ConnectWallet
                         customStyle="w-full flex justify-center items-center"
