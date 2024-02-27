@@ -33,11 +33,16 @@ export const TheHeader = () => {
 
   return (
     <>
-      <header className="bg-[#F2F2F2] dark:bg-[#212322] z-40 w-screen h-auto xl:w-[62px] xl:h-screen py-6 flex xl:flex-col justify-between items-center xl:items-center  xl:px-0 md:px-8 xl:pt-5 xl:pb-4 font-medium shadow-lg absolute left-0 top-0">
-        <div className="flex">
-          <Link href="https://swaplace.xyz/">
+      <header className="bg-[#F2F2F2] dark:bg-[#212322]
+      fixed z-40 w-screen h-auto md:h-[52px] sm:h-[52px]
+      xl:w-[62px] xl:h-screen py-6 flex xl:flex-col
+      justify-between items-center xl:items-center
+      xl:px-0 md:px-8 xl:pt-5 xl:pb-4 font-medium
+      shadow-lg left-0 top-0">
+        <div className="flex items-center">
+          <Link href="https://swaplace.xyz/" className="flex items-center">
             <SwaplaceIcon
-              className="w-10 mt-5"
+              className="w-10"
               fill={cc([theme == "dark" ? "#DDF23D" : "#4F4F4F"])}
             />
           </Link>
@@ -45,7 +50,7 @@ export const TheHeader = () => {
         <div className="xl:flex-col flex-row flex">
           <SwappingIcons />
         </div>
-        <div className="flex md:flex-col gap-[16px]">
+        <div className="flex xl:flex-col gap-[16px] xl:items-center">
           <div className="flex justify-center">
             {isDark ? (
               <Tooltip position={"right"} content={"Light Mode"}>
@@ -67,7 +72,7 @@ export const TheHeader = () => {
               </Tooltip>
             )}
           </div>
-          <div className="h-10 w-10">
+          <div className="flex h-10 w-10">
             {isWideScreen ? (
               <>
                 {!!authenticatedUserAddress ? (
