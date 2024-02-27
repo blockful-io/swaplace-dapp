@@ -56,8 +56,8 @@ export const SwapStation = () => {
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          <OfferSummary forAuthedUser={true} />
           <OfferSummary forAuthedUser={false} />
+          <OfferSummary forAuthedUser={true} />
         </div>
       </div>
       <div className="w-[95%] flex flex-col justify-center items-center">

@@ -1,7 +1,7 @@
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { NftCard } from "@/components/02-molecules";
-import { EmptyNftsCards, PersonIcon, SwapContext } from "@/components/01-atoms";
+import { ENSAvatar, EmptyNftsCards, PersonIcon, SwapContext } from "@/components/01-atoms";
 import { useContext } from "react";
 
 interface IOfferSummary {
@@ -9,7 +9,7 @@ interface IOfferSummary {
 }
 
 export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
-  const { validatedAddressToSwap, nftAuthUser, nftInputUser, inputAddress, userJustValidatedInput } =
+  const { validatedAddressToSwap, nftAuthUser, nftInputUser, inputAddress } =
     useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -21,29 +21,30 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
     12,
     12,
   );
-  
+
   const nftUser = forAuthedUser ? nftAuthUser : nftInputUser;
-
-
 
   return (
     <div className="w-full flex flex-col gap-4 px-3 pt-2 pb-4 dark:bg-[#212322] dark:border-[#434443] rounded-lg border">
       <div className="flex justify-between items-center h-9 gap-2">
         <div className="flex space-x-2">
           <div className="flex items-center">
-            <PersonIcon />
+            {!forAuthedUser && authenticatedUserAddress ?
+              <ENSAvatar avatarENSAddress={authenticatedUserAddress} size="small"/>
+              : forAuthedUser && validatedAddressToSwap ?
+                <ENSAvatar avatarENSAddress={new EthereumAddress(validatedAddressToSwap)} size="small" />
+                : <PersonIcon />}
           </div>
           <div className="items-center">
             <p className="font-medium">
               {
-                forAuthedUser
-                  ? "You give"
-                  : !forAuthedUser && validatedAddressToSwap && inputAddress
-                    ? `${userJustValidatedInput ?
-                      new EthereumAddress(validatedAddressToSwap).getEllipsedAddress() + " gives"
-                      : "Use the search bar!"
-                    }`
-                    : "Use the search bar!"  
+                !forAuthedUser && authenticatedUserAddress ?
+                  `${new EthereumAddress(authenticatedUserAddress.address).getEllipsedAddress()} gets` :
+                  !forAuthedUser ? `You Get` :
+                    forAuthedUser && validatedAddressToSwap && inputAddress ?
+                      `${new EthereumAddress(validatedAddressToSwap).getEllipsedAddress()} gets` :
+                      forAuthedUser && !validatedAddressToSwap || !inputAddress ?
+                        `Use the search bar` : `Use the search bar`
               }
             </p>
           </div>
