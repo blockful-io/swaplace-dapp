@@ -11,7 +11,7 @@ import { useNetwork } from "wagmi";
 
 interface INftsShelfProps {
   address: string | null;
-  variant: "your" | "their";
+  variant: "your" | "their"
 }
 
 /**
@@ -30,16 +30,17 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   const { theme } = useTheme();
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { validatedAddressToSwap, inputAddress, destinyChain } = useContext(SwapContext);
+  const { validatedAddressToSwap, destinyChain } = useContext(SwapContext);
 
   const showUserItems = async () => {
     const chainId =
       address === authenticatedUserAddress?.address
         ? chain?.id
         : ChainInfo[destinyChain].id;
-        
-    if (address && chainId && inputAddress) {
+
+    if (address && chainId) {
       try {
+        console.log("ok")
         const nftsList = await getNftsFrom(address, chainId, setNftsQueryStatus)
 
         setNftsList(nftsList);
@@ -74,26 +75,16 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [chain]);
 
   useEffect(() => {
-    if (
-      address !== authenticatedUserAddress?.address &&
-      validatedAddressToSwap !== authenticatedUserAddress?.address || !inputAddress
-    ) {
-      setNftsList([]);
+    if (!validatedAddressToSwap && address !== authenticatedUserAddress?.address) {
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
-  }, [inputAddress]);
-
-  useEffect(() => {
-    if (!validatedAddressToSwap) {
-      setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
-    }
-  }, [validatedAddressToSwap]);
+  }, [validatedAddressToSwap, address]);
 
   return (
-    <div className="w-full flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px] no-scrollbar">
+    <div className="w-full  flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
       {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
         <div className="w-full h-full">
-          <NftsList ownerAddress={address} nftsList={nftsList} variant={variant} />
+          <NftsList ownerAddress={address} nftsList={nftsList} variant={variant}/>
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
         <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">
