@@ -57,7 +57,7 @@ export const CardOffers = ({
     );
   };
 
-  const SecundaryVariant = () => {
+  const SecondaryVariant = () => {
     return (
       <div className="md:px-4 md:pt-4 md:pb-7  ">
         <div className="flex flex-col justify-content gap-4 md:w-[400px] max-h-[150px] overflow-y-auto no-scrollbar">
@@ -89,7 +89,7 @@ export const CardOffers = ({
       body: <DefaultVariant />,
     },
     [CardOfferVariant.SECONDARY]: {
-      body: <SecundaryVariant />,
+      body: <SecondaryVariant />,
     },
   };
 
