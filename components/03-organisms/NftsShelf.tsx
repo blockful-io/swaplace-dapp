@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { NFT, ChainInfo, NFTsQueryStatus, } from "@/lib/client/constants";
+import { NFT, ChainInfo, NFTsQueryStatus } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EthereumAddress } from "@/lib/shared/types";
 import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
@@ -30,36 +30,40 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   const { theme } = useTheme();
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { validatedAddressToSwap, inputAddress, destinyChain } = useContext(SwapContext);
+  const { validatedAddressToSwap, inputAddress, destinyChain } =
+    useContext(SwapContext);
 
   const showUserItems = async () => {
     const chainId =
       address === authenticatedUserAddress?.address
         ? chain?.id
         : ChainInfo[destinyChain].id;
-        
-    if (address && chainId && inputAddress) {
+
+    if (address && chainId) {
       try {
-        const nftsList = await getNftsFrom(address, chainId, setNftsQueryStatus)
+        const nftsList = await getNftsFrom(
+          address,
+          chainId,
+          setNftsQueryStatus,
+        );
 
         setNftsList(nftsList);
-
       } catch (_) {
-
         setNftsList([]);
       }
     }
-  }
+  };
 
   useEffect(() => {
-    showUserItems()
+    showUserItems();
   }, [address, chain, destinyChain]);
 
   useEffect(() => {
     if (
       authenticatedUserAddress &&
       address &&
-      authenticatedUserAddress.equals(new EthereumAddress(address))
+      authenticatedUserAddress.equals(new EthereumAddress(address)) &&
+      variant === "their"
     ) {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
@@ -67,7 +71,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [destinyChain]);
 
   useEffect(() => {
-    if (address !== authenticatedUserAddress?.address) {
+    if (address !== authenticatedUserAddress?.address && variant === "their") {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
@@ -75,8 +79,10 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
 
   useEffect(() => {
     if (
-      address !== authenticatedUserAddress?.address &&
-      validatedAddressToSwap !== authenticatedUserAddress?.address || !inputAddress
+      authenticatedUserAddress &&
+      address &&
+      new EthereumAddress(address) &&
+      variant === "their"
     ) {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
@@ -84,7 +90,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [inputAddress]);
 
   useEffect(() => {
-    if (!validatedAddressToSwap) {
+    if (!validatedAddressToSwap && variant === "their") {
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
   }, [validatedAddressToSwap]);
@@ -93,7 +99,11 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
     <div className="w-full flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px] no-scrollbar">
       {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
         <div className="w-full h-full">
-          <NftsList ownerAddress={address} nftsList={nftsList} variant={variant} />
+          <NftsList
+            ownerAddress={address}
+            nftsList={nftsList}
+            variant={variant}
+          />
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
         <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">
