@@ -4,7 +4,7 @@ import { SwapStation, SwappingShelfs } from "@/components/03-organisms";
 
 export const SwapSection = () => {
   return (
-      <div className="xl:w-full justify-items-stretch w-full flex flex-col  space-y-6 xl:flex-row xl:space-x-6 xl:mr-4">
+      <div className="xl:w-[1115px] w-full flex flex-col justify-center space-y-6 xl:flex-row xl:space-x-6 xl:space-y-0 mb-16">
       <div className="flex justify-center items-center xl:w-[62px] ml-4">
         <TheHeader />
       </div>
