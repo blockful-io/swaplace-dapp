@@ -11,6 +11,7 @@ import { useNetwork } from "wagmi";
 
 interface INftsShelfProps {
   address: string | null;
+  variant: "your" | "their";
 }
 
 /**
@@ -20,7 +21,7 @@ interface INftsShelfProps {
  *
  * @returns Shelf Nfts based in status of given address
  */
-export const NftsShelf = ({ address }: INftsShelfProps) => {
+export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   const { chain } = useNetwork();
   const [nftsList, setNftsList] = useState<NFT[]>();
   const [nftsQueryStatus, setNftsQueryStatus] = useState<NFTsQueryStatus>(
@@ -89,10 +90,10 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="w-full  flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
+    <div className="w-full flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px] no-scrollbar">
       {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
         <div className="w-full h-full">
-          <NftsList ownerAddress={address} nftsList={nftsList} />
+          <NftsList ownerAddress={address} nftsList={nftsList} variant={variant} />
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
         <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">

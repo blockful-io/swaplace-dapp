@@ -107,7 +107,7 @@ export const NftsCardApprovedList = () => {
 
   return (
     <div className="flex justify-center items-center relative">
-      <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[370px]">
+      <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[370px] no-scrollbar">
         {nftAuthUser.map((nft, index) => (
           <div
             key={index}

@@ -56,7 +56,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
         )}
       </div>
 
-      <div className="w-full h-full min-h-[144px] rounded p-4 overflow-auto max-h-52">
+      <div className="w-full h-full min-h-[144px] rounded p-4 overflow-auto max-h-52 no-scrollbar">
         <div className="w-full grid grid-cols-2 md:grid-cols-6  xl:grid-cols-4 gap-3 ">
           {(forAuthedUser && !authenticatedUserAddress?.address) ||
             (!forAuthedUser && !validatedAddressToSwap) ? null : (
