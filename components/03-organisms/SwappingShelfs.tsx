@@ -38,10 +38,10 @@ export const SwappingShelfs = () => {
         setActiveSwappingShelfID={(input) => setActiveSwappingShelfID(input)}
       />
       <div className={cc([activeSwappingShelfID ? "hidden" : "block"])}>
-        <NftsShelf address={validatedAddressToSwap} />
+        <NftsShelf address={validatedAddressToSwap} variant="their" />
       </div>
       <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
-        <NftsShelf address={authenticatedUserAddress?.address ?? null} />
+        <NftsShelf address={authenticatedUserAddress?.address ?? null} variant="your" />
       </div>
     </div>
   );
