@@ -15,6 +15,7 @@ export const SearchBar = () => {
     inputAddress,
     validateAddressToSwap,
     setUserJustValidatedInput,
+    setValidatedAddressToSwap
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -67,9 +68,9 @@ export const SearchBar = () => {
   };
 
   useEffect(() => {
+    setValidatedAddressToSwap("");
     const requestDelay = setTimeout(() => {
       setUserJustValidatedInput(false);
-
       getUserAddress();
     }, 2000);
     return () => clearTimeout(requestDelay);

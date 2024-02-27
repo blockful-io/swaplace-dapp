@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 interface SwapContextProps {
   inputAddress: string;
   validatedAddressToSwap: string;
+  setValidatedAddressToSwap: (address: string) => void
   setInputAddress: (address: string) => void;
   validateAddressToSwap: (
     authedUser: EthereumAddress,
@@ -43,6 +44,7 @@ interface SwapContextProps {
 export const SwapContext = React.createContext<SwapContextProps>({
   inputAddress: "",
   validatedAddressToSwap: "",
+  setValidatedAddressToSwap: () => {},
   validateAddressToSwap: (
     _authedUser: EthereumAddress,
     _inputEnsAddress: string | null | undefined,
@@ -178,6 +180,7 @@ export const SwapContextProvider = ({ children }: any) => {
       inputAddress,
       setInputAddress,
       validatedAddressToSwap,
+      setValidatedAddressToSwap,
       validateAddressToSwap,
       setUserJustValidatedInput,
       userJustValidatedInput,
@@ -213,6 +216,7 @@ export const SwapContextProvider = ({ children }: any) => {
     inputAddress,
     setInputAddress,
     validatedAddressToSwap,
+    setValidatedAddressToSwap,
     validateAddressToSwap,
     setUserJustValidatedInput,
     userJustValidatedInput,

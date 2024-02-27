@@ -29,18 +29,14 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   const { theme } = useTheme();
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { validatedAddressToSwap, inputAddress, destinyChain, userJustValidatedInput } =
-    useContext(SwapContext);
-
-  const [addressSearchCount, setAddressSearchCount] = useState<number>(0)
+  const { validatedAddressToSwap, inputAddress, destinyChain } = useContext(SwapContext);
 
   const showUserItems = async () => {
     const chainId =
       address === authenticatedUserAddress?.address
         ? chain?.id
         : ChainInfo[destinyChain].id;
-    if(addressSearchCount > 1) return //When a new address is added, all useEffect parameters are updated
-                                    // addressSearchCount prevents multiple API calls from occurring, causing undesired behavior to occur.
+        
     if (address && chainId && inputAddress) {
       try {
         const nftsList = await getNftsFrom(address, chainId, setNftsQueryStatus)
@@ -52,15 +48,14 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
         setNftsList([]);
       }
 
-      setAddressSearchCount((prev)=> prev + 1)
     }
 
   }
 
   useEffect(() => {
     showUserItems()
-    console.log(userJustValidatedInput)
-  }, [address, chain, destinyChain, userJustValidatedInput]);
+    console.log("ok")
+  }, [address, chain, destinyChain]);
 
   useEffect(() => {
     if (
@@ -81,6 +76,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   }, [chain]);
 
   useEffect(() => {
+
     if (
       address !== authenticatedUserAddress?.address &&
       validatedAddressToSwap !== authenticatedUserAddress?.address || !inputAddress
@@ -88,7 +84,7 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
-    setAddressSearchCount(0)
+
   }, [inputAddress]);
 
   useEffect(() => {
