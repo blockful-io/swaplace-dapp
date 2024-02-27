@@ -47,14 +47,11 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
 
         setNftsList([]);
       }
-
     }
-
   }
 
   useEffect(() => {
     showUserItems()
-    console.log("ok")
   }, [address, chain, destinyChain]);
 
   useEffect(() => {
@@ -76,7 +73,6 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
   }, [chain]);
 
   useEffect(() => {
-
     if (
       address !== authenticatedUserAddress?.address &&
       validatedAddressToSwap !== authenticatedUserAddress?.address || !inputAddress
@@ -84,7 +80,6 @@ export const NftsShelf = ({ address }: INftsShelfProps) => {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
-
   }, [inputAddress]);
 
   useEffect(() => {

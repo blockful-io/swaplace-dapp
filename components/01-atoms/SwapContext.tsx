@@ -11,6 +11,7 @@ import {
 } from "@/lib/client/blockchain-data";
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 interface SwapContextProps {
   inputAddress: string;
@@ -87,7 +88,7 @@ export const SwapContextProvider = ({ children }: any) => {
     authedUserSelectedNftsApprovalStatus,
     setAuthedUserNftsApprovalStatus,
   ] = useState<IArrayStatusTokenApproved[]>([]);
-
+  const router  = useRouter()
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
     _inputEnsAddress: string | null | undefined,
@@ -235,6 +236,10 @@ export const SwapContextProvider = ({ children }: any) => {
     updateSwapStep,
     currentSwapModalStep,
   });
+
+  useEffect(()=>{
+    setValidatedAddressToSwap("");
+  },[router.asPath])
 
   return (
     <SwapContext.Provider value={swapData}>{children}</SwapContext.Provider>

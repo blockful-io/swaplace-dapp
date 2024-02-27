@@ -21,7 +21,6 @@ export const SearchBar = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
   const { theme } = useTheme();
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 
   const validateUser = (ensNameAddress: string | null) => {
