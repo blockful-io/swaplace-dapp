@@ -17,6 +17,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
   });
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
+  const emptySquaresDefault = EmptyNftsCards(0, 4, 8, 12, 12);
   const emptySquaresAuthUser = EmptyNftsCards(nftAuthUser.length, 4, 8, 12, 12);
   const emptySquaresInputUser = EmptyNftsCards(
     nftInputUser.length,
@@ -78,11 +79,14 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
                   nftData={nft}
                 />
               ))}
-
-              {forAuthedUser && emptySquaresAuthUser}
-              {!forAuthedUser && emptySquaresInputUser}
             </>
           )}
+
+          {forAuthedUser
+            ? emptySquaresAuthUser
+            : !forAuthedUser
+            ? emptySquaresInputUser
+            : emptySquaresDefault}
         </div>
       </div>
     </div>
