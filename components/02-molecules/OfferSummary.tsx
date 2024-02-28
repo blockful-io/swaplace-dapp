@@ -2,7 +2,6 @@ import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { NftCard } from "@/components/02-molecules";
 import { EmptyNftsCards, PersonIcon, SwapContext } from "@/components/01-atoms";
-import { useEnsName } from "wagmi";
 import { useContext } from "react";
 
 interface IOfferSummary {
@@ -10,13 +9,16 @@ interface IOfferSummary {
 }
 
 export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
-  const { validatedAddressToSwap, nftAuthUser, nftInputUser } =
-    useContext(SwapContext);
-  const { data } = useEnsName({
-    address: validatedAddressToSwap as `0x${string}`,
-  });
+  const {
+    validatedAddressToSwap,
+    nftAuthUser,
+    nftInputUser,
+    inputAddress,
+    userJustValidatedInput,
+  } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
+  const emptySquaresDefault = EmptyNftsCards(0, 4, 8, 12, 12);
   const emptySquaresAuthUser = EmptyNftsCards(nftAuthUser.length, 4, 8, 12, 12);
   const emptySquaresInputUser = EmptyNftsCards(
     nftInputUser.length,
@@ -39,15 +41,15 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
             <p className="font-medium">
               {forAuthedUser
                 ? "You give"
-                : !forAuthedUser && !validatedAddressToSwap
-                ? "Use the search bar!"
-                : `${
-                    data
-                      ? data
-                      : new EthereumAddress(
+                : !forAuthedUser && validatedAddressToSwap && inputAddress
+                ? `${
+                    userJustValidatedInput
+                      ? new EthereumAddress(
                           validatedAddressToSwap,
-                        ).getEllipsedAddress()
-                  } gives`}
+                        ).getEllipsedAddress() + " gives"
+                      : "Use the search bar!"
+                  }`
+                : "Use the search bar!"}
             </p>
           </div>
         </div>
@@ -59,7 +61,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
         )}
       </div>
 
-      <div className="w-full h-full min-h-[144px] rounded p-4 overflow-auto max-h-52">
+      <div className="w-full h-full min-h-[144px] rounded p-4 overflow-auto max-h-52 no-scrollbar">
         <div className="w-full grid grid-cols-2 md:grid-cols-6  xl:grid-cols-4 gap-3 ">
           {(forAuthedUser && !authenticatedUserAddress?.address) ||
           (!forAuthedUser && !validatedAddressToSwap) ? null : (
@@ -78,11 +80,14 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
                   nftData={nft}
                 />
               ))}
-
-              {forAuthedUser && emptySquaresAuthUser}
-              {!forAuthedUser && emptySquaresInputUser}
             </>
           )}
+
+          {forAuthedUser
+            ? emptySquaresAuthUser
+            : !forAuthedUser
+            ? emptySquaresInputUser
+            : emptySquaresDefault}
         </div>
       </div>
     </div>

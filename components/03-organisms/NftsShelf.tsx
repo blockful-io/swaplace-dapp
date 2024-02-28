@@ -33,7 +33,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   const { validatedAddressToSwap, inputAddress, destinyChain } =
     useContext(SwapContext);
 
-  useEffect(() => {
+  const showUserItems = async () => {
     const chainId =
       address === authenticatedUserAddress?.address
         ? chain?.id
@@ -48,13 +48,18 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
           setNftsList([]);
         });
     }
+  };
+
+  useEffect(() => {
+    showUserItems();
   }, [address, chain, destinyChain]);
 
   useEffect(() => {
     if (
       authenticatedUserAddress &&
       address &&
-      authenticatedUserAddress.equals(new EthereumAddress(address))
+      authenticatedUserAddress.equals(new EthereumAddress(address)) &&
+      variant === "their"
     ) {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
@@ -62,7 +67,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [destinyChain]);
 
   useEffect(() => {
-    if (address !== authenticatedUserAddress?.address) {
+    if (address !== authenticatedUserAddress?.address && variant === "their") {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
@@ -70,8 +75,10 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
 
   useEffect(() => {
     if (
-      address !== authenticatedUserAddress?.address &&
-      validatedAddressToSwap !== authenticatedUserAddress?.address
+      authenticatedUserAddress &&
+      address &&
+      new EthereumAddress(address) &&
+      variant === "their"
     ) {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
@@ -79,16 +86,20 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [inputAddress]);
 
   useEffect(() => {
-    if (!validatedAddressToSwap) {
+    if (!validatedAddressToSwap && variant === "their") {
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="w-full  flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
+    <div className="w-full flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px] no-scrollbar">
       {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
         <div className="w-full h-full">
-          <NftsList ownerAddress={address} nftsList={nftsList} variant={variant} />
+          <NftsList
+            ownerAddress={address}
+            nftsList={nftsList}
+            variant={variant}
+          />
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
         <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">

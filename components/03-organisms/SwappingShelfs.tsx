@@ -41,7 +41,10 @@ export const SwappingShelfs = () => {
         <NftsShelf address={validatedAddressToSwap} variant="their" />
       </div>
       <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
-        <NftsShelf address={authenticatedUserAddress?.address ?? null} variant="your" />
+        <NftsShelf
+          address={authenticatedUserAddress?.address ?? null}
+          variant="your"
+        />
       </div>
     </div>
   );
