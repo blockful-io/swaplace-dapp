@@ -15,12 +15,12 @@ export const SearchBar = () => {
     inputAddress,
     validateAddressToSwap,
     setUserJustValidatedInput,
+    setValidatedAddressToSwap,
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
   const { theme } = useTheme();
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 
   const validateUser = (ensNameAddress: string | null) => {
@@ -67,11 +67,11 @@ export const SearchBar = () => {
   };
 
   useEffect(() => {
+    setValidatedAddressToSwap("");
     const requestDelay = setTimeout(() => {
       setUserJustValidatedInput(false);
-
       getUserAddress();
-    }, 2000);
+    }, 750);
     return () => clearTimeout(requestDelay);
   }, [inputAddress]);
 

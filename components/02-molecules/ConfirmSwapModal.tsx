@@ -6,7 +6,7 @@ import {
   SwapContext,
   SwapModalButton,
   SwapModalLayout,
-  OfferExpiryConfirmSwap
+  OfferExpiryConfirmSwap,
 } from "@/components/01-atoms";
 import { ProgressStatus } from "@/components/02-molecules";
 import { createSwap } from "@/lib/service/createSwap";
@@ -17,6 +17,7 @@ import {
   SwapModalSteps,
 } from "@/lib/client/blockchain-data";
 import { updateNftsToSwapApprovalStatus } from "@/lib/client/swap-utils";
+import { TokenOffers } from "@/components/03-organisms";
 import { useNetwork, useWalletClient } from "wagmi";
 import { useContext, useEffect } from "react";
 import { useTheme } from "next-themes";
@@ -174,7 +175,14 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
+          component: (
+            <>
+              <div className="flex flex-col gap-2">
+                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+                <TokenOffers variant="vertical" />
+              </div>
+            </>
+          ),
         }}
         footer={{
           component: (
@@ -210,7 +218,14 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
+          component: (
+            <>
+              <div className="flex flex-col gap-2">
+                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+                <TokenOffers variant="vertical" />
+              </div>
+            </>
+          ),
         }}
         footer={{
           component: (
@@ -236,7 +251,14 @@ export const ConfirmSwapModal = ({
           description: "Congrats, your swap offer was submitted.",
         }}
         body={{
-          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
+          component: (
+            <>
+              <div className="flex flex-col gap-2">
+                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+                <TokenOffers variant="vertical" />
+              </div>
+            </>
+          ),
         }}
         footer={{
           component: (

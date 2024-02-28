@@ -11,10 +11,12 @@ import {
 } from "@/lib/client/blockchain-data";
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 interface SwapContextProps {
   inputAddress: string;
   validatedAddressToSwap: string;
+  setValidatedAddressToSwap: (address: string) => void;
   setInputAddress: (address: string) => void;
   validateAddressToSwap: (
     authedUser: EthereumAddress,
@@ -43,6 +45,7 @@ interface SwapContextProps {
 export const SwapContext = React.createContext<SwapContextProps>({
   inputAddress: "",
   validatedAddressToSwap: "",
+  setValidatedAddressToSwap: () => {},
   validateAddressToSwap: (
     _authedUser: EthereumAddress,
     _inputEnsAddress: string | null | undefined,
@@ -85,7 +88,7 @@ export const SwapContextProvider = ({ children }: any) => {
     authedUserSelectedNftsApprovalStatus,
     setAuthedUserNftsApprovalStatus,
   ] = useState<IArrayStatusTokenApproved[]>([]);
-
+  const router = useRouter();
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
     _inputEnsAddress: string | null | undefined,
@@ -178,6 +181,7 @@ export const SwapContextProvider = ({ children }: any) => {
       inputAddress,
       setInputAddress,
       validatedAddressToSwap,
+      setValidatedAddressToSwap,
       validateAddressToSwap,
       setUserJustValidatedInput,
       userJustValidatedInput,
@@ -213,6 +217,7 @@ export const SwapContextProvider = ({ children }: any) => {
     inputAddress,
     setInputAddress,
     validatedAddressToSwap,
+    setValidatedAddressToSwap,
     validateAddressToSwap,
     setUserJustValidatedInput,
     userJustValidatedInput,
@@ -231,6 +236,12 @@ export const SwapContextProvider = ({ children }: any) => {
     updateSwapStep,
     currentSwapModalStep,
   });
+
+  // This is a temporary measure while we don't turn the dApp into a SPA
+  // We are reseting the inputAddress to reload the inventory
+  useEffect(() => {
+    setValidatedAddressToSwap("");
+  }, [router.asPath]);
 
   return (
     <SwapContext.Provider value={swapData}>{children}</SwapContext.Provider>

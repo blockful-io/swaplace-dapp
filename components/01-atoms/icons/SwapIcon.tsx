@@ -1,7 +1,18 @@
 import { SVGProps } from "react";
 
-export const SwapIcon = (props: SVGProps<SVGSVGElement>) => {
-  return (
+export enum SwapIconVariant {
+  VERTICAL = "vertical",
+  HORIZONTAL = "horizontal",
+}
+type SwapIconVariants = SwapIconVariant | "vertical" | "horizontal";
+
+interface SwapIconProps {
+  props?: SVGProps<SVGSVGElement>;
+  variant?: SwapIconVariants;
+}
+
+export const SwapIcon = ({ props, variant = "horizontal" }: SwapIconProps) => {
+  return variant == SwapIconVariant.HORIZONTAL ? (
     <svg
       {...props}
       width="14"
@@ -55,5 +66,60 @@ export const SwapIcon = (props: SVGProps<SVGSVGElement>) => {
         </filter>
       </defs>
     </svg>
+  ) : (
+    variant == SwapIconVariant.VERTICAL && (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g id="Swap" filter="url(#filter0_i_2167_3884)">
+          <path
+            id="Vector"
+            d="M5.10312 2.09668C4.7594 1.7506 4.20121 1.7506 3.85749 2.09668L1.21775 4.75464C0.874032 5.10073 0.874032 5.66278 1.21775 6.00887C1.56146 6.35496 2.11966 6.35496 2.46338 6.00887L3.60177 4.86262L3.60177 13.3542C3.60177 13.8443 3.99498 14.2402 4.48168 14.2402C4.96838 14.2402 5.36159 13.8443 5.36159 13.3542L5.36159 4.86262L6.49998 6.00887C6.8437 6.35496 7.40189 6.35496 7.74561 6.00887C8.08933 5.66278 8.08933 5.10073 7.74561 4.75464L5.10587 2.09668H5.10312ZM14.7822 11.3248C15.1259 10.9787 15.1259 10.4166 14.7822 10.0706C14.4385 9.72447 13.8803 9.72447 13.5365 10.0706L12.4009 11.214V2.72241C12.4009 2.23235 12.0077 1.83642 11.521 1.83642C11.0343 1.83642 10.6411 2.23235 10.6411 2.72241V11.214L9.50269 10.0678C9.15897 9.7217 8.60078 9.7217 8.25706 10.0678C7.91334 10.4139 7.91334 10.9759 8.25706 11.322L10.8968 13.98C11.2405 14.3261 11.7987 14.3261 12.1424 13.98L14.7822 11.322V11.3248Z"
+            fill="#F7F7F7"
+          />
+        </g>
+        <defs>
+          <filter
+            id="filter0_i_2167_3884"
+            x="0"
+            y="0"
+            width="16"
+            height="17"
+            filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB"
+          >
+            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feBlend
+              mode="normal"
+              in="SourceGraphic"
+              in2="BackgroundImageFix"
+              result="shape"
+            />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feOffset dy="1" />
+            <feGaussianBlur stdDeviation="1" />
+            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"
+            />
+            <feBlend
+              mode="normal"
+              in2="shape"
+              result="effect1_innerShadow_2167_3884"
+            />
+          </filter>
+        </defs>
+      </svg>
+    )
   );
 };
