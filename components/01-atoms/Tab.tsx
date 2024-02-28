@@ -47,9 +47,7 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
               setIsActiveTab(tab.id);
             }}
           >
-            <div className="flex items-center justify-center w-[74px] h-[16px]">
-              {tab.name}
-            </div>
+            <div className="flex items-center justify-center">{tab.name}</div>
           </div>
         );
       })}

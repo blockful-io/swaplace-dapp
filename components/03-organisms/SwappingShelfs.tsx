@@ -51,7 +51,7 @@ export const SwappingShelfs = () => {
           <SearchItemsShelf />
         </div>
       </div>
-      <div className="p-5 bg-blue-500">
+      <div className="p-5">
         <div className={cc([activeSwappingShelfID ? "hidden" : "block"])}>
           <NftsShelf address={validatedAddressToSwap} variant="their" />
         </div>
