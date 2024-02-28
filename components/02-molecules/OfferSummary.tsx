@@ -45,10 +45,9 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
     ensAddress: searchedEthereumAdress as unknown as EthereumAddress,
   });
 
-  useEffect(()=>{
-    if(validatedAddressToSwap && userJustValidatedInput && inputAddress){
- 
-      const newAddress = new EthereumAddress(validatedAddressToSwap)
+  useEffect(() => {
+    if (validatedAddressToSwap && userJustValidatedInput && inputAddress) {
+      const newAddress = new EthereumAddress(validatedAddressToSwap);
       setSearchedEthereumAddress(newAddress);
     }
 
@@ -60,11 +59,19 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
       <div className="flex justify-between items-center h-9 gap-2">
         <div className="flex space-x-2">
           <div className="flex items-center">
-            {!forAuthedUser && authenticatedUserAddress && walletENSName ?
-              <ENSAvatar avatarENSAddress={authenticatedUserAddress} size="small" />
-              : forAuthedUser && validatedAddressToSwap ?
-                <ENSAvatar avatarENSAddress={new EthereumAddress(validatedAddressToSwap)} size="small" />
-                : <PersonIcon />}
+            {!forAuthedUser && authenticatedUserAddress && walletENSName ? (
+              <ENSAvatar
+                avatarENSAddress={authenticatedUserAddress}
+                size="small"
+              />
+            ) : forAuthedUser && validatedAddressToSwap ? (
+              <ENSAvatar
+                avatarENSAddress={new EthereumAddress(validatedAddressToSwap)}
+                size="small"
+              />
+            ) : (
+              <PersonIcon />
+            )}
           </div>
           <div className="items-center">
             <p className="font-medium">
@@ -86,7 +93,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
                     validatedAddressToSwap,
                   ).getEllipsedAddress()} gets`
                 : (forAuthedUser && !validatedAddressToSwap) || !inputAddress
-                ? `Use the search bar`
+                ? `They get`
                 : `Use the search bar`}
             </p>
           </div>
