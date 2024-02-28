@@ -25,7 +25,7 @@ export const EnsNameAndAddressWallet = () => {
         <>
           <ENSAvatar avatarENSAddress={authenticatedUserAddress} />
           <div className="flex flex-col">
-            <div className="flex gap-2">
+            <div className="flex items-center justify-start gap-2">
               {primaryName && (
                 <>
                   <h3 className="text-sm ">{`${primaryName}`}</h3>
@@ -40,7 +40,7 @@ export const EnsNameAndAddressWallet = () => {
                     authenticatedUserAddress.toString(),
                   );
                 }}
-                className="flex items-center justify-start gap-1"
+                className="flex items-center justify-start gap-2"
               >
                 <h3 className="text-sm">{`  ${displayAddress}`}</h3>
                 <div>
