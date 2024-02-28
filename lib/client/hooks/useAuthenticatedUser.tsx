@@ -23,9 +23,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
   const [loadingAuthenticatedUser, setLoadingAuthenticatedUser] =
     useState(true);
 
-
-  console.log("nextAuthUser, address, isConnected :", nextAuthUser, address, isConnected)
-
   useEffect(() => {
     if (
       typeof chain?.id === "number" &&
