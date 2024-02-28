@@ -17,14 +17,15 @@ import {
   packingData,
 } from "@/lib/client/blockchain-utils";
 import { SwaplaceAbi } from "@/lib/client/abi";
+import { TokenOffers } from "@/components/03-organisms";
 import { Asset, makeSwap } from "@/lib/client/swap-utils";
 import { publicClient } from "@/lib/wallet/wallet-config";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
-import { getContract } from "viem";
 import { type WalletClient, useNetwork, useWalletClient } from "wagmi";
 import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import toast from "react-hot-toast";
+import { getContract } from "viem";
 
 interface ConfirmSwapApprovalModalProps {
   open: boolean;
@@ -215,7 +216,14 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
+          component: (
+            <>
+              <div className="flex flex-col gap-2">
+                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+                <TokenOffers variant="vertical" />
+              </div>
+            </>
+          ),
         }}
         footer={{
           component: (
@@ -251,7 +259,14 @@ export const ConfirmSwapModal = ({
           description: "Please review your final proposal.",
         }}
         body={{
-          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
+          component: (
+            <>
+              <div className="flex flex-col gap-2">
+                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+                <TokenOffers variant="vertical" />
+              </div>
+            </>
+          ),
         }}
         footer={{
           component: (
@@ -277,7 +292,14 @@ export const ConfirmSwapModal = ({
           description: "Congrats, your swap offer was submitted.",
         }}
         body={{
-          component: <OfferExpiryConfirmSwap expireTime={"3 weeks"} />,
+          component: (
+            <>
+              <div className="flex flex-col gap-2">
+                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+                <TokenOffers variant="vertical" />
+              </div>
+            </>
+          ),
         }}
         footer={{
           component: (

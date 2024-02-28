@@ -14,6 +14,7 @@ import { useNetwork } from "wagmi";
 
 interface TokensShelfProps {
   address: string | null;
+  variant: "your" | "their";
 }
 
 /**
@@ -23,7 +24,7 @@ interface TokensShelfProps {
  *
  * @returns Tokens Shelf based in status of given address
  */
-export const TokensShelf = ({ address }: TokensShelfProps) => {
+export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   const { chain } = useNetwork();
   const [tokenList, setTokensList] = useState<Token[]>([]);
   const [tokensQueryStatus, setTokensQueryStatus] = useState<TokensQueryStatus>(
@@ -35,7 +36,7 @@ export const TokensShelf = ({ address }: TokensShelfProps) => {
   const { validatedAddressToSwap, inputAddress, destinyChain } =
     useContext(SwapContext);
 
-  useEffect(() => {
+  const showUserItems = async () => {
     const chainId =
       address === authenticatedUserAddress?.address
         ? chain?.id
@@ -70,6 +71,10 @@ export const TokensShelf = ({ address }: TokensShelfProps) => {
           }
         });
     }
+  };
+
+  useEffect(() => {
+    showUserItems();
   }, [address, chain, destinyChain]);
 
   const conditionallyCleanTokensList = (condition: boolean) => {
@@ -83,12 +88,23 @@ export const TokensShelf = ({ address }: TokensShelfProps) => {
     conditionallyCleanTokensList(
       !!authenticatedUserAddress &&
         !!address &&
+        authenticatedUserAddress.equals(new EthereumAddress(address)) &&
+        variant === "their",
+    );
+  }, [variant]);
+
+  useEffect(() => {
+    conditionallyCleanTokensList(
+      !!authenticatedUserAddress &&
+        !!address &&
         authenticatedUserAddress.equals(new EthereumAddress(address)),
     );
   }, [destinyChain]);
 
   useEffect(() => {
-    conditionallyCleanTokensList(address !== authenticatedUserAddress?.address);
+    conditionallyCleanTokensList(
+      address !== authenticatedUserAddress?.address && variant === "their",
+    );
   }, [chain]);
 
   useEffect(() => {
@@ -99,18 +115,26 @@ export const TokensShelf = ({ address }: TokensShelfProps) => {
   }, [inputAddress]);
 
   useEffect(() => {
-    conditionallyCleanTokensList(!validatedAddressToSwap);
+    conditionallyCleanTokensList(
+      !validatedAddressToSwap && variant === "their",
+    );
   }, [validatedAddressToSwap]);
 
   useEffect(() => {
-    conditionallyCleanTokensList(!authenticatedUserAddress);
+    conditionallyCleanTokensList(
+      address !== authenticatedUserAddress?.address && variant === "their",
+    );
   }, [authenticatedUserAddress]);
 
   return (
     <div className="w-full  flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
       {tokensQueryStatus == TokensQueryStatus.WITH_RESULTS && tokenList ? (
         <div className="w-full h-full">
-          <TokensList ownerAddress={address} tokensList={tokenList} />
+          <TokensList
+            ownerAddress={address}
+            tokensList={tokenList}
+            variant={variant}
+          />
         </div>
       ) : tokensQueryStatus == TokensQueryStatus.EMPTY_QUERY || !address ? (
         <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">

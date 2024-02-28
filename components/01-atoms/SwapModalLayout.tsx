@@ -86,7 +86,7 @@ export const SwapModalLayout = ({
               </Dialog.Title>
             </div>
 
-            <div className="flex flex-col gap-6 p-6 h-[460px] ">
+            <div className="flex flex-col gap-6 p-6 h-[460px] overflow-hidden">
               <div className="flex">
                 <Dialog.Description>
                   <p className="dark:p-normal-2-dark p-normal-2">

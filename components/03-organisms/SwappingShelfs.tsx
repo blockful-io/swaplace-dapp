@@ -1,6 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { TokensShelf } from "@/components/03-organisms";
-import { SwapContext, SwappingShelfID, Tab } from "@/components/01-atoms/";
+import {
+  SearchItemsShelf,
+  SwapContext,
+  SwappingShelfID,
+  Tab,
+} from "@/components/01-atoms/";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useContext, useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
@@ -34,14 +39,26 @@ export const SwappingShelfs = () => {
 
   return (
     <div className="w-[95%] mb-20 dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
-      <Tab
-        setActiveSwappingShelfID={(input) => setActiveSwappingShelfID(input)}
-      />
+      <div className="flex items-center justify-between max-h-[48px]">
+        <div className="flex max-w-[224px]">
+          <Tab
+            setActiveSwappingShelfID={(input) =>
+              setActiveSwappingShelfID(input)
+            }
+          />
+        </div>
+        <div className="pr-2">
+          <SearchItemsShelf />
+        </div>
+      </div>
       <div className={cc([activeSwappingShelfID ? "hidden" : "block"])}>
-        <TokensShelf address={validatedAddressToSwap} />
+        <TokensShelf address={validatedAddressToSwap} variant="their" />
       </div>
       <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
-        <TokensShelf address={authenticatedUserAddress?.address ?? null} />
+        <TokensShelf
+          address={authenticatedUserAddress?.address ?? null}
+          variant="your"
+        />
       </div>
     </div>
   );

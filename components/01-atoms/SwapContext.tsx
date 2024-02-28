@@ -11,6 +11,7 @@ import {
 } from "@/lib/client/blockchain-utils";
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 interface SwapContextProps {
   // Application universal need
@@ -73,6 +74,8 @@ export const SwapContextProvider = ({ children }: any) => {
     authedUserSelectedTokensApprovalStatus,
     setAuthedUserTokensApprovalStatus,
   ] = useState<TokenApprovalData[]>([]);
+
+  const router = useRouter();
 
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
@@ -219,6 +222,12 @@ export const SwapContextProvider = ({ children }: any) => {
     updateSwapStep,
     currentSwapModalStep,
   });
+
+  // This is a temporary measure while we don't turn the dApp into a SPA
+  // We are reseting the inputAddress to reload the inventory
+  useEffect(() => {
+    setValidatedAddressToSwap("");
+  }, [router.asPath]);
 
   return (
     <SwapContext.Provider value={swapData}>{children}</SwapContext.Provider>
