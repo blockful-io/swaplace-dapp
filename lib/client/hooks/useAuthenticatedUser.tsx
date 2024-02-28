@@ -10,7 +10,6 @@ interface AuthenticatedUserHook {
   loadingAuthenticatedUser: boolean;
   authenticatedUserEnsName: string | null;
   authenticatedUserAddress: EthereumAddress | null;
-  unsupportedChain: boolean;
   disconnectUser: () => void;
 }
 
@@ -23,7 +22,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
     useState<EthereumAddress | null>(null);
   const [loadingAuthenticatedUser, setLoadingAuthenticatedUser] =
     useState(true);
-    const [isChainSupported, setisChainSupported] = useState(true);
 
 
   console.log("nextAuthUser, address, isConnected :", nextAuthUser, address, isConnected)
@@ -34,11 +32,8 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
       // checks if network is supported
       !getRpcHttpUrlForNetwork.get(chain?.id)
     ) {
-      setisChainSupported(false)
       // disconnect();
       // return;
-    } else {
-      setisChainSupported(true)
     }
   }, [chain]);
 
@@ -94,7 +89,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
 
   return {
     loadingEnsName: (loadingEnsName || !ensName) && !errorLoadingEnsName,
-    unsupportedChain: !isChainSupported,
     loadingAuthenticatedUser,
     authenticatedUserEnsName:
       loadingEnsName || errorLoadingEnsName || !ensName ? null : ensName,
