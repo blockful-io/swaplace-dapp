@@ -7,6 +7,7 @@ export * from "./OfferTag";
 export * from "./NftsCardApprovedList";
 export * from "./ProgressBar";
 export * from "./SearchBar";
+export * from "./SearchItemsShelf";
 export * from "./SelectAuthedUserChain";
 export * from "./SelectDestinyChain";
 export * from "./StatusOffers";
