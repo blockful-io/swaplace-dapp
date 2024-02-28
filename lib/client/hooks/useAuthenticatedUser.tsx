@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ADDRESS_ZERO, getRpcHttpUrlForNetwork } from "../constants";
+import { ADDRESS_ZERO, getNetwork } from "../constants";
 import { EthereumAddress } from "../../shared/types";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -24,10 +24,7 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
     useState(true);
 
   useEffect(() => {
-    if (
-      typeof chain?.id === "number" &&
-      !getRpcHttpUrlForNetwork.get(chain?.id)
-    ) {
+    if (typeof chain?.id === "number" && !getNetwork.get(chain?.id)) {
       disconnect();
       return;
     }

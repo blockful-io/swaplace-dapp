@@ -6,71 +6,57 @@ import { ADDRESS_ZERO, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress, Token } from "@/lib/shared/types";
 import {
   ButtonClickPossibilities,
-  IArrayStatusTokenApproved,
+  TokenApprovalData,
   SwapModalSteps,
-} from "@/lib/client/blockchain-data";
+} from "@/lib/client/blockchain-utils";
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 interface SwapContextProps {
+  // Application universal need
+  destinyChain: SupportedNetworks;
+  setDestinyChain: Dispatch<React.SetStateAction<SupportedNetworks>>;
+
+  // Searched user related
   inputAddress: string;
-  validatedAddressToSwap: string;
   setInputAddress: (address: string) => void;
+  validatedAddressToSwap: string;
+
   validateAddressToSwap: (
     authedUser: EthereumAddress,
     inputEnsAddress: string | null | undefined,
   ) => void;
-  setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
-  userJustValidatedInput: boolean;
-  setAuthenticatedUsedTokensList: Dispatch<React.SetStateAction<Token[]>>;
-  authenticatedUserTokensList: Token[];
-  setSearchedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
   searchedUserTokensList: Token[];
-  destinyChain: SupportedNetworks;
-  setDestinyChain: Dispatch<React.SetStateAction<SupportedNetworks>>;
-  setTimeDate: Dispatch<React.SetStateAction<bigint>>;
-  timeDate: bigint;
-  setAllSelectedNftsAreApproved: Dispatch<React.SetStateAction<boolean>>;
-  allSelectedNftsApproved: boolean;
-  setAuthedUserNftsApprovalStatus: Dispatch<
-    React.SetStateAction<IArrayStatusTokenApproved[]>
-  >;
-  authedUserSelectedNftsApprovalStatus: IArrayStatusTokenApproved[];
-  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
-  currentSwapModalStep: SwapModalSteps;
-}
+  setSearchedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
+  /* 
+    Below state is used for Ui rules only, setting new stylings
+    if the Search bar content was just now submitted
+    */
+  userJustValidatedInput: boolean;
+  setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
 
-export const SwapContext = React.createContext<SwapContextProps>({
-  inputAddress: "",
-  validatedAddressToSwap: "",
-  validateAddressToSwap: (
-    _authedUser: EthereumAddress,
-    _inputEnsAddress: string | null | undefined,
-  ) => {},
-  setInputAddress: (address: string) => {},
-  setUserJustValidatedInput: () => {},
-  userJustValidatedInput: false,
-  setAuthenticatedUsedTokensList: () => {},
-  authenticatedUserTokensList: [],
-  setSearchedUserTokensList: () => {},
-  searchedUserTokensList: [],
-  destinyChain: SupportedNetworks.SEPOLIA,
-  setDestinyChain: () => {},
-  setTimeDate: () => {},
-  timeDate: BigInt(1),
-  setAllSelectedNftsAreApproved: () => {},
-  allSelectedNftsApproved: false,
-  setAuthedUserNftsApprovalStatus: () => {},
-  authedUserSelectedNftsApprovalStatus: [],
-  currentSwapModalStep: SwapModalSteps.APPROVE_TOKENS,
-  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
-});
+  // Authed user related
+  authedUserSelectedTokensApprovalStatus: TokenApprovalData[];
+  authenticatedUserTokensList: Token[];
+  setAuthenticatedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
+  approvedTokensCount: number;
+  setApprovedTokensCount: Dispatch<React.SetStateAction<number>>;
+  setAuthedUserTokensApprovalStatus: Dispatch<
+    React.SetStateAction<TokenApprovalData[]>
+  >;
+
+  // Swap modal related
+  currentSwapModalStep: SwapModalSteps;
+  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
+  timeDate: bigint;
+  setTimeDate: Dispatch<React.SetStateAction<bigint>>;
+}
 
 export const SwapContextProvider = ({ children }: any) => {
   const [inputAddress, setInputAddress] = useState<string>("");
   const [validatedAddressToSwap, setValidatedAddressToSwap] = useState("");
   const [userJustValidatedInput, setUserJustValidatedInput] = useState(true);
-  const [authenticatedUserTokensList, setAuthenticatedUsedTokensList] =
+  const [authenticatedUserTokensList, setAuthenticatedUserTokensList] =
     useState<Token[]>([]);
   const [searchedUserTokensList, setSearchedUserTokensList] = useState<Token[]>(
     [],
@@ -82,12 +68,11 @@ export const SwapContextProvider = ({ children }: any) => {
 
   const [currentSwapModalStep, setCurrentSwapModalStep] =
     useState<SwapModalSteps>(SwapModalSteps.APPROVE_TOKENS);
-  const [allSelectedNftsApproved, setAllSelectedNftsAreApproved] =
-    useState<boolean>(false);
+  const [approvedTokensCount, setApprovedTokensCount] = useState(0);
   const [
-    authedUserSelectedNftsApprovalStatus,
-    setAuthedUserNftsApprovalStatus,
-  ] = useState<IArrayStatusTokenApproved[]>([]);
+    authedUserSelectedTokensApprovalStatus,
+    setAuthedUserTokensApprovalStatus,
+  ] = useState<TokenApprovalData[]>([]);
 
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
@@ -184,7 +169,7 @@ export const SwapContextProvider = ({ children }: any) => {
       validateAddressToSwap,
       setUserJustValidatedInput,
       userJustValidatedInput,
-      setAuthenticatedUsedTokensList,
+      setAuthenticatedUserTokensList,
       authenticatedUserTokensList,
       setSearchedUserTokensList,
       searchedUserTokensList,
@@ -192,10 +177,10 @@ export const SwapContextProvider = ({ children }: any) => {
       setDestinyChain,
       setTimeDate,
       timeDate,
-      setAllSelectedNftsAreApproved,
-      allSelectedNftsApproved,
-      setAuthedUserNftsApprovalStatus,
-      authedUserSelectedNftsApprovalStatus,
+      approvedTokensCount,
+      setApprovedTokensCount,
+      setAuthedUserTokensApprovalStatus,
+      authedUserSelectedTokensApprovalStatus,
       updateSwapStep,
       currentSwapModalStep,
     });
@@ -207,8 +192,8 @@ export const SwapContextProvider = ({ children }: any) => {
     searchedUserTokensList,
     destinyChain,
     timeDate,
-    allSelectedNftsApproved,
-    authedUserSelectedNftsApprovalStatus,
+    approvedTokensCount,
+    authedUserSelectedTokensApprovalStatus,
     currentSwapModalStep,
   ]);
 
@@ -219,7 +204,7 @@ export const SwapContextProvider = ({ children }: any) => {
     validateAddressToSwap,
     setUserJustValidatedInput,
     userJustValidatedInput,
-    setAuthenticatedUsedTokensList,
+    setAuthenticatedUserTokensList,
     authenticatedUserTokensList,
     setSearchedUserTokensList,
     searchedUserTokensList,
@@ -227,10 +212,10 @@ export const SwapContextProvider = ({ children }: any) => {
     setDestinyChain,
     setTimeDate,
     timeDate,
-    setAllSelectedNftsAreApproved,
-    allSelectedNftsApproved,
-    setAuthedUserNftsApprovalStatus,
-    authedUserSelectedNftsApprovalStatus,
+    approvedTokensCount,
+    setApprovedTokensCount,
+    setAuthedUserTokensApprovalStatus,
+    authedUserSelectedTokensApprovalStatus,
     updateSwapStep,
     currentSwapModalStep,
   });
@@ -239,3 +224,29 @@ export const SwapContextProvider = ({ children }: any) => {
     <SwapContext.Provider value={swapData}>{children}</SwapContext.Provider>
   );
 };
+
+export const SwapContext = React.createContext<SwapContextProps>({
+  inputAddress: "",
+  validatedAddressToSwap: "",
+  validateAddressToSwap: (
+    _authedUser: EthereumAddress,
+    _inputEnsAddress: string | null | undefined,
+  ) => {},
+  setInputAddress: (address: string) => {},
+  setUserJustValidatedInput: () => {},
+  userJustValidatedInput: false,
+  setAuthenticatedUserTokensList: () => {},
+  authenticatedUserTokensList: [],
+  setSearchedUserTokensList: () => {},
+  searchedUserTokensList: [],
+  destinyChain: SupportedNetworks.SEPOLIA,
+  setDestinyChain: () => {},
+  timeDate: BigInt(1),
+  setTimeDate: () => {},
+  approvedTokensCount: 0,
+  setApprovedTokensCount: () => {},
+  setAuthedUserTokensApprovalStatus: () => {},
+  authedUserSelectedTokensApprovalStatus: [],
+  currentSwapModalStep: SwapModalSteps.APPROVE_TOKENS,
+  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
+});

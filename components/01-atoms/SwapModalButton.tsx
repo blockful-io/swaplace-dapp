@@ -73,7 +73,7 @@ export function SwapModalButton({
   isLoading = false,
   ...props
 }: Props) {
-  const { allSelectedNftsApproved } = useContext(SwapContext);
+  const { approvedTokensCount } = useContext(SwapContext);
   const { theme } = useTheme();
   if (theme === undefined) return false;
 
@@ -86,7 +86,7 @@ export function SwapModalButton({
         ButtonVariantsConfigs[variant].style,
         "flex items-center gap-2 disabled:pointer-events-none",
         aditionalStyle,
-        !allSelectedNftsApproved
+        !approvedTokensCount
           ? "p-medium-bold dark:p-medium-bold cursor-not-allowed"
           : "p-medium-bold-dark bg-[#DDF23D] ",
       ])}
@@ -101,7 +101,7 @@ export function SwapModalButton({
           <RightIcon
             fill={ButtonVariantsConfigs[variant].arrowColorInHex(
               theme,
-              allSelectedNftsApproved,
+              !!approvedTokensCount,
             )}
           />
         </>
@@ -110,7 +110,7 @@ export function SwapModalButton({
           <LeftIcon
             fill={ButtonVariantsConfigs[variant].arrowColorInHex(
               theme,
-              allSelectedNftsApproved,
+              !!approvedTokensCount,
             )}
           />
           {label}

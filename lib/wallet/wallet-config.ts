@@ -1,4 +1,4 @@
-import { getRpcHttpUrlForNetwork } from "../client/constants";
+import { getCurrentNetworkHttpUrl } from "../client/constants";
 import { polygonMumbai, sepolia } from "@wagmi/core/chains";
 import { configureChains, createConfig } from "wagmi";
 import {
@@ -11,23 +11,17 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-import { createPublicClient, http } from "viem";
 
 export const { chains, webSocketPublicClient, publicClient } = configureChains(
   [sepolia, polygonMumbai],
   [
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: getRpcHttpUrlForNetwork.get(chain.id) ?? "",
+        http: getCurrentNetworkHttpUrl(chain.id),
       }),
     }),
   ],
 );
-
-export const publicClientViem = createPublicClient({
-  chain: sepolia,
-  transport: http(),
-});
 
 const connectorArgs = {
   appName: "Swaplace dApp",

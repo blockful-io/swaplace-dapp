@@ -1,4 +1,4 @@
-export const SwaplaceAbi = [
+export const SwaplaceAbi: Readonly<Array<Record<string, any>>> = [
   {
     inputs: [
       {
@@ -489,7 +489,7 @@ export const SwaplaceAbi = [
   },
 ] as const;
 
-export const MockERC721Abi = [
+export const MockERC721Abi: Readonly<Array<Record<string, any>>> = [
   {
     inputs: [],
     stateMutability: "nonpayable",
@@ -858,7 +858,7 @@ export const MockERC721Abi = [
   },
 ] as const;
 
-export const MockERC20Abi = [
+export const MockERC20Abi: Readonly<Array<Record<string, any>>> = [
   {
     inputs: [],
     stateMutability: "nonpayable",

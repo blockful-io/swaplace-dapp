@@ -12,16 +12,16 @@ export const SwapExpireTime = () => {
     TimeStampDate.ONE_DAY,
   );
 
-  let chainID: number;
+  let chainId: number;
 
   if (typeof chain?.id !== "undefined") {
-    chainID = chain.id;
+    chainId = chain.id;
   }
 
   const fetchData = async (selectedValue: TimeStampDate) => {
     try {
       const timeSelected = BigInt(selectedValue);
-      const timestamp = await getTimestamp(chainID);
+      const timestamp = await getTimestamp(chainId);
       setTimeDate(timeSelected + timestamp);
     } catch (error) {
       console.error("error", error);

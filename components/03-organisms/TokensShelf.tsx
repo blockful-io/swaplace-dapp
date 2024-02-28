@@ -3,7 +3,7 @@ import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import {
   getERC721TokensFromAddress,
   getERC20TokensFromAddress,
-} from "@/lib/client/blockchain-data";
+} from "@/lib/client/blockchain-utils";
 import { EthereumAddress, Token } from "@/lib/shared/types";
 import { TokensList } from "@/components/02-molecules";
 import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
@@ -65,7 +65,6 @@ export const TokensShelf = ({ address }: TokensShelfProps) => {
           if (tokensCount === 0) {
             setTokensQueryStatus(TokensQueryStatus.NO_RESULTS);
           } else {
-            console.log(queriedTokens);
             setTokensList(queriedTokens);
             setTokensQueryStatus(TokensQueryStatus.WITH_RESULTS);
           }

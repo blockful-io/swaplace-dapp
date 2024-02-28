@@ -1,6 +1,6 @@
 import { Swap } from "../client/swap-utils";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
-import { publicClientViem } from "../wallet/wallet-config";
+import { publicClient } from "../wallet/wallet-config";
 import { encodeFunctionData } from "viem";
 
 export interface SwapUserConfiguration {
@@ -100,7 +100,6 @@ export async function createSwap(
       },
     ],
   });
-
   try {
     const transactionHash = await configurations.walletClient.sendTransaction({
       data: data,
@@ -109,11 +108,11 @@ export async function createSwap(
       ] as `0x${string}`,
     });
 
-    const transactionReceipt = await publicClientViem.waitForTransactionReceipt(
-      {
-        hash: transactionHash,
-      },
-    );
+    const transactionReceipt = await publicClient({
+      chainId: configurations.chain,
+    }).waitForTransactionReceipt({
+      hash: transactionHash,
+    });
 
     return transactionReceipt;
   } catch (error) {

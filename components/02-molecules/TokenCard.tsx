@@ -2,6 +2,7 @@
 import { getTokenName } from "@/lib/client/tokens";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { isTokenSwapApproved } from "@/lib/service/verifyTokensSwapApproval";
 import {
   ERC20,
   ERC721,
@@ -12,6 +13,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import toast from "react-hot-toast";
+import { useNetwork } from "wagmi";
 
 interface TokenCardProps {
   tokenData: Token;
@@ -33,7 +35,6 @@ interface TokenCardProps {
 export enum NftCardActionType {
   "SELECT_NFT_FOR_SWAP",
   "SHOW_NFT_DETAILS",
-  "NFT_ONCLICK",
 }
 
 export enum NftCardStyleType {
@@ -60,8 +61,9 @@ export const TokenCard = ({
   onClickAction = NftCardActionType.SELECT_NFT_FOR_SWAP,
 }: TokenCardProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
+  const { chain } = useNetwork();
   const {
-    setAuthenticatedUsedTokensList,
+    setAuthenticatedUserTokensList,
     setSearchedUserTokensList,
     authenticatedUserTokensList,
     searchedUserTokensList,
@@ -96,7 +98,21 @@ export const TokenCard = ({
     }
 
     setDisplayableData(displayableData);
+
+    verifyIfTokenIsApproved();
   }, [tokenData]);
+
+  const verifyIfTokenIsApproved = () => {
+    if (!chain?.id) throw new Error("User is not connected to any network");
+
+    isTokenSwapApproved({
+      token: tokenData,
+      chainId: chain?.id,
+    }).then(() => {
+      //.then((result) => {
+      // setIsApproved(result);
+    });
+  };
 
   useEffect(() => {
     const currentNftIsFromAuthedUser = ownerAddress
@@ -141,13 +157,13 @@ export const TokenCard = ({
         );
 
         if (isSelected) {
-          setAuthenticatedUsedTokensList((prevNftAuthUser) =>
+          setAuthenticatedUserTokensList((prevNftAuthUser) =>
             prevNftAuthUser.filter(
               (selectedNft) => selectedNft.id !== tokenData.id,
             ),
           );
         } else {
-          setAuthenticatedUsedTokensList((prevNftAuthUser) => [
+          setAuthenticatedUserTokensList((prevNftAuthUser) => [
             ...prevNftAuthUser,
             tokenData,
           ]);

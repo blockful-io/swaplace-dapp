@@ -15,15 +15,11 @@ import {
   ComposeTokenUserAssets,
   SwapModalSteps,
   packingData,
-} from "@/lib/client/blockchain-data";
-import {
-  Asset,
-  makeSwap,
-  approveTokensBeforeSwap,
-} from "@/lib/client/swap-utils";
+} from "@/lib/client/blockchain-utils";
 import { SwaplaceAbi } from "@/lib/client/abi";
+import { Asset, makeSwap } from "@/lib/client/swap-utils";
+import { publicClient } from "@/lib/wallet/wallet-config";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
-import { publicClientViem } from "@/lib/wallet/wallet-config";
 import { getContract } from "viem";
 import { type WalletClient, useNetwork, useWalletClient } from "wagmi";
 import { useContext, useEffect, useState } from "react";
@@ -44,10 +40,8 @@ export const ConfirmSwapModal = ({
     timeDate,
     authenticatedUserTokensList,
     searchedUserTokensList,
-    allSelectedNftsApproved,
+    approvedTokensCount,
     validatedAddressToSwap,
-    setAuthedUserNftsApprovalStatus,
-    setAllSelectedNftsAreApproved,
     currentSwapModalStep,
     updateSwapStep,
   } = useContext(SwapContext);
@@ -91,16 +85,7 @@ export const ConfirmSwapModal = ({
 
   useEffect(() => {
     updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
-
-    const fetchApprove = async () => {
-      await approveTokensBeforeSwap(
-        authenticatedUserTokensList,
-        setAuthedUserNftsApprovalStatus,
-        setAllSelectedNftsAreApproved,
-      );
-    };
-    fetchApprove();
-  }, [authenticatedUserTokensList, allSelectedNftsApproved]);
+  }, [authenticatedUserTokensList]);
 
   if (
     !authenticatedUserAddress?.address ||
@@ -124,8 +109,8 @@ export const ConfirmSwapModal = ({
 
     const SwaplaceContract = getContract({
       address: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
+      publicClient: publicClient({ chainId: chain.id }),
       abi: SwaplaceAbi,
-      publicClient: publicClientViem,
     });
     const config = await packingData(
       SwaplaceContract,
@@ -157,7 +142,7 @@ export const ConfirmSwapModal = ({
     // };
 
     try {
-      if (allSelectedNftsApproved) {
+      if (approvedTokensCount) {
         const transactionReceipt = await createSwap(swap, configurations);
 
         if (transactionReceipt != undefined) {
@@ -179,7 +164,7 @@ export const ConfirmSwapModal = ({
   };
 
   const validateTokensAreApproved = () => {
-    if (allSelectedNftsApproved) {
+    if (approvedTokensCount) {
       if (currentSwapModalStep === SwapModalSteps.APPROVE_TOKENS) {
         updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
       }
@@ -246,7 +231,7 @@ export const ConfirmSwapModal = ({
 
                 <SwapModalButton
                   label={"Confirm and send"}
-                  disabled={!allSelectedNftsApproved}
+                  disabled={!approvedTokensCount}
                   variant={ButtonVariant.SECONDARY}
                   onClick={() => {
                     updateSwapStep(ButtonClickPossibilities.NEXT_STEP);

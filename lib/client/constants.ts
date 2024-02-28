@@ -1,6 +1,5 @@
 import { Network } from "alchemy-sdk";
 
-/* eslint-disable prefer-const */
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 export const WIDE_SCREEN_SIZE = 1279;
@@ -65,19 +64,38 @@ export interface AlchemyERC721 {
 //   styleType?: NftCardStyleType;
 // }
 
-export let getApiKeyForNetwork: Map<number, string> = new Map([
+export const getApiKeyForNetwork: Map<number, string> = new Map([
   [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_KEY ?? ""],
   [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_KEY ?? ""],
 ]);
 
-export let getRpcHttpUrlForNetwork: Map<number, Network> = new Map([
+export const getNetwork: Map<number, Network> = new Map([
   [ChainInfo.SEPOLIA.id, Network.ETH_SEPOLIA],
   [ChainInfo.MUMBAI.id, Network.MATIC_MUMBAI],
+]);
+
+export const getRpcHttpUrlForNetwork: Map<number, string> = new Map([
+  [ChainInfo.SEPOLIA.id, `https://eth-sepolia.g.alchemy.com/v2/`],
+  [ChainInfo.MUMBAI.id, "https://polygon-mumbai.g.alchemy.com/v2/"],
+]);
+
+export const getAPIKeyForNetwork: Map<number, string | undefined> = new Map([
+  [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_KEY],
+  [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_KEY],
 ]);
 
 export const SWAPLACE_SMART_CONTRACT_ADDRESS = {
   [ChainInfo.SEPOLIA.id]: "0x24809b2b374c5d70c2BdA6d65290e3fa3a2b378d",
   [ChainInfo.MUMBAI.id]: "0x420696541dc0ec9643409C64d0Ba39dD429Eb34b",
+};
+
+export const getCurrentNetworkHttpUrl = (chainId: number) => {
+  const httpUrl = getRpcHttpUrlForNetwork.get(chainId);
+  const key = getAPIKeyForNetwork.get(chainId);
+
+  if (!key) throw new Error(`No API key is defined for chain ID: ${chainId}`);
+
+  return httpUrl + key;
 };
 
 //SEPOLIA MOCKS

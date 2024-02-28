@@ -1,106 +1,113 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  ADDRESS_ZERO,
-  SWAPLACE_SMART_CONTRACT_ADDRESS,
-} from "@/lib/client/constants";
+import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
 import { SwapContext } from "@/components/01-atoms";
-import {
-  TokenCard,
-  NftCardActionType,
-  NftCardStyleType,
-} from "@/components/02-molecules";
+import { TokenCard, NftCardStyleType } from "@/components/02-molecules";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { approveTokensBeforeSwap } from "@/lib/client/swap-utils";
-import { IApproveSwap } from "@/lib/client/blockchain-data";
+import {
+  IApproveTokenSwap,
+  getTokenAmountOrId,
+} from "@/lib/client/blockchain-utils";
 import { approveSwap } from "@/lib/service/approveSwap";
+import { isTokenSwapApproved } from "@/lib/service/verifyTokensSwapApproval";
 import { getTokenName } from "@/lib/client/tokens";
 import { Token } from "@/lib/shared/types";
 import cc from "classcat";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNetwork, useWalletClient } from "wagmi";
+import { type WalletClient, useNetwork, useWalletClient } from "wagmi";
+import { type TransactionReceipt } from "viem";
 
 export const ApprovedTokenCards = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
+  const [tokensBeingApproved, setTokensBeingApproved] = useState<Token[]>([]);
+  const [tokensApprovedForSwap, setTokensApprovedForSwap] = useState<Token[]>(
+    [],
+  );
 
   const {
     authenticatedUserTokensList,
-    authedUserSelectedNftsApprovalStatus,
-    setAuthedUserNftsApprovalStatus,
-    setAllSelectedNftsAreApproved,
-    allSelectedNftsApproved,
+    setApprovedTokensCount,
+    approvedTokensCount,
   } = useContext(SwapContext);
 
   useEffect(() => {
-    const fetchApprove = async () => {
-      await approveTokensBeforeSwap(
-        authenticatedUserTokensList,
-        setAuthedUserNftsApprovalStatus,
-        setAllSelectedNftsAreApproved,
-      );
-    };
-    fetchApprove();
-  }, [authenticatedUserTokensList, allSelectedNftsApproved]);
+    setApprovedTokensCount(0);
+  }, [authenticatedUserTokensList]);
 
   if (!authenticatedUserAddress?.address) {
     return null;
   }
+
   let chainId: number;
-  const handleApprove = async (token: Token) => {
-    if (typeof chain?.id != "undefined") {
-      chainId = chain?.id;
+
+  const handleApprove = async (
+    token: Token,
+    loadingCallback: (token: Token) => void,
+  ): Promise<TransactionReceipt | undefined> => {
+    if (!chain?.id || !walletClient) {
+      throw new Error("User's wallet is not connected");
     }
 
-    const swapData: IApproveSwap = {
-      walletClient: walletClient,
+    if (!token.contract)
+      throw new Error(`Token contract is not defined for: ${token}`);
+
+    const swapData: IApproveTokenSwap = {
+      walletClient: walletClient as WalletClient,
       spender: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
-      tokenContractAddress: token.contract,
-      amountOrId: BigInt(token?.id as string),
+      tokenContractAddress: token.contract as `0x${string}`,
+      amountOrId: getTokenAmountOrId(token),
+      chainId: chain.id,
+      token,
+      onConfirm: loadingCallback,
     };
 
     try {
       const transactionReceipt = await approveSwap(swapData);
+
       if (transactionReceipt != undefined) {
-        toast.success("Approval successfully");
+        toast.success("Approved successfully");
+        setTokensApprovedForSwap([...tokensApprovedForSwap, token]);
         return transactionReceipt;
       } else {
-        toast.error("Approval Failed");
+        toast.error("Approval failed");
       }
     } catch (error) {
-      toast.error("Approval Rejected");
+      // TODO: map error scenarios and create corresponding error triggers
+      toast.error("Approval rejected");
       console.error(error);
     }
   };
 
-  const validateApprovalTokens = (arraynftApproval: any[]) => {
-    const isValidApproved = !arraynftApproval.some((token) => {
-      return token.approved != SWAPLACE_SMART_CONTRACT_ADDRESS[chainId];
-    });
-
-    setAllSelectedNftsAreApproved(isValidApproved);
+  const addTokenToLoadingState = (token: Token) => {
+    setTokensBeingApproved([...tokensBeingApproved, token]);
   };
 
-  const approveNftForSwapping = async (token: Token, index: number) => {
+  const handleTokenApproval = async (token: Token) => {
     if (typeof chain?.id != "undefined") {
       chainId = chain?.id;
-    }
-    if (
-      authedUserSelectedNftsApprovalStatus[index]?.approved ===
-      SWAPLACE_SMART_CONTRACT_ADDRESS[chainId]
-    ) {
-      toast.error("Token already approved.");
     } else {
-      await handleApprove(token).then((result) => {
-        if (result != undefined) {
-          const nftWasApproved = (authedUserSelectedNftsApprovalStatus[
-            index
-          ].approved = SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as any);
+      throw new Error("User is not connected to any network");
+    }
 
-          setAuthedUserNftsApprovalStatus([nftWasApproved]);
+    const isApproved = await isTokenSwapApproved({
+      token,
+      chainId,
+    });
+
+    if (isApproved) {
+      setTokensApprovedForSwap([...tokensApprovedForSwap, token]);
+      toast.success("Token approved.");
+    } else {
+      await handleApprove(token, addTokenToLoadingState).then((isApproved) => {
+        if (typeof isApproved !== "undefined") {
+          setApprovedTokensCount(approvedTokensCount + 1);
         }
-        validateApprovalTokens(authedUserSelectedNftsApprovalStatus);
+
+        setTokensBeingApproved(
+          tokensBeingApproved.filter((tk) => tk === token),
+        );
       });
     }
   };
@@ -113,18 +120,19 @@ export const ApprovedTokenCards = () => {
             key={index}
             className={cc([
               "flex p-4 items-center gap-4 h-[68px]",
-              authedUserSelectedNftsApprovalStatus[index]?.approved ===
-              ADDRESS_ZERO
+              !tokensApprovedForSwap.includes(token)
                 ? "bg-[#353836]  rounded-xl"
                 : "dark:bg-[#DDF23D] bg-[#97a529] rounded-xl disabled cursor-not-allowed",
+              {
+                "disabled cursor-wait": tokensBeingApproved.includes(token),
+              },
             ])}
             role="button"
-            onClick={() => approveNftForSwapping(token, index)}
+            onClick={() => handleTokenApproval(token)}
           >
             <div>
               <TokenCard
                 withSelectionValidation={false}
-                onClickAction={NftCardActionType.NFT_ONCLICK}
                 ownerAddress={authenticatedUserAddress.address}
                 tokenData={authenticatedUserTokensList[index]}
                 styleType={NftCardStyleType.SMALL}
@@ -132,8 +140,7 @@ export const ApprovedTokenCards = () => {
             </div>
             <div className="flex flex-col gap-1">
               <div className="flex">
-                {authedUserSelectedNftsApprovalStatus[index]?.approved ===
-                ADDRESS_ZERO ? (
+                {!tokensApprovedForSwap.includes(token) ? (
                   <p className="p-medium-2-dark">
                     {getTokenName(authenticatedUserTokensList[index])}
                   </p>
@@ -144,10 +151,13 @@ export const ApprovedTokenCards = () => {
                 )}
               </div>
               <div className="flex p-semibold-dark">
-                {authedUserSelectedNftsApprovalStatus[index]?.approved ===
-                ADDRESS_ZERO ? (
+                {tokensBeingApproved.includes(token) ? (
+                  <p className="bg-[#505150] px-1 w-fit rounded-[4px] h-5 items-center flex">
+                    WAITING BLOCKCHAIN CONFIRMATION
+                  </p>
+                ) : !tokensApprovedForSwap.includes(token) ? (
                   <p className=" bg-[#505150] px-1 w-fit rounded-[4px] h-5 items-center flex">
-                    PENDING APPROVAL
+                    CLICK TO APPROVE
                   </p>
                 ) : (
                   <div className="bg-[#505150] px-1 w-fit bg-opacity-30 rounded-[4px] h-5 items-center flex">

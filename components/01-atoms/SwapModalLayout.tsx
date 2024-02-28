@@ -60,11 +60,11 @@ export const SwapModalLayout = ({
           leave="transition duration-75 ease-out"
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-95 opacity-0"
-          className="fixed left-1/2 top-1/2 z-50 bg-[#f8f8f8] dark:bg-[#212322] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[#353836] "
+          className="w-[80%] md:w-auto fixed left-1/2 top-1/2 z-50 bg-[#f8f8f8] dark:bg-[#212322] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[#353836] "
         >
           <Dialog.Panel
             className={
-              "flex flex-col md:min-w-[480px] md:max-w-[480px] md:max-h-[620px] w-[300px] border border-[#353836] rounded-[20px] shadow"
+              "flex flex-col md:min-w-[480px] md:max-w-[480px] md:max-h-[620px] border border-[#353836] rounded-[20px] shadow"
             }
           >
             <div className="border-b border-[#353836]">
@@ -78,7 +78,9 @@ export const SwapModalLayout = ({
                 </p>
                 <div role="button" onClick={toggleCloseButton.onClose}>
                   <CloseIcon
-                    className={cc([theme == "light" ? "text-black" : "text-white"])}
+                    className={cc([
+                      theme == "light" ? "text-black" : "text-white",
+                    ])}
                   />
                 </div>
               </Dialog.Title>

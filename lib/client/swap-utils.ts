@@ -1,22 +1,22 @@
-import {
-  IArrayStatusTokenApproved,
-  getTokensInfoBeforeSwap,
-} from "./blockchain-data";
+import { TokenApprovalData, getTokensInfoBeforeSwap } from "./blockchain-utils";
 import { ADDRESS_ZERO } from "./constants";
 import { getTimestamp } from "./utils";
 import { EthereumAddress, Token } from "../shared/types";
 import { getMultipleNftsApprovalStatus } from "../service/verifyTokensSwapApproval";
 import { Dispatch, SetStateAction } from "react";
 
-export const approveTokensBeforeSwap = async (
+export const batchApproveTokenSwap = async (
+  chainId: number,
   tokensList: Token[],
-  setNftsApprovalStatus: Dispatch<SetStateAction<IArrayStatusTokenApproved[]>>,
+  setNftsApprovalStatus: Dispatch<SetStateAction<TokenApprovalData[]>>,
   setNftsAreAllApproved: (areApproved: boolean) => void,
 ) => {
   const nftsToSwapFromAuthedUser = getTokensInfoBeforeSwap(tokensList);
+
   try {
     const result = await getMultipleNftsApprovalStatus(
       nftsToSwapFromAuthedUser,
+      chainId,
     );
 
     const nftsApprovalStatus = result.map((approved, index) => ({

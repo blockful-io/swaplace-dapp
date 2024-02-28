@@ -1,38 +1,20 @@
 import { SwapContext } from "../01-atoms";
 import { ProgressBar } from "../01-atoms/ProgressBar";
-import { ADDRESS_ZERO } from "@/lib/client/constants";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 
 export const ProgressStatus = () => {
-  const { authedUserSelectedNftsApprovalStatus } = useContext(SwapContext);
-
-  const [
-    authedUserSelectedApprovedItemsLenght,
-    setAuthedUserSelectedApprovalLenght,
-  ] = useState(0);
-  useEffect(() => {
-    if (authedUserSelectedNftsApprovalStatus.length) {
-      const approvedNftsCount = authedUserSelectedNftsApprovalStatus.filter(
-        (item) => item.approved !== ADDRESS_ZERO,
-      ).length;
-
-      setAuthedUserSelectedApprovalLenght(approvedNftsCount);
-    }
-  }, [authedUserSelectedNftsApprovalStatus]);
+  const { approvedTokensCount, authenticatedUserTokensList } =
+    useContext(SwapContext);
 
   return (
     <div className="flex gap-2 md:w-[200px] justify-center items-center">
       <div className="flex">
-        <p>
-          {authedUserSelectedApprovedItemsLenght +
-            "/" +
-            authedUserSelectedNftsApprovalStatus.length}
-        </p>
+        <p>{approvedTokensCount + "/" + authenticatedUserTokensList.length}</p>
       </div>
       <div className="flex w-full">
         <ProgressBar
-          currentStep={authedUserSelectedApprovedItemsLenght}
-          numberOfItems={authedUserSelectedNftsApprovalStatus.length}
+          currentStep={approvedTokensCount}
+          numberOfItems={authenticatedUserTokensList.length}
         />
       </div>
     </div>
