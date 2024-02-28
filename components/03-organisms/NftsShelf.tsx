@@ -40,17 +40,13 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
         : ChainInfo[destinyChain].id;
 
     if (address && chainId) {
-      try {
-        const nftsList = await getNftsFrom(
-          address,
-          chainId,
-          setNftsQueryStatus,
-        );
-
-        setNftsList(nftsList);
-      } catch (_) {
-        setNftsList([]);
-      }
+      getNftsFrom(address, chainId, setNftsQueryStatus)
+        .then((nftsList) => {
+          setNftsList(nftsList);
+        })
+        .catch(() => {
+          setNftsList([]);
+        });
     }
   };
 
