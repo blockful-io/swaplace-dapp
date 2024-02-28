@@ -54,6 +54,10 @@ input:-webkit-autofill:focus {
     box-shadow: 0px 0px 12px 1px #00000066;
   }
 
+  .shadow-swap-station {
+    box-shadow: 0px 0px 12px 1px #00000066;
+  }
+
   .title-h1 {
   }
 
@@ -144,7 +148,7 @@ input:-webkit-autofill:focus {
     @apply shadow-inner mx-auto w-[44px] h-[44px] lg:w-[44px] lg:h-[44px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
   }
   .card-nft-medium {
-    @apply shadow-inner mx-auto w-[72px] h-[72px] lg:w-[72px] lg:h-[72px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
+    @apply shadow-inner w-[72px] h-[72px] lg:w-[72px] lg:h-[72px] relative rounded-xl border border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
   }
   .card-nft-large {
     @apply shadow-inner mx-auto w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;

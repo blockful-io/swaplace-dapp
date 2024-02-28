@@ -1,4 +1,9 @@
-import { PaperPlane, SwapContext, SwapExpireTime } from "@/components/01-atoms";
+import {
+  PaperPlane,
+  SwapContext,
+  SwapExpireTime,
+  SwapIcon,
+} from "@/components/01-atoms";
 import { ConfirmSwapModal, OfferSummary } from "@/components/02-molecules";
 import { useContext, useEffect, useState } from "react";
 import cc from "classcat";
@@ -43,24 +48,21 @@ export const SwapStation = () => {
   };
 
   return (
-    <div className="mx-auto w-[95%] xl:w-[800px] lg:w-[615px]  p-4 flex flex-col justify-between items-center bg-[#f8f8f8] dark:bg-[#212322] xl:gap-0  gap-4  dark:border rounded-2xl dark:border-[#353836]">
-      <div className="w-full flex flex-col justify-start ">
-        <div className="flex justify-between">
-          <div>
-            <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7">
-              Swap offer
-            </h3>
-          </div>
-          <div>
-            <SwapExpireTime />
-          </div>
+    <div className="w-full p-5 bg-[#f8f8f8] dark:bg-[#212322] dark:border rounded-2xl dark:border-[#353836] shadow-swap-station ">
+      <div className="flex flex-col gap-6">
+        <div className="flex justify-between max-h-[36px]">
+          <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7">
+            Swap offer
+          </h3>
+          <SwapExpireTime />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2 relative">
           <OfferSummary forAuthedUser={true} />
           <OfferSummary forAuthedUser={false} />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
+            <SwapIcon variant={"vertical"} />
+          </div>
         </div>
-      </div>
-      <div className="w-[95%] flex flex-col justify-center items-center">
         <div
           role="button"
           onClick={validateSwapSending}
