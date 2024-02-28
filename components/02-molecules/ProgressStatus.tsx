@@ -1,5 +1,4 @@
-import { SwapContext } from "../01-atoms";
-import { ProgressBar } from "../01-atoms/ProgressBar";
+import { SwapContext, ProgressBar } from "@/components/01-atoms";
 import { ADDRESS_ZERO } from "@/lib/client/constants";
 import { useContext, useEffect, useState } from "react";
 
@@ -7,8 +6,8 @@ export const ProgressStatus = () => {
   const { authedUserSelectedNftsApprovalStatus } = useContext(SwapContext);
 
   const [
-    authedUserSelectedApprovedItemsLenght,
-    setAuthedUserSelectedApprovalLenght,
+    authedUserSelectedApprovedItemsLength,
+    setAuthedUserSelectedApprovalLength,
   ] = useState(0);
   useEffect(() => {
     if (authedUserSelectedNftsApprovalStatus.length) {
@@ -16,7 +15,7 @@ export const ProgressStatus = () => {
         (item) => item.approved !== ADDRESS_ZERO,
       ).length;
 
-      setAuthedUserSelectedApprovalLenght(approvedNftsCount);
+      setAuthedUserSelectedApprovalLength(approvedNftsCount);
     }
   }, [authedUserSelectedNftsApprovalStatus]);
 
@@ -24,14 +23,14 @@ export const ProgressStatus = () => {
     <div className="flex gap-2 md:w-[200px] justify-center items-center">
       <div className="flex">
         <p>
-          {authedUserSelectedApprovedItemsLenght +
+          {authedUserSelectedApprovedItemsLength +
             "/" +
             authedUserSelectedNftsApprovalStatus.length}
         </p>
       </div>
       <div className="flex w-full">
         <ProgressBar
-          currentStep={authedUserSelectedApprovedItemsLenght}
+          currentStep={authedUserSelectedApprovedItemsLength}
           numberOfItems={authedUserSelectedNftsApprovalStatus.length}
         />
       </div>
