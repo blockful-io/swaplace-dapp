@@ -158,7 +158,7 @@ export const NftCard = ({
           onError={handleImageLoadError}
           src={nftData.metadata?.image}
           alt={nftData.metadata?.name}
-          className="static z-10 w-full overflow-y-auto rounded-xl"
+          className="static z-10 w-full h-full overflow-y-auto rounded-xl"
         />,
       )}
     </>

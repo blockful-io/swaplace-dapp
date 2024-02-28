@@ -22,7 +22,7 @@ export const NftsList = ({ nftsList, ownerAddress, variant }: INftsList) => {
   const emptySquares = EmptyNftsCards(nftsList.length, 15, 24, 24, 24);
   const addTokenSquare = SwapAddTokenCard();
   const nftSquares = nftsList.map((nft: NFT, index) => (
-    <div key={`nft-${index}`}>
+    <div key={`nft-${index}`} className="w-[80px] h-[80px]">
       <NftCard ownerAddress={ownerAddress} nftData={nft} />
     </div>
   ));
@@ -31,14 +31,14 @@ export const NftsList = ({ nftsList, ownerAddress, variant }: INftsList) => {
     emptySquares.pop(); // Removes the last element to fill with addToken
     const allSquares = [...nftSquares, ...emptySquares, addTokenSquare];
     return (
-      <div className="w-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-3">
+      <div className="w-full h-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-3">
         {allSquares}
       </div>
     );
   } else {
     const allSquares = [...nftSquares, ...emptySquares];
     return (
-      <div className="w-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-3 ">
+      <div className="w-full h-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-3 ">
         {allSquares}
       </div>
     );
