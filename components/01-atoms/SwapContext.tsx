@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 interface SwapContextProps {
   inputAddress: string;
   validatedAddressToSwap: string;
-  setValidatedAddressToSwap: (address: string) => void
+  setValidatedAddressToSwap: (address: string) => void;
   setInputAddress: (address: string) => void;
   validateAddressToSwap: (
     authedUser: EthereumAddress,
@@ -88,7 +88,7 @@ export const SwapContextProvider = ({ children }: any) => {
     authedUserSelectedNftsApprovalStatus,
     setAuthedUserNftsApprovalStatus,
   ] = useState<IArrayStatusTokenApproved[]>([]);
-  const router  = useRouter()
+  const router = useRouter();
   const validateAddressToSwap = (
     _authedUser: EthereumAddress,
     _inputEnsAddress: string | null | undefined,
@@ -237,9 +237,11 @@ export const SwapContextProvider = ({ children }: any) => {
     currentSwapModalStep,
   });
 
-  useEffect(()=>{
+  // This is a temporary measure while we don't turn the dApp into a SPA
+  // We are reseting the inputAddress to reload the inventory
+  useEffect(() => {
     setValidatedAddressToSwap("");
-  },[router.asPath])
+  }, [router.asPath]);
 
   return (
     <SwapContext.Provider value={swapData}>{children}</SwapContext.Provider>

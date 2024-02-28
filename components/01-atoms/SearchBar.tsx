@@ -15,7 +15,7 @@ export const SearchBar = () => {
     inputAddress,
     validateAddressToSwap,
     setUserJustValidatedInput,
-    setValidatedAddressToSwap
+    setValidatedAddressToSwap,
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -71,7 +71,7 @@ export const SearchBar = () => {
     const requestDelay = setTimeout(() => {
       setUserJustValidatedInput(false);
       getUserAddress();
-    }, 2000);
+    }, 750);
     return () => clearTimeout(requestDelay);
   }, [inputAddress]);
 
