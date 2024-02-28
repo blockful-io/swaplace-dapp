@@ -37,10 +37,11 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
 
 
   useEffect(()=>{
-    if(!validatedAddressToSwap && !userJustValidatedInput) return
-
-    const newAddress = new EthereumAddress(validatedAddressToSwap)
-    setSearchedEthereumAddress(newAddress);
+    if(validatedAddressToSwap && userJustValidatedInput && inputAddress){
+ 
+      const newAddress = new EthereumAddress(validatedAddressToSwap)
+      setSearchedEthereumAddress(newAddress);
+    }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[validatedAddressToSwap])
@@ -50,7 +51,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
       <div className="flex justify-between items-center h-9 gap-2">
         <div className="flex space-x-2">
           <div className="flex items-center">
-            {!forAuthedUser && authenticatedUserAddress ?
+            {!forAuthedUser && authenticatedUserAddress && walletENSName ?
               <ENSAvatar avatarENSAddress={authenticatedUserAddress} size="small" />
               : forAuthedUser && validatedAddressToSwap ?
                 <ENSAvatar avatarENSAddress={new EthereumAddress(validatedAddressToSwap)} size="small" />
