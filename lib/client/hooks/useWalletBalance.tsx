@@ -1,5 +1,6 @@
+import { getRpcHttpUrlForNetwork } from "../constants";
 import { EthereumAddress } from "@/lib/shared/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPublicClient, formatUnits, http } from "viem";
 import { useNetwork } from "wagmi";
 
@@ -19,8 +20,10 @@ export const useWalletBalance = ({ walletAddress }: Props) => {
 
   const { chain } = useNetwork();
 
+  const prevChainRef = useRef(chain);
+
   useEffect(() => {
-    if (walletAddress && chain) {
+    if (walletAddress && chain && !!getRpcHttpUrlForNetwork.get(chain?.id)) {
       const client = createPublicClient({
         chain: chain,
         transport: http(),
@@ -44,7 +47,11 @@ export const useWalletBalance = ({ walletAddress }: Props) => {
       setBalance(null);
       setBalanceQueryStatus(WalletBalanceQueryStatus.ERROR);
     }
+    prevChainRef.current = chain;
   }, [walletAddress, chain]);
+
+    // console.log("Previous chain: ", prevChainRef.current);
+    // console.log("Current chain: ", chain);
 
   return {
     balance,
