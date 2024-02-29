@@ -62,6 +62,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   onClick?: () => void;
   aditionalStyle?: string;
+  disabled?: boolean;
   isLoading?: boolean;
 }
 
@@ -70,6 +71,7 @@ export function SwapModalButton({
   label,
   onClick = () => {},
   aditionalStyle,
+  disabled = false,
   isLoading = false,
   ...props
 }: Props) {
@@ -86,12 +88,12 @@ export function SwapModalButton({
         ButtonVariantsConfigs[variant].style,
         "flex items-center gap-2 disabled:pointer-events-none",
         aditionalStyle,
-        !approvedTokensCount
+        disabled
           ? "p-medium-bold dark:p-medium-bold cursor-not-allowed"
           : "p-medium-bold-dark bg-[#DDF23D] ",
       ])}
       {...props}
-      disabled={isLoading}
+      disabled={disabled}
     >
       {isLoading ? (
         <LoadingIndicator />

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { TokensShelf } from "@/components/03-organisms";
+import { TokensShelf, TokensShelfVariant } from "@/components/03-organisms";
 import {
   SearchItemsShelf,
   SwapContext,
@@ -39,7 +39,7 @@ export const SwappingShelfs = () => {
 
   return (
     <div className="w-[95%] mb-20 dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
-      <div className="flex items-center justify-between max-h-[48px]">
+      <div className="flex space-x-4 items-center justify-between max-h-[48px]">
         <div className="flex max-w-[224px]">
           <Tab
             setActiveSwappingShelfID={(input) =>
@@ -52,12 +52,15 @@ export const SwappingShelfs = () => {
         </div>
       </div>
       <div className={cc([activeSwappingShelfID ? "hidden" : "block"])}>
-        <TokensShelf address={validatedAddressToSwap} variant="their" />
+        <TokensShelf
+          address={validatedAddressToSwap}
+          variant={TokensShelfVariant.Their}
+        />
       </div>
       <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
         <TokensShelf
           address={authenticatedUserAddress?.address ?? null}
-          variant="your"
+          variant={TokensShelfVariant.Your}
         />
       </div>
     </div>

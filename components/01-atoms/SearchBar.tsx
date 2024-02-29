@@ -3,8 +3,6 @@
 /* eslint-disable import/no-named-as-default-member */
 import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ADDRESS_ZERO } from "@/lib/client/constants";
-import { EthereumAddress } from "@/lib/shared/types";
 import { useContext, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { ENS } from "web3-eth-ens";
@@ -25,8 +23,6 @@ export const SearchBar = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 
   const validateUser = (ensNameAddress: string | null) => {
-    if (!authenticatedUserAddress) return;
-
     validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
   };
 
@@ -102,7 +98,7 @@ export const SearchBar = () => {
              dark:border-none dark:bg-transparent`,
           ])}
           onKeyDown={(e) => {
-            if (authenticatedUserAddress && e.key === "Enter") {
+            if (e.key === "Enter") {
               validateAddressToSwap(authenticatedUserAddress, inputAddress);
             }
           }}

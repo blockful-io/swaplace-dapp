@@ -24,7 +24,7 @@ interface SwapContextProps {
   validatedAddressToSwap: string;
 
   validateAddressToSwap: (
-    authedUser: EthereumAddress,
+    authedUser: EthereumAddress | null,
     inputEnsAddress: string | null | undefined,
   ) => void;
   searchedUserTokensList: Token[];
@@ -78,7 +78,7 @@ export const SwapContextProvider = ({ children }: any) => {
   const router = useRouter();
 
   const validateAddressToSwap = (
-    _authedUser: EthereumAddress,
+    _authedUser: EthereumAddress | null,
     _inputEnsAddress: string | null | undefined,
   ) => {
     if (!inputAddress && !_inputEnsAddress) {
@@ -239,7 +239,7 @@ export const SwapContext = React.createContext<SwapContextProps>({
   inputAddress: "",
   validatedAddressToSwap: "",
   validateAddressToSwap: (
-    _authedUser: EthereumAddress,
+    _authedUser: EthereumAddress | null,
     _inputEnsAddress: string | null | undefined,
   ) => {},
   setInputAddress: (address: string) => {},

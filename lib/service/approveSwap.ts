@@ -4,6 +4,12 @@ import { TokenType } from "../shared/types";
 import { publicClient } from "../wallet/wallet-config";
 import { type Hash, type TransactionReceipt } from "viem";
 
+export interface ApproveSwapResponse {
+  receipt: TransactionReceipt | null;
+  errorMessage: string | null;
+  success: boolean;
+}
+
 export async function approveSwap({
   walletClient,
   spender,
@@ -12,7 +18,7 @@ export async function approveSwap({
   chainId,
   token,
   onWalletConfirmation,
-}: IApproveTokenSwap): Promise<TransactionReceipt | undefined> {
+}: IApproveTokenSwap): Promise<ApproveSwapResponse> {
   const abi =
     token.tokenType === TokenType.ERC20 ? MockERC20Abi : MockERC721Abi;
   const functionName = "approve";
@@ -53,9 +59,17 @@ export async function approveSwap({
       }
     }
 
-    return txReceipt;
+    return {
+      success: true,
+      receipt: txReceipt,
+      errorMessage: null,
+    };
   } catch (error) {
-    console.log(error);
     console.error(error);
+    return {
+      receipt: null,
+      success: false,
+      errorMessage: String(error),
+    };
   }
 }

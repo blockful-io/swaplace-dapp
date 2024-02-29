@@ -1,11 +1,8 @@
-import { TokenCard } from ".";
+import { TokensList } from ".";
+import { TokensShelfVariant } from "../03-organisms";
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import {
-  PersonIcon,
-  TokenCardsPlaceholder,
-  SwapContext,
-} from "@/components/01-atoms";
+import { PersonIcon, SwapContext } from "@/components/01-atoms";
 import { useContext } from "react";
 
 interface IOfferSummary {
@@ -22,85 +19,63 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const emptySquaresDefault = TokenCardsPlaceholder(0, 4, 8, 12, 12);
-  const emptySquaresAuthUser = TokenCardsPlaceholder(
-    authenticatedUserTokensList.length,
-    4,
-    8,
-    12,
-    12,
-  );
-  const emptySquaresInputUser = TokenCardsPlaceholder(
-    authenticatedUserTokensList.length,
-    4,
-    8,
-    12,
-    12,
-  );
 
-  const nftUser = forAuthedUser
+  const tokensList = forAuthedUser
     ? authenticatedUserTokensList
     : searchedUserTokensList;
 
   return (
-    <div className="w-full flex flex-col gap-4 px-3 pt-2 pb-4 dark:bg-[#212322] dark:border-[#434443] rounded-lg border">
-      <div className="flex justify-between items-center h-9 gap-2">
+    <div className="w-full flex flex-col gap-4 pt-2 pb-4 dark:bg-[#212322] dark:border-[#434443] rounded-lg border">
+      <div className="w-full px-3 sm:px-4 flex justify-between items-center h-9 gap-2">
         <div className="flex space-x-2">
           <div className="flex items-center">
             <PersonIcon />
           </div>
           <div className="items-center">
             <p className="font-medium">
-              {forAuthedUser
+              {forAuthedUser && authenticatedUserAddress
                 ? "You give"
+                : forAuthedUser && !authenticatedUserAddress
+                ? "Connect your wallet"
                 : !forAuthedUser && validatedAddressToSwap && inputAddress
                 ? `${
                     userJustValidatedInput
                       ? new EthereumAddress(
                           validatedAddressToSwap,
                         ).getEllipsedAddress() + " gives"
-                      : "Use the search bar!"
+                      : "Use the search bar"
                   }`
-                : "Use the search bar!"}
+                : "Use the search bar"}
             </p>
           </div>
         </div>
-        {!forAuthedUser && !validatedAddressToSwap ? null : (
+        {(!forAuthedUser && !validatedAddressToSwap) ||
+        (forAuthedUser && !authenticatedUserAddress) ? null : (
           <div className="h-5">
-            {nftUser.length} item
-            {nftUser.length !== 1 ? "s" : ""}
+            {tokensList.length} item
+            {tokensList.length !== 1 ? "s" : ""}
           </div>
         )}
       </div>
 
-      <div className="w-full h-full min-h-[144px] rounded p-4 overflow-auto max-h-52 no-scrollbar">
-        <div className="w-full grid grid-cols-2 md:grid-cols-6  xl:grid-cols-4 gap-3 ">
-          {(forAuthedUser && !authenticatedUserAddress?.address) ||
-          (!forAuthedUser && !validatedAddressToSwap) ? null : (
-            <>
-              {nftUser.map((nft, index) => (
-                <TokenCard
-                  key={index}
-                  withSelectionValidation={false}
-                  ownerAddress={
-                    forAuthedUser
-                      ? authenticatedUserAddress
-                        ? authenticatedUserAddress.address
-                        : null
-                      : validatedAddressToSwap
-                  }
-                  tokenData={nft}
-                />
-              ))}
-            </>
-          )}
-
-          {forAuthedUser
-            ? emptySquaresAuthUser
-            : !forAuthedUser
-            ? emptySquaresInputUser
-            : emptySquaresDefault}
-        </div>
+      <div className="w-full h-full min-h-[144px] rounded overflow-y-auto max-h-52 no-scrollbar">
+        <TokensList
+          withAddTokenCard={false}
+          mobileTotalCards={tokensList.length}
+          tabletTotalCards={tokensList.length}
+          desktopTotalCards={tokensList.length}
+          wideScreenTotalCards={tokensList.length}
+          withSelectionValidation={false}
+          ownerAddress={
+            forAuthedUser && authenticatedUserAddress
+              ? authenticatedUserAddress.address
+              : validatedAddressToSwap
+          }
+          tokensList={tokensList}
+          variant={
+            forAuthedUser ? TokensShelfVariant.Your : TokensShelfVariant.Their
+          }
+        />
       </div>
     </div>
   );

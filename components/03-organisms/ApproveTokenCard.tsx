@@ -7,6 +7,7 @@ import {
 import {
   IApproveTokenSwap,
   getTokenAmountOrId,
+  toastBlockchainTxError,
 } from "@/lib/client/blockchain-utils";
 import { approveSwap } from "@/lib/service/approveSwap";
 import { getTokenName } from "@/lib/client/tokens";
@@ -45,6 +46,27 @@ export const ApproveTokenCard = ({
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
+  const checkForTokenApproval = async (token: Token) => {
+    let chainId: number | undefined = undefined;
+
+    if (typeof chain?.id != "undefined") {
+      chainId = chain?.id;
+    }
+
+    if (!chainId) {
+      throw new Error("User is not connected to any network");
+    }
+
+    const approved = await isTokenSwapApproved({
+      token,
+      chainId,
+    });
+
+    setIsApproved(approved);
+
+    return approved;
+  };
+
   const handleTokenApproval = async () => {
     let chainId: number | undefined = undefined;
 
@@ -56,14 +78,12 @@ export const ApproveTokenCard = ({
       throw new Error("User is not connected to any network");
     }
 
-    const isApproved = await isTokenSwapApproved({
-      token,
-      chainId,
-    });
+    const approved = await checkForTokenApproval(token);
 
-    if (isApproved) {
-      setIsApproved(true);
-      toast.success("Token approved.");
+    if (approved) {
+      toast.success(
+        `${getTokenName(token)} was successfully approved for swap`,
+      );
     } else {
       await askForTokenApproval(token).then((isApproved) => {
         if (typeof isApproved !== "undefined") {
@@ -74,7 +94,14 @@ export const ApproveTokenCard = ({
   };
 
   useEffect(() => {
-    if (isApproved) setTokenWasApprovedForSwap(token);
+    checkForTokenApproval(token);
+  }, []);
+
+  useEffect(() => {
+    if (isApproved) {
+      setTokenWasApprovedForSwap(token);
+      setTokenApprovalStatus(TokenApprovalStatus.APPROVED);
+    }
   }, [isApproved]);
 
   const askForTokenApproval = async (
@@ -109,16 +136,20 @@ export const ApproveTokenCard = ({
     try {
       const transactionReceipt = await approveSwap(swapData);
 
-      if (transactionReceipt != undefined) {
-        toast.success("Approved successfully");
+      if (transactionReceipt.success) {
+        toast.success(
+          `'${getTokenName(token)}' swap was successfully approved`,
+        );
         setTokenWasApprovedForSwap(token);
-        return transactionReceipt;
+
+        // Below alias is always valid since whenever a tx is successful, a receipt is returned
+        return transactionReceipt.receipt as TransactionReceipt;
       } else {
-        toast.error("Approval failed");
+        toastBlockchainTxError(transactionReceipt.errorMessage || "");
       }
     } catch (error) {
       // TODO: map error scenarios and create corresponding error triggers
-      toast.error("Approval rejected");
+      toastBlockchainTxError(String(error));
       console.error(error);
     }
   };

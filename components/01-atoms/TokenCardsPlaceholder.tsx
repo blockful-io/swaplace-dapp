@@ -1,42 +1,70 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
+import { useEffect, useState } from "react";
 
 export const TokenCardsPlaceholder = (
-  len: number,
-  ismobileTotalSquares: number,
-  isWideScreenTotalSquares: number,
-  isDesktopTotalSquares: number,
-  isTabletTotalSquares: number,
+  totalCardsLength: number,
+  wideScreenTotalSquares = 15,
+  desktopTotalSquares = 30,
+  tabletTotalSquares = 30,
+  mobileTotalSquares = 30,
 ) => {
   const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
 
-  let totalSquares = 0;
-  let totalSquaresX = 0; // Token quantity in X axis
+  const [totalSquares, setTotalSquares] = useState(0);
+  const [totalSquaresX, setTotalSquaresX] = useState(0);
 
   // We are getting X count as the LCM to fill the rows with empty cards correctly.
-  isMobile
-    ? ((totalSquares = ismobileTotalSquares),
-      ismobileTotalSquares == 4 ? (totalSquaresX = 4) : (totalSquaresX = 3))
-    : isWideScreen
-    ? ((totalSquares = isWideScreenTotalSquares),
-      isWideScreenTotalSquares == 8 ? (totalSquaresX = 4) : (totalSquaresX = 6))
-    : isDesktop
-    ? ((totalSquares = isDesktopTotalSquares), (totalSquaresX = 6))
-    : isTablet && ((totalSquares = isTabletTotalSquares), (totalSquaresX = 6));
+  const [spareTokensX, setSpareTokensX] = useState(0);
+  const [spareTokens, setSpareTokens] = useState(0);
+  const [emptySquaresCount, setEmptySquaresCount] = useState(0);
+  const [emptySquaresCountX, setEmptySquaresCountX] = useState(0);
 
-  const spareTokensX = len % totalSquaresX;
-  const emptySquaresCountX = spareTokensX ? totalSquaresX - spareTokensX : 0;
+  const resetTokenCards = () => {
+    isWideScreen
+      ? (setTotalSquares(wideScreenTotalSquares),
+        wideScreenTotalSquares == 8 ? setTotalSquares(4) : setTotalSquaresX(6))
+      : isDesktop
+      ? (setTotalSquares(desktopTotalSquares), setTotalSquaresX(6))
+      : isTablet
+      ? (setTotalSquares(tabletTotalSquares), setTotalSquaresX(6))
+      : isMobile &&
+        (setTotalSquares(mobileTotalSquares),
+        mobileTotalSquares == 4 ? setTotalSquaresX(4) : setTotalSquaresX(3));
 
-  const spareTokens = totalSquares - len;
-  const emptySquaresCount =
-    emptySquaresCountX < spareTokens
-      ? Math.max(spareTokens, 0)
-      : emptySquaresCountX;
+    setSpareTokens(totalSquares - totalCardsLength);
+    setSpareTokensX(totalCardsLength % totalSquaresX);
+    setEmptySquaresCount(
+      emptySquaresCountX < spareTokens
+        ? Math.max(spareTokens, 0)
+        : emptySquaresCountX,
+    );
+    setEmptySquaresCountX(spareTokensX ? totalSquaresX - spareTokensX : 0);
+  };
 
-  const emptySquares = Array.from({ length: emptySquaresCount }, (_, index) => (
+  useEffect(() => {
+    resetTokenCards();
+
+    window.addEventListener("resize", resetTokenCards);
+
+    return () => {
+      window.removeEventListener("resize", resetTokenCards);
+    };
+  }, []);
+
+  useEffect(() => {
+    resetTokenCards();
+  }, [
+    mobileTotalSquares,
+    tabletTotalSquares,
+    desktopTotalSquares,
+    wideScreenTotalSquares,
+    totalCardsLength,
+  ]);
+
+  return Array.from({ length: emptySquaresCount }, (_, index) => (
     <>
       <div key={`empty-${index}`} className="card-nft-normal" />
     </>
   ));
-
-  return emptySquares;
 };

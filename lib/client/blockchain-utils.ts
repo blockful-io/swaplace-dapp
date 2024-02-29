@@ -15,6 +15,7 @@ import {
   Alchemy,
 } from "alchemy-sdk";
 import { type WalletClient } from "wagmi";
+import toast from "react-hot-toast";
 
 const INVALID_TOKEN_AMOUNT_OR_ID = Number.MAX_SAFE_INTEGER.toString();
 const INVALID_TOKEN_SWAP_INFO = {
@@ -339,3 +340,11 @@ export async function packingData(
   const config = await Contract.read.packData([allowed, expiration]);
   return config;
 }
+
+export const toastBlockchainTxError = (e: string) => {
+  if (e.includes("rejected")) {
+    toast.error("Transaction rejected");
+  } else {
+    toast.error("Transaction failed. Please contact our team.");
+  }
+};

@@ -197,6 +197,9 @@ export const ConfirmSwapModal = ({
                 <div>
                   <SwapModalButton
                     label={"Continue"}
+                    disabled={
+                      approvedTokensCount !== authenticatedUserTokensList.length
+                    }
                     onClick={validateTokensAreApproved}
                     aditionalStyle={
                       theme === "light" ? "text-black" : "text-yellow"

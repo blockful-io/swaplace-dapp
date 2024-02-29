@@ -12,9 +12,14 @@ import { useTheme } from "next-themes";
 import { useNetwork } from "wagmi";
 /* eslint-disable react-hooks/exhaustive-deps */
 
+export enum TokensShelfVariant {
+  Your,
+  Their,
+}
+
 interface TokensShelfProps {
   address: string | null;
-  variant: "your" | "their";
+  variant: TokensShelfVariant;
 }
 
 /**
@@ -36,7 +41,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   const { validatedAddressToSwap, inputAddress, destinyChain } =
     useContext(SwapContext);
 
-  const showUserItems = async () => {
+  const getUserTokens = async () => {
     const chainId =
       address === authenticatedUserAddress?.address
         ? chain?.id
@@ -74,8 +79,14 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   };
 
   useEffect(() => {
-    showUserItems();
+    getUserTokens();
   }, [address, chain, destinyChain]);
+
+  useEffect(() => {
+    if (!authenticatedUserAddress) {
+      setTokensList([]);
+    }
+  }, [authenticatedUserAddress]);
 
   const conditionallyCleanTokensList = (condition: boolean) => {
     if (condition) {
@@ -89,7 +100,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
       !!authenticatedUserAddress &&
         !!address &&
         authenticatedUserAddress.equals(new EthereumAddress(address)) &&
-        variant === "their",
+        variant === TokensShelfVariant.Their,
     );
   }, [variant]);
 
@@ -103,7 +114,8 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
 
   useEffect(() => {
     conditionallyCleanTokensList(
-      address !== authenticatedUserAddress?.address && variant === "their",
+      address !== authenticatedUserAddress?.address &&
+        variant === TokensShelfVariant.Their,
     );
   }, [chain]);
 
@@ -116,18 +128,12 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
 
   useEffect(() => {
     conditionallyCleanTokensList(
-      !validatedAddressToSwap && variant === "their",
+      !validatedAddressToSwap && variant === TokensShelfVariant.Their,
     );
   }, [validatedAddressToSwap]);
 
-  useEffect(() => {
-    conditionallyCleanTokensList(
-      address !== authenticatedUserAddress?.address && variant === "their",
-    );
-  }, [authenticatedUserAddress]);
-
   return (
-    <div className="w-full  flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
+    <div className="w-full h-[360px] lg:h-[500px] overflow-y-auto flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
       {tokensQueryStatus == TokensQueryStatus.WITH_RESULTS && tokenList ? (
         <div className="w-full h-full">
           <TokensList
@@ -137,24 +143,28 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
           />
         </div>
       ) : tokensQueryStatus == TokensQueryStatus.EMPTY_QUERY || !address ? (
-        <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">
-          <div className="flex-col flex  items-center space-y-4">
-            <div className="w-[80px] h-[80px] flex items-center border-[3px] rounded-full dark:border-[#DDF23D] border-[#A3A9A5] ">
+        <div className="flex w-full overflow-y-auto bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center">
+          <div className="flex-col flex items-center space-y-4">
+            <div className="w-[80px] h-[80px] flex items-center border-[3px] rounded-full dark:border-[#DDF23D] border-[#A3A9A5]">
               <SelectUserIcon
                 className="w-[100px]"
                 fill={theme == "dark" ? "#DDF23D" : "#A3A9A5"}
               />
             </div>
             <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
-              No user selected yet
+              {variant === TokensShelfVariant.Their
+                ? "No user selected yet"
+                : "No wallet is connected yet"}
             </p>
             <p className="dark:text-[#A3A9A5] font-onest font-normal text-[14px] leading-[20px]">
-              Search for a user to start swapping items
+              {variant === TokensShelfVariant.Their
+                ? "Search for a user to start swapping items"
+                : "Sign in to see your tokens"}
             </p>
           </div>
         </div>
       ) : tokensQueryStatus == TokensQueryStatus.NO_RESULTS ? (
-        <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
+        <div className="flex justify-center w-full h-[360px] lg:h-[500px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
           <div className="flex items-center">
             <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
               Given address has no tokens associated in the given network
@@ -162,7 +172,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
           </div>
         </div>
       ) : tokensQueryStatus == TokensQueryStatus.LOADING ? (
-        <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
+        <div className="flex justify-center w-full h-[360px] lg:h-[500px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
           <div className="flex items-center">
             <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
               Loading tokens of{" "}
