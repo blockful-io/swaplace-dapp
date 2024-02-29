@@ -37,9 +37,14 @@ export enum NftCardStyleType {
   LARGE = "large",
 }
 
-type StyleVariant = NftCardStyleType | "small" | "normal" | "medium" | "large";
+export type StyleVariant =
+  | NftCardStyleType
+  | "small"
+  | "normal"
+  | "medium"
+  | "large";
 
-const NftSizeClassNames = {
+export const NftSizeClassNames = {
   [NftCardStyleType.SMALL]: "card-nft-small",
   [NftCardStyleType.NORMAL]: "card-nft-normal",
   [NftCardStyleType.MEDIUM]: "card-nft-medium",
@@ -158,7 +163,7 @@ export const NftCard = ({
           onError={handleImageLoadError}
           src={nftData.metadata?.image}
           alt={nftData.metadata?.name}
-          className="static z-10 w-full overflow-y-auto rounded-xl"
+          className="static z-10 w-full h-full overflow-y-auto rounded-xl"
         />,
       )}
     </>

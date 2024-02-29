@@ -92,9 +92,9 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="w-full flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px] no-scrollbar">
+    <div className="w-full flex rounded-t-none overflow-y-auto lg:max-w-[600px] h-[356px] no-scrollbar">
       {nftsQueryStatus == NFTsQueryStatus.WITH_RESULTS && nftsList ? (
-        <div className="w-full h-full">
+        <div className="flex h-full w-full justify-center items-center no-scrollbar ">
           <NftsList
             ownerAddress={address}
             nftsList={nftsList}
@@ -102,7 +102,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
           />
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
-        <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4 justify-center items-center ">
+        <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322]  justify-center items-center ">
           <div className="flex-col flex  items-center space-y-4">
             <div className="w-[80px] h-[80px] flex items-center border-[3px] rounded-full dark:border-[#DDF23D] border-[#A3A9A5] ">
               <SelectUserIcon
@@ -119,7 +119,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
           </div>
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.NO_RESULTS ? (
-        <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
+        <div className="flex justify-center w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4">
           <div className="flex items-center">
             <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
               Given address has no NFTs associated in the given network
@@ -127,7 +127,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
           </div>
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.LOADING ? (
-        <div className="flex justify-center w-full h-[450px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
+        <div className="flex justify-center w-full h-full bg-[#f8f8f8] dark:bg-[#212322] p-4">
           <div className="flex items-center">
             <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
               Loading NFTs of{" "}

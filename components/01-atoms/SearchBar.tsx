@@ -76,7 +76,7 @@ export const SearchBar = () => {
   }, [inputAddress]);
 
   return (
-    <div className="w-[95%] h-auto py-5 gap-3 flex flex-col rounded  ">
+    <div className="gap-2 xl:w-full xl:h-full pb-5 flex flex-col rounded">
       <div className="w-full flex justify-between space-x-6">
         <h2 className="title-h3-normal dark:title-h3-normal-dark">
           Who are you swapping with today?
@@ -84,7 +84,7 @@ export const SearchBar = () => {
       </div>
       <div
         className={cc([
-          "flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-[0_0_6px_1px_#0000004b] dark:hover:shadow-[0_0_6px_1px_#84980027]",
+          "flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-swap-station",
         ])}
       >
         <div className="justify-center items-center">
