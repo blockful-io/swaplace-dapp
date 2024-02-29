@@ -38,7 +38,7 @@ export const SwappingShelfs = () => {
   }, [chain]);
 
   return (
-    <div className="w-full h-full dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
+    <div className="w-full h-full dark:bg-[#212322] dark:border-[#353836] border rounded-2xl dark:shadow-swap-station">
       <div className="flex items-center justify-between max-h-[48px] border-b dark:border-[#313131] pr-2">
         <div className="flex max-w-[224px]">
           <Tab
