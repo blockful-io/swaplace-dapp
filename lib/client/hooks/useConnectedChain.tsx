@@ -2,7 +2,7 @@ import { ChainInfo } from "../constants";
 import { useEffect, useState } from "react";
 import {  useNetwork } from "wagmi";
 
-export const useConnectedChain = () => {
+export const useSupportedNetworks = () => {
   const [isNetworkSupported, setIsNetworkSupported] = useState(true);
 
   const supportedNetworksId = Object.values(ChainInfo).map(net => net.id)
