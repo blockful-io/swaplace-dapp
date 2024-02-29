@@ -38,7 +38,7 @@ export const batchApproveTokenSwap = async (
 
 export interface Asset {
   addr: `0x${string}`;
-  amountOrId: bigint;
+  amountOrId: string;
 }
 
 export interface Swap {
@@ -50,7 +50,7 @@ export interface Swap {
 
 export async function makeAsset(
   addr: string,
-  amountOrId: number | bigint,
+  amountOrId: string,
 ): Promise<Asset> {
   // validate if its an ethereum address
   try {
@@ -60,7 +60,7 @@ export async function makeAsset(
   }
 
   // if the amount is negative, it will throw an error
-  if (amountOrId < 0) {
+  if (BigInt(amountOrId) < 0n) {
     throw new Error("AmountOrIdCannotBeNegative");
   }
 
@@ -72,7 +72,7 @@ export async function makeAsset(
    */
   const asset: Asset = {
     addr: addr as `0x${string}`,
-    amountOrId: typeof amountOrId == "number" ? BigInt(amountOrId) : amountOrId,
+    amountOrId,
   };
 
   return asset;

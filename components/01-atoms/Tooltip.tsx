@@ -18,7 +18,7 @@ interface TooltipProps {
 
 export const Tooltip = ({ position, content, children }: TooltipProps) => (
   <div className="relative group">
-    <div>{children}</div>
+    <div>{children ? children : null}</div>
     <div className="pointer-events-none">
       <span
         className={cc([

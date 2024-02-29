@@ -1,4 +1,4 @@
-import { ADDRESS_ZERO, getApiKeyForNetwork, getNetwork } from "./constants";
+import { ADDRESS_ZERO, getAPIKeyForNetwork, getNetwork } from "./constants";
 import { Asset, makeAsset } from "./swap-utils";
 import {
   Token,
@@ -16,7 +16,7 @@ import {
 } from "alchemy-sdk";
 import { type WalletClient } from "wagmi";
 
-const INVALID_TOKEN_AMOUNT_OR_ID = BigInt(Number.MAX_SAFE_INTEGER);
+const INVALID_TOKEN_AMOUNT_OR_ID = Number.MAX_SAFE_INTEGER.toString();
 const INVALID_TOKEN_SWAP_INFO = {
   amountOrId: INVALID_TOKEN_AMOUNT_OR_ID,
   tokenAddress: ADDRESS_ZERO as `0x${string}`,
@@ -40,17 +40,17 @@ export interface IApproveMulticall {
 }
 export interface IGetApproveSwap {
   tokenAddress: `0x${string}`;
-  amountOrId: bigint;
+  amountOrId: string;
 }
 
 export interface IApproveTokenSwap {
   walletClient: WalletClient;
   tokenContractAddress: `0x${string}`;
   spender: `0x${string}`;
-  amountOrId: bigint;
+  amountOrId: string;
   chainId: number;
   token: Token;
-  onConfirm: (token: Token) => void;
+  onWalletConfirmation: () => void;
 }
 
 export enum SwapModalSteps {
@@ -74,7 +74,7 @@ export enum TransactionStatus {
 
 export type TokenWithSwapInfo = {
   tokenAddress: `0x${string}`;
-  amountOrId: bigint;
+  amountOrId: string;
 };
 
 export async function ComposeTokenUserAssets(
@@ -100,7 +100,7 @@ export async function ComposeTokenUserAssets(
   return tokenAssetArray;
 }
 
-export const getTokenAmountOrId = (token: Token): bigint => {
+export const getTokenAmountOrId = (token: Token): string => {
   /* ERC20 tokens have an transaction amount while ERC721, a token ID */
   let tokenAmountOrTokenId = undefined;
 
@@ -116,8 +116,8 @@ export const getTokenAmountOrId = (token: Token): bigint => {
   }
 
   if (typeof tokenAmountOrTokenId === "undefined")
-    return BigInt(INVALID_TOKEN_AMOUNT_OR_ID);
-  else return BigInt(tokenAmountOrTokenId);
+    return INVALID_TOKEN_AMOUNT_OR_ID;
+  else return tokenAmountOrTokenId;
 };
 
 export function getTokenInfoBeforeSwap(token: Token): TokenWithSwapInfo {
@@ -162,7 +162,7 @@ export function getTokensInfoBeforeSwap(
     ) {
       tokensWithInfo.push({
         tokenAddress: tokenContractAddress,
-        amountOrId: BigInt(nftAmountOrTokenId),
+        amountOrId: nftAmountOrTokenId.toString(),
       });
     }
   }
@@ -175,7 +175,7 @@ export const getERC721TokensFromAddress = async (
   address: string,
   chainId: number,
 ) => {
-  const networkAPIKey = getApiKeyForNetwork.get(chainId);
+  const networkAPIKey = getAPIKeyForNetwork.get(chainId);
   const networkName = getNetwork.get(chainId);
 
   if (!networkAPIKey) {
@@ -222,7 +222,7 @@ export const getERC20TokensFromAddress = async (
   address: string,
   chainId: number,
 ): Promise<ERC20[]> => {
-  const alchemyApiKey = getApiKeyForNetwork.get(chainId);
+  const alchemyApiKey = getAPIKeyForNetwork.get(chainId);
   const networkName = getNetwork.get(chainId);
 
   if (!alchemyApiKey) {
@@ -328,7 +328,7 @@ const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
 export interface TokenApprovalData {
   approved: `0x${string}`;
   tokenAddress: `0x${string}`;
-  amountOrId: bigint;
+  amountOrId: string;
 }
 
 export async function packingData(

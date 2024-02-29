@@ -3,6 +3,8 @@
 /* eslint-disable import/no-named-as-default-member */
 import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { ADDRESS_ZERO } from "@/lib/client/constants";
+import { EthereumAddress } from "@/lib/shared/types";
 import { useContext, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { ENS } from "web3-eth-ens";
@@ -15,7 +17,6 @@ export const SearchBar = () => {
     inputAddress,
     validateAddressToSwap,
     setUserJustValidatedInput,
-    setValidatedAddressToSwap,
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -67,11 +68,10 @@ export const SearchBar = () => {
   };
 
   useEffect(() => {
-    setValidatedAddressToSwap("");
     const requestDelay = setTimeout(() => {
       setUserJustValidatedInput(false);
       getUserAddress();
-    }, 750);
+    }, 1500);
     return () => clearTimeout(requestDelay);
   }, [inputAddress]);
 
@@ -101,6 +101,11 @@ export const SearchBar = () => {
             `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small
              dark:border-none dark:bg-transparent`,
           ])}
+          onKeyDown={(e) => {
+            if (authenticatedUserAddress && e.key === "Enter") {
+              validateAddressToSwap(authenticatedUserAddress, inputAddress);
+            }
+          }}
           placeholder="Search username, address or ENS"
           onChange={({ target }) => setInputAddress(target.value)}
         />

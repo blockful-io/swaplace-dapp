@@ -66,7 +66,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
           </div>
         </div>
         {!forAuthedUser && !validatedAddressToSwap ? null : (
-          <div>
+          <div className="h-5">
             {nftUser.length} item
             {nftUser.length !== 1 ? "s" : ""}
           </div>

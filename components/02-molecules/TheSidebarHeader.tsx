@@ -11,11 +11,10 @@ export const TheSidebarHeader = () => {
   const isDark = currentTheme === "dark";
   const { toggleSidebar } = useSidebar();
 
-
   return (
     <div className="w-full gap-5 flex flex-col">
       <button
-        onClick={toggleSidebar}
+        onClick={() => toggleSidebar(false)}
         className={cc([
           "rounded-full w-7 h-7 flex items-center justify-center",
           isDark

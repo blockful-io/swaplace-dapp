@@ -73,7 +73,7 @@ export const TheHeader = () => {
                 {!!authenticatedUserAddress ? (
                   <Tooltip position={"right"} content={"Your wallet"}>
                     <button
-                      onClick={toggleSidebar}
+                      onClick={() => toggleSidebar()}
                       className="rounded-[10px] bg-[#DDF23D] flex items-center justify-center"
                     >
                       <ENSAvatar avatarENSAddress={authenticatedUserAddress} />
@@ -95,7 +95,7 @@ export const TheHeader = () => {
                 {!!authenticatedUserAddress ? (
                   <Tooltip position={"right"} content={"Your wallet"}>
                     <button
-                      onClick={toggleSidebar}
+                      onClick={() => toggleSidebar()}
                       className="rounded-[10px] bg-[#DDF23D] flex items-center justify-center"
                     >
                       <ENSAvatar avatarENSAddress={authenticatedUserAddress} />

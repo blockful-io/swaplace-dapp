@@ -119,6 +119,7 @@ export const SwapContextProvider = ({ children }: any) => {
       setValidatedAddressToSwap(searchedAddress);
       toast.success("Searching Address");
     } else {
+      setValidatedAddressToSwap("");
       toast.error(
         "Your input is not a valid address and neither some registered ENS domain",
       );

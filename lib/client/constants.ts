@@ -129,15 +129,10 @@ export interface AlchemyERC721 {
 
 // export interface ITokenCard {
 //   token: Token;
-//   onClickAction?: NftCardActionType;
+//   onClickAction?: TokenCardActionType;
 //   withSelectionValidation?: boolean;
-//   styleType?: NftCardStyleType;
+//   styleType?: TokenCardStyleType;
 // }
-
-export const getApiKeyForNetwork: Map<number, string> = new Map([
-  [ChainInfo.SEPOLIA.id, process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_KEY ?? ""],
-  [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_KEY ?? ""],
-]);
 
 export const getNetwork: Map<number, Network> = new Map([
   [ChainInfo.SEPOLIA.id, Network.ETH_SEPOLIA],
@@ -188,11 +183,11 @@ export const getAPIKeyForNetwork: Map<number, string | undefined> = new Map([
 
 export const getCurrentNetworkHttpUrl = (chainId: number) => {
   const httpUrl = getRpcHttpUrlForNetwork.get(chainId);
-  const key = getAPIKeyForNetwork.get(chainId);
 
-  if (!key) throw new Error(`No API key is defined for chain ID: ${chainId}`);
+  if (!httpUrl)
+    throw new Error(`No RPC URL was defined for chain ID: ${chainId}`);
 
-  return httpUrl + key;
+  return httpUrl;
 };
 
 export const SWAPLACE_SMART_CONTRACT_ADDRESS = {

@@ -22,6 +22,13 @@ export const useEnsData = ({ ensAddress }: Props) => {
 
   useEffect(() => {
     if (ensAddress) {
+      const mainnetRPCUrl = process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP;
+
+      if (!mainnetRPCUrl)
+        throw new Error(
+          "No RPC URL was defined for mainnet, cannot get ENS name without it.",
+        );
+
       const mainnetClient = createPublicClient({
         chain: mainnet,
         transport: http(),

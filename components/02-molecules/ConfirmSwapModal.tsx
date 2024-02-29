@@ -89,9 +89,10 @@ export const ConfirmSwapModal = ({
   }, [authenticatedUserTokensList]);
 
   if (
-    !authenticatedUserAddress?.address ||
-    !searchedUserTokensList ||
-    !authenticatedUserTokensList
+    (!authenticatedUserAddress?.address ||
+      !searchedUserTokensList ||
+      !authenticatedUserTokensList) &&
+    open
   ) {
     onClose();
     return null;

@@ -2,7 +2,6 @@
 import { getTokenName } from "@/lib/client/tokens";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { isTokenSwapApproved } from "@/lib/service/verifyTokensSwapApproval";
 import {
   ERC20,
   ERC721,
@@ -13,12 +12,11 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import toast from "react-hot-toast";
-import { useNetwork } from "wagmi";
 
 interface TokenCardProps {
   tokenData: Token;
   ownerAddress: string | null;
-  onClickAction?: NftCardActionType;
+  onClickAction?: TokenCardActionType;
   withSelectionValidation?: boolean;
   styleType?: StyleVariant;
 }
@@ -32,36 +30,41 @@ interface TokenCardProps {
  * @returns TokenCard
  */
 
-export enum NftCardActionType {
+export enum TokenCardActionType {
   "SELECT_NFT_FOR_SWAP",
+  "APPROVE_TOKEN_SWAP",
   "SHOW_NFT_DETAILS",
 }
 
-export enum NftCardStyleType {
+export enum TokenCardStyleType {
   SMALL = "small",
   NORMAL = "normal",
   MEDIUM = "medium",
   LARGE = "large",
 }
 
-type StyleVariant = NftCardStyleType | "small" | "normal" | "medium" | "large";
+type StyleVariant =
+  | TokenCardStyleType
+  | "small"
+  | "normal"
+  | "medium"
+  | "large";
 
 const NftSizeClassNames = {
-  [NftCardStyleType.SMALL]: "card-nft-small",
-  [NftCardStyleType.NORMAL]: "card-nft-normal",
-  [NftCardStyleType.MEDIUM]: "card-nft-medium",
-  [NftCardStyleType.LARGE]: "card-nft-large",
+  [TokenCardStyleType.SMALL]: "card-nft-small",
+  [TokenCardStyleType.NORMAL]: "card-nft-normal",
+  [TokenCardStyleType.MEDIUM]: "card-nft-medium",
+  [TokenCardStyleType.LARGE]: "card-nft-large",
 };
 
 export const TokenCard = ({
   tokenData,
   ownerAddress,
   withSelectionValidation = true,
-  styleType = NftCardStyleType.NORMAL,
-  onClickAction = NftCardActionType.SELECT_NFT_FOR_SWAP,
+  styleType = TokenCardStyleType.NORMAL,
+  onClickAction = TokenCardActionType.SELECT_NFT_FOR_SWAP,
 }: TokenCardProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { chain } = useNetwork();
   const {
     setAuthenticatedUserTokensList,
     setSearchedUserTokensList,
@@ -98,21 +101,7 @@ export const TokenCard = ({
     }
 
     setDisplayableData(displayableData);
-
-    verifyIfTokenIsApproved();
   }, [tokenData]);
-
-  const verifyIfTokenIsApproved = () => {
-    if (!chain?.id) throw new Error("User is not connected to any network");
-
-    isTokenSwapApproved({
-      token: tokenData,
-      chainId: chain?.id,
-    }).then(() => {
-      //.then((result) => {
-      // setIsApproved(result);
-    });
-  };
 
   useEffect(() => {
     const currentNftIsFromAuthedUser = ownerAddress
@@ -140,13 +129,9 @@ export const TokenCard = ({
     tokenData,
   ]);
 
-  useEffect(() => {
-    setCouldntLoadNftImage(false);
-  }, [tokenData]);
-
-  const setNftAsActiveOne = () => {
+  const onCardClick = () => {
     if (
-      onClickAction === NftCardActionType.SELECT_NFT_FOR_SWAP &&
+      onClickAction === TokenCardActionType.SELECT_NFT_FOR_SWAP &&
       ownerAddress
     ) {
       const ownerEthAddress = new EthereumAddress(ownerAddress);
@@ -186,7 +171,7 @@ export const TokenCard = ({
           ]);
         }
       }
-    } else if (onClickAction === NftCardActionType.SHOW_NFT_DETAILS) {
+    } else if (onClickAction === TokenCardActionType.SHOW_NFT_DETAILS) {
       navigator.clipboard.writeText(JSON.stringify(tokenData));
       toast.success("NFT data copied to your clipboard");
     }
@@ -199,7 +184,7 @@ export const TokenCard = ({
   const ButtonLayout = (children: React.ReactNode) => {
     return (
       <button
-        onClick={setNftAsActiveOne}
+        onClick={onCardClick}
         className={cc([
           NftSizeClassNames[styleType],
           {
