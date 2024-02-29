@@ -47,7 +47,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
               <PersonIcon />
             </div>
             <div className="items-center">
-              <p className="font-medium">
+              <p className="font-medium dark:text-[#F6F6F1]">
                 {forAuthedUser
                   ? "You give"
                   : !forAuthedUser && validatedAddressToSwap && inputAddress

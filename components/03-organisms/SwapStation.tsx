@@ -76,12 +76,12 @@ export const SwapStation = () => {
           <button
             disabled={!isValidSwap}
             className={cc([
-              "pointer-events-none rounded-xl w-full disabled:bg-gray-100 dark:disabled:bg-[#353836]  dark:hover:bg-[#4b514d] bg-green-400 border-green-500 disabled:border-gray-200  dark:disabled:border-[#434443]  border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:text-gray-300 text-green-900 ",
+              "pointer-events-none rounded-xl w-full disabled:bg-gray-100 dark:disabled:bg-[#282B29]  dark:hover:bg-[#4b514d] bg-green-400 border-green-500 disabled:border-gray-200  dark:disabled:border-[#353836]  border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-base disabled:text-[#707572] text-green-900 dark:shadow-button-swap-station-offer ",
             ])}
           >
             <PaperPlane
               className="w-6"
-              fill={isValidSwap ? "green" : "rgb(209,213,219)"}
+              fill={isValidSwap ? "green" : "#707572"}
             />
             Send swap
           </button>

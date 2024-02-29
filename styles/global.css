@@ -58,6 +58,10 @@ input:-webkit-autofill:focus {
     box-shadow: 0px 0px 6px 1px #00000066;
   }
 
+  .shadow-button-swap-station-offer {
+    box-shadow: 0px 0px 6px 1px #0000004d;
+  }
+
   .title-h1 {
   }
 
