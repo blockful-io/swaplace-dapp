@@ -1,4 +1,5 @@
-import { CopyIcon, ENSAvatar, ExternalLinkIcon } from "@/components/01-atoms";
+import { CopyAdressButton } from ".";
+import { ENSAvatar, ExternalLinkIcon } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useEnsData } from "@/lib/client/hooks/useENSData";
 import { collapseAddress } from "@/lib/client/utils";
@@ -34,21 +35,10 @@ export const EnsNameAndAddressWallet = () => {
                   </h3>
                 </>
               )}
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    authenticatedUserAddress.toString(),
-                  );
-                }}
-                className="flex items-center justify-start gap-2"
-              >
-                <h3 className="text-sm">{`  ${displayAddress}`}</h3>
-                <div>
-                  <div className="p-1">
-                    <CopyIcon className="dark:text-[#F6F6F6] text-[#AABE13] w-4 h-4 " />
-                  </div>
-                </div>
-              </button>
+              <CopyAdressButton
+                authenticatedUserAddress={authenticatedUserAddress.toString()}
+                displayAddress={displayAddress}
+              />
             </div>
             <a
               href={blockExplorer}
