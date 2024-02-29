@@ -25,15 +25,15 @@ export const CopyAdressButton = ({
           navigator.clipboard.writeText(authenticatedUserAddress);
           setIsCopied(true);
         }}
-        className="flex items-center justify-center gap-2 hover:bg-[#DDF23D] hover:bg-opacity-10 py-1/2 px-1 rounded-[4px] transition-colors duration-200"
+        className="flex group items-center justify-center gap-2 dark:hover:bg-[#DDF23D] hover:bg-[#AABE13] dark:hover:bg-opacity-10 py-1/2 px-1 rounded-[4px] transition-colors duration-200"
       >
-        <h3 className="text-sm">{`${displayAddress}`}</h3>
+        <h3 className="text-sm group-hover:text-[#F6F6F6] transition-colors duration-200">{`${displayAddress}`}</h3>
         <div>
           <div className="p-1">
             {isCopied ? (
-              <DoneIcon className="dark:text-[#F6F6F6] text-[#AABE13] w-4 h-4" />
+              <DoneIcon className="dark:text-[#F6F6F6] group-hover:text-[#F6F6F6] transition-colors duration-200  text-[#AABE13] w-4 h-4" />
             ) : (
-              <CopyIcon className="dark:text-[#F6F6F6] text-[#AABE13] w-4 h-4" />
+              <CopyIcon className="dark:text-[#F6F6F6] group-hover:text-[#F6F6F6] transition-colors duration-200 text-[#AABE13] w-4 h-4" />
             )}
           </div>
         </div>
