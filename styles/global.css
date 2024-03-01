@@ -62,6 +62,10 @@ input:-webkit-autofill:focus {
     box-shadow: 0px 0px 6px 1px #0000004d;
   }
 
+  .shadow-swap-connection {
+    box-shadow: 0px 0px 6px 1px #0000004d;
+  }
+
   .title-h1 {
   }
 
@@ -103,6 +107,9 @@ input:-webkit-autofill:focus {
   }
   .p-normal-2-dark {
     @apply font-onest font-normal text-[16px] leading-[20px] text-[#F6F6F6];
+  }
+  .p-normal-2-light {
+    @apply font-onest font-normal text-[16px] leading-[20px] text-[#212322];
   }
 
   .p-medium-bold-2 {
