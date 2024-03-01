@@ -26,10 +26,11 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
   useEffect(() => {
     if (
       typeof chain?.id === "number" &&
+      // checks if network is supported
       !getRpcHttpUrlForNetwork.get(chain?.id)
     ) {
-      disconnect();
-      return;
+      // disconnect();
+      // return;
     }
   }, [chain]);
 

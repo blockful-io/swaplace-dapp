@@ -1,8 +1,14 @@
 import { EthereumAddress } from "@/lib/shared/types";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { NftCard } from "@/components/02-molecules";
-import { EmptyNftsCards, PersonIcon, SwapContext } from "@/components/01-atoms";
-import { useContext } from "react";
+import {
+  ENSAvatar,
+  EmptyNftsCards,
+  PersonIcon,
+  SwapContext,
+} from "@/components/01-atoms";
+import { useEnsData } from "@/lib/client/hooks/useENSData";
+import { useContext, useEffect, useState } from "react";
 
 interface IOfferSummary {
   forAuthedUser: boolean;
@@ -37,6 +43,24 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
   );
 
   const nftUser = forAuthedUser ? nftAuthUser : nftInputUser;
+  const [searchedEthereumAdress, setSearchedEthereumAddress] =
+    useState<EthereumAddress | null>(null);
+
+  const { primaryName: walletENSName } = useEnsData({
+    ensAddress: authenticatedUserAddress,
+  });
+  const { primaryName: searchedENSName } = useEnsData({
+    ensAddress: searchedEthereumAdress as unknown as EthereumAddress,
+  });
+
+  useEffect(() => {
+    if (validatedAddressToSwap && userJustValidatedInput && inputAddress) {
+      const newAddress = new EthereumAddress(validatedAddressToSwap);
+      setSearchedEthereumAddress(newAddress);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validatedAddressToSwap]);
 
   return (
     <div className="w-full h-full dark:bg-[#282B29] border dark:border-[#353836] rounded-lg ">
@@ -44,21 +68,42 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
         <div className="flex justify-between items-center h-9 gap-2">
           <div className="flex space-x-2">
             <div className="flex items-center">
-              <PersonIcon />
+              {!forAuthedUser && authenticatedUserAddress && walletENSName ? (
+                <ENSAvatar
+                  avatarENSAddress={authenticatedUserAddress}
+                  size="small"
+                />
+              ) : forAuthedUser && validatedAddressToSwap ? (
+                <ENSAvatar
+                  avatarENSAddress={new EthereumAddress(validatedAddressToSwap)}
+                  size="small"
+                />
+              ) : (
+                <PersonIcon />
+              )}
             </div>
             <div className="items-center">
-              <p className="font-medium dark:text-[#F6F6F1]">
-                {forAuthedUser
-                  ? "You give"
-                  : !forAuthedUser && validatedAddressToSwap && inputAddress
-                  ? `${
-                      userJustValidatedInput
-                        ? new EthereumAddress(
-                            validatedAddressToSwap,
-                          ).getEllipsedAddress() + " gives"
-                        : "Use the search bar!"
-                    }`
-                  : "Use the search bar!"}
+              <p className="font-medium">
+                {!forAuthedUser && authenticatedUserAddress && walletENSName
+                  ? `${walletENSName} gets`
+                  : !forAuthedUser && authenticatedUserAddress
+                  ? `${new EthereumAddress(
+                      authenticatedUserAddress.address,
+                    ).getEllipsedAddress()} gets`
+                  : !forAuthedUser
+                  ? `You Get`
+                  : forAuthedUser &&
+                    validatedAddressToSwap &&
+                    inputAddress &&
+                    searchedENSName
+                  ? `${searchedENSName} gets`
+                  : forAuthedUser && validatedAddressToSwap && inputAddress
+                  ? `${new EthereumAddress(
+                      validatedAddressToSwap,
+                    ).getEllipsedAddress()} gets`
+                  : (forAuthedUser && !validatedAddressToSwap) || !inputAddress
+                  ? `They get`
+                  : `Use the search bar`}
               </p>
             </div>
           </div>
