@@ -1,4 +1,4 @@
-import { CopyAdressButton } from ".";
+import { CopyAdressButton } from "@/components/02-molecules";
 import { ENSAvatar, ExternalLinkIcon } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useEnsData } from "@/lib/client/hooks/useENSData";

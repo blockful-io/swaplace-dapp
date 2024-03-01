@@ -1,4 +1,4 @@
-import { getRpcHttpUrlForNetwork } from "../client/constants";
+import { getRpcHttpUrlForNetwork } from "@/lib/client/constants";
 import { polygonMumbai, sepolia, hardhat } from "@wagmi/core/chains";
 import { configureChains, createConfig } from "wagmi";
 import {
