@@ -31,7 +31,7 @@ export const WalletSidebarTemplate = ({
 
       <div
         className={cc([
-          "z-50 h-full absolute right-0 top-0 rounded-tl-[20px] border-l border-t transition-transform duration-300 ease-in-out p-6",
+          "z-50 h-full right-0 top-0 rounded-tl-[20px] border-l border-t fixed transition-transform duration-300 ease-in-out p-6",
           isDark
             ? "bg-[#212322] border-[#353836] shadow-sidebarDark"
             : "bg-[#F6F6F6] border-[#F0EEEE] shadow-sidebarLight",
