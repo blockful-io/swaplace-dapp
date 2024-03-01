@@ -13,3 +13,4 @@ export * from "./TheSidebarHeader";
 export * from "./UserInfo";
 export * from "./AccountBalanceWalletSidebar";
 export * from "./UserOfferInfo";
+export * from "./CopyAdressButton";
