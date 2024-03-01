@@ -16,15 +16,20 @@ interface Props {
 
 export const useWalletBalance = ({ walletAddress }: Props) => {
   const [balance, setBalance] = useState<string | null>(null);
-  const [balanceQueryStatus, setBalanceQueryStatus] = useState<WalletBalanceQueryStatus>(WalletBalanceQueryStatus.LOADING);
+  const [balanceQueryStatus, setBalanceQueryStatus] =
+    useState<WalletBalanceQueryStatus>(WalletBalanceQueryStatus.LOADING);
 
   const { chain } = useNetwork();
 
+  const RpcHttpUrlForNetwork = chain
+    ? getRpcHttpUrlForNetwork.get(chain?.id)
+    : "";
+
   useEffect(() => {
-    if (walletAddress && chain && !!getRpcHttpUrlForNetwork.get(chain?.id)) {
+    if (walletAddress && chain && !!RpcHttpUrlForNetwork) {
       const client = createPublicClient({
         chain: chain,
-        transport: http(),
+        transport: http(RpcHttpUrlForNetwork),
       });
 
       setBalanceQueryStatus(WalletBalanceQueryStatus.LOADING);
@@ -35,7 +40,10 @@ export const useWalletBalance = ({ walletAddress }: Props) => {
         })
         .then((fetchedBalance) => {
           setBalanceQueryStatus(WalletBalanceQueryStatus.SUCCESS);
-          !!chain && setBalance(formatUnits(fetchedBalance, chain.nativeCurrency.decimals));
+          !!chain &&
+            setBalance(
+              formatUnits(fetchedBalance, chain.nativeCurrency.decimals),
+            );
         })
         .catch(() => {
           setBalanceQueryStatus(WalletBalanceQueryStatus.ERROR);
@@ -45,7 +53,7 @@ export const useWalletBalance = ({ walletAddress }: Props) => {
       setBalance(null);
       setBalanceQueryStatus(WalletBalanceQueryStatus.ERROR);
     }
-  }, [walletAddress, chain]);
+  }, [walletAddress, chain, RpcHttpUrlForNetwork]);
 
   return {
     balance,
