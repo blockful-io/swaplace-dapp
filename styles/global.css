@@ -65,6 +65,13 @@ input:-webkit-autofill:focus {
   .shadow-swap-connection {
     box-shadow: 0px 0px 6px 1px #0000004d;
   }
+  .shadow-swap-connection-light {
+    box-shadow: 0px 0px 6px 0px #00000014;
+  }
+
+  .shadow-swap-connection-dropwdown {
+    box-shadow: 0px 0px 12px 1px #00000066;
+  }
 
   .title-h1 {
   }

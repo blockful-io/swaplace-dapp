@@ -76,7 +76,7 @@ export const SearchBar = () => {
   }, [inputAddress]);
 
   return (
-    <div className="gap-2 xl:w-full xl:h-full pb-5 flex flex-col rounded">
+    <div className="gap-2 xl:w-full max-h-[72px] flex flex-col rounded">
       <div className="w-full flex justify-between space-x-6">
         <h2 className="p-normal-2-light dark:p-normal-2-dark">
           Who are you swapping with today?
