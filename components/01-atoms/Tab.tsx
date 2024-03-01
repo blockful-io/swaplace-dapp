@@ -30,7 +30,7 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
   const [isActiveTab, setIsActiveTab] = useState(SwappingShelfID.THEIR_ITEMS);
 
   return (
-    <div className="w-full font-light flex-auto flex items-center justify-between  overflow-hidden  ">
+    <div className="w-full font-light flex-auto flex items-center justify-between overflow-hidden">
       {swappingTabs.map((tab) => {
         return (
           <div
@@ -38,8 +38,8 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
             className={cc([
               isActiveTab == tab.id
                 ? "dark:p-medium-bold-dark p-medium-bold border-b dark:border-[#DDF23D] border-black "
-                : "dark:p-medium-bold p-medium-bold opacity-50 border-b dark:border-[#313131]",
-              "flex-1 p-4  cursor-pointer",
+                : "dark:p-medium-bold p-medium-bold opacity-50",
+              "flex cursor-pointer py-4 px-5",
             ])}
             role="tab"
             onClick={() => {

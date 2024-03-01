@@ -1,4 +1,5 @@
 import { TheSidebarHeader, UserInfo } from "@/components/02-molecules";
+import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
 import React from "react";
 import cc from "classcat";
 import { useTheme } from "next-themes";
@@ -15,14 +16,17 @@ export const WalletSidebarTemplate = ({
   const { systemTheme, theme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark";
+  const { toggleSidebar } = useSidebar();
 
   return (
     <>
       <div
         className={cc([
-          "fixed left-0 top-0 w-full h-full z-30 backdrop-blur-sm transition-all duration-300",
-          isOpen ? "opacity-100 inset-0" : "opacity-0 z-[-1]",
+          "fixed left-0 top-0 w-full h-full z-50 backdrop-blur-sm transition-all duration-300 cursor-default",
+          isOpen ? "opacity-100 inset-0 " : "opacity-0 z-[-1]",
         ])}
+        role="button"
+        onClick={toggleSidebar}
       />
 
       <div
