@@ -23,5 +23,13 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [authenticatedUserAddress, isNetworkSupported]);
 
-  return <SidebarProvider>{children}</SidebarProvider>;
+  return (
+    <SidebarProvider>
+      <meta
+        content="initial-scale=1.0, width=device-width"
+        name="viewport"
+      ></meta>
+      {children}
+    </SidebarProvider>
+  );
 };
