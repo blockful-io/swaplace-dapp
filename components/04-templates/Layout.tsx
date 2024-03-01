@@ -2,7 +2,7 @@
 import { SidebarProvider } from "@/lib/client/contexts/SidebarContext.tsx";
 import { useAuthedAccess } from "@/lib/client/hooks/useAuthedAccess";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useSupportedNetworks } from "@/lib/client/hooks/useConnectedChain";
+import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { sepolia, useSwitchNetwork } from "wagmi";
