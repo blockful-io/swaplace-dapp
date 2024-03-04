@@ -158,6 +158,9 @@ input:-webkit-autofill:focus {
   .p-small-dark-variant-grey {
     @apply font-onest font-normal text-[14px] leading-[20px] text-[#A3A9A5];
   }
+  .p-small-variant-black-2 {
+    @apply font-onest font-normal text-[14px] leading-[20px] text-[#353836];
+  }
 
   .card-nft-normal {
     @apply shadow-inner w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
