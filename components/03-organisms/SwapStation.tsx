@@ -59,7 +59,7 @@ export const SwapStation = () => {
         <div className="flex flex-col gap-2 relative">
           <OfferSummary forAuthedUser={false} />
           <OfferSummary forAuthedUser={true} />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] dark:bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
             <SwapIcon variant={"vertical"} />
           </div>
         </div>
