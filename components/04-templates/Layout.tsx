@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { SidebarProvider } from "@/lib/client/contexts/SidebarContext.tsx";
-import { useAuthedAccess } from "@/lib/client/hooks/useAuthedAccess";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
 import { useEffect } from "react";
@@ -8,7 +7,6 @@ import toast from "react-hot-toast";
 import { sepolia, useSwitchNetwork } from "wagmi";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
-  useAuthedAccess();
   const { isNetworkSupported } = useSupportedNetworks();
   const { switchNetwork } = useSwitchNetwork();
   const { authenticatedUserAddress } = useAuthenticatedUser();
