@@ -76,9 +76,9 @@ export const SearchBar = () => {
   }, [inputAddress]);
 
   return (
-    <div className="gap-2 xl:w-full xl:h-full pb-5 flex flex-col rounded">
+    <div className="gap-2 xl:w-full max-h-[72px] flex flex-col rounded">
       <div className="w-full flex justify-between space-x-6">
-        <h2 className="title-h3-normal dark:title-h3-normal-dark">
+        <h2 className="p-normal-2-light dark:p-normal-2-dark">
           Who are you swapping with today?
         </h2>
       </div>
@@ -98,7 +98,7 @@ export const SearchBar = () => {
           name="search"
           type="search"
           className={cc([
-            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small
+            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis
              dark:border-none dark:bg-transparent`,
           ])}
           placeholder="Search username, address or ENS"

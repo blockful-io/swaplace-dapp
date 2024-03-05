@@ -14,7 +14,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { createPublicClient, http } from "viem";
 
 export const { chains, webSocketPublicClient, publicClient } = configureChains(
-  [sepolia, polygonMumbai, hardhat],
+  [sepolia],
   [
     jsonRpcProvider({
       rpc: (chain) => ({

@@ -62,6 +62,17 @@ input:-webkit-autofill:focus {
     box-shadow: 0px 0px 6px 1px #0000004d;
   }
 
+  .shadow-swap-connection {
+    box-shadow: 0px 0px 6px 1px #0000004d;
+  }
+  .shadow-swap-connection-light {
+    box-shadow: 0px 0px 6px 0px #00000014;
+  }
+
+  .shadow-swap-connection-dropwdown {
+    box-shadow: 0px 0px 12px 1px #00000066;
+  }
+
   .title-h1 {
   }
 
@@ -104,6 +115,9 @@ input:-webkit-autofill:focus {
   .p-normal-2-dark {
     @apply font-onest font-normal text-[16px] leading-[20px] text-[#F6F6F6];
   }
+  .p-normal-2-light {
+    @apply font-onest font-normal text-[16px] leading-[20px] text-[#212322];
+  }
 
   .p-medium-bold-2 {
     @apply font-onest font-medium text-[16px] leading-[20px] text-[#707572];
@@ -143,6 +157,9 @@ input:-webkit-autofill:focus {
   }
   .p-small-dark-variant-grey {
     @apply font-onest font-normal text-[14px] leading-[20px] text-[#A3A9A5];
+  }
+  .p-small-variant-black-2 {
+    @apply font-onest font-normal text-[14px] leading-[20px] text-[#353836];
   }
 
   .card-nft-normal {
