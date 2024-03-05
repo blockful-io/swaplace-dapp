@@ -4,7 +4,6 @@
 import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useContext, useEffect } from "react";
-import { useTheme } from "next-themes";
 import { ENS } from "web3-eth-ens";
 import cc from "classcat";
 import Web3 from "web3";
@@ -20,7 +19,6 @@ export const SearchBar = () => {
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
-  const { theme } = useTheme();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 
   const validateUser = (ensNameAddress: string | null) => {
@@ -78,27 +76,24 @@ export const SearchBar = () => {
   return (
     <div className="gap-2 xl:w-full max-h-[72px] flex flex-col rounded">
       <div className="w-full flex justify-between space-x-6">
-        <h2 className="p-normal-2-light dark:p-normal-2-dark">
+        <h2 className="p-normal-2-light dark:p-normal-2-dark contrast-50">
           Who are you swapping with today?
         </h2>
       </div>
       <div
         className={cc([
-          "flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-swap-station",
+          "flex items-center border rounded-xl pl-4 pr-3 gap-4 bg-[#F6F6F6] dark:bg-[#212322] dark:border-[#353836] border-[#D6D5D5]  dark:hover:border-[#edff6259] dark:shadow-swap-station  shadow-swap-connection-light",
         ])}
       >
         <div className="justify-center items-center">
-          <MagnifyingGlassIcon
-            className="w-5"
-            fill={cc([theme == "dark" ? "#353836" : "#EEE"])}
-          />
+          <MagnifyingGlassIcon className="w-5 text-[#A3A9A5] dark:text-[#353836]" />
         </div>
         <input
           id="search"
           name="search"
           type="search"
           className={cc([
-            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis
+            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis bg-inherit
              dark:border-none dark:bg-transparent`,
           ])}
           placeholder="Search username, address or ENS"
