@@ -55,6 +55,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [address, chain, destinyChain]);
 
   useEffect(() => {
+
     if (
       authenticatedUserAddress &&
       address &&
@@ -101,7 +102,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
             variant={variant}
           />
         </div>
-      ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
+      ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address || !chain ? (
         <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322]  justify-center items-center ">
           <div className="flex-col flex  items-center space-y-4">
             <div className="w-[80px] h-[80px] flex items-center border-[3px] rounded-full dark:border-[#DDF23D] border-[#A3A9A5] ">
