@@ -1,16 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { SwapContext } from ".";
+import { ArrowIcon, SwapContext } from "@/components/01-atoms";
 import { getTimestamp } from "@/lib/client/utils";
-import { TimeStampDate, ExpireDate } from "@/lib/client/constants";
-import React, { useContext, useEffect, useState } from "react";
+import { ExpireDate, TimeStampDate } from "@/lib/client/constants";
+import { useContext, useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
+import cc from "classcat";
 
 export const SwapExpireTime = () => {
   const { chain } = useNetwork();
   const { setTimeDate } = useContext(SwapContext);
-  const [selectedOption, setSelectedOption] = useState<TimeStampDate>(
+  const [expireDate, setExpireDate] = useState<TimeStampDate>(
     TimeStampDate.ONE_DAY,
   );
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
   let chainID: number;
 
@@ -28,40 +34,66 @@ export const SwapExpireTime = () => {
     }
   };
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value as unknown as TimeStampDate;
-    setSelectedOption(selectedValue);
-    fetchData(selectedValue);
+  const handleSelectExpirateDate = (selectedExpirationDate: TimeStampDate) => {
+    setExpireDate(selectedExpirationDate);
+    fetchData(selectedExpirationDate);
   };
 
   useEffect(() => {
-    fetchData(selectedOption);
-  }, [selectedOption]);
+    fetchData(expireDate);
+  }, [expireDate]);
 
   return (
     <div className="flex">
-      <div className="flex xl:h-[36px] rounded-lg border border-[#353836]">
-        <div className="dark:bg-[#353836] flex justify-center items-center xl:p-3 dark:p-small-dark p-small">
-          Expires in
+      <div className="flex xl:max-h-[36px] xl:w-[227px]">
+        <div className="dark:bg-[#353836] bg-[#E4E4E4] rounded-l-lg border dark:border-[#353836] border-[#E4E4E4]  flex items-center xl:py-2 xl:px-3 dark:p-small-dark p-small">
+          Expires
         </div>
-        <div className="flex justify-center items-center">
-          <div className="xl:px-3 py-2 flex justify-center items-center ">
-            <select
-              value={selectedOption}
-              onChange={handleSelectChange}
-              className="bg-inherit dark:p-small-dark p-small  "
-            >
-              {ExpireDate.map((option, index) => (
-                <option
-                  key={index}
-                  value={option.value}
-                  className="dark:text-black font-onest font-normal text-[14px] leading-[20px] "
-                >
-                  {option.label}
-                </option>
-              ))}
-            </select>
+        <div
+          className="flex w-full relative"
+          role="button"
+          onClick={handleToggleDropdown}
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+        >
+          <div
+            className={cc([
+              "w-full h-full flex justify-between items-center px-3 py-2 hover:dark:bg-[#282B29] dark:bg-[#212322] bg-[#F6F6F6] border-[#E4E4E4] rounded-r-lg border dark:border-[#353836] hover:dark:border-[#505150]",
+              isOpen &&
+                "border-[#DDF23D] hover:border-[#DDF23D] dark:border-[#DDF23D] hover:dark:border-[#DDF23D] dark:bg-[#282B29]",
+            ])}
+          >
+            <div className="flex p-small dark:p-small-dark">
+              <div>
+                {ExpireDate.find((item) => item.value === expireDate)?.label}
+              </div>
+            </div>
+            <div className="flex">
+              <ArrowIcon
+                props={{
+                  className: "dark:text-[#707572] text-[#A3A9A5]",
+                }}
+                variant={isOpen ? "up" : "down"}
+              />
+            </div>
           </div>
+          {isOpen && (
+            <div className="absolute z-10 bg-white dark:bg-[#212322] border dark:border-[#505150] dark:shadow-swap-connection-dropwdown rounded-xl top-[36px] w-full">
+              {Object.values(ExpireDate).map((expirationDate, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleSelectExpirateDate(expirationDate.value)}
+                  className={cc([
+                    "gap-2 flex px-4 py-2 p-small-variant-black-2 dark:p-small-dark-variant-grey items-center hover:dark:bg-[#353836] hover:bg-[#F0EEEE] hover:dark:p-small-dark",
+                    { "rounded-t-xl": index === 0 },
+                    { "rounded-b-xl": index === ExpireDate.length - 1 },
+                  ])}
+                >
+                  {expirationDate.label}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

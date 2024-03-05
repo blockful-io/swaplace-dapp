@@ -102,20 +102,22 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
           />
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.EMPTY_QUERY || !address ? (
-        <div className="flex w-full h-full bg-[#f8f8f8] dark:bg-[#212322]  justify-center items-center ">
-          <div className="flex-col flex  items-center space-y-4">
+        <div className="flex w-full h-full bg-inherit  justify-center items-center">
+          <div className="flex-col flex items-center gap-5">
             <div className="w-[80px] h-[80px] flex items-center border-[3px] rounded-full dark:border-[#DDF23D] border-[#A3A9A5] ">
               <SelectUserIcon
                 className="w-[100px]"
                 fill={theme == "dark" ? "#DDF23D" : "#A3A9A5"}
               />
             </div>
-            <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
-              No user selected yet
-            </p>
-            <p className="dark:text-[#A3A9A5] font-onest font-normal text-[14px] leading-[20px]">
-              Search for a user to start swapping items
-            </p>
+            <div className="flex items-center justify-center flex-col gap-1 text-center">
+              <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
+                No user selected yet
+              </p>
+              <p className="dark:text-[#A3A9A5] font-onest font-normal text-[14px] leading-[20px]">
+                Search for a user to start swapping items
+              </p>
+            </div>
           </div>
         </div>
       ) : nftsQueryStatus == NFTsQueryStatus.NO_RESULTS ? (
