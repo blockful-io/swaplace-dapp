@@ -132,8 +132,8 @@ export const NetworkDropdown = ({ forAuthedUser }: NetworkDropdownProps) => {
           ])}
         >
           <div className="flex justify-between items-center h-[44px] lg:w-[252px]">
-            <div className="flex gap-2">
-              <div className="flex items-center dark:bg-[#353836] bg-[#E4E4E4] rounded-md">
+            <div className="flex gap-2 items-center">
+              <div className="flex dark:bg-[#353836] bg-[#E4E4E4] rounded-md">
                 <NetworkIcon variant={networkText} />
               </div>
               <div
