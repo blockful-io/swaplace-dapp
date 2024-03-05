@@ -70,6 +70,7 @@ export const SwapIcon = ({ props, variant = "horizontal" }: SwapIconProps) => {
     ),
     [SwapIconVariant.VERTICAL]: (
       <svg
+        {...props}
         width="16"
         height="16"
         viewBox="0 0 16 16"
