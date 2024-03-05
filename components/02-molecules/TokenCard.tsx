@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { getTokenName } from "@/lib/client/tokens";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import {
@@ -9,13 +8,18 @@ import {
   Token,
   TokenType,
 } from "@/lib/shared/types";
+import { getTokenName } from "@/lib/client/ui-utils";
 import React, { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import toast from "react-hot-toast";
 
 interface TokenCardProps {
   tokenData: Token;
-  ownerAddress: string | null;
+  ownerAddress: EthereumAddress | null;
+  openTokenAmountSelectionModal?: (
+    owner: EthereumAddress,
+    token: Token,
+  ) => void;
   onClickAction?: TokenCardActionType;
   withSelectionValidation?: boolean;
   styleType?: StyleVariant;
@@ -34,6 +38,7 @@ export enum TokenCardActionType {
   "SELECT_NFT_FOR_SWAP",
   "APPROVE_TOKEN_SWAP",
   "SHOW_NFT_DETAILS",
+  "NO_ACTION",
 }
 
 export enum TokenCardStyleType {
@@ -60,6 +65,7 @@ const NftSizeClassNames = {
 export const TokenCard = ({
   tokenData,
   ownerAddress,
+  openTokenAmountSelectionModal,
   withSelectionValidation = true,
   styleType = TokenCardStyleType.NORMAL,
   onClickAction = TokenCardActionType.SELECT_NFT_FOR_SWAP,
@@ -105,7 +111,7 @@ export const TokenCard = ({
 
   useEffect(() => {
     const currentNftIsFromAuthedUser = ownerAddress
-      ? authenticatedUserAddress?.equals(new EthereumAddress(ownerAddress))
+      ? authenticatedUserAddress?.equals(ownerAddress)
       : false;
 
     if (currentNftIsFromAuthedUser) {
@@ -134,7 +140,7 @@ export const TokenCard = ({
       onClickAction === TokenCardActionType.SELECT_NFT_FOR_SWAP &&
       ownerAddress
     ) {
-      const ownerEthAddress = new EthereumAddress(ownerAddress);
+      const ownerEthAddress = ownerAddress;
 
       if (authenticatedUserAddress?.equals(ownerEthAddress)) {
         const isSelected = authenticatedUserTokensList.some(
@@ -152,6 +158,10 @@ export const TokenCard = ({
             ...prevNftAuthUser,
             tokenData,
           ]);
+
+          if (tokenData.tokenType === TokenType.ERC20) {
+            openTokenAmountSelectionModal?.(ownerEthAddress, tokenData);
+          }
         }
       } else {
         const isSelected = searchedUserTokensList.some(
@@ -169,6 +179,10 @@ export const TokenCard = ({
             ...prevNftInputUser,
             tokenData,
           ]);
+
+          if (tokenData.tokenType === TokenType.ERC20) {
+            openTokenAmountSelectionModal?.(ownerEthAddress, tokenData);
+          }
         }
       }
     } else if (onClickAction === TokenCardActionType.SHOW_NFT_DETAILS) {
@@ -189,6 +203,7 @@ export const TokenCard = ({
           NftSizeClassNames[styleType],
           {
             "border-green-500": currentNftIsSelected && withSelectionValidation,
+            "cursor-auto": onClickAction === TokenCardActionType.NO_ACTION,
           },
         ])}
       >

@@ -30,22 +30,22 @@ export class EthereumAddress {
     `^0x[a-fA-F0-9]{${EthereumAddress.ETHEREUM_ADDRESS_LENGTH}}$`,
   );
 
-  private readonly _value: string;
+  public address: `0x${string}`;
   public erc20List: ERC20[];
   public erc721List: ERC721[];
 
-  constructor(public address: string) {
-    if (!EthereumAddress.pattern.test(address)) {
-      throw new Error(`Invalid Ethereum address: ${address}`);
+  constructor(private add: string) {
+    if (!EthereumAddress.pattern.test(add)) {
+      throw new Error(`Invalid Ethereum address: ${add}`);
     }
 
     this.erc20List = [];
     this.erc721List = [];
-    this._value = address.toLowerCase();
+    this.address = add.toLowerCase() as `0x${string}`;
   }
 
   toString() {
-    return this._value;
+    return this.address;
   }
 
   equals(otherAddress: EthereumAddress | undefined | null) {
@@ -53,14 +53,14 @@ export class EthereumAddress {
 
     let isEqual = false;
     try {
-      isEqual = this._value === otherAddress._value;
+      isEqual = this.address === otherAddress.address;
     } finally {
       return isEqual;
     }
   }
 
   getEllipsedAddress() {
-    return this._value.slice(0, 6) + "..." + this._value.slice(-4);
+    return this.address.slice(0, 6) + "..." + this.address.slice(-4);
   }
 
   setERC20List(erc20List: ERC20[]) {

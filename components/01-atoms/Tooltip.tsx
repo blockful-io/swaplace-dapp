@@ -22,7 +22,7 @@ export const Tooltip = ({ position, content, children }: TooltipProps) => (
     <div className="pointer-events-none">
       <span
         className={cc([
-          "absolute hidden group-hover:inline-block bg-[#212322] border border-[#353836] dark:p-small-dark p-small-dark text-xs p-2 whitespace-nowrap rounded-lg",
+          "z-50 absolute hidden group-hover:inline-block bg-[#212322] border border-[#353836] dark:p-small-dark p-small-dark text-xs p-2 whitespace-nowrap rounded-lg",
           {
             "left-1/2 -translate-x-1/2 bottom-[calc(100%+5px)]":
               position === ToolTipPosition.TOP,

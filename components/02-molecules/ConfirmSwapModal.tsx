@@ -12,17 +12,17 @@ import { ProgressStatus } from "@/components/02-molecules";
 import { SwapUserConfiguration, createSwap } from "@/lib/service/createSwap";
 import {
   ButtonClickPossibilities,
-  ComposeTokenUserAssets,
-  SwapModalSteps,
   packingData,
 } from "@/lib/client/blockchain-utils";
-import { SwaplaceAbi } from "@/lib/client/abi";
 import { TokenOffers } from "@/components/03-organisms";
-import { Asset, makeSwap } from "@/lib/client/swap-utils";
-import { publicClient } from "@/lib/wallet/wallet-config";
+import { fromTokensToAssets, getSwapConfig } from "@/lib/client/swap-utils";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
+import { publicClient } from "@/lib/wallet/wallet-config";
+import { SwapModalSteps } from "@/lib/client/ui-utils";
+import { SwaplaceAbi } from "@/lib/client/abi";
+import { EthereumAddress } from "@/lib/shared/types";
 import { type WalletClient, useNetwork, useWalletClient } from "wagmi";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useTheme } from "next-themes";
 import toast from "react-hot-toast";
 import { getContract } from "viem";
@@ -47,9 +47,6 @@ export const ConfirmSwapModal = ({
     updateSwapStep,
   } = useContext(SwapContext);
 
-  const [nftsInputUser, setNftsInputUser] = useState<Asset[]>([]); // asking
-  const [nftsAuthUser, setNftsAuthUser] = useState<Asset[]>([]); // biding
-
   const { chain } = useNetwork();
   const { data: walletClient } = useWalletClient();
   const { theme } = useTheme();
@@ -65,24 +62,6 @@ export const ConfirmSwapModal = ({
       updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
     }
   }, [open]);
-
-  useEffect(() => {
-    const fetchUserTokenAssets = async () => {
-      try {
-        const [nftsInputUserResult, nftsAuthUserResult] = await Promise.all([
-          ComposeTokenUserAssets(searchedUserTokensList),
-          ComposeTokenUserAssets(authenticatedUserTokensList),
-        ]);
-
-        setNftsInputUser(nftsInputUserResult);
-        setNftsAuthUser(nftsAuthUserResult);
-      } catch (error) {
-        console.error("Error fetching User Tokens Assets:", error);
-      }
-    };
-
-    fetchUserTokenAssets();
-  }, [searchedUserTokensList, authenticatedUserTokensList]);
 
   useEffect(() => {
     updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
@@ -109,22 +88,32 @@ export const ConfirmSwapModal = ({
       throw new Error("Chain ID is undefined");
     }
 
+    if (!validatedAddressToSwap)
+      throw new Error("No Swap offer receiver is defined");
+
+    // Franco TODO: Review this need
     const SwaplaceContract = getContract({
       address: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
       publicClient: publicClient({ chainId: chain.id }),
       abi: SwaplaceAbi,
     });
-    const config = await packingData(
+    const packedData = await packingData(
       SwaplaceContract,
-      validatedAddressToSwap as `0x${string}`,
+      validatedAddressToSwap,
       timeDate,
     );
 
-    const swap = await makeSwap(
-      userWalletClient.account.address,
-      config,
-      nftsAuthUser,
-      nftsInputUser,
+    const authenticatedUserAssets = await fromTokensToAssets(
+      authenticatedUserTokensList,
+    );
+    const searchedUserAssets = await fromTokensToAssets(searchedUserTokensList);
+
+    const swapConfig = await getSwapConfig(
+      new EthereumAddress(userWalletClient.account.address),
+      packedData,
+      timeDate,
+      authenticatedUserAssets,
+      searchedUserAssets,
       chainId,
     );
 
@@ -133,19 +122,9 @@ export const ConfirmSwapModal = ({
       chain: chainId,
     };
 
-    // const swapData: ICreateSwap = {
-    //   walletClient: walletClient, // owner
-    //   expireDate: timeDate,
-    //   searchedUserTokensList: nftsInputUser, // asking
-    //   authenticatedUserTokensList: nftsAuthUser, // biding
-    //   validatedAddressToSwap: validatedAddressToSwap,
-    //   authenticatedUserAddress: authenticatedUserAddress,
-    //   chain: chainId,
-    // };
-
     try {
       if (approvedTokensCount) {
-        const transactionReceipt = await createSwap(swap, configurations);
+        const transactionReceipt = await createSwap(swapConfig, configurations);
 
         if (transactionReceipt != undefined) {
           toast.success("Created Swap");
@@ -155,11 +134,11 @@ export const ConfirmSwapModal = ({
           updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
         }
       } else {
-        toast.error("You must approve the Tokens to create Swap.");
+        toast.error("You must approve the Tokens to Swap.");
         updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
       }
     } catch (error) {
-      toast.error("You must approve the Tokens to create Swap.");
+      toast.error("You must approve the Tokens to Swap.");
       updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
       console.error(error);
     }
@@ -171,7 +150,7 @@ export const ConfirmSwapModal = ({
         updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
       }
     } else {
-      toast.error("You must approve the Tokens to create Swap.");
+      toast.error("You must approve the Tokens to Swap.");
     }
   };
 
@@ -191,21 +170,17 @@ export const ConfirmSwapModal = ({
           component: (
             <>
               <div className="flex w-full justify-between items-center">
-                <div>
-                  <ProgressStatus />
-                </div>
-                <div>
-                  <SwapModalButton
-                    label={"Continue"}
-                    disabled={
-                      approvedTokensCount !== authenticatedUserTokensList.length
-                    }
-                    onClick={validateTokensAreApproved}
-                    aditionalStyle={
-                      theme === "light" ? "text-black" : "text-yellow"
-                    }
-                  />
-                </div>
+                <ProgressStatus />
+                <SwapModalButton
+                  label={"Continue"}
+                  disabled={
+                    approvedTokensCount !== authenticatedUserTokensList.length
+                  }
+                  onClick={validateTokensAreApproved}
+                  aditionalStyle={
+                    theme === "light" ? "text-black" : "text-yellow"
+                  }
+                />
               </div>
             </>
           ),
@@ -222,9 +197,9 @@ export const ConfirmSwapModal = ({
         body={{
           component: (
             <>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 flex-grow">
                 <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-                <TokenOffers variant="vertical" />
+                <TokenOffers />
               </div>
             </>
           ),
@@ -265,9 +240,9 @@ export const ConfirmSwapModal = ({
         body={{
           component: (
             <>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 flex-grow">
                 <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-                <TokenOffers variant="vertical" />
+                <TokenOffers />
               </div>
             </>
           ),
@@ -298,9 +273,9 @@ export const ConfirmSwapModal = ({
         body={{
           component: (
             <>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 flex-grow">
                 <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-                <TokenOffers variant="vertical" />
+                <TokenOffers />
               </div>
             </>
           ),

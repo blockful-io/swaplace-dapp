@@ -1,5 +1,5 @@
-import { ADDRESS_ZERO, getAPIKeyForNetwork, getNetwork } from "./constants";
-import { Asset, makeAsset } from "./swap-utils";
+import { getAPIKeyForNetwork, getNetwork } from "./constants";
+import { publicClient } from "../wallet/wallet-config";
 import {
   Token,
   ERC20,
@@ -13,53 +13,10 @@ import {
   type OwnedToken,
   type OwnedNft,
   Alchemy,
+  type TokenBalancesResponseErc20,
 } from "alchemy-sdk";
-import { type WalletClient } from "wagmi";
 import toast from "react-hot-toast";
-
-const INVALID_TOKEN_AMOUNT_OR_ID = Number.MAX_SAFE_INTEGER.toString();
-const INVALID_TOKEN_SWAP_INFO = {
-  amountOrId: INVALID_TOKEN_AMOUNT_OR_ID,
-  tokenAddress: ADDRESS_ZERO as `0x${string}`,
-};
-
-export interface ICreateSwap {
-  walletClient: WalletClient;
-  expireDate: bigint;
-  searchedUserTokensList: Token[];
-  authenticatedUserTokensList: Token[];
-  validatedAddressToSwap: string;
-  authenticatedUserAddress: EthereumAddress;
-  chain: number;
-}
-
-export interface IApproveMulticall {
-  abi: Record<string, any>;
-  functionName: string;
-  address: `0x${string}`;
-  args?: [any];
-}
-export interface IGetApproveSwap {
-  tokenAddress: `0x${string}`;
-  amountOrId: string;
-}
-
-export interface IApproveTokenSwap {
-  walletClient: WalletClient;
-  tokenContractAddress: `0x${string}`;
-  spender: `0x${string}`;
-  amountOrId: string;
-  chainId: number;
-  token: Token;
-  onWalletConfirmation: () => void;
-}
-
-export enum SwapModalSteps {
-  APPROVE_TOKENS,
-  CREATE_SWAP,
-  CREATING_SWAP,
-  CREATED_SWAP,
-}
+import { hexToNumber, isAddress } from "viem";
 
 export enum ButtonClickPossibilities {
   PREVIOUS_STEP,
@@ -73,35 +30,22 @@ export enum TransactionStatus {
   SUCCESSFUL_TRANSACTION,
 }
 
-export type TokenWithSwapInfo = {
-  tokenAddress: `0x${string}`;
-  amountOrId: string;
+export const getBlockchainTimestamp = async (chainId: number) => {
+  const provider = publicClient({
+    chainId,
+  });
+
+  const block = await provider.getBlockNumber();
+  const blockDetails = await provider.getBlock({ blockNumber: block });
+
+  const timestamp = blockDetails.timestamp;
+
+  return timestamp;
 };
 
-export async function ComposeTokenUserAssets(
-  tokensList: Token[],
-): Promise<Asset[]> {
-  const tokenAssetArray: Asset[] = [];
-  const assetPromisesArray: Promise<void>[] = [];
+export const INVALID_TOKEN_AMOUNT_OR_ID = BigInt(Number.MAX_SAFE_INTEGER);
 
-  for (let i = 0; i < tokensList.length; i += 1) {
-    const addr = tokensList[i]?.contract as `0x${string}`;
-    const amountOrId = getTokenAmountOrId(tokensList[i]);
-
-    if (amountOrId !== undefined && addr !== undefined) {
-      const assetPromise = makeAsset(addr, amountOrId).then((asset) => {
-        tokenAssetArray.push(asset);
-      });
-      assetPromisesArray.push(assetPromise);
-    }
-  }
-
-  await Promise.all(assetPromisesArray);
-
-  return tokenAssetArray;
-}
-
-export const getTokenAmountOrId = (token: Token): string => {
+export const getTokenAmountOrId = (token: Token): bigint => {
   /* ERC20 tokens have an transaction amount while ERC721, a token ID */
   let tokenAmountOrTokenId = undefined;
 
@@ -118,62 +62,12 @@ export const getTokenAmountOrId = (token: Token): string => {
 
   if (typeof tokenAmountOrTokenId === "undefined")
     return INVALID_TOKEN_AMOUNT_OR_ID;
-  else return tokenAmountOrTokenId;
+  else return BigInt(tokenAmountOrTokenId);
 };
-
-export function getTokenInfoBeforeSwap(token: Token): TokenWithSwapInfo {
-  const amountOrId = getTokenAmountOrId(token);
-
-  const contractAddress = token.contract;
-
-  if (amountOrId !== undefined && contractAddress !== undefined) {
-    return {
-      tokenAddress: contractAddress as `0x${string}`,
-      amountOrId: amountOrId,
-    };
-  } else {
-    return INVALID_TOKEN_SWAP_INFO;
-  }
-}
-
-export function getTokensInfoBeforeSwap(
-  tokensList: Token[],
-): TokenWithSwapInfo[] {
-  const tokensWithInfo: TokenWithSwapInfo[] = [];
-
-  for (let i = 0; i < tokensList.length; i++) {
-    let nftAmountOrTokenId = undefined;
-
-    switch (tokensList[i].tokenType) {
-      case TokenType.ERC20:
-        if ((tokensList[i] as ERC20).rawBalance) {
-          nftAmountOrTokenId = (tokensList[i] as ERC20).rawBalance;
-        }
-      case TokenType.ERC721:
-        if (tokensList[i]?.id as unknown as number) {
-          nftAmountOrTokenId = tokensList[i]?.id as unknown as number;
-        }
-    }
-
-    const tokenContractAddress = tokensList[i]?.contract as `0x${string}`;
-
-    if (
-      nftAmountOrTokenId !== undefined &&
-      tokenContractAddress !== undefined
-    ) {
-      tokensWithInfo.push({
-        tokenAddress: tokenContractAddress,
-        amountOrId: nftAmountOrTokenId.toString(),
-      });
-    }
-  }
-
-  return tokensWithInfo;
-}
 
 // Check out the Alchemy Documentation https://docs.alchemy.com/reference/getnfts-sdk-v3
 export const getERC721TokensFromAddress = async (
-  address: string,
+  address: EthereumAddress,
   chainId: number,
 ) => {
   const networkAPIKey = getAPIKeyForNetwork.get(chainId);
@@ -195,13 +89,13 @@ export const getERC721TokensFromAddress = async (
   const alchemy = new Alchemy(config);
 
   return alchemy.nft
-    .getNftsForOwner(address)
+    .getNftsForOwner(address.address)
     .then((response: OwnedNftsResponse) => {
       return parseAlchemyERC721Tokens(response.ownedNfts);
     })
-    .catch((error: any) => {
-      console.error("Error getNftsForOwner:", error);
-      throw new Error();
+    .catch((error) => {
+      toastBlockchainTxError(error);
+      throw new Error("Error getting user's ERC721 tokens.");
     });
 };
 
@@ -220,7 +114,7 @@ const parseAlchemyERC721Tokens = (tokens: OwnedNft[]): ERC721[] => {
 
 // Check out the Alchemy Documentation https://docs.alchemy.com/reference/gettokensforowner-sdk-v3
 export const getERC20TokensFromAddress = async (
-  address: string,
+  address: EthereumAddress,
   chainId: number,
 ): Promise<ERC20[]> => {
   const alchemyApiKey = getAPIKeyForNetwork.get(chainId);
@@ -242,9 +136,13 @@ export const getERC20TokensFromAddress = async (
   const ownerAddress = address;
 
   return alchemy.core
-    .getTokensForOwner(ownerAddress)
+    .getTokensForOwner(ownerAddress.address)
     .then((response: GetTokensForOwnerResponse) => {
       return parseAlchemyERC20Tokens(response.tokens);
+    })
+    .catch((error) => {
+      toastBlockchainTxError(error);
+      throw new Error("Error getting user's ERC20 tokens.");
     });
 };
 
@@ -269,75 +167,65 @@ const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
   });
 };
 
-// export interface Swap {
-//   owner: string;
-//   config: any;
-//   biding: Token[];
-//   asking: Token[];
-// }
+export const getTokenBalance = async (
+  owner: EthereumAddress,
+  token: Token,
+  chainId: number,
+): Promise<string | null> => {
+  const alchemyApiKey = getAPIKeyForNetwork.get(chainId);
+  const networkName = getNetwork.get(chainId);
 
-// export async function makeConfig(
-//   Contract: any,
-//   allowed: any,
-//   destinationChainSelector: any,
-//   expiration: any,
-// ) {
-//   const config = await Contract.packData(
-//     allowed,
-//     destinationChainSelector,
-//     expiration,
-//   );
-//   return config;
-// }
+  if (!alchemyApiKey) {
+    throw new Error("No API Key for this network.");
+  }
+  if (!networkName) {
+    throw new Error("No Network Name is defined for this network.");
+  }
+  if (!token.contract) {
+    throw new Error("Selected token has no known contract address.");
+  }
 
-// export async function makeSwap(
-//   Contract: any,
-//   owner: any,
-//   allowed: any,
-//   destinationChainSelector: any,
-//   expiration: any,
-//   biding: Token[],
-//   asking: Token[],
-//   chainId: number,
-// ) {
-//   const timestamp = await getTimestamp(chainId);
-//   if (expiration < timestamp) {
-//     throw new Error("InvalidExpiry");
-//   }
+  const config = {
+    apiKey: alchemyApiKey,
+    network: networkName,
+  };
+  const alchemy = new Alchemy(config);
 
-//   if (biding.length == 0 || asking.length == 0) {
-//     throw new Error("InvalidAssetsLength");
-//   }
+  return alchemy.core
+    .getTokenBalances(owner.address, [token.contract])
+    .then((response: TokenBalancesResponseErc20) => {
+      if (!response.tokenBalances[0].tokenBalance) return null;
 
-//   const config = await makeConfig(
-//     Contract,
-//     allowed,
-//     destinationChainSelector,
-//     expiration,
-//   );
+      let balance: string | null = null;
+      if (isAddress(response.tokenBalances[0].tokenBalance)) {
+        balance = hexToNumber(
+          response.tokenBalances[0].tokenBalance,
+        ).toString();
+      } else {
+        balance = response.tokenBalances[0].tokenBalance;
+      }
 
-//   const swap: Swap = {
-//     owner: owner,
-//     config: config,
-//     biding: biding,
-//     asking: asking,
-//   };
-
-//   return swap;
-// }
+      return balance;
+    })
+    .catch((error) => {
+      toastBlockchainTxError(error);
+      throw new Error("Error getting token balance.");
+    });
+};
 
 export interface TokenApprovalData {
-  approved: `0x${string}`;
+  approved: boolean;
   tokenAddress: `0x${string}`;
-  amountOrId: string;
+  amountOrId: bigint;
 }
 
 export async function packingData(
   Contract: any,
-  allowed: any,
-  expiration: any,
-) {
-  const config = await Contract.read.packData([allowed, expiration]);
+  allowed: EthereumAddress,
+  expiration: bigint,
+): Promise<number> {
+  console.log(Contract);
+  const config = await Contract.read.packData([allowed.address, expiration]);
   return config;
 }
 

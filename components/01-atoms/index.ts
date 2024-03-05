@@ -24,6 +24,7 @@ export * from "./ThreeDotsCardOffersOptions";
 export * from "./WalletSidebarTemplate";
 export * from "./ENSAvatar";
 export * from "./SwapContext";
+export * from "./TokenAmountSelectionModal";
 
 export * from "./icons/ChatIcon";
 export * from "./icons/DoneIcon";

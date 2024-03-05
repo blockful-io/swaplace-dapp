@@ -17,7 +17,7 @@ export async function createSwap(
   //   abi: SwaplaceAbi,
   //   publicClient: publicClientViem,
   // });
-  // const config = await packingData(
+  // const config = await packData(
   //   SwaplaceContract,
   //   validatedAddressToSwap as `0x${string}`,
   //   expireDate,
@@ -94,7 +94,7 @@ export async function createSwap(
     args: [
       {
         owner: swap.owner as `0x${string}`,
-        config: swap.config as unknown as bigint,
+        config: BigInt(swap.config),
         biding: swap.biding,
         asking: swap.asking,
       },

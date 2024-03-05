@@ -97,11 +97,6 @@ export const SearchBar = () => {
             `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small
              dark:border-none dark:bg-transparent`,
           ])}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              validateAddressToSwap(authenticatedUserAddress, inputAddress);
-            }
-          }}
           placeholder="Search username, address or ENS"
           onChange={({ target }) => setInputAddress(target.value)}
         />

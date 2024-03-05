@@ -1,5 +1,6 @@
 import { PaperPlane, SwapContext, SwapExpireTime } from "@/components/01-atoms";
 import { ConfirmSwapModal, OfferSummary } from "@/components/02-molecules";
+import { TokensShelfVariant } from "@/components/03-organisms";
 import { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import toast from "react-hot-toast";
@@ -52,9 +53,9 @@ export const SwapStation = () => {
   };
 
   return (
-    <div className="mx-auto w-[95%] xl:w-[500px] lg:w-[615px] p-4 flex flex-col justify-between items-center bg-[#f8f8f8] dark:bg-[#212322] xl:gap-0  gap-4  dark:border rounded-2xl dark:border-[#353836]">
-      <div className="w-full flex flex-col justify-start">
-        <div className="flex justify-between">
+    <div className="mx-auto w-[95%] xl:w-[500px] lg:w-[615px] p-4 gap-4 flex flex-col justify-between items-center bg-[#f8f8f8] dark:bg-[#212322] dark:border rounded-2xl dark:border-[#353836]">
+      <div className="w-full flex flex-grow h-max flex-col justify-start">
+        <div className="flex flex-shrink justify-between">
           <div>
             <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7">
               Swap offer
@@ -64,9 +65,9 @@ export const SwapStation = () => {
             <SwapExpireTime />
           </div>
         </div>
-        <div className="w-full flex flex-col gap-4">
-          <OfferSummary forAuthedUser={true} />
-          <OfferSummary forAuthedUser={false} />
+        <div className="w-full h-max flex flex-grow flex-col gap-4">
+          <OfferSummary variant={TokensShelfVariant.Your} />
+          <OfferSummary variant={TokensShelfVariant.Their} />
         </div>
       </div>
       <div className="w-full flex flex-col justify-center items-center">

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { SwapContext } from ".";
-import { getTimestamp } from "@/lib/client/utils";
-import { TimeStampDate, ExpireDate } from "@/lib/client/constants";
+import { getBlockchainTimestamp } from "@/lib/client/blockchain-utils";
+import { ExpireDate, TimeStampDate } from "@/lib/client/ui-utils";
 import React, { useContext, useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
 
@@ -21,7 +21,7 @@ export const SwapExpireTime = () => {
   const fetchData = async (selectedValue: TimeStampDate) => {
     try {
       const timeSelected = BigInt(selectedValue);
-      const timestamp = await getTimestamp(chainId);
+      const timestamp = await getBlockchainTimestamp(chainId);
       setTimeDate(timeSelected + timestamp);
     } catch (error) {
       console.error("error", error);

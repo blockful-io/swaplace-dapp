@@ -23,9 +23,11 @@ export const ApprovedTokenCards = () => {
   }
 
   const addNewTokenToApprovedList = (token: Token) => {
-    setTokensApprovedForSwap([...tokensApprovedForSwap, token]);
-
-    setApprovedTokensCount([...tokensApprovedForSwap, token].length);
+    if (!tokensApprovedForSwap.includes(token)) {
+      const approvedTokensCount = tokensApprovedForSwap.length + 1;
+      setTokensApprovedForSwap([...tokensApprovedForSwap, token]);
+      setApprovedTokensCount(approvedTokensCount);
+    }
   };
 
   return (

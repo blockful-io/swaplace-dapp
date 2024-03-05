@@ -1,6 +1,5 @@
 import {
-  IApproveMulticall,
-  IGetApproveSwap,
+  TokenApprovalData,
   getTokenInfoBeforeSwap,
 } from "../client/blockchain-utils";
 import { publicClient } from "../wallet/wallet-config";
@@ -46,21 +45,20 @@ export async function isTokenSwapApproved({
   }
 }
 
-export async function getMultipleNftsApprovalStatus(
-  nftsApprove: IGetApproveSwap[],
+export async function getMultipleTokensApprovalStatus(
+  tokensList: Token[],
   chainId: number,
-) {
-  const approvedCall: IApproveMulticall[] = nftsApprove.map((data) => ({
-    abi: MockERC721Abi,
-    functionName: "getApproved",
-    address: data.tokenAddress,
-    args: [data.amountOrId],
-  }));
+): Promise<TokenApprovalData[]> {
+  const promises = tokensList.map(async (token) => {
+    const tokenSwapInfo = getTokenInfoBeforeSwap(token);
 
-  const approvedTokens = await publicClient({ chainId }).multicall({
-    contracts: approvedCall,
-    allowFailure: false,
+    return {
+      ...tokenSwapInfo,
+      approved: await isTokenSwapApproved({ token, chainId }),
+    };
   });
 
-  return approvedTokens;
+  const tokensListWithApprovalStatus = Promise.all(promises);
+
+  return tokensListWithApprovalStatus;
 }

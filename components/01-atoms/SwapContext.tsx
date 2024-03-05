@@ -2,13 +2,10 @@
 /* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { SwapModalSteps } from "@/lib/client/ui-utils";
 import { ADDRESS_ZERO, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress, Token } from "@/lib/shared/types";
-import {
-  ButtonClickPossibilities,
-  TokenApprovalData,
-  SwapModalSteps,
-} from "@/lib/client/blockchain-utils";
+import { ButtonClickPossibilities } from "@/lib/client/blockchain-utils";
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -21,8 +18,7 @@ interface SwapContextProps {
   // Searched user related
   inputAddress: string;
   setInputAddress: (address: string) => void;
-  validatedAddressToSwap: string;
-
+  validatedAddressToSwap: EthereumAddress | null;
   validateAddressToSwap: (
     authedUser: EthereumAddress | null,
     inputEnsAddress: string | null | undefined,
@@ -32,19 +28,15 @@ interface SwapContextProps {
   /* 
     Below state is used for Ui rules only, setting new stylings
     if the Search bar content was just now submitted
-    */
+  */
   userJustValidatedInput: boolean;
   setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
 
   // Authed user related
-  authedUserSelectedTokensApprovalStatus: TokenApprovalData[];
   authenticatedUserTokensList: Token[];
   setAuthenticatedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
   approvedTokensCount: number;
   setApprovedTokensCount: Dispatch<React.SetStateAction<number>>;
-  setAuthedUserTokensApprovalStatus: Dispatch<
-    React.SetStateAction<TokenApprovalData[]>
-  >;
 
   // Swap modal related
   currentSwapModalStep: SwapModalSteps;
@@ -54,8 +46,9 @@ interface SwapContextProps {
 }
 
 export const SwapContextProvider = ({ children }: any) => {
-  const [inputAddress, setInputAddress] = useState<string>("");
-  const [validatedAddressToSwap, setValidatedAddressToSwap] = useState("");
+  const [inputAddress, setInputAddress] = useState("");
+  const [validatedAddressToSwap, setValidatedAddressToSwap] =
+    useState<EthereumAddress | null>(null);
   const [userJustValidatedInput, setUserJustValidatedInput] = useState(true);
   const [authenticatedUserTokensList, setAuthenticatedUserTokensList] =
     useState<Token[]>([]);
@@ -70,10 +63,6 @@ export const SwapContextProvider = ({ children }: any) => {
   const [currentSwapModalStep, setCurrentSwapModalStep] =
     useState<SwapModalSteps>(SwapModalSteps.APPROVE_TOKENS);
   const [approvedTokensCount, setApprovedTokensCount] = useState(0);
-  const [
-    authedUserSelectedTokensApprovalStatus,
-    setAuthedUserTokensApprovalStatus,
-  ] = useState<TokenApprovalData[]>([]);
 
   const router = useRouter();
 
@@ -106,20 +95,20 @@ export const SwapContextProvider = ({ children }: any) => {
 
       if (inputEthAddress.equals(_authedUser)) {
         toast.error("You cannot swap with yourself");
-        setValidatedAddressToSwap("");
+        setValidatedAddressToSwap(null);
         setUserJustValidatedInput(true);
         return;
       } else if (searchedAddress === ADDRESS_ZERO) {
         toast.error("You cannot swap with an invalid address");
-        setValidatedAddressToSwap("");
+        setValidatedAddressToSwap(null);
         setUserJustValidatedInput(true);
         return;
       }
 
-      setValidatedAddressToSwap(searchedAddress);
+      setValidatedAddressToSwap(inputEthAddress);
       toast.success("Searching Address");
     } else {
-      setValidatedAddressToSwap("");
+      setValidatedAddressToSwap(null);
       toast.error(
         "Your input is not a valid address and neither some registered ENS domain",
       );
@@ -183,8 +172,6 @@ export const SwapContextProvider = ({ children }: any) => {
       timeDate,
       approvedTokensCount,
       setApprovedTokensCount,
-      setAuthedUserTokensApprovalStatus,
-      authedUserSelectedTokensApprovalStatus,
       updateSwapStep,
       currentSwapModalStep,
     });
@@ -197,7 +184,6 @@ export const SwapContextProvider = ({ children }: any) => {
     destinyChain,
     timeDate,
     approvedTokensCount,
-    authedUserSelectedTokensApprovalStatus,
     currentSwapModalStep,
   ]);
 
@@ -218,8 +204,6 @@ export const SwapContextProvider = ({ children }: any) => {
     timeDate,
     approvedTokensCount,
     setApprovedTokensCount,
-    setAuthedUserTokensApprovalStatus,
-    authedUserSelectedTokensApprovalStatus,
     updateSwapStep,
     currentSwapModalStep,
   });
@@ -227,7 +211,7 @@ export const SwapContextProvider = ({ children }: any) => {
   // This is a temporary measure while we don't turn the dApp into a SPA
   // We are reseting the inputAddress to reload the inventory
   useEffect(() => {
-    setValidatedAddressToSwap("");
+    setValidatedAddressToSwap(null);
   }, [router.asPath]);
 
   return (
@@ -237,7 +221,7 @@ export const SwapContextProvider = ({ children }: any) => {
 
 export const SwapContext = React.createContext<SwapContextProps>({
   inputAddress: "",
-  validatedAddressToSwap: "",
+  validatedAddressToSwap: null,
   validateAddressToSwap: (
     _authedUser: EthereumAddress | null,
     _inputEnsAddress: string | null | undefined,
@@ -255,8 +239,6 @@ export const SwapContext = React.createContext<SwapContextProps>({
   setTimeDate: () => {},
   approvedTokensCount: 0,
   setApprovedTokensCount: () => {},
-  setAuthedUserTokensApprovalStatus: () => {},
-  authedUserSelectedTokensApprovalStatus: [],
   currentSwapModalStep: SwapModalSteps.APPROVE_TOKENS,
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
 });

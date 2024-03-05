@@ -1,44 +1,15 @@
-import { TokenApprovalData, getTokensInfoBeforeSwap } from "./blockchain-utils";
+import {
+  INVALID_TOKEN_AMOUNT_OR_ID,
+  getBlockchainTimestamp,
+  getTokenAmountOrId,
+} from "./blockchain-utils";
 import { ADDRESS_ZERO } from "./constants";
-import { getTimestamp } from "./utils";
-import { EthereumAddress, Token } from "../shared/types";
-import { getMultipleNftsApprovalStatus } from "../service/verifyTokensSwapApproval";
-import { Dispatch, SetStateAction } from "react";
-
-export const batchApproveTokenSwap = async (
-  chainId: number,
-  tokensList: Token[],
-  setNftsApprovalStatus: Dispatch<SetStateAction<TokenApprovalData[]>>,
-  setNftsAreAllApproved: (areApproved: boolean) => void,
-) => {
-  const nftsToSwapFromAuthedUser = getTokensInfoBeforeSwap(tokensList);
-
-  try {
-    const result = await getMultipleNftsApprovalStatus(
-      nftsToSwapFromAuthedUser,
-      chainId,
-    );
-
-    const nftsApprovalStatus = result.map((approved, index) => ({
-      tokenAddress: nftsToSwapFromAuthedUser[index].tokenAddress,
-      amountOrId: nftsToSwapFromAuthedUser[index].amountOrId,
-      approved: approved as `0x${string}`,
-    }));
-
-    const someNftIsNotApprovedForSwapping = !result.some(
-      (approved) => approved === ADDRESS_ZERO,
-    );
-
-    setNftsApprovalStatus(nftsApprovalStatus);
-    setNftsAreAllApproved(someNftIsNotApprovedForSwapping);
-  } catch (error) {
-    console.error("error ", error);
-  }
-};
+import { ERC20, EthereumAddress, Token, TokenType } from "../shared/types";
+import { type WalletClient } from "wagmi";
 
 export interface Asset {
   addr: `0x${string}`;
-  amountOrId: string;
+  amountOrId: bigint;
 }
 
 export interface Swap {
@@ -48,9 +19,54 @@ export interface Swap {
   asking: Asset[];
 }
 
+export interface ICreateSwap {
+  walletClient: WalletClient;
+  expireDate: bigint;
+  searchedUserTokensList: Token[];
+  authenticatedUserTokensList: Token[];
+  validatedAddressToSwap: string;
+  authenticatedUserAddress: EthereumAddress;
+  chain: number;
+}
+
+export type TokenWithSwapInfo = {
+  tokenAddress: `0x${string}`;
+  amountOrId: bigint;
+};
+
+export interface IApproveTokenSwap {
+  walletClient: WalletClient;
+  tokenContractAddress: `0x${string}`;
+  spender: `0x${string}`;
+  amountOrId: bigint;
+  chainId: number;
+  token: Token;
+  onWalletConfirmation: () => void;
+}
+
+const INVALID_TOKEN_SWAP_INFO = {
+  amountOrId: INVALID_TOKEN_AMOUNT_OR_ID,
+  tokenAddress: ADDRESS_ZERO as `0x${string}`,
+};
+
+export function getTokenInfoBeforeSwap(token: Token): TokenWithSwapInfo {
+  const amountOrId = getTokenAmountOrId(token);
+
+  const contractAddress = token.contract;
+
+  if (amountOrId !== undefined && contractAddress !== undefined) {
+    return {
+      tokenAddress: contractAddress as `0x${string}`,
+      amountOrId: amountOrId,
+    };
+  } else {
+    return INVALID_TOKEN_SWAP_INFO;
+  }
+}
+
 export async function makeAsset(
   addr: string,
-  amountOrId: string,
+  amountOrId: bigint,
 ): Promise<Asset> {
   // validate if its an ethereum address
   try {
@@ -78,18 +94,39 @@ export async function makeAsset(
   return asset;
 }
 
-export async function makeSwap(
-  owner: any,
-  config: any,
+export async function fromTokensToAssets(
+  tokensList: Token[],
+): Promise<Asset[]> {
+  const tokenAssetArray: Asset[] = [];
+  const assetPromisesArray: Promise<void>[] = [];
+
+  for (let i = 0; i < tokensList.length; i += 1) {
+    const addr = tokensList[i]?.contract as `0x${string}`;
+    const amountOrId = getTokenAmountOrId(tokensList[i]);
+
+    if (amountOrId !== undefined && addr !== undefined) {
+      const assetPromise = makeAsset(addr, amountOrId).then((asset) => {
+        tokenAssetArray.push(asset);
+      });
+      assetPromisesArray.push(assetPromise);
+    }
+  }
+
+  await Promise.all(assetPromisesArray);
+
+  return tokenAssetArray;
+}
+
+export async function getSwapConfig(
+  owner: EthereumAddress,
+  packedData: number,
+  expiry: bigint,
   biding: Asset[],
   asking: Asset[],
   chainId: number, // To Do remove thee chainId in params
 ) {
-  const expiry: bigint =
-    BigInt(config) & ((BigInt(1) << BigInt(96)) - BigInt(1));
-
   // check for the current `block.timestamp` because `expiry` cannot be in the past
-  const timestamp = await getTimestamp(chainId);
+  const timestamp = await getBlockchainTimestamp(chainId);
   if (expiry < timestamp) {
     throw new Error("InvalidExpiry");
   }
@@ -106,8 +143,8 @@ export async function makeSwap(
   }
 
   const swap: Swap = {
-    owner: owner,
-    config: config,
+    owner: owner.address,
+    config: packedData,
     biding: biding,
     asking: asking,
   };
@@ -137,6 +174,7 @@ export async function makeSwap(
 export async function composeSwap(
   owner: any,
   config: any,
+  expiry: bigint,
   bidingAddr: any[],
   bidingAmountOrId: any[],
   askingAddr: any[],
@@ -163,5 +201,40 @@ export async function composeSwap(
 
   const chainId = 0;
 
-  return await makeSwap(owner, config, biding, asking, chainId); // To Do remove thee chainId in params
+  return await getSwapConfig(owner, config, expiry, biding, asking, chainId); // To Do remove thee chainId in params
+}
+
+export function getTokensInfoBeforeSwap(
+  tokensList: Token[],
+): TokenWithSwapInfo[] {
+  const tokensWithInfo: TokenWithSwapInfo[] = [];
+
+  for (let i = 0; i < tokensList.length; i++) {
+    let nftAmountOrTokenId = undefined;
+
+    switch (tokensList[i].tokenType) {
+      case TokenType.ERC20:
+        if ((tokensList[i] as ERC20).rawBalance) {
+          nftAmountOrTokenId = (tokensList[i] as ERC20).rawBalance;
+        }
+      case TokenType.ERC721:
+        if (tokensList[i]?.id as unknown as number) {
+          nftAmountOrTokenId = tokensList[i]?.id as unknown as number;
+        }
+    }
+
+    const tokenContractAddress = tokensList[i]?.contract as `0x${string}`;
+
+    if (
+      nftAmountOrTokenId !== undefined &&
+      tokenContractAddress !== undefined
+    ) {
+      tokensWithInfo.push({
+        tokenAddress: tokenContractAddress,
+        amountOrId: BigInt(nftAmountOrTokenId),
+      });
+    }
+  }
+
+  return tokensWithInfo;
 }

@@ -39,7 +39,7 @@ export const SwappingShelfs = () => {
 
   return (
     <div className="w-[95%] mb-20 dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
-      <div className="flex space-x-4 items-center justify-between max-h-[48px]">
+      <div className="flex space-x-4 items-center justify-between max-h-[48px] pb-1">
         <div className="flex max-w-[224px]">
           <Tab
             setActiveSwappingShelfID={(input) =>
@@ -59,7 +59,7 @@ export const SwappingShelfs = () => {
       </div>
       <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
         <TokensShelf
-          address={authenticatedUserAddress?.address ?? null}
+          address={authenticatedUserAddress}
           variant={TokensShelfVariant.Your}
         />
       </div>

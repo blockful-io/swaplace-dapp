@@ -1,19 +1,19 @@
-import { TokenCard, UserOfferInfo } from "@/components/02-molecules";
+import { TokenOfferVariant, TokensShelfVariant } from "../03-organisms";
+import {
+  TokenCardActionType,
+  TokenCardStyleType,
+  TokensList,
+  UserOfferInfo,
+  UserOfferVariant,
+} from "@/components/02-molecules";
 import { SwapContext, TokenCardProperties } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { EthereumAddress } from "@/lib/shared/types";
+import { EthereumAddress, Token } from "@/lib/shared/types";
 import { useContext } from "react";
-
-export enum CardOfferVariant {
-  DEFAULT = "default",
-  SECONDARY = "secondary",
-}
-
-type CardOfferVariants = CardOfferVariant | "default" | "secondary";
 
 interface CardOffersProps {
   address: EthereumAddress | null;
-  variant?: CardOfferVariants;
+  variant?: TokenOfferVariant;
 }
 
 interface CardOfferSConfig {
@@ -22,33 +22,37 @@ interface CardOfferSConfig {
 
 export const CardOffers = ({
   address,
-  variant = "default",
+  variant = TokenOfferVariant.HORIZONTAL,
 }: CardOffersProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { authenticatedUserTokensList } = useContext(SwapContext);
+  const { authenticatedUserTokensList, searchedUserTokensList } =
+    useContext(SwapContext);
 
-  const DefaultVariant = () => {
+  const tokenShelfVariant = authenticatedUserAddress?.equals(address)
+    ? TokensShelfVariant.Your
+    : TokensShelfVariant.Their;
+  const tokensOfferFor: Record<TokensShelfVariant, Token[]> = {
+    [TokensShelfVariant.Your]: searchedUserTokensList,
+    [TokensShelfVariant.Their]: authenticatedUserTokensList,
+  };
+
+  const HorizontalVariant = (address: EthereumAddress | null) => {
+    if (!address) return null;
+
     return (
       <div className="md:p-4">
         <div className="flex flex-col justify-content gap-4 md:w-[326px]">
-          <div>
-            <UserOfferInfo address={address} />
-          </div>
-          <div>
-            {authenticatedUserAddress && ( // That div needs change to render the given Tokens by Subgraph, shouldn't be the <TokenCard here/> , for now, just visualization
-              <div className="grid md:grid-cols-4 md:gap-4 ">
-                {authenticatedUserTokensList.map((token, index) => (
-                  <TokenCard
-                    key={index}
-                    withSelectionValidation={false}
-                    ownerAddress={authenticatedUserAddress?.address}
-                    tokenData={token}
-                    styleType="medium"
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          <UserOfferInfo address={address} />
+          <TokensList
+            ownerAddress={address}
+            withAddTokenCard={false}
+            withPlaceholders={false}
+            variant={tokenShelfVariant}
+            withSelectionValidation={false}
+            tokenCardClickAction={TokenCardActionType.NO_ACTION}
+            tokensList={tokensOfferFor[tokenShelfVariant]}
+            tokenCardStyleType={TokenCardStyleType.MEDIUM}
+          />
           <div>
             <TokenCardProperties properties={{ amount: 2, value: 0.056 }} />
           </div>
@@ -57,39 +61,37 @@ export const CardOffers = ({
     );
   };
 
-  const SecondaryVariant = () => {
+  const VerticalVariant = (address: EthereumAddress | null) => {
+    if (!address) return null;
+
     return (
-      <div className="md:px-4 md:pt-4 md:pb-7  ">
+      <div className="md:px-4 md:pt-4 md:pb-7">
         <div className="flex flex-col justify-content gap-4 md:w-[400px] max-h-[150px] overflow-y-auto no-scrollbar">
-          <div>
-            <UserOfferInfo address={address} variant={"secondary"} />
-          </div>
-          <div>
-            {authenticatedUserAddress && ( // That div needs change to render the given Tokens by Subgraph, shouldn't be the <NftCard here/> , for now, just visualization
-              <div className="grid md:grid-cols-5 md:gap-4 ">
-                {authenticatedUserTokensList.map((token, index) => (
-                  <TokenCard
-                    key={index}
-                    withSelectionValidation={false}
-                    ownerAddress={authenticatedUserAddress?.address}
-                    tokenData={token}
-                    styleType="medium"
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          <UserOfferInfo
+            address={address}
+            variant={UserOfferVariant.SECONDARY}
+          />
+          <TokensList
+            ownerAddress={address}
+            withAddTokenCard={false}
+            withPlaceholders={false}
+            variant={tokenShelfVariant}
+            withSelectionValidation={false}
+            tokenCardClickAction={TokenCardActionType.NO_ACTION}
+            tokensList={tokensOfferFor[tokenShelfVariant]}
+            tokenCardStyleType={TokenCardStyleType.MEDIUM}
+          />
         </div>
       </div>
     );
   };
 
-  const CardOfferVariantsConfig: Record<CardOfferVariant, CardOfferSConfig> = {
-    [CardOfferVariant.DEFAULT]: {
-      body: <DefaultVariant />,
+  const CardOfferVariantsConfig: Record<TokenOfferVariant, CardOfferSConfig> = {
+    [TokenOfferVariant.HORIZONTAL]: {
+      body: HorizontalVariant(address),
     },
-    [CardOfferVariant.SECONDARY]: {
-      body: <SecondaryVariant />,
+    [TokenOfferVariant.VERTICAL]: {
+      body: VerticalVariant(address),
     },
   };
 

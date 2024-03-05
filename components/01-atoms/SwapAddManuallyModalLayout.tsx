@@ -1,5 +1,6 @@
 import { CloseIcon } from "./icons/CloseIcon";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
+import { TokenType } from "@/lib/shared/types";
 import React, { useState } from "react";
 import cc from "classcat";
 import { useTheme } from "next-themes";
@@ -41,14 +42,7 @@ const SwapBody = () => {
 };
 
 const TokenBody = () => {
-  enum TokenPosibilities {
-    ERC20 = "ERC20",
-    ERC721 = "ERC721",
-  }
-
-  type TokenPossibilites = TokenPosibilities | "ERC20" | "ERC721";
-
-  const [token, setToken] = useState<TokenPossibilites>("ERC20");
+  const [token, setToken] = useState<TokenType>(TokenType.ERC20);
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex flex-col gap-2">
@@ -57,12 +51,12 @@ const TokenBody = () => {
           <button
             className={cc([
               "w-full border border-[#353836] rounded-lg py-3 pl-3 pr-4 text-start dark:bg-[#282B29]",
-              token === "ERC20"
+              token === TokenType.ERC20
                 ? "dark:bg-[#ddf23d] bg-[#ddf23d] p-medium-2"
                 : "dark:p-medium-2-dark dark:hover:bg-[#353836] hover:bg-[#35383617]",
             ])}
             onClick={() => {
-              setToken("ERC20");
+              setToken(TokenType.ERC20);
             }}
           >
             ERC20
@@ -70,12 +64,12 @@ const TokenBody = () => {
           <button
             className={cc([
               "w-full  border border-[#353836] rounded-lg py-3 pl-3 pr-4 text-start dark:bg-[#282B29]",
-              token === "ERC721"
+              token === TokenType.ERC721
                 ? "dark:bg-[#ddf23d] bg-[#ddf23d] p-medium-2"
                 : "dark:p-medium-2-dark dark:hover:bg-[#353836] hover:bg-[#35383617]",
             ])}
             onClick={() => {
-              setToken("ERC721");
+              setToken(TokenType.ERC721);
             }}
           >
             ERC721
@@ -83,7 +77,7 @@ const TokenBody = () => {
         </div>
       </div>
       <div>
-        {token === "ERC20" ? (
+        {token === TokenType.ERC20 ? (
           <div className="flex flex-col gap-2">
             <div className="dark:p-small-dark p-small-variant-black">
               Contract address
@@ -160,7 +154,9 @@ export const SwapAddManuallyModalLayout = ({
               {AddManuallyVariantConfig[variant].header}
             </div>
             <div className="flex" role="button" onClick={onClose}>
-              <CloseIcon className={cc([theme == "light" ? "text-black" : "text-white"])} />
+              <CloseIcon
+                className={cc([theme == "light" ? "text-black" : "text-white"])}
+              />
             </div>
           </div>
           <div className="p-6">{AddManuallyVariantConfig[variant].body}</div>

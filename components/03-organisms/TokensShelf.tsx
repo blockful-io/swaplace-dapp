@@ -18,7 +18,7 @@ export enum TokensShelfVariant {
 }
 
 interface TokensShelfProps {
-  address: string | null;
+  address: EthereumAddress | null;
   variant: TokensShelfVariant;
 }
 
@@ -31,7 +31,7 @@ interface TokensShelfProps {
  */
 export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   const { chain } = useNetwork();
-  const [tokenList, setTokensList] = useState<Token[]>([]);
+  const [allTokensList, setAllTokensList] = useState<Token[]>([]);
   const [tokensQueryStatus, setTokensQueryStatus] = useState<TokensQueryStatus>(
     TokensQueryStatus.EMPTY_QUERY,
   );
@@ -42,13 +42,12 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     useContext(SwapContext);
 
   const getUserTokens = async () => {
-    const chainId =
-      address === authenticatedUserAddress?.address
-        ? chain?.id
-        : ChainInfo[destinyChain].id;
+    const chainId = authenticatedUserAddress?.equals(address)
+      ? chain?.id
+      : ChainInfo[destinyChain].id;
 
-    let queriedTokens = [...tokenList];
-    let tokensCount = tokenList.length;
+    let queriedTokens: Token[] = [];
+    let tokensCount = allTokensList.length;
 
     if (address && chainId) {
       setTokensQueryStatus(TokensQueryStatus.LOADING);
@@ -71,7 +70,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
           if (tokensCount === 0) {
             setTokensQueryStatus(TokensQueryStatus.NO_RESULTS);
           } else {
-            setTokensList(queriedTokens);
+            setAllTokensList(queriedTokens);
             setTokensQueryStatus(TokensQueryStatus.WITH_RESULTS);
           }
         });
@@ -83,14 +82,14 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   }, [address, chain, destinyChain]);
 
   useEffect(() => {
-    if (!authenticatedUserAddress) {
-      setTokensList([]);
+    if (!authenticatedUserAddress && variant === TokensShelfVariant.Your) {
+      setAllTokensList([]);
     }
   }, [authenticatedUserAddress]);
 
   const conditionallyCleanTokensList = (condition: boolean) => {
     if (condition) {
-      setTokensList([]);
+      setAllTokensList([]);
       setTokensQueryStatus(TokensQueryStatus.EMPTY_QUERY);
     }
   };
@@ -99,7 +98,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     conditionallyCleanTokensList(
       !!authenticatedUserAddress &&
         !!address &&
-        authenticatedUserAddress.equals(new EthereumAddress(address)) &&
+        authenticatedUserAddress.equals(address) &&
         variant === TokensShelfVariant.Their,
     );
   }, [variant]);
@@ -108,21 +107,21 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     conditionallyCleanTokensList(
       !!authenticatedUserAddress &&
         !!address &&
-        authenticatedUserAddress.equals(new EthereumAddress(address)),
+        authenticatedUserAddress.equals(address),
     );
   }, [destinyChain]);
 
   useEffect(() => {
     conditionallyCleanTokensList(
-      address !== authenticatedUserAddress?.address &&
+      !authenticatedUserAddress?.equals(address) &&
         variant === TokensShelfVariant.Their,
     );
   }, [chain]);
 
   useEffect(() => {
     conditionallyCleanTokensList(
-      address !== authenticatedUserAddress?.address &&
-        validatedAddressToSwap !== authenticatedUserAddress?.address,
+      !authenticatedUserAddress?.equals(address) &&
+        !validatedAddressToSwap?.equals(authenticatedUserAddress),
     );
   }, [inputAddress]);
 
@@ -133,12 +132,12 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="w-full h-[360px] lg:h-[500px] overflow-y-auto flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
-      {tokensQueryStatus == TokensQueryStatus.WITH_RESULTS && tokenList ? (
-        <div className="w-full h-full">
+    <div className="w-full h-[360px] lg:h-[500px] flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
+      {tokensQueryStatus == TokensQueryStatus.WITH_RESULTS && allTokensList ? (
+        <div className="w-full h-full py-4 overflow-y-auto">
           <TokensList
             ownerAddress={address}
-            tokensList={tokenList}
+            tokensList={allTokensList}
             variant={variant}
           />
         </div>
@@ -175,8 +174,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
         <div className="flex justify-center w-full h-[360px] lg:h-[500px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
           <div className="flex items-center">
             <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
-              Loading tokens of{" "}
-              {new EthereumAddress(address).getEllipsedAddress()}...
+              Loading tokens of {address.getEllipsedAddress()}...
             </p>
           </div>
         </div>
