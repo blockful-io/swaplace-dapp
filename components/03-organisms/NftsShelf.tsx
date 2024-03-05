@@ -67,7 +67,7 @@ export const NftsShelf = ({ address, variant }: INftsShelfProps) => {
   }, [destinyChain]);
 
   useEffect(() => {
-    if (address !== authenticatedUserAddress?.address && variant === "their") {
+    if ((address !== authenticatedUserAddress?.address && variant === "their") || !chain) {
       setNftsList([]);
       setNftsQueryStatus(NFTsQueryStatus.EMPTY_QUERY);
     }
