@@ -73,7 +73,7 @@ export const SwapStation = () => {
         >
           <div
             role="button"
-            onClick={validateSwapSending}
+            onClick={() => isValidSwap && validateSwapSending}
             className={cc([
               "w-full",
               {
