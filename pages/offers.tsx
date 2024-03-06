@@ -1,5 +1,4 @@
-import { Layout } from "@/components/04-templates";
-import { OfferSection } from "@/components/04-templates/OfferSection";
+import { Layout, OfferSection } from "@/components/04-templates";
 import cc from "classcat";
 
 export default function Offers() {

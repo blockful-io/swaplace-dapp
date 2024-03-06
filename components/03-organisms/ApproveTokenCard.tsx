@@ -3,7 +3,7 @@ import {
   TokenCard,
   TokenCardActionType,
   TokenCardStyleType,
-} from "../02-molecules";
+} from "@/components/02-molecules";
 import {
   getTokenAmountOrId,
   toastBlockchainTxError,
