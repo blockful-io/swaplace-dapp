@@ -3,6 +3,7 @@ import {
   SwapContext,
   SwapExpireTime,
   SwapIcon,
+  SwapIconVariant,
   Tooltip,
 } from "@/components/01-atoms";
 import { ConfirmSwapModal, OfferSummary } from "@/components/02-molecules";
@@ -71,7 +72,7 @@ export const SwapStation = () => {
           <OfferSummary variant={TokensShelfVariant.Your} />
           <OfferSummary variant={TokensShelfVariant.Their} />
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] dark:bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
-            <SwapIcon variant={"vertical"} />
+            <SwapIcon variant={SwapIconVariant.VERTICAL} />
           </div>
         </div>
         <Tooltip
