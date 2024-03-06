@@ -4,14 +4,15 @@ export enum SwapIconVariant {
   VERTICAL = "vertical",
   HORIZONTAL = "horizontal",
 }
-type SwapIconVariants = SwapIconVariant | "vertical" | "horizontal";
-
 interface SwapIconProps {
   props?: SVGProps<SVGSVGElement>;
-  variant?: SwapIconVariants;
+  variant?: SwapIconVariant;
 }
 
-export const SwapIcon = ({ props, variant = "horizontal" }: SwapIconProps) => {
+export const SwapIcon = ({
+  props,
+  variant = SwapIconVariant.HORIZONTAL,
+}: SwapIconProps) => {
   const SwapIcons: Partial<Record<SwapIconVariant, React.ReactElement>> = {
     [SwapIconVariant.HORIZONTAL]: (
       <svg

@@ -4,7 +4,7 @@ import cc from "classcat";
 
 interface CloseCTAProps {
   onClick: () => void;
-  className: string;
+  className?: string;
 }
 
 export const CloseCTA = ({ onClick, className }: CloseCTAProps) => {

@@ -3,6 +3,7 @@ import {
   TokenOfferDetails,
   SwapIcon,
   SwapContext,
+  SwapIconVariant,
 } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import cc from "classcat";
@@ -65,7 +66,7 @@ export const TokenOffers = ({
             />
           </div>
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
-            <SwapIcon variant={"vertical"} />
+            <SwapIcon variant={SwapIconVariant.VERTICAL} />
           </div>
         </div>
       </div>

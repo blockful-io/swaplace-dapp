@@ -1,4 +1,8 @@
-import { NetworkDropdown, SwapIcon } from "@/components/01-atoms";
+import {
+  NetworkDropdown,
+  SwapIcon,
+  SwapIconVariant,
+} from "@/components/01-atoms";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 
 export const SelectChainNetwork = () => {
@@ -15,12 +19,12 @@ export const SelectChainNetwork = () => {
         <div className="w-[16px] h-[16px]">
           {isMobile ? (
             <SwapIcon
-              variant={"vertical"}
+              variant={SwapIconVariant.VERTICAL}
               props={{ className: "text-[#707572] " }}
             />
           ) : (
             <SwapIcon
-              variant={"horizontal"}
+              variant={SwapIconVariant.HORIZONTAL}
               props={{ className: "text-[#707572] " }}
             />
           )}
