@@ -14,6 +14,8 @@ export const EnsNameAndAddressWallet = () => {
 
   const { chain } = useNetwork();
 
+  if (!authenticatedUserAddress) return null;
+
   const blockExplorer = `${
     chain?.blockExplorers?.default.url
   }/address/${authenticatedUserAddress?.toString()}`;
