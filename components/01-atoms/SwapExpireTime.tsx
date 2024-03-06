@@ -46,8 +46,8 @@ export const SwapExpireTime = () => {
   return (
     <div className="flex">
       <div className="flex xl:max-h-[36px] xl:w-[227px]">
-        <div className="dark:bg-[#353836] bg-[#E4E4E4] rounded-l-lg border dark:border-[#353836] border-[#E4E4E4]  flex items-center xl:py-2 xl:px-3 dark:p-small-dark p-small">
-          Expires
+        <div className="dark:bg-[#353836] bg-[#E4E4E4] rounded-l-lg border dark:border-[#353836] border-[#E4E4E4] flex items-center xl:py-2 xl:px-3 p-small-variant-black-2 dark:p-small-dark-variant-grey">
+          Expiry
         </div>
         <div
           className="flex w-full relative"
@@ -58,12 +58,12 @@ export const SwapExpireTime = () => {
         >
           <div
             className={cc([
-              "w-full h-full flex justify-between items-center px-3 py-2 hover:dark:bg-[#282B29] dark:bg-[#212322] bg-[#F6F6F6] border-[#E4E4E4] rounded-r-lg border dark:border-[#353836] hover:dark:border-[#505150]",
+              "w-full h-full flex justify-between items-center px-3 py-2 dark:bg-[#212322] bg-[#F6F6F6] border-[#E4E4E4] rounded-r-lg border dark:border-[#353836] hover:border-[#AABE13] dark:hover:border-[#edff6259] transition duration-300 ease-in-out",
               isOpen &&
-                "border-[#DDF23D] hover:border-[#DDF23D] dark:border-[#DDF23D] hover:dark:border-[#DDF23D] dark:bg-[#282B29]",
+                "hover:bg-[#F0EEEE75] hover:border-[#AABE13] hover:border-[#D6D5D5] dark:border-[#353836] dark:hover:border-[#edff6259]",
             ])}
           >
-            <div className="flex p-small dark:p-small-dark">
+            <div className="flex p-small-variant-black-2 dark:p-small-dark-variant-grey">
               <div>
                 {ExpireDate.find((item) => item.value === expireDate)?.label}
               </div>
