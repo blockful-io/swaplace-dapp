@@ -18,11 +18,11 @@ export enum SwappingShelfID {
 export const swappingTabs: Array<Tab> = [
   {
     id: SwappingShelfID.THEIR_ITEMS,
-    name: "Their Items",
+    name: "Their items",
   },
   {
     id: SwappingShelfID.YOUR_ITEMS,
-    name: "Your Items",
+    name: "Your items",
   },
 ];
 
@@ -37,7 +37,7 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
             key={tab.id}
             className={cc([
               isActiveTab == tab.id
-                ? "dark:p-medium-bold-dark p-medium-bold border-b dark:border-[#DDF23D] border-black "
+                ? "dark:p-medium-bold-dark p-medium-bold border-b border-[#AABE13] "
                 : "dark:p-medium-bold p-medium-bold opacity-50",
               "flex cursor-pointer py-4 px-5",
             ])}
@@ -47,7 +47,9 @@ export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
               setIsActiveTab(tab.id);
             }}
           >
-            <div className="flex items-center justify-center">{tab.name}</div>
+            <div className="flex items-center justify-center contrast-50">
+              {tab.name}
+            </div>
           </div>
         );
       })}

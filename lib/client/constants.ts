@@ -191,9 +191,8 @@ export interface ExpireOption {
 }
 
 export const ExpireDate: ExpireOption[] = [
-  { label: "1 Day", value: ONE_DAY },
-  { label: "7 Days", value: ONE_WEEK },
-  { label: "1 Month", value: ONE_MONTH },
-  { label: "6 Month", value: SIX_MONTH },
-  { label: "1 Year", value: ONE_YEAR },
+  { label: "1 day", value: ONE_DAY },
+  { label: "1 week", value: ONE_WEEK },
+  { label: "1 month", value: ONE_MONTH },
+  { label: "1 year", value: ONE_YEAR },
 ];
