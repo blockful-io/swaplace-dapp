@@ -2,13 +2,11 @@ import { CopyAdressButton } from "@/components/02-molecules";
 import { ENSAvatar, ExternalLinkIcon } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useEnsData } from "@/lib/client/hooks/useENSData";
-import { collapseAddress } from "@/lib/client/utils";
 import React from "react";
 import { useNetwork } from "wagmi";
 
 export const EnsNameAndAddressWallet = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const stringAddress = authenticatedUserAddress?.toString();
 
   const { primaryName } = useEnsData({
     ensAddress: authenticatedUserAddress,
@@ -16,9 +14,13 @@ export const EnsNameAndAddressWallet = () => {
 
   const { chain } = useNetwork();
 
-  const blockExplorer = `${chain?.blockExplorers?.default.url}/address/${stringAddress}`;
+  if (!authenticatedUserAddress) return null;
 
-  const displayAddress = collapseAddress(stringAddress ?? "") || "";
+  const blockExplorer = `${
+    chain?.blockExplorers?.default.url
+  }/address/${authenticatedUserAddress?.toString()}`;
+
+  const displayAddress = authenticatedUserAddress?.getEllipsedAddress();
 
   return (
     <div className="flex gap-3 pb-5">

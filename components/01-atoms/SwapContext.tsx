@@ -2,95 +2,74 @@
 /* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { ADDRESS_ZERO, NFT, SupportedNetworks } from "@/lib/client/constants";
-import { EthereumAddress } from "@/lib/shared/types";
-import {
-  ButtonClickPossibilities,
-  IArrayStatusTokenApproved,
-  SwapModalSteps,
-} from "@/lib/client/blockchain-data";
+import { SwapModalSteps } from "@/lib/client/ui-utils";
+import { ADDRESS_ZERO, SupportedNetworks } from "@/lib/client/constants";
+import { EthereumAddress, Token } from "@/lib/shared/types";
+import { ButtonClickPossibilities } from "@/lib/client/blockchain-utils";
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 
 interface SwapContextProps {
-  inputAddress: string;
-  validatedAddressToSwap: string;
-  setValidatedAddressToSwap: (address: string) => void;
-  setInputAddress: (address: string) => void;
-  validateAddressToSwap: (
-    authedUser: EthereumAddress,
-    inputEnsAddress: string | null | undefined,
-  ) => void;
-  setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
-  userJustValidatedInput: boolean;
-  setNftAuthUser: Dispatch<React.SetStateAction<NFT[]>>;
-  nftAuthUser: NFT[];
-  setNftInputUser: Dispatch<React.SetStateAction<NFT[]>>;
-  nftInputUser: NFT[];
+  // Application universal need
   destinyChain: SupportedNetworks;
   setDestinyChain: Dispatch<React.SetStateAction<SupportedNetworks>>;
-  setTimeDate: Dispatch<React.SetStateAction<bigint>>;
-  timeDate: bigint;
-  setAllSelectedNftsAreApproved: Dispatch<React.SetStateAction<boolean>>;
-  allSelectedNftsApproved: boolean;
-  setAuthedUserNftsApprovalStatus: Dispatch<
-    React.SetStateAction<IArrayStatusTokenApproved[]>
-  >;
-  authedUserSelectedNftsApprovalStatus: IArrayStatusTokenApproved[];
-  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
+
+  // Searched user related
+  inputAddress: string;
+  setInputAddress: (address: string) => void;
+  validatedAddressToSwap: EthereumAddress | null;
+  validateAddressToSwap: (
+    authedUser: EthereumAddress | null,
+    inputEnsAddress: string | null | undefined,
+  ) => void;
+  searchedUserTokensList: Token[];
+  setSearchedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
+  /* 
+    Below state is used for Ui rules only, setting new stylings
+    if the Search bar content was just now submitted
+  */
+  userJustValidatedInput: boolean;
+  setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
+
+  // Authed user related
+  authenticatedUserTokensList: Token[];
+  setAuthenticatedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
+  approvedTokensCount: number;
+  setApprovedTokensCount: Dispatch<React.SetStateAction<number>>;
+
+  // Swap modal related
   currentSwapModalStep: SwapModalSteps;
+  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
+  timeDate: bigint;
+  setTimeDate: Dispatch<React.SetStateAction<bigint>>;
+
+  clearSwapData: () => void;
 }
 
-export const SwapContext = React.createContext<SwapContextProps>({
-  inputAddress: "",
-  validatedAddressToSwap: "",
-  setValidatedAddressToSwap: () => {},
-  validateAddressToSwap: (
-    _authedUser: EthereumAddress,
-    _inputEnsAddress: string | null | undefined,
-  ) => {},
-  setInputAddress: (address: string) => {},
-  setUserJustValidatedInput: () => {},
-  userJustValidatedInput: false,
-  setNftAuthUser: () => {},
-  nftAuthUser: [],
-  setNftInputUser: () => {},
-  nftInputUser: [],
-  destinyChain: SupportedNetworks.SEPOLIA,
-  setDestinyChain: () => {},
-  setTimeDate: () => {},
-  timeDate: BigInt(1),
-  setAllSelectedNftsAreApproved: () => {},
-  allSelectedNftsApproved: false,
-  setAuthedUserNftsApprovalStatus: () => {},
-  authedUserSelectedNftsApprovalStatus: [],
-  currentSwapModalStep: SwapModalSteps.APPROVE_NFTS,
-  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
-});
-
 export const SwapContextProvider = ({ children }: any) => {
-  const [inputAddress, setInputAddress] = useState<string>("");
-  const [validatedAddressToSwap, setValidatedAddressToSwap] = useState("");
+  const [inputAddress, setInputAddress] = useState("");
+  const [validatedAddressToSwap, setValidatedAddressToSwap] =
+    useState<EthereumAddress | null>(null);
   const [userJustValidatedInput, setUserJustValidatedInput] = useState(true);
-  const [nftAuthUser, setNftAuthUser] = useState<NFT[]>([]);
-  const [nftInputUser, setNftInputUser] = useState<NFT[]>([]);
+  const [authenticatedUserTokensList, setAuthenticatedUserTokensList] =
+    useState<Token[]>([]);
+  const [searchedUserTokensList, setSearchedUserTokensList] = useState<Token[]>(
+    [],
+  );
   const [destinyChain, setDestinyChain] = useState<SupportedNetworks>(
     SupportedNetworks.SEPOLIA,
   );
   const [timeDate, setTimeDate] = useState<bigint>(BigInt(1));
 
   const [currentSwapModalStep, setCurrentSwapModalStep] =
-    useState<SwapModalSteps>(SwapModalSteps.APPROVE_NFTS);
-  const [allSelectedNftsApproved, setAllSelectedNftsAreApproved] =
-    useState<boolean>(false);
-  const [
-    authedUserSelectedNftsApprovalStatus,
-    setAuthedUserNftsApprovalStatus,
-  ] = useState<IArrayStatusTokenApproved[]>([]);
+    useState<SwapModalSteps>(SwapModalSteps.APPROVE_TOKENS);
+  const [approvedTokensCount, setApprovedTokensCount] = useState(0);
+
   const router = useRouter();
+
   const validateAddressToSwap = (
-    _authedUser: EthereumAddress,
+    _authedUser: EthereumAddress | null,
     _inputEnsAddress: string | null | undefined,
   ) => {
     if (!inputAddress && !_inputEnsAddress) {
@@ -118,19 +97,20 @@ export const SwapContextProvider = ({ children }: any) => {
 
       if (inputEthAddress.equals(_authedUser)) {
         toast.error("You cannot swap with yourself");
-        setValidatedAddressToSwap("");
+        setValidatedAddressToSwap(null);
         setUserJustValidatedInput(true);
         return;
       } else if (searchedAddress === ADDRESS_ZERO) {
         toast.error("You cannot swap with an invalid address");
-        setValidatedAddressToSwap("");
+        setValidatedAddressToSwap(null);
         setUserJustValidatedInput(true);
         return;
       }
 
-      setValidatedAddressToSwap(searchedAddress);
+      setValidatedAddressToSwap(inputEthAddress);
       toast.success("Searching Address");
     } else {
+      setValidatedAddressToSwap(null);
       toast.error(
         "Your input is not a valid address and neither some registered ENS domain",
       );
@@ -140,14 +120,14 @@ export const SwapContextProvider = ({ children }: any) => {
 
   const updateSwapStep = (buttonClicked: ButtonClickPossibilities) => {
     switch (currentSwapModalStep) {
-      case SwapModalSteps.APPROVE_NFTS:
+      case SwapModalSteps.APPROVE_TOKENS:
         if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
           setCurrentSwapModalStep(SwapModalSteps.CREATE_SWAP);
         }
         break;
       case SwapModalSteps.CREATE_SWAP:
         if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
-          setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+          setCurrentSwapModalStep(SwapModalSteps.APPROVE_TOKENS);
         } else if (buttonClicked === ButtonClickPossibilities.NEXT_STEP) {
           setCurrentSwapModalStep(SwapModalSteps.CREATING_SWAP);
         }
@@ -161,19 +141,25 @@ export const SwapContextProvider = ({ children }: any) => {
         break;
       case SwapModalSteps.CREATED_SWAP:
         if (buttonClicked === ButtonClickPossibilities.PREVIOUS_STEP) {
-          setCurrentSwapModalStep(SwapModalSteps.APPROVE_NFTS);
+          setCurrentSwapModalStep(SwapModalSteps.APPROVE_TOKENS);
         }
         break;
     }
   };
 
+  const clearSwapData = () => {
+    setAuthenticatedUserTokensList([]);
+    setSearchedUserTokensList([]);
+    setCurrentSwapModalStep(SwapModalSteps.APPROVE_TOKENS);
+  };
+
   useEffect(() => {
-    setNftInputUser([]);
+    setSearchedUserTokensList([]);
     setUserJustValidatedInput(false);
   }, [inputAddress]);
 
   useEffect(() => {
-    setNftInputUser([]);
+    setSearchedUserTokensList([]);
   }, [destinyChain]);
 
   useEffect(() => {
@@ -181,35 +167,32 @@ export const SwapContextProvider = ({ children }: any) => {
       inputAddress,
       setInputAddress,
       validatedAddressToSwap,
-      setValidatedAddressToSwap,
       validateAddressToSwap,
       setUserJustValidatedInput,
       userJustValidatedInput,
-      setNftAuthUser,
-      nftAuthUser,
-      setNftInputUser,
-      nftInputUser,
+      setAuthenticatedUserTokensList,
+      authenticatedUserTokensList,
+      setSearchedUserTokensList,
+      searchedUserTokensList,
       destinyChain,
       setDestinyChain,
       setTimeDate,
       timeDate,
-      setAllSelectedNftsAreApproved,
-      allSelectedNftsApproved,
-      setAuthedUserNftsApprovalStatus,
-      authedUserSelectedNftsApprovalStatus,
+      approvedTokensCount,
+      setApprovedTokensCount,
       updateSwapStep,
       currentSwapModalStep,
+      clearSwapData,
     });
   }, [
     inputAddress,
     validatedAddressToSwap,
     userJustValidatedInput,
-    nftAuthUser,
-    nftInputUser,
+    authenticatedUserTokensList,
+    searchedUserTokensList,
     destinyChain,
     timeDate,
-    allSelectedNftsApproved,
-    authedUserSelectedNftsApprovalStatus,
+    approvedTokensCount,
     currentSwapModalStep,
   ]);
 
@@ -217,33 +200,56 @@ export const SwapContextProvider = ({ children }: any) => {
     inputAddress,
     setInputAddress,
     validatedAddressToSwap,
-    setValidatedAddressToSwap,
     validateAddressToSwap,
     setUserJustValidatedInput,
     userJustValidatedInput,
-    setNftAuthUser,
-    nftAuthUser,
-    setNftInputUser,
-    nftInputUser,
+    setAuthenticatedUserTokensList,
+    authenticatedUserTokensList,
+    setSearchedUserTokensList,
+    searchedUserTokensList,
     destinyChain,
     setDestinyChain,
     setTimeDate,
     timeDate,
-    setAllSelectedNftsAreApproved,
-    allSelectedNftsApproved,
-    setAuthedUserNftsApprovalStatus,
-    authedUserSelectedNftsApprovalStatus,
+    approvedTokensCount,
+    setApprovedTokensCount,
     updateSwapStep,
     currentSwapModalStep,
+    clearSwapData,
   });
 
   // This is a temporary measure while we don't turn the dApp into a SPA
   // We are reseting the inputAddress to reload the inventory
   useEffect(() => {
-    setValidatedAddressToSwap("");
+    setValidatedAddressToSwap(null);
   }, [router.asPath]);
 
   return (
     <SwapContext.Provider value={swapData}>{children}</SwapContext.Provider>
   );
 };
+
+export const SwapContext = React.createContext<SwapContextProps>({
+  inputAddress: "",
+  validatedAddressToSwap: null,
+  validateAddressToSwap: (
+    _authedUser: EthereumAddress | null,
+    _inputEnsAddress: string | null | undefined,
+  ) => {},
+  setInputAddress: (address: string) => {},
+  setUserJustValidatedInput: () => {},
+  userJustValidatedInput: false,
+  setAuthenticatedUserTokensList: () => {},
+  authenticatedUserTokensList: [],
+  setSearchedUserTokensList: () => {},
+  searchedUserTokensList: [],
+  destinyChain: SupportedNetworks.SEPOLIA,
+  setDestinyChain: () => {},
+  timeDate: BigInt(1),
+  setTimeDate: () => {},
+  approvedTokensCount: 0,
+  setApprovedTokensCount: () => {},
+  currentSwapModalStep: SwapModalSteps.APPROVE_TOKENS,
+  updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
+  clearSwapData: () => {},
+});

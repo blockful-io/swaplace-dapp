@@ -1,17 +1,28 @@
-import { ICreateSwap } from "../client/blockchain-data";
+import { Swap } from "../client/swap-utils";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
-import { publicClientViem } from "../wallet/wallet-config";
+import { publicClient } from "../wallet/wallet-config";
 import { encodeFunctionData } from "viem";
 
-export async function createSwap({
-  walletClient,
-  expireDate,
-  nftInputUser,
-  nftAuthUser,
-  validatedAddressToSwap,
-  authenticatedUserAddress,
-  chain,
-}: ICreateSwap) {
+export interface SwapUserConfiguration {
+  walletClient: any;
+  chain: number;
+}
+
+export async function createSwap(
+  swap: Swap,
+  configurations: SwapUserConfiguration,
+) {
+  // const SwaplaceContract = getContract({
+  //   address: SWAPLACE_SMART_CONTRACT_ADDRESS[chain] as `0x${string}`,
+  //   abi: SwaplaceAbi,
+  //   publicClient: publicClientViem,
+  // });
+  // const config = await packData(
+  //   SwaplaceContract,
+  //   validatedAddressToSwap as `0x${string}`,
+  //   expireDate,
+  // );
+
   const data = encodeFunctionData({
     abi: [
       {
@@ -24,13 +35,8 @@ export async function createSwap({
                 type: "address",
               },
               {
-                internalType: "address",
-                name: "allowed",
-                type: "address",
-              },
-              {
                 internalType: "uint256",
-                name: "expiry",
+                name: "config",
                 type: "uint256",
               },
               {
@@ -87,29 +93,30 @@ export async function createSwap({
     ],
     args: [
       {
-        owner: authenticatedUserAddress.address as `0x${string}`,
-        allowed: validatedAddressToSwap as `0x${string}`,
-        expiry: expireDate,
-        biding: nftAuthUser,
-        asking: nftInputUser,
+        owner: swap.owner as `0x${string}`,
+        config: BigInt(swap.config),
+        biding: swap.biding,
+        asking: swap.asking,
       },
     ],
   });
-
   try {
-    const transactionHash = await walletClient.sendTransaction({
+    const transactionHash = await configurations.walletClient.sendTransaction({
       data: data,
-      to: SWAPLACE_SMART_CONTRACT_ADDRESS[chain],
+      to: SWAPLACE_SMART_CONTRACT_ADDRESS[
+        configurations.chain
+      ] as `0x${string}`,
     });
 
-    const transactionReceipt = await publicClientViem.waitForTransactionReceipt(
-      {
-        hash: transactionHash,
-      },
-    );
+    const transactionReceipt = await publicClient({
+      chainId: configurations.chain,
+    }).waitForTransactionReceipt({
+      hash: transactionHash,
+    });
 
     return transactionReceipt;
   } catch (error) {
     console.error(error);
+    throw new Error(String(error));
   }
 }

@@ -1,8 +1,6 @@
-import { CloseIcon } from "./icons/CloseIcon";
+import { CloseCTA } from "@/components/01-atoms";
 import { Transition, Dialog } from "@headlessui/react";
 import React, { Fragment } from "react";
-import cc from "classcat";
-import { useTheme } from "next-themes";
 
 interface ConfirmSwapModalToggle {
   open: boolean;
@@ -14,19 +12,11 @@ interface ConfirmSwapModalText {
   description?: string;
 }
 
-interface ConfirmSwapApprovalModalBody {
-  component: React.ReactNode;
-}
-
-interface ConfirmSwapApprovalModalFooter {
-  component: React.ReactNode;
-}
-
 interface ISwapModalLayout {
   toggleCloseButton: ConfirmSwapModalToggle;
   text: ConfirmSwapModalText;
-  body: ConfirmSwapApprovalModalBody;
-  footer: ConfirmSwapApprovalModalFooter;
+  body: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
 export const SwapModalLayout = ({
@@ -35,8 +25,6 @@ export const SwapModalLayout = ({
   body,
   footer,
 }: ISwapModalLayout) => {
-  const { theme } = useTheme();
-
   return (
     <>
       <Transition
@@ -49,7 +37,11 @@ export const SwapModalLayout = ({
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className="z-40 fixed inset-0 bg-black/30 backdrop-blur-sm" />
+        <div
+          role="button"
+          onClick={toggleCloseButton.onClose}
+          className="z-40 fixed inset-0 bg-black/30 backdrop-blur-sm"
+        />
       </Transition>
       <Dialog open={toggleCloseButton.open} onClose={toggleCloseButton.onClose}>
         <Transition
@@ -60,11 +52,11 @@ export const SwapModalLayout = ({
           leave="transition duration-75 ease-out"
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-95 opacity-0"
-          className="fixed left-1/2 top-1/2 z-50 bg-[#f8f8f8] dark:bg-[#212322] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[#353836] "
+          className="w-[80%] md:w-auto fixed left-1/2 top-1/2 z-50 bg-[#f8f8f8] dark:bg-[#212322] -translate-x-1/2 -translate-y-1/2 rounded-[20px] border-[#353836] "
         >
           <Dialog.Panel
             className={
-              "flex flex-col md:min-w-[480px] md:max-w-[480px] md:max-h-[620px] w-[300px] border border-[#353836] rounded-[20px] shadow"
+              "flex flex-col md:min-w-[480px] md:max-w-[480px] md:max-h-[620px] border border-[#353836] rounded-[20px] shadow"
             }
           >
             <div className="border-b border-[#353836]">
@@ -77,30 +69,26 @@ export const SwapModalLayout = ({
                   {text.title}
                 </p>
                 <div role="button" onClick={toggleCloseButton.onClose}>
-                  <CloseIcon
-                    className={cc([
-                      theme == "light" ? "text-black" : "text-white",
-                    ])}
-                  />
+                  <CloseCTA onClick={toggleCloseButton.onClose} />
                 </div>
               </Dialog.Title>
             </div>
 
-            <div className="flex flex-col gap-6 p-6 h-[460px] overflow-hidden">
-              <div className="flex">
-                <Dialog.Description>
-                  <p className="dark:p-normal-2-dark p-normal-2">
-                    {text.description}
-                  </p>
-                </Dialog.Description>
+            <div className="flex flex-col gap-6 p-6 overflow-hidden">
+              {text.description && (
+                <div className="flex dark:p-normal-2-dark p-normal-2">
+                  <Dialog.Description>{text.description}</Dialog.Description>
+                </div>
+              )}
+
+              {body}
+            </div>
+
+            {footer && (
+              <div className="flex justify-between items-center w-full p-6 border-t border-[#353836]">
+                {footer}
               </div>
-
-              <div>{body.component}</div>
-            </div>
-
-            <div className="flex justify-between items-center w-full p-6 border-t border-[#353836]">
-              {footer.component}
-            </div>
+            )}
           </Dialog.Panel>
         </Transition>
       </Dialog>

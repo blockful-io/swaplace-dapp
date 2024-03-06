@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { LoadingIndicator } from "./LoadingIndicator";
-import { LeftIcon, RightIcon, SwapContext } from "@/components/01-atoms";
+import {
+  LeftIcon,
+  LoadingIndicator,
+  RightIcon,
+  SwapContext,
+} from "@/components/01-atoms";
 import React, { ButtonHTMLAttributes, useContext } from "react";
 import { useTheme } from "next-themes";
 import cc from "classcat";
@@ -34,15 +38,19 @@ const ButtonVariantsConfigs: Record<ButtonVariant, ButtonVariantConfig> = {
     style:
       "border border-[#353836] bg-[#282B29] rounded-[10px] px-4 py-2 p-medium  dark:p-medium-2-small h-9 flex justify-center items-center gap-3",
     arrowColorInHex: (theme, tokenApproved) =>
-      theme === "dark" && tokenApproved === true
-        ? ArrowColor.BLACK
+      !!tokenApproved
+        ? theme === "dark"
+          ? ArrowColor.BLACK
+          : ArrowColor.GRAY
+        : theme === "dark"
+        ? ArrowColor.GRAY
         : ArrowColor.GRAY,
   },
   [ButtonVariant.ALTERNATIVE]: {
     style:
       "border border-[#353836] bg-[#DDF23D] bg-opacity-20 rounded-[10px] px-4 py-2 dark:p-medium p-medium-dark h-9 flex justify-center items-center gap-2 dark:!text-[#DDF23D] !text-black",
     arrowColorInHex: (theme, tokenApproved) =>
-      theme === "dark" && tokenApproved === true
+      theme === "dark" && !!tokenApproved
         ? ArrowColor.YELLOW
         : ArrowColor.BLACK,
   },
@@ -51,9 +59,7 @@ const ButtonVariantsConfigs: Record<ButtonVariant, ButtonVariantConfig> = {
     style:
       "border border-[#353836] bg-[#282B29] rounded-[10px] px-4 py-2 dark:p-medium-bold !text-[#181A19] p-medium-bold-dark disabled:pointer-events-none shadow justify-center items-center gap-3",
     arrowColorInHex: (theme, tokenApproved) =>
-      theme === "dark" && tokenApproved === true
-        ? ArrowColor.BLACK
-        : ArrowColor.GRAY,
+      theme === "dark" && !!tokenApproved ? ArrowColor.BLACK : ArrowColor.GRAY,
   },
 };
 
@@ -62,6 +68,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   onClick?: () => void;
   aditionalStyle?: string;
+  disabled?: boolean;
   isLoading?: boolean;
 }
 
@@ -70,28 +77,27 @@ export function SwapModalButton({
   label,
   onClick = () => {},
   aditionalStyle,
+  disabled = false,
   isLoading = false,
   ...props
 }: Props) {
-  const { allSelectedNftsApproved } = useContext(SwapContext);
+  const { approvedTokensCount } = useContext(SwapContext);
   const { theme } = useTheme();
   if (theme === undefined) return false;
 
   return (
     <button
-      onClick={() => {
-        onClick();
-      }}
+      onClick={onClick}
       className={cc([
         ButtonVariantsConfigs[variant].style,
-        "flex items-center gap-2 disabled:pointer-events-none",
+        "flex items-center gap-2",
         aditionalStyle,
-        !allSelectedNftsApproved
-          ? "p-medium-bold dark:p-medium-bold cursor-not-allowed"
-          : "p-medium-bold-dark bg-[#DDF23D] ",
+        disabled
+          ? "p-medium-bold dark:p-medium-bold cursor-not-allowed pointer-events-none"
+          : "p-medium-bold-dark bg-[#DDF23D]",
       ])}
       {...props}
-      disabled={isLoading}
+      disabled={disabled}
     >
       {isLoading ? (
         <LoadingIndicator />
@@ -101,16 +107,17 @@ export function SwapModalButton({
           <RightIcon
             fill={ButtonVariantsConfigs[variant].arrowColorInHex(
               theme,
-              allSelectedNftsApproved,
+              !!approvedTokensCount,
             )}
           />
         </>
       ) : variant === ButtonVariant.ALTERNATIVE ? (
         <>
           <LeftIcon
+            className="p-medium-bold dark:p-medium-bold"
             fill={ButtonVariantsConfigs[variant].arrowColorInHex(
               theme,
-              allSelectedNftsApproved,
+              !!approvedTokensCount,
             )}
           />
           {label}

@@ -1,11 +1,10 @@
 import {
-  SwappingIcon,
-  OffersIcon,
   ChatIcon,
   NotificationsIcon,
+  OffersIcon,
+  SwappingIcon,
   Tooltip,
 } from "@/components/01-atoms";
-
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useTheme } from "next-themes";
 import { NextRouter, useRouter } from "next/router";

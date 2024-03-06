@@ -3,9 +3,11 @@ import {
   SwapContext,
   SwapExpireTime,
   SwapIcon,
+  SwapIconVariant,
   Tooltip,
 } from "@/components/01-atoms";
 import { ConfirmSwapModal, OfferSummary } from "@/components/02-molecules";
+import { TokensShelfVariant } from "@/components/03-organisms";
 import { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import { toast } from "react-hot-toast";
@@ -13,14 +15,23 @@ import { toast } from "react-hot-toast";
 export const SwapStation = () => {
   const [isValidSwap, setIsValidSwap] = useState<boolean>(false);
 
-  const { nftAuthUser, nftInputUser, validatedAddressToSwap } =
-    useContext(SwapContext);
+  const {
+    authenticatedUserTokensList,
+    searchedUserTokensList,
+    validatedAddressToSwap,
+  } = useContext(SwapContext);
 
   useEffect(() => {
     setIsValidSwap(
-      !!nftAuthUser.length && !!nftInputUser.length && !!validatedAddressToSwap,
+      !!authenticatedUserTokensList.length &&
+        !!searchedUserTokensList.length &&
+        !!validatedAddressToSwap,
     );
-  }, [nftAuthUser, nftInputUser, validatedAddressToSwap]);
+  }, [
+    authenticatedUserTokensList,
+    searchedUserTokensList,
+    validatedAddressToSwap,
+  ]);
 
   const [openConfirmationModal, setOpenConfirmationModal] =
     useState<boolean>(false);
@@ -28,16 +39,16 @@ export const SwapStation = () => {
   const validateSwapSending = () => {
     if (!isValidSwap) {
       if (!validatedAddressToSwap) {
-        toast.error("You must select a destiny wallet to swap NFTs with");
+        toast.error("You must select a destiny wallet to swap tokens with");
         return;
       }
 
-      if (!nftAuthUser.length) {
+      if (!authenticatedUserTokensList.length) {
         toast.error("You must select at least one NFT from yours to swap");
         return;
       }
 
-      if (!nftInputUser.length) {
+      if (!searchedUserTokensList.length) {
         toast.error(
           "You must select at least one NFT from the destiny wallet to swap",
         );
@@ -58,13 +69,10 @@ export const SwapStation = () => {
           <SwapExpireTime />
         </div>
         <div className="flex flex-col gap-2 relative">
-          <OfferSummary forAuthedUser={false} />
-          <OfferSummary forAuthedUser={true} />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border dark:border-[#353836]  border-[#E4E4E4] dark:bg-[#212322] bg-[#F6F6F6] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
-            <SwapIcon
-              variant={"vertical"}
-              props={{ className: "text-[#A3A9A5] dark:text-[#F6F6F6]" }}
-            />
+          <OfferSummary variant={TokensShelfVariant.Your} />
+          <OfferSummary variant={TokensShelfVariant.Their} />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] dark:bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
+            <SwapIcon variant={SwapIconVariant.VERTICAL} />
           </div>
         </div>
         <Tooltip

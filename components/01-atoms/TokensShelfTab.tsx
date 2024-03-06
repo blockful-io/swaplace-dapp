@@ -5,7 +5,7 @@ interface ITab {
   setActiveSwappingShelfID: (_: SwappingShelfID) => void;
 }
 
-interface Tab {
+interface TokensShelfTab {
   id: number;
   name: string;
 }
@@ -15,7 +15,7 @@ export enum SwappingShelfID {
   "YOUR_ITEMS",
 }
 
-export const swappingTabs: Array<Tab> = [
+export const swappingTabs: Array<TokensShelfTab> = [
   {
     id: SwappingShelfID.THEIR_ITEMS,
     name: "Their items",
@@ -26,7 +26,7 @@ export const swappingTabs: Array<Tab> = [
   },
 ];
 
-export const Tab = ({ setActiveSwappingShelfID }: ITab) => {
+export const TokensShelfTab = ({ setActiveSwappingShelfID }: ITab) => {
   const [isActiveTab, setIsActiveTab] = useState(SwappingShelfID.THEIR_ITEMS);
 
   return (

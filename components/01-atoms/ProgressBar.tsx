@@ -10,7 +10,7 @@ export const ProgressBar = ({
   numberOfItems,
 }: ProgressBarProps) => {
   return (
-    <div className="flex w-full">
+    <div className="w-full flex items-center rounded-lg overflow-hidden">
       {Array(numberOfItems)
         .fill(0)
         .map((_, index) => {
@@ -18,7 +18,7 @@ export const ProgressBar = ({
             <div
               key={index}
               className={cc([
-                "h-2 flex w-full",
+                "h-2 w-full",
                 {
                   "bg-[#DDF23D]": currentStep > index,
                   "bg-[#353836]": currentStep <= index,

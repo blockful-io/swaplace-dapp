@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { getBlockchainTimestamp } from "@/lib/client/blockchain-utils";
+import { ExpireDate } from "@/lib/client/ui-utils";
+import { TimeStampDate } from "@/lib/client/swap-utils";
 import { ArrowIcon, SwapContext } from "@/components/01-atoms";
-import { getTimestamp } from "@/lib/client/utils";
-import { ExpireDate, TimeStampDate } from "@/lib/client/constants";
 import { useContext, useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
 import cc from "classcat";
@@ -18,16 +19,16 @@ export const SwapExpireTime = () => {
     setIsOpen(!isOpen);
   };
 
-  let chainID: number;
+  let chainId: number;
 
   if (typeof chain?.id !== "undefined") {
-    chainID = chain.id;
+    chainId = chain.id;
   }
 
   const fetchData = async (selectedValue: TimeStampDate) => {
     try {
       const timeSelected = BigInt(selectedValue);
-      const timestamp = await getTimestamp(chainID);
+      const timestamp = await getBlockchainTimestamp(chainId);
       setTimeDate(timeSelected + timestamp);
     } catch (error) {
       console.error("error", error);
@@ -60,7 +61,7 @@ export const SwapExpireTime = () => {
             className={cc([
               "w-full h-full flex justify-between items-center px-3 py-2 dark:bg-[#212322] bg-[#F6F6F6] hover:bg-[#F0EEEE75] hover:shadow-[0_0_6px_1px_#00000014] border-[#E4E4E4] rounded-r-lg border dark:border-[#353836] hover:border-[#AABE13] dark:hover:border-[#edff6259] transition duration-300 ease-in-out",
               isOpen &&
-                "hover:bg-[#F0EEEE75] hover:border-[#AABE13] hover:border-[#D6D5D5] dark:border-[#353836] dark:hover:border-[#edff6259]",
+                "hover:bg-[#F0EEEE75] hover:border-[#D6D5D5] dark:border-[#353836] dark:hover:border-[#edff6259]",
             ])}
           >
             <div className="flex p-small-variant-black-2 dark:p-small-dark-variant-grey">

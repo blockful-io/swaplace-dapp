@@ -1,9 +1,11 @@
 import { MagnifyingGlassIcon } from "@/components/01-atoms";
+import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useTheme } from "next-themes";
 import cc from "classcat";
 
 export const SearchItemsShelf = () => {
   const { theme } = useTheme();
+  const { isMobile } = useScreenSize();
 
   return (
     <div className="relative flex-grow">
@@ -17,7 +19,7 @@ export const SearchItemsShelf = () => {
             ? "border-[#E4E4E4] bg-[#F6F6F6] hover:bg-[#F0EEEE75] hover:border-[#AABE13] hover:shadow-[0_0_6px_1px_#00000014] focus:shadow-[0_0_6px_1px_#00000014] focus:border-opacity-100"
             : "dark:bg-[#282B29] dark:border-[#353836] dark:hover:border-[#edff6259] hover:dark:shadow-[0_0_6px_1px_#00000066] focus:dark:shadow-[0_0_6px_1px_#00000066]",
         ])}
-        placeholder="Search for items"
+        placeholder={isMobile ? "Search" : "Search for items"}
         aria-label="Search"
         aria-describedby="button-addon2"
       />

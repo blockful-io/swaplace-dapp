@@ -1,5 +1,4 @@
-import { CloseIcon } from "../01-atoms/icons/CloseIcon";
-import { DisconnectWallet } from "../01-atoms/DisconnectWallet";
+import { CloseCTA, DisconnectWallet } from "@/components/01-atoms";
 import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
 import React from "react";
 import cc from "classcat";
@@ -11,11 +10,9 @@ export const TheSidebarHeader = () => {
   const isDark = currentTheme === "dark";
   const { toggleSidebar } = useSidebar();
 
-
   return (
     <div className="w-full gap-5 flex flex-col">
-      <button
-        onClick={toggleSidebar}
+      <div
         className={cc([
           "rounded-full w-7 h-7 flex items-center justify-center",
           isDark
@@ -23,10 +20,11 @@ export const TheSidebarHeader = () => {
             : "border-[#D6D6D6] bg-[#F6F6F6]",
         ])}
       >
-        <CloseIcon
+        <CloseCTA
+          onClick={() => toggleSidebar()}
           className={cc([isDark ? "text-[#F6F6F1]" : "text-[#A3A9A5]"])}
         />
-      </button>
+      </div>
       <div className="w-full flex justify-between">
         <h3
           className={cc([

@@ -1,8 +1,8 @@
 import {
-  ErrorIcon,
-  NoSwapsIcon,
-  SwapAddManuallyModalLayout,
-} from "@/components/01-atoms";
+  AddTokenOrSwapManuallyModal,
+  AddTokenOrSwapManuallyModalVariant,
+} from "@/components/02-molecules";
+import { ErrorIcon, NoSwapsIcon } from "@/components/01-atoms";
 import { useTheme } from "next-themes";
 import React, { useState } from "react";
 import cc from "classcat";
@@ -68,12 +68,12 @@ export const SwapOffersLayout = ({ variant }: SwapOffersLayoutProps) => {
               >
                 Add swap manually
               </button>
-              <SwapAddManuallyModalLayout
+              <AddTokenOrSwapManuallyModal
                 open={toggleManually}
                 onClose={() => {
                   setToggleManually(false);
                 }}
-                variant="swap"
+                variant={AddTokenOrSwapManuallyModalVariant.SWAP}
               />
             </>
           }

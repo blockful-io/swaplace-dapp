@@ -26,7 +26,7 @@ export const WalletSidebarTemplate = ({
           isOpen ? "opacity-100 inset-0 " : "opacity-0 z-[-1]",
         ])}
         role="button"
-        onClick={toggleSidebar}
+        onClick={() => toggleSidebar()}
       />
 
       <div
