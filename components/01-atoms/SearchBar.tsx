@@ -82,7 +82,7 @@ export const SearchBar = () => {
       </div>
       <div
         className={cc([
-          "flex items-center border rounded-xl pl-4 pr-3 gap-4 bg-[#F6F6F6] dark:bg-[#212322] dark:border-[#353836] border-[#D6D5D5]  dark:hover:border-[#edff6259] dark:shadow-swap-station  shadow-swap-connection-light",
+          "flex items-center border rounded-xl pl-4 pr-3 gap-4 bg-[#F6F6F6] hover:bg-[#F0EEEE] dark:bg-[#212322] border-[#E4E4E4] hover:border-[#AABE13] dark:border-[#353836] focus:border-[#FFFFFF] dark:hover:border-[#edff6259] dark:shadow-swap-station shadow-swap-connection-light transition duration-300 ease-in-out",
         ])}
       >
         <div className="justify-center items-center">
@@ -94,7 +94,7 @@ export const SearchBar = () => {
           type="search"
           className={cc([
             `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis bg-inherit
-             dark:border-none dark:bg-transparent`,
+             border-none dark:border-none bg-transparent dark:bg-transparent contrast-50`,
           ])}
           placeholder="Search username, address or ENS"
           onChange={({ target }) => setInputAddress(target.value)}
