@@ -66,6 +66,25 @@ input[type="number"] {
     box-shadow: 0px 0px 12px 1px #00000066;
   }
 
+  .shadow-swap-station {
+    box-shadow: 0px 0px 6px 1px #00000066;
+  }
+
+  .shadow-button-swap-station-offer {
+    box-shadow: 0px 0px 6px 1px #0000004d;
+  }
+
+  .shadow-swap-connection {
+    box-shadow: 0px 0px 6px 1px #0000004d;
+  }
+  .shadow-swap-connection-light {
+    box-shadow: 0px 0px 6px 0px #00000014;
+  }
+
+  .shadow-swap-connection-dropwdown {
+    box-shadow: 0px 0px 12px 1px #00000066;
+  }
+
   .title-h1 {
   }
 
@@ -108,6 +127,9 @@ input[type="number"] {
   .p-normal-2-dark {
     @apply font-onest font-normal text-[16px] leading-[20px] text-[#F6F6F6];
   }
+  .p-normal-2-light {
+    @apply font-onest font-normal text-[16px] leading-[20px] text-[#212322];
+  }
 
   .p-medium-bold-2 {
     @apply font-onest font-medium text-[16px] leading-[20px] text-[#707572];
@@ -148,15 +170,18 @@ input[type="number"] {
   .p-small-dark-variant-grey {
     @apply font-onest font-normal text-[14px] leading-[20px] text-[#A3A9A5];
   }
+  .p-small-variant-black-2 {
+    @apply font-onest font-normal text-[14px] leading-[20px] text-[#353836];
+  }
 
   .card-nft-normal {
-    @apply shadow-inner mx-auto w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token px-1;
+    @apply shadow-inner w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
   }
   .card-nft-small {
     @apply shadow-inner mx-auto w-[44px] h-[44px] lg:w-[44px] lg:h-[44px] relative rounded-lg border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
   }
   .card-nft-medium {
-    @apply shadow-inner mx-auto w-[72px] h-[72px] lg:w-[72px] lg:h-[72px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
+    @apply shadow-inner w-[72px] h-[72px] lg:w-[72px] lg:h-[72px] relative rounded-xl border border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
   }
   .card-nft-large {
     @apply shadow-inner mx-auto w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;

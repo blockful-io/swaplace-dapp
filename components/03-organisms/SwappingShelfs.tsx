@@ -38,8 +38,8 @@ export const SwappingShelfs = () => {
   }, [chain]);
 
   return (
-    <div className="w-[95%] mb-20 dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
-      <div className="flex space-x-4 items-center justify-between max-h-[48px] pb-1">
+    <div className="w-full h-full dark:bg-[#212322] dark:border-[#353836] border rounded-2xl dark:shadow-swap-station">
+      <div className="flex items-center justify-between max-h-[48px] border-b dark:border-[#313131] pr-2">
         <div className="flex max-w-[224px]">
           <TokensShelfTab
             setActiveSwappingShelfID={(input) =>
@@ -47,7 +47,7 @@ export const SwappingShelfs = () => {
             }
           />
         </div>
-        <div className="pr-2">
+        <div>
           <SearchItemsShelf />
         </div>
       </div>

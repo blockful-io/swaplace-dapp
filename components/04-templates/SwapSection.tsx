@@ -1,14 +1,25 @@
-import { SearchBar } from "@/components/01-atoms";
-import { SwapStation, SwappingShelfs } from "@/components/03-organisms";
+import { TheHeader } from "@/components/02-molecules";
+import {
+  SwapConnection,
+  SwapStation,
+  SwappingShelfs,
+} from "@/components/03-organisms";
 
 export const SwapSection = () => {
   return (
-    <div className="xl:w-[1115px] w-full flex flex-col justify-center space-y-6 xl:flex-row xl:space-x-6 xl:space-y-0 mb-16">
-      <section className="lg:w-[650px] xl:w-[615px] w-full h-full flex flex-col items-center space-y-6 lg:mx-auto ">
-        <SearchBar />
-        <SwappingShelfs />
+    <div className="max-w-[1280px] max-h-[720px] w-full flex xl:flex-row flex-col lg:justify-center h-full">
+      <TheHeader />
+      <section className="flex items-center xl:px-[60px] xl:py-[32px] xl:flex-row flex-col">
+        <div className="flex lg:flex-row flex-col xl:h-[656px] xl:w-[1098px] lg:gap-[20px] w-[95%] gap-2">
+          <div className="flex flex-col lg:w-[600px] gap-8">
+            <SwapConnection />
+            <SwappingShelfs />
+          </div>
+          <div className="flex xl:w-[478px] ">
+            <SwapStation />
+          </div>
+        </div>
       </section>
-      <SwapStation />
     </div>
   );
 };

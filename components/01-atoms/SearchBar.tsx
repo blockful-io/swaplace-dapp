@@ -72,15 +72,15 @@ export const SearchBar = () => {
   }, [inputAddress]);
 
   return (
-    <div className="w-[95%] h-auto py-5 gap-3 flex flex-col rounded  ">
+    <div className="gap-2 xl:w-full max-h-[72px] flex flex-col rounded">
       <div className="w-full flex justify-between space-x-6">
-        <h2 className="title-h3-normal dark:title-h3-normal-dark">
+        <h2 className="p-normal-2-light dark:p-normal-2-dark">
           Who are you swapping with today?
         </h2>
       </div>
       <div
         className={cc([
-          "flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-[0_0_6px_1px_#0000004b] dark:hover:shadow-[0_0_6px_1px_#84980027]",
+          "flex items-center border rounded-xl pl-4 pr-3 gap-4 dark:bg-[#212322] dark:border-[#353836] dark:hover:border-[#edff6259] dark:shadow-swap-station",
         ])}
       >
         <div className="justify-center items-center">
@@ -94,7 +94,7 @@ export const SearchBar = () => {
           name="search"
           type="search"
           className={cc([
-            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small
+            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis
              dark:border-none dark:bg-transparent`,
           ])}
           placeholder="Search username, address or ENS"

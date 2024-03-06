@@ -26,7 +26,7 @@ export const TokenOfferDetails = () => (
           // onClick={acceptSwap}
           className="disabled:pointer-events-none rounded-lg w-full h-[28px] shadow-tag bg-[#d8f035] py-1 px-3 items-center flex justify-center gap-2"
         >
-          <DoneIcon />
+          <DoneIcon className="text-[#181A19]" />
           <p className="p-medium-bold-variant-black">Accept</p>
         </button>
       </div>

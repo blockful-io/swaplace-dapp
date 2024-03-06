@@ -1,7 +1,8 @@
 import { TokensList } from ".";
 import { TokensShelfVariant } from "../03-organisms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { PersonIcon, SwapContext } from "@/components/01-atoms";
+import { ENSAvatar, PersonIcon, SwapContext } from "@/components/01-atoms";
+import { useEnsData } from "@/lib/client/hooks/useENSData";
 import { useContext } from "react";
 
 interface IOfferSummary {
@@ -14,7 +15,6 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
     authenticatedUserTokensList,
     searchedUserTokensList,
     inputAddress,
-    userJustValidatedInput,
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -24,12 +24,30 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
       ? authenticatedUserTokensList
       : searchedUserTokensList;
 
+  const { primaryName: searchedENSName } = useEnsData({
+    ensAddress: validatedAddressToSwap,
+  });
+
   return (
     <div className="w-full flex flex-grow h-max flex-col gap-4 pt-2 pb-4 dark:bg-[#212322] dark:border-[#434443] rounded-lg border">
       <div className="w-full flex-shrink px-3 sm:px-4 flex justify-between items-center h-9 gap-2">
         <div className="flex space-x-2">
           <div className="flex items-center">
-            <PersonIcon />
+            {variant === TokensShelfVariant.Their &&
+            authenticatedUserAddress ? (
+              <ENSAvatar
+                avatarENSAddress={authenticatedUserAddress}
+                size="small"
+              />
+            ) : variant === TokensShelfVariant.Your &&
+              validatedAddressToSwap ? (
+              <ENSAvatar
+                avatarENSAddress={validatedAddressToSwap}
+                size="small"
+              />
+            ) : (
+              <PersonIcon />
+            )}
           </div>
           <div className="items-center">
             <p className="font-medium">
@@ -42,7 +60,9 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
                   validatedAddressToSwap &&
                   inputAddress
                 ? `${
-                    userJustValidatedInput
+                    searchedENSName
+                      ? searchedENSName + " gives"
+                      : validatedAddressToSwap
                       ? validatedAddressToSwap.getEllipsedAddress() + " gives"
                       : "Use the search bar"
                   }`
