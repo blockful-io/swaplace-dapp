@@ -1,4 +1,7 @@
-import { TokenOfferVariant, TokensShelfVariant } from "../03-organisms";
+import {
+  TokenOfferVariant,
+  TokensShelfVariant,
+} from "@/components/03-organisms";
 import {
   TokenCardActionType,
   TokenCardStyleType,

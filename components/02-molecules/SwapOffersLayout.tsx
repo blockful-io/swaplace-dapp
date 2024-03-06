@@ -1,7 +1,7 @@
 import {
   AddTokenOrSwapManuallyModal,
   AddTokenOrSwapManuallyModalVariant,
-} from ".";
+} from "@/components/02-molecules";
 import { ErrorIcon, NoSwapsIcon } from "@/components/01-atoms";
 import { useTheme } from "next-themes";
 import React, { useState } from "react";

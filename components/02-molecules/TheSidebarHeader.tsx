@@ -1,5 +1,4 @@
-import { CloseCTA } from "../01-atoms/icons/CloseCTA";
-import { DisconnectWallet } from "../01-atoms/DisconnectWallet";
+import { CloseCTA, DisconnectWallet } from "@/components/01-atoms";
 import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
 import React from "react";
 import cc from "classcat";

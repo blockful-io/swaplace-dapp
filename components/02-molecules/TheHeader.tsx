@@ -8,9 +8,9 @@ import {
   SwaplaceIcon,
   SwappingIcons,
   Tooltip,
-  WalletSidebarTemplate,
 } from "@/components/01-atoms";
 import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
+import { WalletSidebarTemplate } from "@/components/03-organisms";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";

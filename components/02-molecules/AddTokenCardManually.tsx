@@ -1,7 +1,7 @@
 import {
   AddTokenOrSwapManuallyModal,
   AddTokenOrSwapManuallyModalVariant,
-} from ".";
+} from "@/components/02-molecules";
 import { PlusIcon, Tooltip } from "@/components/01-atoms";
 import { useState } from "react";
 

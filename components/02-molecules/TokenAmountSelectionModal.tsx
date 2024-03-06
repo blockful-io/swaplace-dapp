@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { SwapContext, SwapModalLayout } from "../01-atoms";
+import { SwapContext, SwapModalLayout } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { toastBlockchainTxError } from "@/lib/client/blockchain-utils";
 import { getTokenName } from "@/lib/client/ui-utils";

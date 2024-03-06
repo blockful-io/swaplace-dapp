@@ -1,4 +1,4 @@
-import { SwapModalLayout } from "../01-atoms";
+import { SwapModalLayout } from "@/components/01-atoms";
 import { TokenType } from "@/lib/shared/types";
 import React, { useState } from "react";
 import cc from "classcat";

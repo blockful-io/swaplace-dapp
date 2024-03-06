@@ -1,6 +1,6 @@
-import { AddTokenCardManually } from "./AddTokenCardManually";
-import { TokensShelfVariant } from "../03-organisms";
+import { TokensShelfVariant } from "@/components/03-organisms";
 import {
+  AddTokenCardManually,
   TokenAmountSelectionModal,
   TokenCard,
   TokenCardActionType,

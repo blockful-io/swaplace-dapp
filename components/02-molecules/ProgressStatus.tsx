@@ -1,5 +1,4 @@
-import { SwapContext } from "../01-atoms";
-import { ProgressBar } from "../01-atoms/ProgressBar";
+import { SwapContext, ProgressBar } from "@/components/01-atoms";
 import { useContext } from "react";
 
 export const ProgressStatus = () => {

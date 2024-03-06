@@ -1,5 +1,5 @@
-import { TokensList } from ".";
-import { TokensShelfVariant } from "../03-organisms";
+import { TokensShelfVariant } from "@/components/03-organisms";
+import { TokensList } from "@/components/02-molecules";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { ENSAvatar, PersonIcon, SwapContext } from "@/components/01-atoms";
 import { useEnsData } from "@/lib/client/hooks/useENSData";
