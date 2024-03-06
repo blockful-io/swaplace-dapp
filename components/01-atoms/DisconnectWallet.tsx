@@ -1,7 +1,7 @@
-import { PowerIcon } from "./icons/PowerIcon";
+import { PowerIcon } from "@/components/01-atoms";
 import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
 import { useDisconnect } from "wagmi";
-import cc from "classcat"
+import cc from "classcat";
 import { useTheme } from "next-themes";
 
 export const DisconnectWallet = () => {
@@ -12,9 +12,9 @@ export const DisconnectWallet = () => {
   const { toggleSidebar } = useSidebar();
 
   const handleClick = () => {
-    toggleSidebar()
-    disconnect()
-  }
+    toggleSidebar();
+    disconnect();
+  };
 
   return (
     <button

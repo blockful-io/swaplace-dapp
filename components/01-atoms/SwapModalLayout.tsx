@@ -1,4 +1,4 @@
-import { CloseCTA } from "./icons/CloseCTA";
+import { CloseCTA } from "@/components/01-atoms";
 import { Transition, Dialog } from "@headlessui/react";
 import React, { Fragment } from "react";
 

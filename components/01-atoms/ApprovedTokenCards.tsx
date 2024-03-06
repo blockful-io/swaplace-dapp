@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ApproveTokenCard } from "../03-organisms";
+import { ApproveTokenCard } from "@/components/03-organisms";
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { Token } from "@/lib/shared/types";

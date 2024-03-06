@@ -1,4 +1,4 @@
-import { LoadingIndicator } from ".";
+import { LoadingIndicator } from "@/components/01-atoms";
 import {
   ENSAvatarQueryStatus,
   useEnsData,
