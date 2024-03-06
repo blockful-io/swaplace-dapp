@@ -52,7 +52,7 @@ export const SwapStation = () => {
     <div className="w-full p-5 bg-[#F6F6F6] dark:bg-[#212322] border rounded-2xl dark:border-[#353836] border-[#D6D5D5] dark:shadow-swap-station shadow-swap-station-light ">
       <div className="flex flex-col gap-6">
         <div className="flex justify-between max-h-[36px]">
-          <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7">
+          <h3 className="dark:title-h3-normal-dark title-h3-normal mb-7 contrast-50">
             Swap Station
           </h3>
           <SwapExpireTime />
