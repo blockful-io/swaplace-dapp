@@ -58,7 +58,7 @@ export const SwapExpireTime = () => {
         >
           <div
             className={cc([
-              "w-full h-full flex justify-between items-center px-3 py-2 dark:bg-[#212322] bg-[#F6F6F6] border-[#E4E4E4] rounded-r-lg border dark:border-[#353836] hover:border-[#AABE13] dark:hover:border-[#edff6259] transition duration-300 ease-in-out",
+              "w-full h-full flex justify-between items-center px-3 py-2 dark:bg-[#212322] bg-[#F6F6F6] hover:bg-[#F0EEEE75] hover:shadow-[0_0_6px_1px_#00000014] border-[#E4E4E4] rounded-r-lg border dark:border-[#353836] hover:border-[#AABE13] dark:hover:border-[#edff6259] transition duration-300 ease-in-out",
               isOpen &&
                 "hover:bg-[#F0EEEE75] hover:border-[#AABE13] hover:border-[#D6D5D5] dark:border-[#353836] dark:hover:border-[#edff6259]",
             ])}
@@ -84,7 +84,7 @@ export const SwapExpireTime = () => {
                   key={index}
                   onClick={() => handleSelectExpirateDate(expirationDate.value)}
                   className={cc([
-                    "gap-2 flex px-4 py-2 p-small-variant-black-2 dark:p-small-dark-variant-grey items-center hover:dark:bg-[#353836] hover:bg-[#F0EEEE] hover:dark:p-small-dark",
+                    "gap-2 flex px-4 py-2 p-small-variant-black-2 dark:p-small-dark-variant-grey items-center hover:dark:bg-[#353836] hover:bg-[#F0EEEE75] hover:dark:p-small-dark",
                     { "rounded-t-xl": index === 0 },
                     { "rounded-b-xl": index === ExpireDate.length - 1 },
                   ])}
