@@ -81,18 +81,18 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     getUserTokens();
   }, [address, chain, destinyChain]);
 
-  useEffect(() => {
-    if (!authenticatedUserAddress && variant === TokensShelfVariant.Your) {
-      setAllTokensList([]);
-    }
-  }, [authenticatedUserAddress]);
-
   const conditionallyCleanTokensList = (condition: boolean) => {
     if (condition) {
       setAllTokensList([]);
       setTokensQueryStatus(TokensQueryStatus.EMPTY_QUERY);
     }
   };
+
+  useEffect(() => {
+    conditionallyCleanTokensList(
+      !authenticatedUserAddress && variant === TokensShelfVariant.Your,
+    );
+  }, [authenticatedUserAddress]);
 
   useEffect(() => {
     conditionallyCleanTokensList(

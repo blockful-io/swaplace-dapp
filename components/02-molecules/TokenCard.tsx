@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { EMPTY_ERC_20_BALANCE } from "@/lib/client/blockchain-utils";
 import {
   ERC20,
   ERC721,
@@ -21,6 +22,13 @@ interface TokenCardProps {
     token: Token,
   ) => void;
   onClickAction?: TokenCardActionType;
+
+  /* 
+    When true, instead of displaying an ERC20 Token balance
+    the TokenCard will display the ERC20 Token amount 
+    selected by the user for the swap transaction
+  */
+  displayERC20TokensAmount?: boolean;
   withSelectionValidation?: boolean;
   styleType?: StyleVariant;
 }
@@ -67,6 +75,7 @@ export const TokenCard = ({
   ownerAddress,
   openTokenAmountSelectionModal,
   withSelectionValidation = true,
+  displayERC20TokensAmount = false,
   styleType = TokenCardStyleType.NORMAL,
   onClickAction = TokenCardActionType.SELECT_NFT_FOR_SWAP,
 }: TokenCardProps) => {
@@ -215,6 +224,12 @@ export const TokenCard = ({
     );
   };
 
+  if (
+    tokenData.tokenType === TokenType.ERC20 &&
+    (tokenData as ERC20).rawBalance === EMPTY_ERC_20_BALANCE
+  )
+    return <div className="card-nft-normal" />;
+
   return tokenDisplayableData.image && !couldntLoadNftImage ? (
     <>
       {ButtonLayout(
@@ -230,7 +245,10 @@ export const TokenCard = ({
     <>
       {ButtonLayout(
         <div className="flex justify-center items-center w-full h-full text-[10px] font-medium oveflow-y-scroll break-all">
-          {getTokenName(tokenData)}
+          {getTokenName(tokenData, {
+            withAmountPrefix: tokenData.tokenType === TokenType.ERC20,
+            displayTokenAmount: displayERC20TokensAmount,
+          })}
         </div>,
       )}
     </>

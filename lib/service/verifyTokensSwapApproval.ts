@@ -1,11 +1,9 @@
-import {
-  TokenApprovalData,
-  getTokenInfoBeforeSwap,
-} from "../client/blockchain-utils";
+import { TokenApprovalData } from "../client/blockchain-utils";
 import { publicClient } from "../wallet/wallet-config";
 import { MockERC721Abi } from "../client/abi";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
 import { Token, TokenType } from "../shared/types";
+import { getTokenInfoBeforeSwap } from "../client/swap-utils";
 
 export async function isTokenSwapApproved({
   token,

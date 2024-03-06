@@ -65,6 +65,7 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
           <TokensList
             withAddTokenCard={false}
             withPlaceholders={false}
+            displayERC20TokensAmount={true}
             withSelectionValidation={false}
             ownerAddress={authenticatedUserAddress}
             tokensList={tokensList}
@@ -74,6 +75,7 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
           <TokensList
             withAddTokenCard={false}
             withPlaceholders={false}
+            displayERC20TokensAmount={true}
             withSelectionValidation={false}
             ownerAddress={validatedAddressToSwap}
             tokensList={tokensList}

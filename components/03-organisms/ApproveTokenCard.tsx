@@ -170,6 +170,7 @@ export const ApproveTokenCard = ({
     >
       <div>
         <TokenCard
+          displayERC20TokensAmount={true}
           withSelectionValidation={false}
           onClickAction={TokenCardActionType.APPROVE_TOKEN_SWAP}
           ownerAddress={authenticatedUserAddress}

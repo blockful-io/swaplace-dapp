@@ -1,4 +1,4 @@
-import { CloseIcon } from "../01-atoms/icons/CloseIcon";
+import { CloseCTA } from "../01-atoms/icons/CloseCTA";
 import { DisconnectWallet } from "../01-atoms/DisconnectWallet";
 import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
 import React from "react";
@@ -22,7 +22,7 @@ export const TheSidebarHeader = () => {
             : "border-[#D6D6D6] bg-[#F6F6F6]",
         ])}
       >
-        <CloseIcon
+        <CloseCTA
           className={cc([isDark ? "text-[#F6F6F1]" : "text-[#A3A9A5]"])}
         />
       </button>

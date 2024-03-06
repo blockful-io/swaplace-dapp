@@ -1,8 +1,4 @@
-import {
-  ErrorIcon,
-  NoSwapsIcon,
-  SwapAddManuallyModalLayout,
-} from "@/components/01-atoms";
+import { ErrorIcon, NoSwapsIcon, SwapModalLayout } from "@/components/01-atoms";
 import { useTheme } from "next-themes";
 import React, { useState } from "react";
 import cc from "classcat";
@@ -68,7 +64,7 @@ export const SwapOffersLayout = ({ variant }: SwapOffersLayoutProps) => {
               >
                 Add swap manually
               </button>
-              <SwapAddManuallyModalLayout
+              <SwapModalLayout
                 open={toggleManually}
                 onClose={() => {
                   setToggleManually(false);

@@ -43,6 +43,8 @@ interface SwapContextProps {
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
   timeDate: bigint;
   setTimeDate: Dispatch<React.SetStateAction<bigint>>;
+
+  clearSwapData: () => void;
 }
 
 export const SwapContextProvider = ({ children }: any) => {
@@ -145,6 +147,12 @@ export const SwapContextProvider = ({ children }: any) => {
     }
   };
 
+  const clearSwapData = () => {
+    setAuthenticatedUserTokensList([]);
+    setSearchedUserTokensList([]);
+    setCurrentSwapModalStep(SwapModalSteps.APPROVE_TOKENS);
+  };
+
   useEffect(() => {
     setSearchedUserTokensList([]);
     setUserJustValidatedInput(false);
@@ -174,6 +182,7 @@ export const SwapContextProvider = ({ children }: any) => {
       setApprovedTokensCount,
       updateSwapStep,
       currentSwapModalStep,
+      clearSwapData,
     });
   }, [
     inputAddress,
@@ -206,6 +215,7 @@ export const SwapContextProvider = ({ children }: any) => {
     setApprovedTokensCount,
     updateSwapStep,
     currentSwapModalStep,
+    clearSwapData,
   });
 
   // This is a temporary measure while we don't turn the dApp into a SPA
@@ -241,4 +251,5 @@ export const SwapContext = React.createContext<SwapContextProps>({
   setApprovedTokensCount: () => {},
   currentSwapModalStep: SwapModalSteps.APPROVE_TOKENS,
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
+  clearSwapData: () => {},
 });

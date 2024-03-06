@@ -2,13 +2,21 @@
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useEffect, useState } from "react";
 
-export const TokenCardsPlaceholder = (
-  totalCardsLength: number,
+interface TokenCardsPlaceholderProps {
+  totalCardsLength: number;
+  wideScreenTotalSquares?: number;
+  desktopTotalSquares?: number;
+  tabletTotalSquares?: number;
+  mobileTotalSquares?: number;
+}
+
+export const TokenCardsPlaceholder = ({
+  totalCardsLength,
   wideScreenTotalSquares = 15,
   desktopTotalSquares = 30,
   tabletTotalSquares = 30,
   mobileTotalSquares = 30,
-) => {
+}: TokenCardsPlaceholderProps) => {
   const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
 
   const [totalSquares, setTotalSquares] = useState(0);

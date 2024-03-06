@@ -1,4 +1,10 @@
-import { ERC721, Token, TokenType } from "../shared/types";
+import {
+  ERC20,
+  ERC20WithTokenAmountSelection,
+  ERC721,
+  Token,
+  TokenType,
+} from "../shared/types";
 
 export const WIDE_SCREEN_SIZE = 1279;
 export const DESKTOP_SCREEN_SIZE = 1023;
@@ -32,9 +38,23 @@ export const ExpireDate: ExpireOption[] = [
   { label: "1 Year", value: TimeStampDate.ONE_YEAR },
 ];
 
-export const getTokenName = (token: Token): string => {
+export const getTokenName = (
+  token: Token,
+  prefix = {
+    withAmountPrefix: false,
+    displayTokenAmount: false,
+  },
+): string => {
   if (token.tokenType === TokenType.ERC20) {
-    return token.name ? token.name : token.tokenType;
+    const erc20balancePrefix = prefix.withAmountPrefix
+      ? prefix.displayTokenAmount
+        ? (token as ERC20WithTokenAmountSelection).tokenAmount + " - "
+        : (token as ERC20).rawBalance + " - "
+      : "";
+
+    return token.name
+      ? erc20balancePrefix + token.name
+      : erc20balancePrefix + token.tokenType;
   } else if (token.tokenType === TokenType.ERC721) {
     return (token as ERC721).metadata
       ? (token as ERC721).metadata?.name

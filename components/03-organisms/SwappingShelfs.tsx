@@ -4,7 +4,7 @@ import {
   SearchItemsShelf,
   SwapContext,
   SwappingShelfID,
-  Tab,
+  TokensShelfTab,
 } from "@/components/01-atoms/";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useContext, useEffect, useState } from "react";
@@ -41,7 +41,7 @@ export const SwappingShelfs = () => {
     <div className="w-[95%] mb-20 dark:bg-[#212322] dark:border-[#353836] border rounded-2xl ">
       <div className="flex space-x-4 items-center justify-between max-h-[48px] pb-1">
         <div className="flex max-w-[224px]">
-          <Tab
+          <TokensShelfTab
             setActiveSwappingShelfID={(input) =>
               setActiveSwappingShelfID(input)
             }

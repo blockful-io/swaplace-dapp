@@ -1,10 +1,11 @@
 import {
-  PlusIcon,
-  SwapAddManuallyModalLayout,
-  Tooltip,
-} from "@/components/01-atoms";
+  AddTokenOrSwapManuallyModal,
+  AddTokenOrSwapManuallyModalVariant,
+} from ".";
+import { PlusIcon, Tooltip } from "@/components/01-atoms";
 import { useState } from "react";
-export const SwapAddTokenCard = () => {
+
+export const AddTokenCardManually = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,10 +35,10 @@ export const SwapAddTokenCard = () => {
         </div>
       </div>
 
-      <SwapAddManuallyModalLayout
-        variant="token"
-        open={open}
+      <AddTokenOrSwapManuallyModal
+        variant={AddTokenOrSwapManuallyModalVariant.TOKEN}
         onClose={() => setOpen(false)}
+        open={open}
       />
     </>
   );

@@ -6,6 +6,7 @@ import {
   ERC721,
   TokenType,
   EthereumAddress,
+  ERC20WithTokenAmountSelection,
 } from "../shared/types";
 import {
   type GetTokensForOwnerResponse,
@@ -13,10 +14,9 @@ import {
   type OwnedToken,
   type OwnedNft,
   Alchemy,
-  type TokenBalancesResponseErc20,
 } from "alchemy-sdk";
 import toast from "react-hot-toast";
-import { hexToNumber, isAddress } from "viem";
+import { hexToNumber } from "viem";
 
 export enum ButtonClickPossibilities {
   PREVIOUS_STEP,
@@ -51,8 +51,9 @@ export const getTokenAmountOrId = (token: Token): bigint => {
 
   switch (token.tokenType) {
     case TokenType.ERC20:
-      if ((token as ERC20).rawBalance) {
-        tokenAmountOrTokenId = (token as ERC20).rawBalance as string;
+      if ((token as ERC20WithTokenAmountSelection).tokenAmount) {
+        tokenAmountOrTokenId = (token as ERC20WithTokenAmountSelection)
+          .tokenAmount;
       }
     case TokenType.ERC721:
       if (token.id) {
@@ -146,8 +147,14 @@ export const getERC20TokensFromAddress = async (
     });
 };
 
+export const EMPTY_ERC_20_BALANCE = 0;
+
 const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
   return tokens.map((token) => {
+    const rawBalanceAsNumber = token.rawBalance
+      ? hexToNumber(token.rawBalance as `0x${string}`)
+      : EMPTY_ERC_20_BALANCE;
+
     return {
       tokenType: TokenType.ERC20,
       /*
@@ -161,57 +168,54 @@ const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
       name: token.name,
       logo: token.logo,
       symbol: token.symbol,
-      rawBalance: token.rawBalance,
+      rawBalance: rawBalanceAsNumber,
       contract: token.contractAddress,
     };
   });
 };
 
-export const getTokenBalance = async (
-  owner: EthereumAddress,
-  token: Token,
-  chainId: number,
-): Promise<string | null> => {
-  const alchemyApiKey = getAPIKeyForNetwork.get(chainId);
-  const networkName = getNetwork.get(chainId);
+// Unused for now
+// export const getTokenBalance = async (
+//   owner: EthereumAddress,
+//   token: Token,
+//   chainId: number,
+// ): Promise<number | null> => {
+//   const alchemyApiKey = getAPIKeyForNetwork.get(chainId);
+//   const networkName = getNetwork.get(chainId);
 
-  if (!alchemyApiKey) {
-    throw new Error("No API Key for this network.");
-  }
-  if (!networkName) {
-    throw new Error("No Network Name is defined for this network.");
-  }
-  if (!token.contract) {
-    throw new Error("Selected token has no known contract address.");
-  }
+//   if (!alchemyApiKey) {
+//     throw new Error("No API Key for this network.");
+//   }
+//   if (!networkName) {
+//     throw new Error("No Network Name is defined for this network.");
+//   }
+//   if (!token.contract) {
+//     throw new Error("Selected token has no known contract address.");
+//   }
 
-  const config = {
-    apiKey: alchemyApiKey,
-    network: networkName,
-  };
-  const alchemy = new Alchemy(config);
+//   const config = {
+//     apiKey: alchemyApiKey,
+//     network: networkName,
+//   };
+//   const alchemy = new Alchemy(config);
 
-  return alchemy.core
-    .getTokenBalances(owner.address, [token.contract])
-    .then((response: TokenBalancesResponseErc20) => {
-      if (!response.tokenBalances[0].tokenBalance) return null;
+//   return alchemy.core
+//     .getTokenBalances(owner.address, [token.contract])
+//     .then((response: TokenBalancesResponseErc20) => {
+//       if (!response.tokenBalances[0].tokenBalance) return null;
 
-      let balance: string | null = null;
-      if (isAddress(response.tokenBalances[0].tokenBalance)) {
-        balance = hexToNumber(
-          response.tokenBalances[0].tokenBalance,
-        ).toString();
-      } else {
-        balance = response.tokenBalances[0].tokenBalance;
-      }
+//       let balance = 0;
+//       if (isAddress(response.tokenBalances[0].tokenBalance)) {
+//         balance = hexToNumber(response.tokenBalances[0].tokenBalance);
+//       }
 
-      return balance;
-    })
-    .catch((error) => {
-      toastBlockchainTxError(error);
-      throw new Error("Error getting token balance.");
-    });
-};
+//       return balance;
+//     })
+//     .catch((error) => {
+//       toastBlockchainTxError(error);
+//       throw new Error("Error getting token balance.");
+//     });
+// };
 
 export interface TokenApprovalData {
   approved: boolean;
@@ -224,7 +228,6 @@ export async function packingData(
   allowed: EthereumAddress,
   expiration: bigint,
 ): Promise<number> {
-  console.log(Contract);
   const config = await Contract.read.packData([allowed.address, expiration]);
   return config;
 }

@@ -1,30 +1,32 @@
+import { AddTokenCardManually } from "./AddTokenCardManually";
 import { TokensShelfVariant } from "../03-organisms";
-import { TokenAmountSelectionModal } from "../01-atoms/TokenAmountSelectionModal";
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { toastBlockchainTxError } from "@/lib/client/blockchain-utils";
 import {
+  TokenAmountSelectionModal,
   TokenCard,
   TokenCardActionType,
   TokenCardStyleType,
 } from "@/components/02-molecules";
-import {
-  SwapAddTokenCard,
-  SwapContext,
-  TokenCardsPlaceholder,
-} from "@/components/01-atoms";
-import { ERC20, EthereumAddress, Token } from "@/lib/shared/types";
-import { useContext, useState } from "react";
+import { TokenCardsPlaceholder } from "@/components/01-atoms";
+import { EthereumAddress, Token } from "@/lib/shared/types";
+import { useState } from "react";
 
 export interface TokensListProps {
   tokensList: Token[];
   ownerAddress: EthereumAddress | null;
+  withSelectionValidation?: boolean;
   withPlaceholders?: boolean;
   withAddTokenCard?: boolean;
-  withSelectionValidation?: boolean;
   mobileTotalCards?: number;
   tabletTotalCards?: number;
   desktopTotalCards?: number;
   wideScreenTotalCards?: number;
+
+  /* 
+    When true, instead of displaying an ERC20 Token balance
+    the TokenCard will display the ERC20 Token amount 
+    selected by the user for the swap transaction
+  */
+  displayERC20TokensAmount?: boolean;
   tokenCardStyleType?: TokenCardStyleType;
   tokenCardClickAction?: TokenCardActionType;
   variant: TokensShelfVariant;
@@ -42,14 +44,15 @@ export interface TokensListProps {
 
 export const TokensList = ({
   tokensList,
-  withPlaceholders = true,
-  withAddTokenCard = true,
-  withSelectionValidation = true,
+  ownerAddress,
   mobileTotalCards,
   tabletTotalCards,
   desktopTotalCards,
   wideScreenTotalCards,
-  ownerAddress,
+  withPlaceholders = true,
+  withAddTokenCard = true,
+  withSelectionValidation = true,
+  displayERC20TokensAmount = false,
   variant = TokensShelfVariant.Your,
   tokenCardStyleType = TokenCardStyleType.NORMAL,
   tokenCardClickAction = TokenCardActionType.SELECT_NFT_FOR_SWAP,
@@ -68,20 +71,26 @@ export const TokensList = ({
     setSelectTokenAmountOf(owner);
   };
 
+  const onCloseModal = () => {
+    setSelectTokenAmountFor(null);
+    setSelectTokenAmountOf(null);
+  };
+
   const placeholders = withPlaceholders
-    ? TokenCardsPlaceholder(
-        tokensList.length,
-        mobileTotalCards,
-        tabletTotalCards,
-        desktopTotalCards,
-        wideScreenTotalCards,
-      )
+    ? TokenCardsPlaceholder({
+        totalCardsLength: tokensList.length,
+        mobileTotalSquares: mobileTotalCards,
+        tabletTotalSquares: tabletTotalCards,
+        desktopTotalSquares: desktopTotalCards,
+        wideScreenTotalSquares: wideScreenTotalCards,
+      })
     : [<></>];
   const tokenCards = tokensList.map((token: Token, index) => (
     <div key={`nft-${index}`}>
       <TokenCard
         styleType={tokenCardStyleType}
         onClickAction={tokenCardClickAction}
+        displayERC20TokensAmount={displayERC20TokensAmount}
         openTokenAmountSelectionModal={openTokenAmountSelectionModal}
         withSelectionValidation={withSelectionValidation}
         ownerAddress={ownerAddress}
@@ -90,74 +99,28 @@ export const TokensList = ({
     </div>
   ));
 
-  const { authenticatedUserAddress } = useAuthenticatedUser();
-  const {
-    authenticatedUserTokensList,
-    searchedUserTokensList,
-    setAuthenticatedUserTokensList,
-    setSearchedUserTokensList,
-  } = useContext(SwapContext);
-
-  const closeAmountSelectionModal = (amount: null | string) => {
-    if (!selectTokenAmountOf || !selectTokenAmountFor) {
-      toastBlockchainTxError(
-        "No token or token's owner selected to set amount for.",
-      );
-      throw new Error("No token or token's owner selected to set amount for.");
-    }
-
-    const tokenOwnerIsAuthedUser =
-      authenticatedUserAddress?.equals(selectTokenAmountOf);
-
-    let originalTokensList: Token[];
-    if (tokenOwnerIsAuthedUser) {
-      originalTokensList = [...authenticatedUserTokensList];
-    } else {
-      originalTokensList = [...searchedUserTokensList];
-    }
-
-    originalTokensList.map((token) => {
-      if (
-        amount &&
-        Number(amount) !== 0 &&
-        token.contract === selectTokenAmountFor.contract
-      ) {
-        (token as ERC20).rawBalance = amount;
-      } else if (!amount || Number(amount) === 0) {
-        originalTokensList = originalTokensList.filter(
-          (token) => token.contract !== selectTokenAmountFor.contract,
-        );
-      }
-    });
-
-    if (tokenOwnerIsAuthedUser) {
-      setAuthenticatedUserTokensList(originalTokensList);
-    } else {
-      setSearchedUserTokensList(originalTokensList);
-    }
-
-    setSelectTokenAmountFor(null);
-    setSelectTokenAmountOf(null);
-  };
-
   let allSquares = [...tokenCards, ...placeholders];
 
-  const addTokenSquare = withAddTokenCard ? SwapAddTokenCard() : <></>;
+  const addTokenSquare = withAddTokenCard ? AddTokenCardManually() : <></>;
+
+  const Layout = (squares: JSX.Element[]) => {
+    return (
+      <div className={gridClassNames}>
+        {squares}
+        <TokenAmountSelectionModal
+          owner={selectTokenAmountOf}
+          token={selectTokenAmountFor}
+          onCloseModal={onCloseModal}
+        />
+      </div>
+    );
+  };
 
   if (variant === TokensShelfVariant.Your) {
     placeholders.pop(); // Removes the last element to fill with addToken
     allSquares = [...allSquares, addTokenSquare];
-    return (
-      <div className={gridClassNames}>
-        {allSquares}
-        <TokenAmountSelectionModal
-          owner={selectTokenAmountOf}
-          token={selectTokenAmountFor}
-          onCloseModal={closeAmountSelectionModal}
-        />
-      </div>
-    );
+    return Layout(allSquares);
   } else {
-    return <div className={gridClassNames}>{allSquares}</div>;
+    return Layout(allSquares);
   }
 };

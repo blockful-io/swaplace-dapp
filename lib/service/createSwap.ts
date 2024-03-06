@@ -117,5 +117,6 @@ export async function createSwap(
     return transactionReceipt;
   } catch (error) {
     console.error(error);
+    throw new Error(String(error));
   }
 }

@@ -1,8 +1,6 @@
-import { CloseIcon } from "./icons/CloseIcon";
+import { CloseCTA } from "./icons/CloseCTA";
 import { Transition, Dialog } from "@headlessui/react";
 import React, { Fragment } from "react";
-import cc from "classcat";
-import { useTheme } from "next-themes";
 
 interface ConfirmSwapModalToggle {
   open: boolean;
@@ -14,19 +12,11 @@ interface ConfirmSwapModalText {
   description?: string;
 }
 
-interface ConfirmSwapApprovalModalBody {
-  component: React.ReactNode;
-}
-
-interface ConfirmSwapApprovalModalFooter {
-  component: React.ReactNode;
-}
-
 interface ISwapModalLayout {
   toggleCloseButton: ConfirmSwapModalToggle;
   text: ConfirmSwapModalText;
-  body: ConfirmSwapApprovalModalBody;
-  footer: ConfirmSwapApprovalModalFooter;
+  body: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
 export const SwapModalLayout = ({
@@ -35,8 +25,6 @@ export const SwapModalLayout = ({
   body,
   footer,
 }: ISwapModalLayout) => {
-  const { theme } = useTheme();
-
   return (
     <>
       <Transition
@@ -49,7 +37,11 @@ export const SwapModalLayout = ({
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className="z-40 fixed inset-0 bg-black/30 backdrop-blur-sm" />
+        <div
+          role="button"
+          onClick={toggleCloseButton.onClose}
+          className="z-40 fixed inset-0 bg-black/30 backdrop-blur-sm"
+        />
       </Transition>
       <Dialog open={toggleCloseButton.open} onClose={toggleCloseButton.onClose}>
         <Transition
@@ -77,26 +69,26 @@ export const SwapModalLayout = ({
                   {text.title}
                 </p>
                 <div role="button" onClick={toggleCloseButton.onClose}>
-                  <CloseIcon
-                    className={cc([
-                      theme == "light" ? "text-black" : "text-white",
-                    ])}
-                  />
+                  <CloseCTA onClick={toggleCloseButton.onClose} />
                 </div>
               </Dialog.Title>
             </div>
 
-            <div className="flex flex-col gap-6 p-6 h-[460px] overflow-hidden">
-              <div className="flex dark:p-normal-2-dark p-normal-2">
-                <Dialog.Description>{text.description}</Dialog.Description>
+            <div className="flex flex-col gap-6 p-6 overflow-hidden">
+              {text.description && (
+                <div className="flex dark:p-normal-2-dark p-normal-2">
+                  <Dialog.Description>{text.description}</Dialog.Description>
+                </div>
+              )}
+
+              {body}
+            </div>
+
+            {footer && (
+              <div className="flex justify-between items-center w-full p-6 border-t border-[#353836]">
+                {footer}
               </div>
-
-              {body.component}
-            </div>
-
-            <div className="flex justify-between items-center w-full p-6 border-t border-[#353836]">
-              {footer.component}
-            </div>
+            )}
           </Dialog.Panel>
         </Transition>
       </Dialog>

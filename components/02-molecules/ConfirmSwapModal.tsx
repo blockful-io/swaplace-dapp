@@ -13,6 +13,7 @@ import { SwapUserConfiguration, createSwap } from "@/lib/service/createSwap";
 import {
   ButtonClickPossibilities,
   packingData,
+  toastBlockchainTxError,
 } from "@/lib/client/blockchain-utils";
 import { TokenOffers } from "@/components/03-organisms";
 import { fromTokensToAssets, getSwapConfig } from "@/lib/client/swap-utils";
@@ -45,6 +46,7 @@ export const ConfirmSwapModal = ({
     validatedAddressToSwap,
     currentSwapModalStep,
     updateSwapStep,
+    clearSwapData,
   } = useContext(SwapContext);
 
   const { chain } = useNetwork();
@@ -127,10 +129,10 @@ export const ConfirmSwapModal = ({
         const transactionReceipt = await createSwap(swapConfig, configurations);
 
         if (transactionReceipt != undefined) {
-          toast.success("Created Swap");
+          toast.success("Successfully created swap offer!");
           updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
         } else {
-          toast.error("Create Swap Failed");
+          toastBlockchainTxError("Create swap failed");
           updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
         }
       } else {
@@ -138,7 +140,7 @@ export const ConfirmSwapModal = ({
         updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
       }
     } catch (error) {
-      toast.error("You must approve the Tokens to Swap.");
+      toastBlockchainTxError(String(error));
       updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
       console.error(error);
     }
@@ -163,28 +165,20 @@ export const ConfirmSwapModal = ({
           description:
             "Before sending your offer, please approve the assets you want to trade by clicking on them.",
         }}
-        body={{
-          component: <ApprovedTokenCards />,
-        }}
-        footer={{
-          component: (
-            <>
-              <div className="flex w-full justify-between items-center">
-                <ProgressStatus />
-                <SwapModalButton
-                  label={"Continue"}
-                  disabled={
-                    approvedTokensCount !== authenticatedUserTokensList.length
-                  }
-                  onClick={validateTokensAreApproved}
-                  aditionalStyle={
-                    theme === "light" ? "text-black" : "text-yellow"
-                  }
-                />
-              </div>
-            </>
-          ),
-        }}
+        body={<ApprovedTokenCards />}
+        footer={
+          <div className="flex w-full justify-between items-center">
+            <ProgressStatus />
+            <SwapModalButton
+              label={"Continue"}
+              disabled={
+                approvedTokensCount !== authenticatedUserTokensList.length
+              }
+              onClick={validateTokensAreApproved}
+              aditionalStyle={theme === "light" ? "text-black" : "text-yellow"}
+            />
+          </div>
+        }
       />
     ),
     [SwapModalSteps.CREATE_SWAP]: (
@@ -194,40 +188,32 @@ export const ConfirmSwapModal = ({
           title: "Swap offer confirmation",
           description: "Please review your final proposal.",
         }}
-        body={{
-          component: (
-            <>
-              <div className="flex flex-col gap-2 flex-grow">
-                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-                <TokenOffers />
-              </div>
-            </>
-          ),
-        }}
-        footer={{
-          component: (
-            <>
-              <div className="flex w-full justify-end gap-3">
-                <SwapModalButton
-                  label={"Back"}
-                  variant={ButtonVariant.ALTERNATIVE}
-                  onClick={() => {
-                    updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
-                  }}
-                />
+        body={
+          <div className="flex flex-col gap-2 flex-grow">
+            <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+            <TokenOffers />
+          </div>
+        }
+        footer={
+          <div className="flex w-full justify-end gap-3">
+            <SwapModalButton
+              label={"Back"}
+              variant={ButtonVariant.ALTERNATIVE}
+              onClick={() => {
+                updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
+              }}
+            />
 
-                <SwapModalButton
-                  label={"Confirm and send"}
-                  disabled={!approvedTokensCount}
-                  variant={ButtonVariant.SECONDARY}
-                  onClick={() => {
-                    updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
-                  }}
-                />
-              </div>
-            </>
-          ),
-        }}
+            <SwapModalButton
+              label={"Confirm and send"}
+              disabled={!approvedTokensCount}
+              variant={ButtonVariant.SECONDARY}
+              onClick={() => {
+                updateSwapStep(ButtonClickPossibilities.NEXT_STEP);
+              }}
+            />
+          </div>
+        }
       />
     ),
     [SwapModalSteps.CREATING_SWAP]: (
@@ -237,30 +223,22 @@ export const ConfirmSwapModal = ({
           title: "Swap offer confirmation",
           description: "Please review your final proposal.",
         }}
-        body={{
-          component: (
-            <>
-              <div className="flex flex-col gap-2 flex-grow">
-                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-                <TokenOffers />
-              </div>
-            </>
-          ),
-        }}
-        footer={{
-          component: (
-            <>
-              <div className="flex w-full justify-end gap-3">
-                <SwapModalButton
-                  label={"Waiting wallet approval..."}
-                  variant={ButtonVariant.SECONDARY}
-                  disabled={true}
-                  isLoading={true}
-                />
-              </div>
-            </>
-          ),
-        }}
+        body={
+          <div className="flex flex-col gap-2 flex-grow">
+            <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+            <TokenOffers />
+          </div>
+        }
+        footer={
+          <div className="flex w-full justify-end gap-3">
+            <SwapModalButton
+              label={"Waiting wallet approval..."}
+              variant={ButtonVariant.SECONDARY}
+              disabled={true}
+              isLoading={true}
+            />
+          </div>
+        }
       />
     ),
     [SwapModalSteps.CREATED_SWAP]: (
@@ -270,29 +248,24 @@ export const ConfirmSwapModal = ({
           title: "Swap offer confirmed!",
           description: "Congrats, your swap offer was submitted.",
         }}
-        body={{
-          component: (
-            <>
-              <div className="flex flex-col gap-2 flex-grow">
-                <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-                <TokenOffers />
-              </div>
-            </>
-          ),
-        }}
-        footer={{
-          component: (
-            <>
-              <div className="flex w-full justify-end gap-3">
-                <SwapModalButton
-                  label={"Close"}
-                  variant={ButtonVariant.SECONDARY}
-                  onClick={onClose}
-                />
-              </div>
-            </>
-          ),
-        }}
+        body={
+          <div className="flex flex-col gap-2 flex-grow">
+            <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
+            <TokenOffers />
+          </div>
+        }
+        footer={
+          <div className="flex w-full justify-end gap-3">
+            <SwapModalButton
+              label={"Close"}
+              variant={ButtonVariant.SECONDARY}
+              onClick={() => {
+                clearSwapData();
+                onClose();
+              }}
+            />
+          </div>
+        }
       />
     ),
   };
