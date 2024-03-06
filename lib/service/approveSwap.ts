@@ -1,5 +1,5 @@
 import { MockERC20Abi, MockERC721Abi } from "../client/abi";
-import { IApproveTokenSwap } from "../client/blockchain-utils";
+import { IApproveTokenSwap } from "../client/swap-utils";
 import { TokenType } from "../shared/types";
 import { publicClient } from "../wallet/wallet-config";
 import { type Hash, type TransactionReceipt } from "viem";

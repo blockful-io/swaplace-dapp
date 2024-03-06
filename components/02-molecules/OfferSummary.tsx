@@ -33,13 +33,12 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
       <div className="w-full flex-shrink px-3 sm:px-4 flex justify-between items-center h-9 gap-2">
         <div className="flex space-x-2">
           <div className="flex items-center">
-            {variant === TokensShelfVariant.Their &&
-            authenticatedUserAddress ? (
+            {variant === TokensShelfVariant.Your && authenticatedUserAddress ? (
               <ENSAvatar
                 avatarENSAddress={authenticatedUserAddress}
                 size="small"
               />
-            ) : variant === TokensShelfVariant.Your &&
+            ) : variant === TokensShelfVariant.Their &&
               validatedAddressToSwap ? (
               <ENSAvatar
                 avatarENSAddress={validatedAddressToSwap}

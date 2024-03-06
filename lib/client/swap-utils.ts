@@ -1,9 +1,4 @@
-import {
-  INVALID_TOKEN_AMOUNT_OR_ID,
-  getBlockchainTimestamp,
-  getTokenAmountOrId,
-} from "./blockchain-utils";
-import { ADDRESS_ZERO } from "./constants";
+import { getBlockchainTimestamp, getTokenAmountOrId } from "./blockchain-utils";
 import { ERC20, EthereumAddress, Token, TokenType } from "../shared/types";
 import { type WalletClient } from "wagmi";
 
@@ -44,23 +39,26 @@ export interface IApproveTokenSwap {
   onWalletConfirmation: () => void;
 }
 
-const INVALID_TOKEN_SWAP_INFO = {
-  amountOrId: INVALID_TOKEN_AMOUNT_OR_ID,
-  tokenAddress: ADDRESS_ZERO as `0x${string}`,
-};
+export enum TimeStampDate {
+  ONE_DAY = 24 * 60 * 60 * 1000,
+  ONE_WEEK = ONE_DAY * 7,
+  ONE_MONTH = ONE_WEEK * 4,
+  SIX_MONTH = ONE_MONTH * 6,
+  ONE_YEAR = SIX_MONTH * 2,
+}
 
 export function getTokenInfoBeforeSwap(token: Token): TokenWithSwapInfo {
   const amountOrId = getTokenAmountOrId(token);
 
   const contractAddress = token.contract;
 
-  if (amountOrId !== undefined && contractAddress !== undefined) {
+  if (amountOrId == undefined || contractAddress == undefined) {
+    throw new Error(`Invalid token swap info: ${JSON.stringify(token)}`);
+  } else {
     return {
       tokenAddress: contractAddress as `0x${string}`,
       amountOrId: amountOrId,
     };
-  } else {
-    return INVALID_TOKEN_SWAP_INFO;
   }
 }
 

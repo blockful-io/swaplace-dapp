@@ -4,9 +4,10 @@ import cc from "classcat";
 
 interface CloseCTAProps {
   onClick: () => void;
+  className: string;
 }
 
-export const CloseCTA = ({ onClick }: CloseCTAProps) => {
+export const CloseCTA = ({ onClick, className }: CloseCTAProps) => {
   const { theme } = useTheme();
 
   return (
@@ -16,6 +17,7 @@ export const CloseCTA = ({ onClick }: CloseCTAProps) => {
     >
       <XMarkIcon
         className={cc([
+          className,
           "text-white w-[18px] h-[18px]",
           theme == "light" ? "text-black" : "text-white",
         ])}

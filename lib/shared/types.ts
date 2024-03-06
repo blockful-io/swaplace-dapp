@@ -66,12 +66,4 @@ export class EthereumAddress {
   getEllipsedAddress() {
     return this.address.slice(0, 6) + "..." + this.address.slice(-4);
   }
-
-  setERC20List(erc20List: ERC20[]) {
-    this.erc20List = erc20List;
-  }
-
-  setERC721List(erc20List: ERC20[]) {
-    this.erc20List = erc20List;
-  }
 }

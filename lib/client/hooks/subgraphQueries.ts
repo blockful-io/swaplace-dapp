@@ -31,14 +31,16 @@ export const getGraphQuery = async () => {
   };
 
   try {
-    await axios(config);
+    const response = await axios(config);
+    console.log(JSON.stringify(response.data, null, 2));
+    console.log(response.data.errors);
   } catch (error) {
     console.error(error);
   }
 };
 
 getGraphQuery()
-  .then((result) => result)
+  .then((result) => console.log(result))
   .catch((error) => {
     console.error(error);
   });

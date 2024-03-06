@@ -2,7 +2,7 @@ import {
   DESKTOP_SCREEN_SIZE,
   TABLET_SCREEN_SIZE,
   WIDE_SCREEN_SIZE,
-} from "../constants";
+} from "../ui-utils";
 import { useState, useEffect } from "react";
 
 export const useScreenSize = () => {
@@ -13,10 +13,10 @@ export const useScreenSize = () => {
 
   const checkIfIsMobile = () => {
     setIsMobile(
-      window.matchMedia(`(max-width: ${TABLET_SCREEN_SIZE - 1}px)`).matches,
+      window.matchMedia(`(max-width: ${TABLET_SCREEN_SIZE}px)`).matches,
     );
     setIsTablet(
-      window.matchMedia(`(max-width: ${DESKTOP_SCREEN_SIZE - 1}px)`).matches,
+      window.matchMedia(`(min-width: ${TABLET_SCREEN_SIZE - 1}px)`).matches,
     );
     setIsDesktop(
       window.matchMedia(`(min-width: ${DESKTOP_SCREEN_SIZE}px)`).matches,

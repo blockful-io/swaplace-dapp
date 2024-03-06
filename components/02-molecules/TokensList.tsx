@@ -86,7 +86,7 @@ export const TokensList = ({
       })
     : [<></>];
   const tokenCards = tokensList.map((token: Token, index) => (
-    <div key={`nft-${index}`}>
+    <div key={`nft-${index}`} className="flex items-center justify-center">
       <TokenCard
         styleType={tokenCardStyleType}
         onClickAction={tokenCardClickAction}

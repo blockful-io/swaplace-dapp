@@ -13,8 +13,7 @@ export const TheSidebarHeader = () => {
 
   return (
     <div className="w-full gap-5 flex flex-col">
-      <button
-        onClick={() => toggleSidebar(false)}
+      <div
         className={cc([
           "rounded-full w-7 h-7 flex items-center justify-center",
           isDark
@@ -23,9 +22,10 @@ export const TheSidebarHeader = () => {
         ])}
       >
         <CloseCTA
+          onClick={() => toggleSidebar()}
           className={cc([isDark ? "text-[#F6F6F1]" : "text-[#A3A9A5]"])}
         />
-      </button>
+      </div>
       <div className="w-full flex justify-between">
         <h3
           className={cc([

@@ -46,7 +46,7 @@ export const getBlockchainTimestamp = async (chainId: number) => {
 export const INVALID_TOKEN_AMOUNT_OR_ID = BigInt(Number.MAX_SAFE_INTEGER);
 
 export const getTokenAmountOrId = (token: Token): bigint => {
-  /* ERC20 tokens have an transaction amount while ERC721, a token ID */
+  /* ERC20 tokens have a transaction amount while ERC721, a token ID */
   let tokenAmountOrTokenId = undefined;
 
   switch (token.tokenType) {
@@ -62,7 +62,7 @@ export const getTokenAmountOrId = (token: Token): bigint => {
   }
 
   if (typeof tokenAmountOrTokenId === "undefined")
-    return INVALID_TOKEN_AMOUNT_OR_ID;
+    throw new Error(`Invalid token amount or ID: ${JSON.stringify(token)}`);
   else return BigInt(tokenAmountOrTokenId);
 };
 
@@ -233,6 +233,12 @@ export async function packingData(
 }
 
 export const toastBlockchainTxError = (e: string) => {
+  /* 
+    Below condition should include all possible Wallet Provider's
+    error messages on User transaction decline action in order
+    to patternize inside Swaplace the Transaction "Cancelled"
+    state response to the User.
+  */
   if (e.includes("rejected")) {
     toast.error("Transaction rejected");
   } else {

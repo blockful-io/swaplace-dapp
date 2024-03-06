@@ -101,13 +101,6 @@ export const ChainInfo: Record<SupportedNetworks, ChainProps> = {
   },
 };
 
-export interface AlchemyERC721 {
-  id?: Record<string, any>;
-  metadata?: Record<string, any>;
-  contract?: Record<string, any>;
-  contractMetadata?: Record<string, any>;
-}
-
 export const getNetwork: Map<number, Network> = new Map([
   [ChainInfo.SEPOLIA.id, Network.ETH_SEPOLIA],
   [ChainInfo.MUMBAI.id, Network.MATIC_MUMBAI],

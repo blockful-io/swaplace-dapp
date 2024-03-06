@@ -132,7 +132,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   }, [validatedAddressToSwap]);
 
   return (
-    <div className="w-full h-[360px] lg:h-[500px] flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px] md:h-[540px]">
+    <div className="w-full h-[360px] lg:h-[400px] flex border-1 border-gray-200 border-t-0 rounded-2xl rounded-t-none overflow-auto bg-[#f8f8f8] dark:bg-[#212322] lg:max-w-[580px]">
       {tokensQueryStatus == TokensQueryStatus.WITH_RESULTS && allTokensList ? (
         <div className="w-full h-full py-4 overflow-y-auto">
           <TokensList
@@ -163,7 +163,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
           </div>
         </div>
       ) : tokensQueryStatus == TokensQueryStatus.NO_RESULTS ? (
-        <div className="flex justify-center w-full h-[360px] lg:h-[500px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
+        <div className="flex justify-center w-full bg-[#f8f8f8] dark:bg-[#212322] p-4">
           <div className="flex items-center">
             <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
               Given address has no tokens associated in the given network
@@ -171,7 +171,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
           </div>
         </div>
       ) : tokensQueryStatus == TokensQueryStatus.LOADING ? (
-        <div className="flex justify-center w-full h-[360px] lg:h-[500px] bg-[#f8f8f8] dark:bg-[#212322] p-4">
+        <div className="flex justify-center w-full bg-[#f8f8f8] dark:bg-[#212322] p-4">
           <div className="flex items-center">
             <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
               Loading tokens of {address.getEllipsedAddress()}...

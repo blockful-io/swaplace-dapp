@@ -1,3 +1,4 @@
+import { TimeStampDate } from "./swap-utils";
 import {
   ERC20,
   ERC20WithTokenAmountSelection,
@@ -9,14 +10,6 @@ import {
 export const WIDE_SCREEN_SIZE = 1279;
 export const DESKTOP_SCREEN_SIZE = 1023;
 export const TABLET_SCREEN_SIZE = 768;
-
-export enum TimeStampDate {
-  ONE_DAY = 24 * 60 * 60 * 1000,
-  ONE_WEEK = ONE_DAY * 7,
-  ONE_MONTH = ONE_WEEK * 4,
-  SIX_MONTH = ONE_MONTH * 6,
-  ONE_YEAR = SIX_MONTH * 2,
-}
 
 export interface ExpireOption {
   label: string;

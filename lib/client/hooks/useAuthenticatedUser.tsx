@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ADDRESS_ZERO, getNetwork } from "../constants";
+import { ADDRESS_ZERO } from "../constants";
 import { EthereumAddress } from "../../shared/types";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useAccount, useDisconnect, useEnsName, useNetwork } from "wagmi";
+import { useAccount, useDisconnect, useEnsName } from "wagmi";
 
 interface AuthenticatedUserHook {
   loadingEnsName: boolean;
@@ -14,7 +14,6 @@ interface AuthenticatedUserHook {
 }
 
 export const useAuthenticatedUser = (): AuthenticatedUserHook => {
-  const { chain } = useNetwork();
   const { disconnect } = useDisconnect();
   const { data: nextAuthUser } = useSession();
   const { address, isConnected } = useAccount();
@@ -22,13 +21,6 @@ export const useAuthenticatedUser = (): AuthenticatedUserHook => {
     useState<EthereumAddress | null>(null);
   const [loadingAuthenticatedUser, setLoadingAuthenticatedUser] =
     useState(true);
-
-  useEffect(() => {
-    if (typeof chain?.id === "number" && !getNetwork.get(chain?.id)) {
-      disconnect();
-      return;
-    }
-  }, [chain]);
 
   const {
     data: ensName,
