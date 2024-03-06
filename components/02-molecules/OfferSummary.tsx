@@ -85,7 +85,7 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
               )}
             </div>
             <div className="items-center">
-              <p className="p-small-variant-black-3 dark:p-small-variant-light-2">
+              <p className="p-small-variant-black-3 dark:p-small-variant-light-2 contrast-50">
                 {!forAuthedUser && authenticatedUserAddress && walletENSName
                   ? `${walletENSName} gets`
                   : !forAuthedUser && authenticatedUserAddress
@@ -109,8 +109,8 @@ export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
               </p>
             </div>
           </div>
-          {!forAuthedUser && !validatedAddressToSwap ? null : (
-            <div>
+          {!validatedAddressToSwap ? null : (
+            <div className="contrast-50">
               {nftUser.length} item
               {nftUser.length !== 1 ? "s" : ""}
             </div>
