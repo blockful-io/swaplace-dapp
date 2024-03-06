@@ -6,8 +6,8 @@ export const SelectChainNetwork = () => {
   return (
     <div className="flex flex-col gap-2">
       <div>
-        <h2 className="p-normal-2-light dark:p-normal-2-dark">
-          Which network do you want to connect to?
+        <h2 className="p-normal-2-light dark:p-normal-2-dark contrast-50">
+          Which network do you want to swap?
         </h2>
       </div>
       <div className="flex md:flex-row flex-col gap-3 items-center">

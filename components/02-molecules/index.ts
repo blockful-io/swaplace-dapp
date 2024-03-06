@@ -1,4 +1,3 @@
-export * from "./CardHome";
 export * from "./CardOffers";
 export * from "./ConfirmSwapModal";
 export * from "./TokenCard";

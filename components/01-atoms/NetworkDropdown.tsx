@@ -127,13 +127,14 @@ export const NetworkDropdown = ({ forAuthedUser }: NetworkDropdownProps) => {
       >
         <div
           className={cc([
-            "lg:max-w-[280px] max-h-[44px] rounded-xl pl-3 pr-4 dark:bg-[#212322] bg-[#F6F6F6] border dark:border-[#353836] border-[#D6D5D5] hover:dark:border-[#505150] transition duration-300 ease-in-out dark:shadow-swap-connection shadow-swap-connection-light",
-            isOpen && "dark:border-[#DDF23D33] hover:dark:border-[#DDF23D33]",
+            "lg:max-w-[280px] max-h-[44px] rounded-xl pl-3 pr-4 dark:bg-[#212322] bg-[#F6F6F6] hover:bg-[#F0EEEE75] hover:shadow-[0_0_6px_1px_#00000014] border dark:border-[#353836] border-[#D6D5D5] hover:border-[#AABE13] dark:hover:border-[#edff6259] dark:shadow-swap-connection shadow-swap-connection-light transition duration-300 ease-in-out",
+            isOpen &&
+              "hover:bg-[#F0EEEE75] border-[#E4E4E4] hover:border-[#AABE13] hover:shadow-[0_0_6px_1px_#00000014] dark:border-[#DDF23D33] dark:hover:border-[#edff6259]",
           ])}
         >
           <div className="flex justify-between items-center h-[44px] lg:w-[252px]">
-            <div className="flex gap-2">
-              <div className="flex items-center dark:bg-[#353836] bg-[#E4E4E4] rounded-md">
+            <div className="flex gap-2 items-center">
+              <div className="flex dark:bg-[#353836] bg-[#E4E4E4] rounded-md">
                 <NetworkIcon variant={networkText} />
               </div>
               <div
