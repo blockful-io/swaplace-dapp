@@ -24,11 +24,10 @@ export enum SwapModalSteps {
 }
 
 export const ExpireDate: ExpireOption[] = [
-  { label: "1 Day", value: TimeStampDate.ONE_DAY },
-  { label: "7 Days", value: TimeStampDate.ONE_WEEK },
-  { label: "1 Month", value: TimeStampDate.ONE_MONTH },
-  { label: "6 Month", value: TimeStampDate.SIX_MONTH },
-  { label: "1 Year", value: TimeStampDate.ONE_YEAR },
+  { label: "1 day", value: TimeStampDate.ONE_DAY },
+  { label: "1 week", value: TimeStampDate.ONE_WEEK },
+  { label: "1 month", value: TimeStampDate.ONE_MONTH },
+  { label: "1 year", value: TimeStampDate.ONE_YEAR },
 ];
 
 export const getTokenName = (
