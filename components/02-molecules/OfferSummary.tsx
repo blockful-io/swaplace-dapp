@@ -80,32 +80,31 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
             </div>
           )}
         </div>
-      </div>
-
-      <div className="w-full h-full max-h-[156px] rounded overflow-auto no-scrollbar">
-        {variant === TokensShelfVariant.Your && authenticatedUserAddress ? (
-          <TokensList
-            withAddTokenCard={false}
-            displayERC20TokensAmount={true}
-            withSelectionValidation={false}
-            ownerAddress={authenticatedUserAddress}
-            tokensList={tokensList}
-            variant={variant}
-            tokenCardStyleType={TokenCardStyleType.MEDIUM}
-            gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
-          />
-        ) : variant === TokensShelfVariant.Their && validatedAddressToSwap ? (
-          <TokensList
-            withAddTokenCard={false}
-            displayERC20TokensAmount={true}
-            withSelectionValidation={false}
-            ownerAddress={validatedAddressToSwap}
-            tokensList={tokensList}
-            variant={variant}
-            tokenCardStyleType={TokenCardStyleType.MEDIUM}
-            gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
-          />
-        ) : null}
+        <div className="w-full h-full max-h-[156px] rounded overflow-auto no-scrollbar">
+          {variant === TokensShelfVariant.Your && authenticatedUserAddress ? (
+            <TokensList
+              withAddTokenCard={false}
+              displayERC20TokensAmount={true}
+              withSelectionValidation={false}
+              ownerAddress={authenticatedUserAddress}
+              tokensList={tokensList}
+              variant={variant}
+              tokenCardStyleType={TokenCardStyleType.MEDIUM}
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+            />
+          ) : variant === TokensShelfVariant.Their && validatedAddressToSwap ? (
+            <TokensList
+              withAddTokenCard={false}
+              displayERC20TokensAmount={true}
+              withSelectionValidation={false}
+              ownerAddress={validatedAddressToSwap}
+              tokensList={tokensList}
+              variant={variant}
+              tokenCardStyleType={TokenCardStyleType.MEDIUM}
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+            />
+          ) : null}
+        </div>
       </div>
     </div>
   );
