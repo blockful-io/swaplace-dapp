@@ -56,7 +56,7 @@ export const TokensList = ({
   variant = TokensShelfVariant.Your,
   tokenCardStyleType = TokenCardStyleType.NORMAL,
   tokenCardClickAction = TokenCardActionType.SELECT_NFT_FOR_SWAP,
-  gridClassNames = "w-full grid grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-3",
+  gridClassNames = "w-full grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3",
 }: TokensListProps) => {
   const [selectTokenAmountOf, setSelectTokenAmountOf] =
     useState<EthereumAddress | null>(null);
