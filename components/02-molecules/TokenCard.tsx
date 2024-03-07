@@ -63,7 +63,7 @@ type StyleVariant =
   | "medium"
   | "large";
 
-const NftSizeClassNames = {
+export const TokenSizeClassNames = {
   [TokenCardStyleType.SMALL]: "card-nft-small",
   [TokenCardStyleType.NORMAL]: "card-nft-normal",
   [TokenCardStyleType.MEDIUM]: "card-nft-medium",
@@ -209,7 +209,7 @@ export const TokenCard = ({
       <button
         onClick={onCardClick}
         className={cc([
-          NftSizeClassNames[styleType],
+          TokenSizeClassNames[styleType],
           {
             "border-green-500": currentNftIsSelected && withSelectionValidation,
             "cursor-auto": onClickAction === TokenCardActionType.NO_ACTION,
