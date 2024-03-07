@@ -1,4 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import {
+  TokenCardStyleType,
+  TokenSizeClassNames,
+} from "@/components/02-molecules";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useEffect, useState } from "react";
 
@@ -8,6 +12,7 @@ interface TokenCardsPlaceholderProps {
   desktopTotalSquares?: number;
   tabletTotalSquares?: number;
   mobileTotalSquares?: number;
+  styleType?: TokenCardStyleType;
 }
 
 export const TokenCardsPlaceholder = ({
@@ -16,6 +21,7 @@ export const TokenCardsPlaceholder = ({
   desktopTotalSquares = 30,
   tabletTotalSquares = 30,
   mobileTotalSquares = 30,
+  styleType = TokenCardStyleType.MEDIUM,
 }: TokenCardsPlaceholderProps) => {
   const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
 
@@ -72,7 +78,7 @@ export const TokenCardsPlaceholder = ({
 
   return Array.from({ length: emptySquaresCount }, (_, index) => (
     <>
-      <div key={`empty-${index}`} className="card-nft-normal" />
+      <div key={`empty-${index}`} className={TokenSizeClassNames[styleType]} />
     </>
   ));
 };

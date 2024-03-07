@@ -83,6 +83,7 @@ export const TokensList = ({
         tabletTotalSquares: tabletTotalCards,
         desktopTotalSquares: desktopTotalCards,
         wideScreenTotalSquares: wideScreenTotalCards,
+        styleType: tokenCardStyleType,
       })
     : [<></>];
   const tokenCards = tokensList.map((token: Token, index) => (
