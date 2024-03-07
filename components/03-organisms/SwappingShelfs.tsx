@@ -51,17 +51,19 @@ export const SwappingShelfs = () => {
           <SearchItemsShelf />
         </div>
       </div>
-      <div className={cc([activeSwappingShelfID ? "hidden" : "block"])}>
-        <TokensShelf
-          address={validatedAddressToSwap}
-          variant={TokensShelfVariant.Their}
-        />
-      </div>
-      <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
-        <TokensShelf
-          address={authenticatedUserAddress}
-          variant={TokensShelfVariant.Your}
-        />
+      <div className="p-5">
+        <div className={cc([activeSwappingShelfID ? "hidden" : "block"])}>
+          <TokensShelf
+            address={validatedAddressToSwap}
+            variant={TokensShelfVariant.Their}
+          />
+        </div>
+        <div className={cc([activeSwappingShelfID ? "block" : "hidden"])}>
+          <TokensShelf
+            address={authenticatedUserAddress}
+            variant={TokensShelfVariant.Your}
+          />
+        </div>
       </div>
     </div>
   );
