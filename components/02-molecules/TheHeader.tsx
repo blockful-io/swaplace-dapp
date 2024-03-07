@@ -31,10 +31,10 @@ export const TheHeader = () => {
   const isDark = currentTheme === "dark";
   return (
     <>
-      <header className="bg-[#F6F6F6] dark:bg-[#212322] dark:border-[#353836] border-[#D6D5D5] border rounded-2xl z-40 w-full h-auto xl:w-[62px] py-6 flex xl:flex-col justify-between items-center xl:px-0 px-8  xl:pb-4 font-medium dark:shadow-swap-station shadow-swap-station-light">
+      <header className="dark:bg-[#212322] h-full dark:border-[#353836] border-[#D6D5D5] border rounded-2xl z-40 w-full xl:w-[62px] xl:py-6 flex xl:flex-col justify-between items-center xl:px-0 lg:px-8  xl:pb-4 font-medium dark:shadow-swap-station shadow-swap-station-light">
         <div className="flex">
           <Link href="https://swaplace.xyz/">
-            <SwaplaceIcon className="w-10 mt-5 text-[#AABE13] dark:text-[#DDF23D]" />
+            <SwaplaceIcon className="w-10 text-[#AABE13] dark:text-[#DDF23D]" />
           </Link>
         </div>
         <div className="xl:flex-col flex-row flex w-full">
