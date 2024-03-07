@@ -237,7 +237,7 @@ export const TokenCard = ({
           onError={handleImageLoadError}
           src={tokenDisplayableData.image}
           alt={getTokenName(tokenData)}
-          className="text-center static z-10 w-full overflow-y-auto rounded-xl"
+          className="text-center static z-10 w-full h-full overflow-y-auto rounded-xl"
         />,
       )}
     </>
