@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { SwapContext } from "@/components/01-atoms";
+import { SwapContext, SwaplaceIcon } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EMPTY_ERC_20_BALANCE } from "@/lib/client/blockchain-utils";
 import {
@@ -64,10 +64,10 @@ type StyleVariant =
   | "large";
 
 export const TokenSizeClassNames = {
-  [TokenCardStyleType.SMALL]: "card-nft-small",
-  [TokenCardStyleType.NORMAL]: "card-nft-normal",
-  [TokenCardStyleType.MEDIUM]: "card-nft-medium",
-  [TokenCardStyleType.LARGE]: "card-nft-large",
+  [TokenCardStyleType.SMALL]: "card-token-small",
+  [TokenCardStyleType.NORMAL]: "card-token-normal",
+  [TokenCardStyleType.MEDIUM]: "card-token-medium",
+  [TokenCardStyleType.LARGE]: "card-token-large",
 };
 
 export const TokenCard = ({
@@ -217,7 +217,11 @@ export const TokenCard = ({
         ])}
       >
         {currentNftIsSelected && withSelectionValidation && (
-          <div className="absolute left-0 top-0 w-full h-full bg-green-500 rounded-xl opacity-50 z-20"></div>
+          <div className="flex items-end justify-end absolute bottom-0 right-0 w-full h-full rounded-xl z-20">
+            <div className=" dark:bg-[#212322] p-1 rounded-tl-xl">
+              <SwaplaceIcon className="text-[#AABE13] dark:text-[#DDF23D] w-4 h-4" />
+            </div>
+          </div>
         )}
         {children}
       </button>

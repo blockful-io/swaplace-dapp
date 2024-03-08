@@ -10,10 +10,10 @@ export const TokensOfferSkeleton = () => {
           <div className="w-40 h-4 bg-gray-700 rounded-full "></div>
         </div>
         <div className="flex gap-4">
-          <div className=" card-nft-medium !mx-0 !bg-gray-700  "></div>
-          <div className=" card-nft-medium !mx-0 !bg-gray-700  "></div>
-          <div className=" card-nft-medium !mx-0 !bg-gray-700  "></div>
-          <div className=" card-nft-medium !mx-0 !bg-gray-700  "></div>
+          <div className=" card-token-medium !mx-0 !bg-gray-700  "></div>
+          <div className=" card-token-medium !mx-0 !bg-gray-700  "></div>
+          <div className=" card-token-medium !mx-0 !bg-gray-700  "></div>
+          <div className=" card-token-medium !mx-0 !bg-gray-700  "></div>
         </div>
         <div className="flex justify-between py-1 px-2">
           <div className="w-[60px] h-[20px] bg-gray-700 rounded-full "></div>
