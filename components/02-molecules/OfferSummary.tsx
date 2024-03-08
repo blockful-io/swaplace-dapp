@@ -89,6 +89,10 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               ownerAddress={authenticatedUserAddress}
               tokensList={tokensList}
               variant={variant}
+              wideScreenTotalCards={10}
+              desktopTotalCards={8}
+              tabletTotalCards={12}
+              mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
               gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
             />
@@ -100,6 +104,10 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               ownerAddress={validatedAddressToSwap}
               tokensList={tokensList}
               variant={variant}
+              wideScreenTotalCards={10}
+              desktopTotalCards={8}
+              tabletTotalCards={12}
+              mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
               gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
             />
@@ -112,6 +120,9 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               tokensList={tokensList}
               variant={variant}
               wideScreenTotalCards={10}
+              desktopTotalCards={8}
+              tabletTotalCards={12}
+              mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
               gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
             />
