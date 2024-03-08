@@ -7,6 +7,7 @@ import { ADDRESS_ZERO, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress, Token } from "@/lib/shared/types";
 import { ButtonClickPossibilities } from "@/lib/client/blockchain-utils";
 import React, { Dispatch, useEffect, useState } from "react";
+import { getGraphQuery } from "@/lib/client/hooks/ponderQueries";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 
@@ -222,7 +223,8 @@ export const SwapContextProvider = ({ children }: any) => {
   // We are reseting the inputAddress to reload the inventory
   useEffect(() => {
     setValidatedAddressToSwap(null);
-  }, [router.asPath]);
+    getGraphQuery(inputAddress);
+  }, [inputAddress, router.asPath]);
 
   return (
     <SwapContext.Provider value={swapData}>{children}</SwapContext.Provider>
