@@ -17,10 +17,10 @@ interface TokenCardsPlaceholderProps {
 
 export const TokenCardsPlaceholder = ({
   totalCardsLength,
-  wideScreenTotalSquares = 15,
-  desktopTotalSquares = 30,
-  tabletTotalSquares = 30,
-  mobileTotalSquares = 30,
+  wideScreenTotalSquares = 24,
+  desktopTotalSquares = 24,
+  tabletTotalSquares = 24,
+  mobileTotalSquares = 15,
   styleType = TokenCardStyleType.MEDIUM,
 }: TokenCardsPlaceholderProps) => {
   const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
