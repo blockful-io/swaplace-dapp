@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import cc from "classcat";
+import { getGraphQuery } from "@/lib/client/hooks/ponderQueries";
+import { SwapContext } from ".";
 
 export const StatusOffers = () => {
+  const { inputAddress } = useContext(SwapContext);
   const [offerIsActive, setOfferIsActive] = useState<number>(0);
+  const [allSwaps, setAllSwaps] = useState<Swap[]>([]);
 
   enum FilterOptions {
     ALL_OFFERS = "All Offers",
@@ -16,6 +20,19 @@ export const StatusOffers = () => {
   interface IFilterOffers {
     id: number;
     name: FilterOptions;
+  }
+
+  interface Swap {
+    swapId: string;
+    status: string;
+    owner: string;
+    allowed: string | null;
+    expiry: bigint;
+    bid: string;
+    ask: string;
+    swapAccepted: string | null;
+    swapCanceled: string | null;
+    swapCreated: string | null;
   }
 
   const OffersFilter: Record<FilterOptions, IFilterOffers> = {
@@ -45,6 +62,61 @@ export const StatusOffers = () => {
     },
   };
 
+  useEffect(() => {
+    const fetchAllSwaps = async () => {
+      try {
+        const results = await getGraphQuery(inputAddress);
+        setAllSwaps(results);
+      } catch (error) {
+        console.error("Failed to fetch swaps:", error);
+      }
+    };
+
+    fetchAllSwaps();
+  }, [inputAddress]);
+
+  const handleFilterClick = (filterOption: FilterOptions, index: number) => {
+    setOfferIsActive(index);
+    console.log("All Swaps:", allSwaps);
+
+    let filtered: any[] = [];
+    switch (filterOption) {
+      case FilterOptions.CREATED:
+        filtered = allSwaps.filter((swap) => swap.status === "created");
+        break;
+
+      case FilterOptions.RECEIVED:
+        const filtered2 = allSwaps.filter((swap) => {
+          swap.allowed === inputAddress && !swap.swapAccepted;
+        });
+        break;
+
+      case FilterOptions.ACCEPTED:
+        filtered = allSwaps.filter(
+          (swap) => swap.swapAccepted === inputAddress,
+        );
+        break;
+
+      case FilterOptions.CANCELED:
+        filtered = allSwaps.filter(
+          (swap) =>
+            swap.owner &&
+            swap.owner.toUpperCase() === inputAddress.toUpperCase() &&
+            swap.status === "canceled",
+        );
+        break;
+      default:
+        filtered = allSwaps;
+    }
+
+    console.log(
+      "swapOwner",
+      allSwaps[0].owner && allSwaps[0].owner.toUpperCase(),
+    );
+    console.log("InputAddress:", inputAddress.toUpperCase());
+    console.log("filtered", filtered);
+  };
+
   return (
     <>
       {Object.keys(OffersFilter).map((key, index) => {
@@ -60,7 +132,7 @@ export const StatusOffers = () => {
                 : "dark:hover:bg-[#282B29]",
             ])}
             key={index}
-            onClick={() => setOfferIsActive(index)}
+            onClick={() => handleFilterClick(filterOption, index)}
           >
             <div
               className={cc([
