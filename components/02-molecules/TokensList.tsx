@@ -87,7 +87,7 @@ export const TokensList = ({
       })
     : [<></>];
   const tokenCards = tokensList.map((token: Token, index) => (
-    <div key={`token-${index}`} className="flex items-center justify-center">
+    <div key={`token-${index}`}>
       <TokenCard
         styleType={tokenCardStyleType}
         onClickAction={tokenCardClickAction}
