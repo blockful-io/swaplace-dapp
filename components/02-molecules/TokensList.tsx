@@ -102,6 +102,8 @@ export const TokensList = ({
 
   let allSquares = [...tokenCards, ...placeholders];
 
+  console.log("testing");
+
   const addTokenSquare = withAddTokenCard ? AddTokenCardManually() : <></>;
 
   const Layout = (squares: React.JSX.Element[]) => {
