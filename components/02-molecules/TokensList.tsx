@@ -121,7 +121,6 @@ export const TokensList = ({
     placeholders.pop(); // Removes the last element to fill with addToken
     allSquares = [...allSquares, addTokenSquare];
     return Layout(allSquares);
-  } else {
-    return Layout(allSquares);
   }
+  return Layout(allSquares);
 };

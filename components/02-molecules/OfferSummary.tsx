@@ -103,7 +103,19 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
               gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
             />
-          ) : null}
+          ) : (
+            <TokensList
+              withAddTokenCard={false}
+              displayERC20TokensAmount={true}
+              withSelectionValidation={false}
+              ownerAddress={null}
+              tokensList={tokensList}
+              variant={variant}
+              wideScreenTotalCards={10}
+              tokenCardStyleType={TokenCardStyleType.MEDIUM}
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+            />
+          )}
         </div>
       </div>
     </div>
