@@ -86,7 +86,7 @@ export const StatusOffers = () => {
         break;
 
       case FilterOptions.RECEIVED:
-        const filtered2 = allSwaps.filter((swap) => {
+         filtered = allSwaps.filter((swap) => {
           swap.allowed === inputAddress && !swap.swapAccepted;
         });
         break;
@@ -98,12 +98,7 @@ export const StatusOffers = () => {
         break;
 
       case FilterOptions.CANCELED:
-        filtered = allSwaps.filter(
-          (swap) =>
-            swap.owner &&
-            swap.owner.toUpperCase() === inputAddress.toUpperCase() &&
-            swap.status === "canceled",
-        );
+        filtered = allSwaps.filter((swap) => swap.status === "canceled");
         break;
       default:
         filtered = allSwaps;
