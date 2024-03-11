@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import {
+  TokenCardStyleType,
+  TokenSizeClassNames,
+} from "@/components/02-molecules";
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
-import { useEffect, useState } from "react";
 
 interface TokenCardsPlaceholderProps {
   totalCardsLength: number;
@@ -8,71 +11,48 @@ interface TokenCardsPlaceholderProps {
   desktopTotalSquares?: number;
   tabletTotalSquares?: number;
   mobileTotalSquares?: number;
+  styleType?: TokenCardStyleType;
 }
 
 export const TokenCardsPlaceholder = ({
   totalCardsLength,
-  wideScreenTotalSquares = 15,
-  desktopTotalSquares = 30,
-  tabletTotalSquares = 30,
-  mobileTotalSquares = 30,
+  wideScreenTotalSquares = 24,
+  desktopTotalSquares = 24,
+  tabletTotalSquares = 24,
+  mobileTotalSquares = 15,
+  styleType = TokenCardStyleType.MEDIUM,
 }: TokenCardsPlaceholderProps) => {
   const { isDesktop, isTablet, isWideScreen, isMobile } = useScreenSize();
 
-  const [totalSquares, setTotalSquares] = useState(0);
-  const [totalSquaresX, setTotalSquaresX] = useState(0);
+  let totalSquares = 0;
+  let totalSquaresX = 0; // Token quantity in X axis
 
   // We are getting X count as the LCM to fill the rows with empty cards correctly.
-  const [spareTokensX, setSpareTokensX] = useState(0);
-  const [spareTokens, setSpareTokens] = useState(0);
-  const [emptySquaresCount, setEmptySquaresCount] = useState(0);
-  const [emptySquaresCountX, setEmptySquaresCountX] = useState(0);
+  isMobile
+    ? ((totalSquares = mobileTotalSquares),
+      mobileTotalSquares == 5 ? (totalSquaresX = 5) : (totalSquaresX = 3))
+    : isWideScreen
+    ? ((totalSquares = wideScreenTotalSquares),
+      wideScreenTotalSquares == 10 ? (totalSquaresX = 5) : (totalSquaresX = 6))
+    : isDesktop
+    ? ((totalSquares = desktopTotalSquares),
+      desktopTotalSquares == 8 ? (totalSquaresX = 4) : (totalSquaresX = 6))
+    : isTablet &&
+      ((totalSquares = tabletTotalSquares),
+      tabletTotalSquares == 10 ? (totalSquaresX = 5) : (totalSquaresX = 6));
 
-  const resetTokenCards = () => {
-    isWideScreen
-      ? (setTotalSquares(wideScreenTotalSquares),
-        wideScreenTotalSquares == 8 ? setTotalSquares(4) : setTotalSquaresX(6))
-      : isDesktop
-      ? (setTotalSquares(desktopTotalSquares), setTotalSquaresX(6))
-      : isTablet
-      ? (setTotalSquares(tabletTotalSquares), setTotalSquaresX(6))
-      : isMobile &&
-        (setTotalSquares(mobileTotalSquares),
-        mobileTotalSquares == 4 ? setTotalSquaresX(4) : setTotalSquaresX(3));
+  const spareTokensX = totalCardsLength % totalSquaresX;
+  const emptySquaresCountX = spareTokensX ? totalSquaresX - spareTokensX : 0;
 
-    setSpareTokens(totalSquares - totalCardsLength);
-    setSpareTokensX(totalCardsLength % totalSquaresX);
-    setEmptySquaresCount(
-      emptySquaresCountX < spareTokens
-        ? Math.max(spareTokens, 0)
-        : emptySquaresCountX,
-    );
-    setEmptySquaresCountX(spareTokensX ? totalSquaresX - spareTokensX : 0);
-  };
-
-  useEffect(() => {
-    resetTokenCards();
-
-    window.addEventListener("resize", resetTokenCards);
-
-    return () => {
-      window.removeEventListener("resize", resetTokenCards);
-    };
-  }, []);
-
-  useEffect(() => {
-    resetTokenCards();
-  }, [
-    mobileTotalSquares,
-    tabletTotalSquares,
-    desktopTotalSquares,
-    wideScreenTotalSquares,
-    totalCardsLength,
-  ]);
+  const spareTokens = totalSquares - totalCardsLength;
+  const emptySquaresCount =
+    emptySquaresCountX < spareTokens
+      ? Math.max(spareTokens, 0)
+      : emptySquaresCountX;
 
   return Array.from({ length: emptySquaresCount }, (_, index) => (
     <>
-      <div key={`empty-${index}`} className="card-nft-normal" />
+      <div key={`empty-${index}`} className={TokenSizeClassNames[styleType]} />
     </>
   ));
 };

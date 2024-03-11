@@ -48,11 +48,14 @@ export const getTokenName = (
       ? erc20balancePrefix + token.name
       : erc20balancePrefix + token.tokenType;
   } else if (token.tokenType === TokenType.ERC721) {
-    return (token as ERC721).metadata
-      ? (token as ERC721).metadata?.name
-      : token.name
+    const metadataName = (token as ERC721).metadata?.name;
+    const tokenName = (token as ERC721).name;
+
+    return metadataName
+      ? metadataName
+      : tokenName
       ? `${token.name} - ${token.tokenType}`
-      : token.tokenType;
+      : `${token.tokenType}`;
   } else {
     return `${token.tokenType} - Token Name Not Found`;
   }

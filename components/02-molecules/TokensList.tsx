@@ -7,7 +7,8 @@ import {
   TokenCardStyleType,
 } from "@/components/02-molecules";
 import { TokenCardsPlaceholder } from "@/components/01-atoms";
-import { EthereumAddress, Token } from "@/lib/shared/types";
+import { ERC20, EthereumAddress, Token } from "@/lib/shared/types";
+import { EMPTY_ERC_20_BALANCE } from "@/lib/client/blockchain-utils";
 import { useState } from "react";
 
 export interface TokensListProps {
@@ -56,7 +57,7 @@ export const TokensList = ({
   variant = TokensShelfVariant.Your,
   tokenCardStyleType = TokenCardStyleType.NORMAL,
   tokenCardClickAction = TokenCardActionType.SELECT_NFT_FOR_SWAP,
-  gridClassNames = "w-full grid grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-3",
+  gridClassNames = "w-full h-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-3",
 }: TokensListProps) => {
   const [selectTokenAmountOf, setSelectTokenAmountOf] =
     useState<EthereumAddress | null>(null);
@@ -76,6 +77,11 @@ export const TokensList = ({
     setSelectTokenAmountOf(null);
   };
 
+  /* Filter TokenList so that TokenCard receives the filtered array and does not display tokens with a zero balance on the screen */
+  tokensList = tokensList.filter(
+    (token) => (token as ERC20).rawBalance !== EMPTY_ERC_20_BALANCE,
+  );
+
   const placeholders = withPlaceholders
     ? TokenCardsPlaceholder({
         totalCardsLength: tokensList.length,
@@ -83,10 +89,11 @@ export const TokensList = ({
         tabletTotalSquares: tabletTotalCards,
         desktopTotalSquares: desktopTotalCards,
         wideScreenTotalSquares: wideScreenTotalCards,
+        styleType: tokenCardStyleType,
       })
     : [<></>];
   const tokenCards = tokensList.map((token: Token, index) => (
-    <div key={`nft-${index}`} className="flex items-center justify-center">
+    <div key={`token-${index}`}>
       <TokenCard
         styleType={tokenCardStyleType}
         onClickAction={tokenCardClickAction}
@@ -103,7 +110,7 @@ export const TokensList = ({
 
   const addTokenSquare = withAddTokenCard ? AddTokenCardManually() : <></>;
 
-  const Layout = (squares: JSX.Element[]) => {
+  const Layout = (squares: React.JSX.Element[]) => {
     return (
       <div className={gridClassNames}>
         {squares}
@@ -120,7 +127,6 @@ export const TokensList = ({
     placeholders.pop(); // Removes the last element to fill with addToken
     allSquares = [...allSquares, addTokenSquare];
     return Layout(allSquares);
-  } else {
-    return Layout(allSquares);
   }
+  return Layout(allSquares);
 };
