@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { SwapContext, SwaplaceIcon } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { EMPTY_ERC_20_BALANCE } from "@/lib/client/blockchain-utils";
 import {
   ERC20,
   ERC721,
@@ -227,12 +226,6 @@ export const TokenCard = ({
       </button>
     );
   };
-
-  if (
-    tokenData.tokenType === TokenType.ERC20 &&
-    (tokenData as ERC20).rawBalance === EMPTY_ERC_20_BALANCE
-  )
-    return <div className="card-nft-normal" />;
 
   return tokenDisplayableData.image && !couldntLoadNftImage ? (
     <>

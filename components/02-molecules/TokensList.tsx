@@ -7,7 +7,8 @@ import {
   TokenCardStyleType,
 } from "@/components/02-molecules";
 import { TokenCardsPlaceholder } from "@/components/01-atoms";
-import { EthereumAddress, Token } from "@/lib/shared/types";
+import { ERC20, EthereumAddress, Token } from "@/lib/shared/types";
+import { EMPTY_ERC_20_BALANCE } from "@/lib/client/blockchain-utils";
 import { useState } from "react";
 
 export interface TokensListProps {
@@ -75,6 +76,11 @@ export const TokensList = ({
     setSelectTokenAmountFor(null);
     setSelectTokenAmountOf(null);
   };
+
+  /* Filter TokenList so that TokenCard receives the filtered array and does not display tokens with a zero balance on the screen */
+  tokensList = tokensList.filter(
+    (token) => (token as ERC20).rawBalance !== EMPTY_ERC_20_BALANCE,
+  );
 
   const placeholders = withPlaceholders
     ? TokenCardsPlaceholder({
