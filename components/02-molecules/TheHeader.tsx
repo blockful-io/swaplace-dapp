@@ -77,7 +77,7 @@ export const TheHeader = () => {
                 >
                   <button
                     onClick={() => toggleSidebar()}
-                    className="rounded-[10px] bg-[#DDF23D] flex items-center justify-center"
+                    className="rounded-[10px] flex items-center justify-center"
                   >
                     <ENSAvatar avatarENSAddress={authenticatedUserAddress} />
                   </button>
@@ -87,12 +87,10 @@ export const TheHeader = () => {
                   position={window.innerWidth > 1440 ? "right" : "bottom"}
                   content={"Connect a Wallet"}
                 >
-                  <div className="h-10 w-10 rounded-[10px] bg-[#DDF23D] flex items-center justify-center">
                     <ConnectWallet
-                      customStyle="w-full flex justify-center items-center"
+                      customStyle="w-full flex justify-center items-center h-10 w-10 rounded-[10px] bg-[#DDF23D]"
                       walletIcon={true}
                     />
-                  </div>
                 </Tooltip>
               )}
             </>
