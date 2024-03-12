@@ -223,8 +223,11 @@ export const SwapContextProvider = ({ children }: any) => {
   // We are reseting the inputAddress to reload the inventory
   useEffect(() => {
     setValidatedAddressToSwap(null);
-    getGraphQuery(inputAddress);
-  }, [inputAddress, router.asPath]);
+    //getGraphQuery(inputAddress);
+  }, [
+    //inputAddress,
+    router.asPath,
+  ]);
 
   return (
     <SwapContext.Provider value={swapData}>{children}</SwapContext.Provider>
