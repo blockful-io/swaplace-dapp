@@ -100,7 +100,10 @@ export const TokenCard = ({
       case TokenType.ERC20:
         if ((tokenData as ERC20).symbol) {
           displayableData.image = (tokenData as ERC20).symbol as string;
+        } else {
+          displayableData.image = "";
         }
+
         if ((tokenData as ERC20).id) {
           displayableData.id = (tokenData as ERC20).id as string;
         }
@@ -108,6 +111,8 @@ export const TokenCard = ({
         if ((tokenData as ERC721).metadata?.image) {
           displayableData.image = (tokenData as ERC721).metadata
             ?.image as string;
+        } else {
+          displayableData.image = "";
         }
         if ((tokenData as ERC721).id) {
           displayableData.id = (tokenData as ERC721).id as string;
@@ -157,9 +162,13 @@ export const TokenCard = ({
 
         if (isSelected) {
           setAuthenticatedUserTokensList((prevNftAuthUser) =>
-            prevNftAuthUser.filter(
-              (selectedNft) => selectedNft.id !== tokenData.id,
-            ),
+            // aqui
+            prevNftAuthUser.filter((selectedNft) => {
+              console.log(
+                `selectedNft.id ${selectedNft.id} tokenData.id ${tokenData.id} `,
+              );
+              return selectedNft.id !== tokenData.id;
+            }),
           );
         } else {
           setAuthenticatedUserTokensList((prevNftAuthUser) => [
@@ -177,11 +186,12 @@ export const TokenCard = ({
         );
 
         if (isSelected) {
-          setSearchedUserTokensList((prevNftInputUser) =>
-            prevNftInputUser.filter(
-              (selectedNft) => selectedNft.id !== tokenData.id,
-            ),
-          );
+          setSearchedUserTokensList((prevNftInputUser) => {
+            console.log(prevNftInputUser);
+            return prevNftInputUser.filter((selectedNft) => {
+              return selectedNft.id !== tokenData.id;
+            });
+          });
         } else {
           setSearchedUserTokensList((prevNftInputUser) => [
             ...prevNftInputUser,
