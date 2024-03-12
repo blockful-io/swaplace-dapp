@@ -9,7 +9,7 @@ export const CloseCTA = ({ onClick, props }: CloseCTAProps) => {
   return (
     <button
       onClick={onClick}
-      className="p-2 rounded-full border border-[#353836] hover:bg-[#353836] transition"
+      className="p-2 rounded-full border border-[#353836] dark:hover:bg-[#353836] hover:bg-zinc-200 transition"
     >
       <svg
         {...props}
