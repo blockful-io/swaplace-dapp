@@ -86,7 +86,7 @@ export const StatusOffers = () => {
         break;
 
       case FilterOptions.RECEIVED:
-         filtered = allSwaps.filter((swap) => {
+        filtered = allSwaps.filter((swap) => {
           swap.allowed === inputAddress && !swap.swapAccepted;
         });
         break;
