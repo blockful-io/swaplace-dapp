@@ -162,11 +162,7 @@ export const TokenCard = ({
 
         if (isSelected) {
           setAuthenticatedUserTokensList((prevNftAuthUser) =>
-            // aqui
             prevNftAuthUser.filter((selectedNft) => {
-              console.log(
-                `selectedNft.id ${selectedNft.id} tokenData.id ${tokenData.id} `,
-              );
               return selectedNft.id !== tokenData.id;
             }),
           );
@@ -187,7 +183,6 @@ export const TokenCard = ({
 
         if (isSelected) {
           setSearchedUserTokensList((prevNftInputUser) => {
-            console.log(prevNftInputUser);
             return prevNftInputUser.filter((selectedNft) => {
               return selectedNft.id !== tokenData.id;
             });
