@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const getGraphQuery = async (inputAddress: string) => {
-  const endpoint = "http://localhost:42069/";
+  const endpoint = "https://rascar-swaplace-ponder-production.up.railway.app/";
   const headers = {
     "content-type": "application/json",
   };
