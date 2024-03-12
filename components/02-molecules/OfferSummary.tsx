@@ -1,4 +1,9 @@
-import { ENSAvatar, PersonIcon, SwapContext } from "@/components/01-atoms";
+import {
+  ENSAvatar,
+  ENSAvatarSize,
+  PersonIcon,
+  SwapContext,
+} from "@/components/01-atoms";
 import { TokenCardStyleType, TokensList } from "@/components/02-molecules";
 import { TokensShelfVariant } from "@/components/03-organisms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
@@ -38,13 +43,13 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               {variant === TokensShelfVariant.Your && validatedAddressToSwap ? (
                 <ENSAvatar
                   avatarENSAddress={validatedAddressToSwap}
-                  size="small"
+                  size={ENSAvatarSize.SMALL}
                 />
               ) : variant === TokensShelfVariant.Their &&
                 authenticatedUserAddress ? (
                 <ENSAvatar
                   avatarENSAddress={authenticatedUserAddress}
-                  size="small"
+                  size={ENSAvatarSize.SMALL}
                 />
               ) : (
                 <div className="bg-[#E4E4E4] dark:bg-[#353836] p-[5px] rounded-md">
