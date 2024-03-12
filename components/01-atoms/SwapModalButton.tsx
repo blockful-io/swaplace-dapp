@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {
-  LeftIcon,
+  ArrowIcon,
+  ArrowIconVariant,
   LoadingIndicator,
-  RightIcon,
   SwapContext,
 } from "@/components/01-atoms";
 import React, { ButtonHTMLAttributes, useContext } from "react";
@@ -104,21 +104,26 @@ export function SwapModalButton({
       ) : variant === ButtonVariant.DEFAULT ? (
         <>
           {label}
-          <RightIcon
-            fill={ButtonVariantsConfigs[variant].arrowColorInHex(
-              theme,
-              !!approvedTokensCount,
-            )}
+          <ArrowIcon
+            variant={ArrowIconVariant.RIGHT}
+            props={{
+              className: ButtonVariantsConfigs[variant].arrowColorInHex(
+                theme,
+                !!approvedTokensCount,
+              ),
+            }}
           />
         </>
       ) : variant === ButtonVariant.ALTERNATIVE ? (
         <>
-          <LeftIcon
-            className="p-medium-bold dark:p-medium-bold"
-            fill={ButtonVariantsConfigs[variant].arrowColorInHex(
-              theme,
-              !!approvedTokensCount,
-            )}
+          <ArrowIcon
+            variant={ArrowIconVariant.LEFT}
+            props={{
+              className: ButtonVariantsConfigs[variant].arrowColorInHex(
+                theme,
+                !!approvedTokensCount,
+              ),
+            }}
           />
           {label}
         </>

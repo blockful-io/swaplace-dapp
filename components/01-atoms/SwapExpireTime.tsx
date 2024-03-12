@@ -2,7 +2,11 @@
 import { getBlockchainTimestamp } from "@/lib/client/blockchain-utils";
 import { ExpireDate } from "@/lib/client/ui-utils";
 import { TimeStampDate } from "@/lib/client/swap-utils";
-import { ArrowIcon, SwapContext } from "@/components/01-atoms";
+import {
+  ArrowIcon,
+  ArrowIconVariant,
+  SwapContext,
+} from "@/components/01-atoms";
 import { useContext, useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
 import cc from "classcat";
@@ -74,7 +78,7 @@ export const SwapExpireTime = () => {
                 props={{
                   className: "dark:text-[#707572] text-[#A3A9A5]",
                 }}
-                variant={isOpen ? "up" : "down"}
+                variant={isOpen ? ArrowIconVariant.UP : ArrowIconVariant.DOWN}
               />
             </div>
           </div>
