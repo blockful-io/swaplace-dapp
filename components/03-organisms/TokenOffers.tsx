@@ -65,7 +65,7 @@ export const TokenOffers = ({
               variant={TokenOfferVariant.VERTICAL}
             />
           </div>
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border dark:border-[#353836] border-[#707572]  bg-[#F6F6F6] dark:bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
             <SwapIcon variant={SwapIconVariant.VERTICAL} />
           </div>
         </div>
