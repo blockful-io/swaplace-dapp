@@ -7,6 +7,7 @@ import { useContext, useEffect } from "react";
 import { ENS } from "web3-eth-ens";
 import cc from "classcat";
 import Web3 from "web3";
+import toast from "react-hot-toast";
 
 export const SearchBar = () => {
   const {
@@ -25,7 +26,7 @@ export const SearchBar = () => {
   };
 
   const getUserAddress = async () => {
-    if (inputAddress) {
+    if (inputAddress && authenticatedUserAddress) {
       if (!process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP) {
         throw new Error(
           "Cannot get ENS address without Alchemy Ethereum Mainnet API key",
@@ -58,6 +59,8 @@ export const SearchBar = () => {
       } finally {
         setUserJustValidatedInput(true);
       }
+    } else if (inputAddress && !authenticatedUserAddress) {
+      toast.error("Cannot get ENS address without connect your wallet");
     }
   };
 
