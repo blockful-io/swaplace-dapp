@@ -32,17 +32,8 @@ interface TokenCardProps {
   styleType?: StyleVariant;
 }
 
-/**
- *
- * This component receives the data of an nft and create a card NFT
- * @param tokenData
- * @param ownerAddress
- *
- * @returns TokenCard
- */
-
 export enum TokenCardActionType {
-  "SELECT_NFT_FOR_SWAP",
+  "SELECT_TOKEN_FOR_SWAP",
   "APPROVE_TOKEN_SWAP",
   "SHOW_NFT_DETAILS",
   "NO_ACTION",
@@ -69,6 +60,22 @@ export const TokenSizeClassNames = {
   [TokenCardStyleType.LARGE]: "card-token-large",
 };
 
+/**
+ * TokenCard Component
+ *
+ * This component is responsible for rendering and interacting with a token card.
+ * It supports features such as displaying token information, handling user interaction,
+ * and triggering actions based on different scenarios.
+ *
+ * @param tokenData - Data representing the token, including its type, ID, and image.
+ * @param ownerAddress - The address of the token owner.
+ * @param openTokenAmountSelectionModal - Function to open a modal for selecting token amount.
+ * @param withSelectionValidation - Flag indicating whether to validate token selection.
+ * @param displayERC20TokensAmount - Flag indicating whether to display ERC20 token amounts.
+ * @param styleType - Style type for the token card (e.g., normal).
+ * @param onClickAction - Action type to be performed on token card click.
+ */
+
 export const TokenCard = ({
   tokenData,
   ownerAddress,
@@ -76,7 +83,7 @@ export const TokenCard = ({
   withSelectionValidation = true,
   displayERC20TokensAmount = false,
   styleType = TokenCardStyleType.NORMAL,
-  onClickAction = TokenCardActionType.SELECT_NFT_FOR_SWAP,
+  onClickAction = TokenCardActionType.SELECT_TOKEN_FOR_SWAP,
 }: TokenCardProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const {
@@ -150,7 +157,7 @@ export const TokenCard = ({
 
   const onCardClick = () => {
     if (
-      onClickAction === TokenCardActionType.SELECT_NFT_FOR_SWAP &&
+      onClickAction === TokenCardActionType.SELECT_TOKEN_FOR_SWAP &&
       ownerAddress
     ) {
       const ownerEthAddress = ownerAddress;

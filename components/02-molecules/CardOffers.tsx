@@ -80,6 +80,7 @@ export const CardOffers = ({
           tokenCardClickAction={TokenCardActionType.NO_ACTION}
           tokensList={tokensOfferFor[tokenShelfVariant]}
           tokenCardStyleType={TokenCardStyleType.MEDIUM}
+          gridClassNames="grid md:grid-cols-5 md:gap-4"
         />
       </div>
     );
