@@ -1,4 +1,9 @@
-import { ArrowIcon, NetworkIcon, NetworkVariants } from "@/components/01-atoms";
+import {
+  ArrowIcon,
+  ArrowIconVariant,
+  NetworkIcon,
+  NetworkVariants,
+} from "@/components/01-atoms";
 import { SupportedNetworks } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
@@ -154,7 +159,7 @@ export const NetworkDropdown = ({ forAuthedUser }: NetworkDropdownProps) => {
             <div>
               <ArrowIcon
                 props={{ className: "dark:text-[#707572] text-[#A3A9A5]" }}
-                variant={isOpen ? "up" : "down"}
+                variant={isOpen ? ArrowIconVariant.UP : ArrowIconVariant.DOWN}
               />
             </div>
           </div>

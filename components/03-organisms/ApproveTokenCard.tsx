@@ -160,7 +160,7 @@ export const ApproveTokenCard = ({
   return (
     <div
       className={cc([
-        "flex p-4 items-center gap-4 min-h-[68px]",
+        "flex p-4 items-center gap-4 max-h-[68px]",
         !isApproved
           ? "bg-[#282B29] hover:bg-[#353836] transition rounded-xl border border-[#353836]"
           : "dark:bg-[#DDF23D] bg-[#97a529] rounded-xl disabled cursor-auto pointer-events-none",

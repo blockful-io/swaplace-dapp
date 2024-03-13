@@ -7,12 +7,10 @@ import { EthereumAddress } from "@/lib/shared/types";
 import BoringAvatar from "boring-avatars";
 import cc from "classcat";
 
-enum ENSAvatarSize {
+export enum ENSAvatarSize {
   SMALL = "small",
   MEDIUM = "medium",
 }
-
-type Size = ENSAvatarSize | "small" | "medium";
 
 const ENSAvatarClassName = {
   [ENSAvatarSize.SMALL]: "ens-avatar-small",
@@ -21,7 +19,7 @@ const ENSAvatarClassName = {
 
 interface ENSAvatarProps {
   avatarENSAddress: EthereumAddress;
-  size?: Size;
+  size?: ENSAvatarSize;
 }
 
 export const ENSAvatar = ({
