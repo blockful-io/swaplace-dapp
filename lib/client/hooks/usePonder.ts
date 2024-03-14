@@ -18,7 +18,7 @@ interface Swap {
 export const usePonder = ({ inputAddress }: Props) => {
   const [allSwaps, setAllSwaps] = useState<Swap[]>([]);
 
-  const endpoint = "https://rascar-swaplace-ponder-production.up.railway.app/";
+  const endpoint = process.env.NEXT_PUBLIC_PONDER_ENDPOINT;
   const headers = {
     "content-type": "application/json",
   };
@@ -68,10 +68,10 @@ export const usePonder = ({ inputAddress }: Props) => {
       try {
         const response = await axios(config);
 
-        const results = response.data.data.databases.items;
-        console.log(results);
+        const allSwapsResponseData = response.data.data.databases.items;
+        console.log(allSwapsResponseData);
 
-        setAllSwaps(results);
+        setAllSwaps(allSwapsResponseData);
       } catch (error) {
         console.error(error);
         return [];
