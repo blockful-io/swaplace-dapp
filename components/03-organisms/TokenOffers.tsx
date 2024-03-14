@@ -32,7 +32,6 @@ export const TokenOffers = ({
     return (
       <div className="flex flex-col border border-[#353836] dark:shadow-add-manually-card dark:bg-[#282B29] rounded-lg ">
         <div className="flex flex-row border-b dark:border-[#353836] relative">
-          <h1>HELLOOO</h1>
           <div className={cc(["border-r dark:border-[#353836]"])}>
             <CardOffers address={authenticatedUserAddress} />
           </div>
