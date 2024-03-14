@@ -1,12 +1,12 @@
 import { SwapContext } from "@/components/01-atoms";
-import { getGraphQuery } from "@/lib/client/hooks/ponderQueries";
-import { useState, useContext, useEffect } from "react";
+import { usePonder } from "@/lib/client/hooks/usePonder";
+import { useState, useContext } from "react";
 import cc from "classcat";
 
 export const StatusOffers = () => {
   const { inputAddress } = useContext(SwapContext);
   const [offerIsActive, setOfferIsActive] = useState<number>(0);
-  const [allSwaps, setAllSwaps] = useState<Swap[]>([]);
+  const { allSwaps } = usePonder({ inputAddress });
 
   enum FilterOptions {
     ALL_OFFERS = "All Offers",
@@ -20,19 +20,6 @@ export const StatusOffers = () => {
   interface IFilterOffers {
     id: number;
     name: FilterOptions;
-  }
-
-  interface Swap {
-    swapId: string;
-    status: string;
-    owner: string;
-    allowed: string | null;
-    expiry: bigint;
-    bid: string;
-    ask: string;
-    swapAccepted: string | null;
-    swapCanceled: string | null;
-    swapCreated: string | null;
   }
 
   const OffersFilter: Record<FilterOptions, IFilterOffers> = {
@@ -62,19 +49,6 @@ export const StatusOffers = () => {
     },
   };
 
-  useEffect(() => {
-    const fetchAllSwaps = async () => {
-      try {
-        const results = await getGraphQuery(inputAddress);
-        setAllSwaps(results);
-      } catch (error) {
-        console.error("Failed to fetch swaps:", error);
-      }
-    };
-
-    fetchAllSwaps();
-  }, [inputAddress]);
-
   const handleFilterClick = (filterOption: FilterOptions, index: number) => {
     setOfferIsActive(index);
     console.log("All Swaps:", allSwaps);
@@ -87,14 +61,12 @@ export const StatusOffers = () => {
 
       case FilterOptions.RECEIVED:
         filtered = allSwaps.filter((swap) => {
-          swap.allowed === inputAddress && !swap.swapAccepted;
+          swap.allowed === inputAddress && swap.status !== "acceppted";
         });
         break;
 
       case FilterOptions.ACCEPTED:
-        filtered = allSwaps.filter(
-          (swap) => swap.swapAccepted === inputAddress,
-        );
+        filtered = allSwaps.filter((swap) => swap.status === "acceppted");
         break;
 
       case FilterOptions.CANCELED:
