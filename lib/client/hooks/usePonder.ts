@@ -1,9 +1,6 @@
+import { SwapContext } from "@/components/01-atoms";
 import axios from "axios";
-import { useEffect, useState } from "react";
-
-interface Props {
-  inputAddress: string;
-}
+import { useContext, useEffect, useState } from "react";
 
 interface Swap {
   swapId: string;
@@ -15,8 +12,48 @@ interface Swap {
   ask: string;
 }
 
-export const usePonder = ({ inputAddress }: Props) => {
+export enum PonderFilter {
+  ALL_OFFERS = "All Offers", //
+  CREATED = "created",
+  RECEIVED = "received", // Not yet
+  ACCEPTED = "accepted",
+  CANCELED = "canceled",
+  EXPIRED = "expired", // Not yet
+}
+
+interface Ponder {
+  operationName: string;
+  query: string;
+  variables: {
+    orderBy: string;
+    orderDirection: string;
+    inputAddress: string;
+    ponderFilterStatus?: string;
+  };
+}
+
+export const usePonder = () => {
+  const { inputAddress, ponderFilterStatus } = useContext(SwapContext);
   const [allSwaps, setAllSwaps] = useState<Swap[]>([]);
+
+  useEffect(() => {
+    const fetchAllSwaps = async () => {
+      try {
+        const response = await axios(config);
+        console.log("response =", response);
+
+        const allSwapsResponseData = response.data.data.databases.items;
+        console.log("allSwapsResponseData", allSwapsResponseData);
+
+        setAllSwaps(allSwapsResponseData);
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    };
+
+    fetchAllSwaps();
+  }, [ponderFilterStatus, inputAddress]);
 
   const endpoint = process.env.NEXT_PUBLIC_PONDER_ENDPOINT;
   const headers = {
@@ -27,34 +64,67 @@ export const usePonder = ({ inputAddress }: Props) => {
     ? inputAddress
     : `0x${inputAddress}`;
 
-  const ponderQuery = {
-    operationName: "databases",
-    query: `query databases($orderBy: String!, $orderDirection: String!, $inputAddress: String!) {
-      databases(orderBy: $orderBy, orderDirection: $orderDirection, where: { owner: $inputAddress }, limit: 20) {
-         items {
-           swapId
-           status
-           owner
-           allowed
-           expiry
-           bid
-           ask
-           blockTimestamp
-           transactionHash
-         }
-         pageInfo {
-           hasNextPage
-           endCursor
-         }
-      }
-     }`,
-    variables: {
-      orderBy: "blockTimestamp",
-      orderDirection: "desc",
-      inputAddress: formattedInputAddress,
-      // after: after,
-    },
-  };
+  let ponderQuery: Ponder;
+  if (ponderFilterStatus === PonderFilter.ALL_OFFERS) {
+    ponderQuery = {
+      operationName: "databases",
+      query: `query databases($orderBy: String!, $orderDirection: String!, $inputAddress: String! ) {
+        databases(orderBy: $orderBy, orderDirection: $orderDirection, where: { owner: $inputAddress }, limit: 20) {
+          items {
+            swapId
+            status
+            owner
+            allowed
+            expiry
+            bid
+            ask
+            blockTimestamp
+            transactionHash
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }`,
+      variables: {
+        orderBy: "blockTimestamp",
+        orderDirection: "desc",
+        inputAddress: formattedInputAddress,
+        // after: after,
+      },
+    };
+  } else {
+    ponderQuery = {
+      operationName: "databases",
+      query: `query databases($orderBy: String!, $orderDirection: String!, $inputAddress: String!, $ponderFilterStatus: Status!  ) {
+        databases(orderBy: $orderBy, orderDirection: $orderDirection, where: { owner: $inputAddress, status: $ponderFilterStatus }, limit: 20) {
+          items {
+            swapId
+            status
+            owner
+            allowed
+            expiry
+            bid
+            ask
+            blockTimestamp
+            transactionHash
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }`,
+      variables: {
+        orderBy: "blockTimestamp",
+        orderDirection: "desc",
+        inputAddress: formattedInputAddress,
+        ponderFilterStatus: ponderFilterStatus,
+        // after: after,
+      },
+    };
+  }
 
   const config = {
     url: endpoint,
@@ -62,24 +132,6 @@ export const usePonder = ({ inputAddress }: Props) => {
     headers: headers,
     data: ponderQuery,
   };
-
-  useEffect(() => {
-    const fetchAllSwaps = async () => {
-      try {
-        const response = await axios(config);
-
-        const allSwapsResponseData = response.data.data.databases.items;
-        console.log(allSwapsResponseData);
-
-        setAllSwaps(allSwapsResponseData);
-      } catch (error) {
-        console.error(error);
-        return [];
-      }
-    };
-
-    fetchAllSwaps();
-  }, [inputAddress]);
 
   return { allSwaps };
 };

@@ -1,93 +1,87 @@
 import { SwapContext } from "@/components/01-atoms";
-import { usePonder } from "@/lib/client/hooks/usePonder";
+import { PonderFilter, usePonder } from "@/lib/client/hooks/usePonder";
 import { useState, useContext } from "react";
 import cc from "classcat";
 
+export enum DisplayFilterOptions {
+  ALL_OFFERS = "All Offers",
+  CREATED = "Created",
+  RECEIVED = "Received",
+  ACCEPTED = "Accepted",
+  CANCELED = "Canceled",
+  EXPIRED = "Expired",
+}
+
 export const StatusOffers = () => {
-  const { inputAddress } = useContext(SwapContext);
+  const { setPonderFilterStatus } = useContext(SwapContext);
   const [offerIsActive, setOfferIsActive] = useState<number>(0);
-  const { allSwaps } = usePonder({ inputAddress });
-
-  enum FilterOptions {
-    ALL_OFFERS = "All Offers",
-    CREATED = "Created",
-    RECEIVED = "Received",
-    ACCEPTED = "Accepted",
-    CANCELED = "Canceled",
-    EXPIRED = "Expired",
-  }
-
+  const { allSwaps } = usePonder();
+  console.log("AllSwaps Ponder Status Filter = ", allSwaps);
   interface IFilterOffers {
     id: number;
-    name: FilterOptions;
+    name: DisplayFilterOptions;
   }
 
-  const OffersFilter: Record<FilterOptions, IFilterOffers> = {
-    [FilterOptions.ALL_OFFERS]: {
+  const OffersFilter: Record<DisplayFilterOptions, IFilterOffers> = {
+    [DisplayFilterOptions.ALL_OFFERS]: {
       id: 1,
-      name: FilterOptions.ALL_OFFERS,
+      name: DisplayFilterOptions.ALL_OFFERS,
     },
-    [FilterOptions.CREATED]: {
+    [DisplayFilterOptions.CREATED]: {
       id: 2,
-      name: FilterOptions.CREATED,
+      name: DisplayFilterOptions.CREATED,
     },
-    [FilterOptions.RECEIVED]: {
+    [DisplayFilterOptions.RECEIVED]: {
       id: 3,
-      name: FilterOptions.RECEIVED,
+      name: DisplayFilterOptions.RECEIVED,
     },
-    [FilterOptions.ACCEPTED]: {
+    [DisplayFilterOptions.ACCEPTED]: {
       id: 4,
-      name: FilterOptions.ACCEPTED,
+      name: DisplayFilterOptions.ACCEPTED,
     },
-    [FilterOptions.CANCELED]: {
+    [DisplayFilterOptions.CANCELED]: {
       id: 5,
-      name: FilterOptions.CANCELED,
+      name: DisplayFilterOptions.CANCELED,
     },
-    [FilterOptions.EXPIRED]: {
+    [DisplayFilterOptions.EXPIRED]: {
       id: 6,
-      name: FilterOptions.EXPIRED,
+      name: DisplayFilterOptions.EXPIRED,
     },
   };
 
-  const handleFilterClick = (filterOption: FilterOptions, index: number) => {
+  const handleFilterClick = (
+    filterOption: DisplayFilterOptions,
+    index: number,
+  ) => {
     setOfferIsActive(index);
-    console.log("All Swaps:", allSwaps);
 
-    let filtered: any[] = [];
     switch (filterOption) {
-      case FilterOptions.CREATED:
-        filtered = allSwaps.filter((swap) => swap.status === "created");
+      case DisplayFilterOptions.CREATED:
+        setPonderFilterStatus(PonderFilter.CREATED);
         break;
 
-      case FilterOptions.RECEIVED:
-        filtered = allSwaps.filter((swap) => {
-          swap.allowed === inputAddress && swap.status !== "acceppted";
-        });
+      case DisplayFilterOptions.RECEIVED:
+        setPonderFilterStatus(PonderFilter.RECEIVED);
         break;
 
-      case FilterOptions.ACCEPTED:
-        filtered = allSwaps.filter((swap) => swap.status === "acceppted");
+      case DisplayFilterOptions.ACCEPTED:
+        setPonderFilterStatus(PonderFilter.ACCEPTED);
         break;
 
-      case FilterOptions.CANCELED:
-        filtered = allSwaps.filter((swap) => swap.status === "canceled");
+      case DisplayFilterOptions.CANCELED:
+        setPonderFilterStatus(PonderFilter.CANCELED);
         break;
+
       default:
-        filtered = allSwaps;
+        setPonderFilterStatus(PonderFilter.ALL_OFFERS);
+        break;
     }
-
-    console.log(
-      "swapOwner",
-      allSwaps[0].owner && allSwaps[0].owner.toUpperCase(),
-    );
-    console.log("InputAddress:", inputAddress.toUpperCase());
-    console.log("filtered", filtered);
   };
 
   return (
     <>
       {Object.keys(OffersFilter).map((key, index) => {
-        const filterOption = key as FilterOptions;
+        const filterOption = key as DisplayFilterOptions;
         const { id, name } = OffersFilter[filterOption];
 
         return (
