@@ -1,7 +1,7 @@
+import { SwapContext } from "@/components/01-atoms";
+import { getGraphQuery } from "@/lib/client/hooks/ponderQueries";
 import { useState, useContext, useEffect } from "react";
 import cc from "classcat";
-import { getGraphQuery } from "@/lib/client/hooks/ponderQueries";
-import { SwapContext } from ".";
 
 export const StatusOffers = () => {
   const { inputAddress } = useContext(SwapContext);
