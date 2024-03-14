@@ -26,6 +26,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.no-transition * {
+  transition: none !important;
+}
+
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
