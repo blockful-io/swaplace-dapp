@@ -30,10 +30,10 @@ export const TokenAmountSelectionModal = ({
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const {
-    authenticatedUserTokensList,
-    searchedUserTokensList,
-    setAuthenticatedUserTokensList,
-    setSearchedUserTokensList,
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
+    setAuthenticatedUserSelectedTokensList,
+    setSearchedUserSelectedTokensList,
   } = useContext(SwapContext);
 
   useEffect(() => {
@@ -56,9 +56,9 @@ export const TokenAmountSelectionModal = ({
 
     let originalTokensList: Token[];
     if (tokenOwnerIsAuthedUser) {
-      originalTokensList = [...authenticatedUserTokensList];
+      originalTokensList = [...authenticatedUserSelectedTokensList];
     } else {
-      originalTokensList = [...searchedUserTokensList];
+      originalTokensList = [...searchedUserSelectedTokensList];
     }
 
     if (!tokenAmount) {
@@ -86,9 +86,9 @@ export const TokenAmountSelectionModal = ({
     }
 
     if (tokenOwnerIsAuthedUser) {
-      setAuthenticatedUserTokensList(originalTokensList);
+      setAuthenticatedUserSelectedTokensList(originalTokensList);
     } else {
-      setSearchedUserTokensList(originalTokensList);
+      setSearchedUserSelectedTokensList(originalTokensList);
     }
 
     setUserBalance(0);

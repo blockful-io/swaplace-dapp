@@ -87,10 +87,10 @@ export const TokenCard = ({
 }: TokenCardProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const {
-    setAuthenticatedUserTokensList,
-    setSearchedUserTokensList,
-    authenticatedUserTokensList,
-    searchedUserTokensList,
+    setAuthenticatedUserSelectedTokensList,
+    setSearchedUserSelectedTokensList,
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
   } = useContext(SwapContext);
   const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
   const [couldntLoadNftImage, setCouldntLoadNftImage] = useState(false);
@@ -136,21 +136,21 @@ export const TokenCard = ({
 
     if (currentNftIsFromAuthedUser) {
       setCurrentNftIsSelected(
-        authenticatedUserTokensList.some(
+        authenticatedUserSelectedTokensList.some(
           (selectedNft) => selectedNft.id === tokenData.id,
         ),
       );
     } else {
       setCurrentNftIsSelected(
-        searchedUserTokensList.some(
+        searchedUserSelectedTokensList.some(
           (selectedNft) => selectedNft.id === tokenData.id,
         ),
       );
     }
   }, [
     authenticatedUserAddress,
-    authenticatedUserTokensList,
-    searchedUserTokensList,
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
     ownerAddress,
     tokenData,
   ]);
@@ -163,18 +163,18 @@ export const TokenCard = ({
       const ownerEthAddress = ownerAddress;
 
       if (authenticatedUserAddress?.equals(ownerEthAddress)) {
-        const isSelected = authenticatedUserTokensList.some(
+        const isSelected = authenticatedUserSelectedTokensList.some(
           (selectedNft) => selectedNft.id === tokenData.id,
         );
 
         if (isSelected) {
-          setAuthenticatedUserTokensList((prevNftAuthUser) =>
+          setAuthenticatedUserSelectedTokensList((prevNftAuthUser) =>
             prevNftAuthUser.filter((selectedNft) => {
               return selectedNft.id !== tokenData.id;
             }),
           );
         } else {
-          setAuthenticatedUserTokensList((prevNftAuthUser) => [
+          setAuthenticatedUserSelectedTokensList((prevNftAuthUser) => [
             ...prevNftAuthUser,
             tokenData,
           ]);
@@ -184,18 +184,18 @@ export const TokenCard = ({
           }
         }
       } else {
-        const isSelected = searchedUserTokensList.some(
+        const isSelected = searchedUserSelectedTokensList.some(
           (selectedNft) => selectedNft.id === tokenData.id,
         );
 
         if (isSelected) {
-          setSearchedUserTokensList((prevNftInputUser) => {
+          setSearchedUserSelectedTokensList((prevNftInputUser) => {
             return prevNftInputUser.filter((selectedNft) => {
               return selectedNft.id !== tokenData.id;
             });
           });
         } else {
-          setSearchedUserTokensList((prevNftInputUser) => [
+          setSearchedUserSelectedTokensList((prevNftInputUser) => [
             ...prevNftInputUser,
             tokenData,
           ]);

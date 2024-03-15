@@ -26,14 +26,14 @@ export const SwappingShelfs = () => {
 
   const {
     validatedAddressToSwap,
-    setAuthenticatedUserTokensList,
-    setSearchedUserTokensList,
+    setAuthenticatedUserSelectedTokensList,
+    setSearchedUserSelectedTokensList,
     setInputAddress,
   } = useContext(SwapContext);
 
   useEffect(() => {
-    setAuthenticatedUserTokensList([]);
-    setSearchedUserTokensList([]);
+    setAuthenticatedUserSelectedTokensList([]);
+    setSearchedUserSelectedTokensList([]);
     setInputAddress("");
   }, [chain]);
 

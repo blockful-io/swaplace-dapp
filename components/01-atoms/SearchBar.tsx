@@ -3,6 +3,7 @@
 /* eslint-disable import/no-named-as-default-member */
 import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
+import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
 import { useContext, useEffect } from "react";
 import { ENS } from "web3-eth-ens";
 import cc from "classcat";
@@ -19,6 +20,8 @@ export const SearchBar = () => {
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
+  const { isNetworkSupported } = useSupportedNetworks();
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 
   const validateUser = (ensNameAddress: string | null) => {
@@ -26,7 +29,7 @@ export const SearchBar = () => {
   };
 
   const getUserAddress = async () => {
-    if (inputAddress && authenticatedUserAddress) {
+    if (inputAddress && authenticatedUserAddress && isNetworkSupported) {
       if (!process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP) {
         throw new Error(
           "Cannot get ENS address without Alchemy Ethereum Mainnet API key",
@@ -91,9 +94,10 @@ export const SearchBar = () => {
           id="search"
           name="search"
           type="search"
+          value={inputAddress}
           className={cc([
             `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis bg-inherit
-             border-none dark:border-none bg-transparent dark:bg-transparent contrast-50`,
+             border-none dark:border-none dark:bg-transparent contrast-50`,
           ])}
           placeholder="Search username, address or ENS"
           onChange={({ target }) => setInputAddress(target.value)}

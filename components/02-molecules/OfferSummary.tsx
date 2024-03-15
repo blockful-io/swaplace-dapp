@@ -17,15 +17,17 @@ interface IOfferSummary {
 export const OfferSummary = ({ variant }: IOfferSummary) => {
   const {
     validatedAddressToSwap,
-    authenticatedUserTokensList,
-    searchedUserTokensList,
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
+
+  console.log(searchedUserSelectedTokensList);
   const tokensList =
     variant === TokensShelfVariant.Your
-      ? authenticatedUserTokensList
-      : searchedUserTokensList;
+      ? authenticatedUserSelectedTokensList
+      : searchedUserSelectedTokensList;
 
   const { primaryName: searchedENSName } = useEnsData({
     ensAddress: validatedAddressToSwap,

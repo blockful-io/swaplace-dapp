@@ -11,12 +11,12 @@ export const ApprovedTokenCards = () => {
     [],
   );
 
-  const { authenticatedUserTokensList, setApprovedTokensCount } =
+  const { authenticatedUserSelectedTokensList, setApprovedTokensCount } =
     useContext(SwapContext);
 
   useEffect(() => {
     setApprovedTokensCount(0);
-  }, [authenticatedUserTokensList]);
+  }, [authenticatedUserSelectedTokensList]);
 
   if (!authenticatedUserAddress?.address) {
     return null;
@@ -33,7 +33,7 @@ export const ApprovedTokenCards = () => {
   return (
     <div className="flex justify-center items-center relative">
       <div className="grid grid-cols-1 w-[100%] gap-3 relative overflow-y-auto max-h-[370px] no-scrollbar">
-        {authenticatedUserTokensList.map((token, index) => (
+        {authenticatedUserSelectedTokensList.map((token, index) => (
           <ApproveTokenCard
             setTokenWasApprovedForSwap={addNewTokenToApprovedList}
             key={index}

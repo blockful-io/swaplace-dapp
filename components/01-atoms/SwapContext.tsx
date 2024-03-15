@@ -10,6 +10,11 @@ import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 
+// Rules for swapping address search:
+//  - Everytime the search changes, the result items should go back to []
+//  - While the user is being searched, a loading state should be true
+//  - Everytime the network changes, the result should go back to [] and searchItem too
+
 interface SwapContextProps {
   // Application universal need
   destinyChain: SupportedNetworks;
@@ -23,8 +28,8 @@ interface SwapContextProps {
     authedUser: EthereumAddress | null,
     inputEnsAddress: string | null | undefined,
   ) => void;
-  searchedUserTokensList: Token[];
-  setSearchedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
+  searchedUserSelectedTokensList: Token[];
+  setSearchedUserSelectedTokensList: Dispatch<React.SetStateAction<Token[]>>;
   /* 
     Below state is used for Ui rules only, setting new stylings
     if the Search bar content was just now submitted
@@ -33,8 +38,10 @@ interface SwapContextProps {
   setUserJustValidatedInput: Dispatch<React.SetStateAction<boolean>>;
 
   // Authed user related
-  authenticatedUserTokensList: Token[];
-  setAuthenticatedUserTokensList: Dispatch<React.SetStateAction<Token[]>>;
+  authenticatedUserSelectedTokensList: Token[];
+  setAuthenticatedUserSelectedTokensList: Dispatch<
+    React.SetStateAction<Token[]>
+  >;
   approvedTokensCount: number;
   setApprovedTokensCount: Dispatch<React.SetStateAction<number>>;
 
@@ -43,8 +50,9 @@ interface SwapContextProps {
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => void;
   timeDate: bigint;
   setTimeDate: Dispatch<React.SetStateAction<bigint>>;
-
   clearSwapData: () => void;
+  clearAllData: () => void;
+  isLoading: boolean;
 }
 
 export const SwapContextProvider = ({ children }: any) => {
@@ -52,11 +60,12 @@ export const SwapContextProvider = ({ children }: any) => {
   const [validatedAddressToSwap, setValidatedAddressToSwap] =
     useState<EthereumAddress | null>(null);
   const [userJustValidatedInput, setUserJustValidatedInput] = useState(true);
-  const [authenticatedUserTokensList, setAuthenticatedUserTokensList] =
+  const [
+    authenticatedUserSelectedTokensList,
+    setAuthenticatedUserSelectedTokensList,
+  ] = useState<Token[]>([]);
+  const [searchedUserSelectedTokensList, setSearchedUserSelectedTokensList] =
     useState<Token[]>([]);
-  const [searchedUserTokensList, setSearchedUserTokensList] = useState<Token[]>(
-    [],
-  );
   const [destinyChain, setDestinyChain] = useState<SupportedNetworks>(
     SupportedNetworks.SEPOLIA,
   );
@@ -65,9 +74,11 @@ export const SwapContextProvider = ({ children }: any) => {
   const [currentSwapModalStep, setCurrentSwapModalStep] =
     useState<SwapModalSteps>(SwapModalSteps.APPROVE_TOKENS);
   const [approvedTokensCount, setApprovedTokensCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
 
+  // validate the user seartch to swap
   const validateAddressToSwap = (
     _authedUser: EthereumAddress | null,
     _inputEnsAddress: string | null | undefined,
@@ -148,18 +159,26 @@ export const SwapContextProvider = ({ children }: any) => {
   };
 
   const clearSwapData = () => {
-    setAuthenticatedUserTokensList([]);
-    setSearchedUserTokensList([]);
+    setAuthenticatedUserSelectedTokensList([]);
+    setSearchedUserSelectedTokensList([]);
+    setCurrentSwapModalStep(SwapModalSteps.APPROVE_TOKENS);
+  };
+
+  const clearAllData = () => {
+    setInputAddress("");
+    setValidatedAddressToSwap(null);
+    setAuthenticatedUserSelectedTokensList([]);
+    setSearchedUserSelectedTokensList([]);
     setCurrentSwapModalStep(SwapModalSteps.APPROVE_TOKENS);
   };
 
   useEffect(() => {
-    setSearchedUserTokensList([]);
+    setSearchedUserSelectedTokensList([]);
     setUserJustValidatedInput(false);
   }, [inputAddress]);
 
   useEffect(() => {
-    setSearchedUserTokensList([]);
+    setSearchedUserSelectedTokensList([]);
   }, [destinyChain]);
 
   useEffect(() => {
@@ -170,10 +189,11 @@ export const SwapContextProvider = ({ children }: any) => {
       validateAddressToSwap,
       setUserJustValidatedInput,
       userJustValidatedInput,
-      setAuthenticatedUserTokensList,
-      authenticatedUserTokensList,
-      setSearchedUserTokensList,
-      searchedUserTokensList,
+      setAuthenticatedUserSelectedTokensList:
+        setAuthenticatedUserSelectedTokensList,
+      authenticatedUserSelectedTokensList: authenticatedUserSelectedTokensList,
+      setSearchedUserSelectedTokensList,
+      searchedUserSelectedTokensList,
       destinyChain,
       setDestinyChain,
       setTimeDate,
@@ -183,13 +203,15 @@ export const SwapContextProvider = ({ children }: any) => {
       updateSwapStep,
       currentSwapModalStep,
       clearSwapData,
+      clearAllData,
+      isLoading,
     });
   }, [
     inputAddress,
     validatedAddressToSwap,
     userJustValidatedInput,
-    authenticatedUserTokensList,
-    searchedUserTokensList,
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
     destinyChain,
     timeDate,
     approvedTokensCount,
@@ -203,10 +225,10 @@ export const SwapContextProvider = ({ children }: any) => {
     validateAddressToSwap,
     setUserJustValidatedInput,
     userJustValidatedInput,
-    setAuthenticatedUserTokensList,
-    authenticatedUserTokensList,
-    setSearchedUserTokensList,
-    searchedUserTokensList,
+    setAuthenticatedUserSelectedTokensList,
+    authenticatedUserSelectedTokensList,
+    setSearchedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
     destinyChain,
     setDestinyChain,
     setTimeDate,
@@ -216,6 +238,8 @@ export const SwapContextProvider = ({ children }: any) => {
     updateSwapStep,
     currentSwapModalStep,
     clearSwapData,
+    clearAllData,
+    isLoading,
   });
 
   // This is a temporary measure while we don't turn the dApp into a SPA
@@ -239,10 +263,10 @@ export const SwapContext = React.createContext<SwapContextProps>({
   setInputAddress: (address: string) => {},
   setUserJustValidatedInput: () => {},
   userJustValidatedInput: false,
-  setAuthenticatedUserTokensList: () => {},
-  authenticatedUserTokensList: [],
-  setSearchedUserTokensList: () => {},
-  searchedUserTokensList: [],
+  setAuthenticatedUserSelectedTokensList: () => {},
+  authenticatedUserSelectedTokensList: [],
+  setSearchedUserSelectedTokensList: () => {},
+  searchedUserSelectedTokensList: [],
   destinyChain: SupportedNetworks.SEPOLIA,
   setDestinyChain: () => {},
   timeDate: BigInt(1),
@@ -252,4 +276,6 @@ export const SwapContext = React.createContext<SwapContextProps>({
   currentSwapModalStep: SwapModalSteps.APPROVE_TOKENS,
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
   clearSwapData: () => {},
+  clearAllData: () => {},
+  isLoading: true,
 });

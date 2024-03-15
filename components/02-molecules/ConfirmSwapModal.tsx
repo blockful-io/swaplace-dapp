@@ -40,8 +40,8 @@ export const ConfirmSwapModal = ({
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const {
     timeDate,
-    authenticatedUserTokensList,
-    searchedUserTokensList,
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
     approvedTokensCount,
     validatedAddressToSwap,
     currentSwapModalStep,
@@ -67,12 +67,12 @@ export const ConfirmSwapModal = ({
 
   useEffect(() => {
     updateSwapStep(ButtonClickPossibilities.PREVIOUS_STEP);
-  }, [authenticatedUserTokensList]);
+  }, [authenticatedUserSelectedTokensList]);
 
   if (
     (!authenticatedUserAddress?.address ||
-      !searchedUserTokensList ||
-      !authenticatedUserTokensList) &&
+      !searchedUserSelectedTokensList ||
+      !authenticatedUserSelectedTokensList) &&
     open
   ) {
     onClose();
@@ -106,9 +106,11 @@ export const ConfirmSwapModal = ({
     );
 
     const authenticatedUserAssets = await fromTokensToAssets(
-      authenticatedUserTokensList,
+      authenticatedUserSelectedTokensList,
     );
-    const searchedUserAssets = await fromTokensToAssets(searchedUserTokensList);
+    const searchedUserAssets = await fromTokensToAssets(
+      searchedUserSelectedTokensList,
+    );
 
     const swapConfig = await getSwapConfig(
       new EthereumAddress(userWalletClient.account.address),
@@ -172,7 +174,8 @@ export const ConfirmSwapModal = ({
             <SwapModalButton
               label={"Continue"}
               disabled={
-                approvedTokensCount !== authenticatedUserTokensList.length
+                approvedTokensCount !==
+                authenticatedUserSelectedTokensList.length
               }
               onClick={validateTokensAreApproved}
               aditionalStyle={theme === "light" ? "text-black" : "text-yellow"}

@@ -16,20 +16,20 @@ export const SwapStation = () => {
   const [isValidSwap, setIsValidSwap] = useState<boolean>(false);
 
   const {
-    authenticatedUserTokensList,
-    searchedUserTokensList,
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
     validatedAddressToSwap,
   } = useContext(SwapContext);
 
   useEffect(() => {
     setIsValidSwap(
-      !!authenticatedUserTokensList.length &&
-        !!searchedUserTokensList.length &&
+      !!authenticatedUserSelectedTokensList.length &&
+        !!searchedUserSelectedTokensList.length &&
         !!validatedAddressToSwap,
     );
   }, [
-    authenticatedUserTokensList,
-    searchedUserTokensList,
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
     validatedAddressToSwap,
   ]);
 
@@ -43,12 +43,12 @@ export const SwapStation = () => {
         return;
       }
 
-      if (!authenticatedUserTokensList.length) {
+      if (!authenticatedUserSelectedTokensList.length) {
         toast.error("You must select at least one NFT from yours to swap");
         return;
       }
 
-      if (!searchedUserTokensList.length) {
+      if (!searchedUserSelectedTokensList.length) {
         toast.error(
           "You must select at least one NFT from the destiny wallet to swap",
         );

@@ -28,15 +28,17 @@ export const CardOffers = ({
   variant = TokenOfferVariant.HORIZONTAL,
 }: CardOffersProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { authenticatedUserTokensList, searchedUserTokensList } =
-    useContext(SwapContext);
+  const {
+    authenticatedUserSelectedTokensList,
+    searchedUserSelectedTokensList,
+  } = useContext(SwapContext);
 
   const tokenShelfVariant = authenticatedUserAddress?.equals(address)
     ? TokensShelfVariant.Your
     : TokensShelfVariant.Their;
   const tokensOfferFor: Record<TokensShelfVariant, Token[]> = {
-    [TokensShelfVariant.Your]: searchedUserTokensList,
-    [TokensShelfVariant.Their]: authenticatedUserTokensList,
+    [TokensShelfVariant.Your]: searchedUserSelectedTokensList,
+    [TokensShelfVariant.Their]: authenticatedUserSelectedTokensList,
   };
 
   const HorizontalVariant = (address: EthereumAddress | null) => {
