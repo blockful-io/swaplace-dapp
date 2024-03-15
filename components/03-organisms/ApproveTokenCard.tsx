@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { BlockExplorerExternalLinkButton } from "@/components/01-atoms";
 import {
   TokenCard,
   TokenCardActionType,
@@ -13,7 +14,7 @@ import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { isTokenSwapApproved } from "@/lib/service/verifyTokensSwapApproval";
 import { IApproveTokenSwap } from "@/lib/client/swap-utils";
-import { getTokenName } from "@/lib/client/ui-utils";
+import { getTokenContractAddress, getTokenName } from "@/lib/client/ui-utils";
 import { Token } from "@/lib/shared/types";
 import toast from "react-hot-toast";
 import { type TransactionReceipt } from "viem";
@@ -79,13 +80,12 @@ export const ApproveTokenCard = ({
       throw new Error("User is not connected to any network");
     }
 
-    setTokenApprovalStatus(TokenApprovalStatus.APPROVE_IN_YOUR_WALLET);
-
     const approved = await checkForTokenApproval(token);
 
     if (approved) {
       toast.success(`${getTokenName(token)} was approved for swap`);
     } else {
+      setTokenApprovalStatus(TokenApprovalStatus.APPROVE_IN_YOUR_WALLET);
       await askForTokenApproval(token).then((isApproved) => {
         if (typeof isApproved !== "undefined") {
           setIsApproved(true);
@@ -160,7 +160,7 @@ export const ApproveTokenCard = ({
   return (
     <div
       className={cc([
-        "flex p-4 items-center gap-4 max-h-[68px]",
+        "flex p-4 items-center max-h-[68px]",
         !isApproved
           ? "bg-[#282B29] hover:bg-[#353836] transition rounded-xl border border-[#353836]"
           : "dark:bg-[#DDF23D] bg-[#97a529] rounded-xl disabled cursor-auto pointer-events-none",
@@ -168,43 +168,54 @@ export const ApproveTokenCard = ({
       onClick={() => handleTokenApproval()}
       role="button"
     >
-      <div>
-        <TokenCard
-          displayERC20TokensAmount={true}
-          withSelectionValidation={false}
-          onClickAction={TokenCardActionType.APPROVE_TOKEN_SWAP}
-          ownerAddress={authenticatedUserAddress}
-          styleType={TokenCardStyleType.SMALL}
-          tokenData={token}
-        />
+      <div className="flex gap-4 w-[75%]">
+        <div>
+          <TokenCard
+            displayERC20TokensAmount={true}
+            withSelectionValidation={false}
+            onClickAction={TokenCardActionType.APPROVE_TOKEN_SWAP}
+            ownerAddress={authenticatedUserAddress}
+            styleType={TokenCardStyleType.SMALL}
+            tokenData={token}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <div className="flex">
+            <p className={!isApproved ? "p-medium-2-dark" : "p-medium-2"}>
+              {getTokenName(token)}
+            </p>
+          </div>
+          <div className="flex p-semibold-dark">
+            {tokenApprovalStatus === TokenApprovalStatus.CLICK_TO_APPROVE ? (
+              <p className=" bg-[#505150] p-1.5 w-fit rounded-[4px] min-h-6 items-center flex">
+                CLICK TO APPROVE
+              </p>
+            ) : tokenApprovalStatus ===
+              TokenApprovalStatus.APPROVE_IN_YOUR_WALLET ? (
+              <p className="bg-[#505150] p-1.5 w-fit rounded-[4px] min-h-6 items-center flex">
+                APPROVE TRANSACTION REQUEST IN YOUR WALLET
+              </p>
+            ) : tokenApprovalStatus ===
+              TokenApprovalStatus.WAITING_BLOCKCHAIN_CONFIRMATION ? (
+              <p className="bg-[#505150] p-1.5 w-fit rounded-[4px] min-h-6 items-center flex">
+                WAITING FOR BLOCKCHAIN CONFIRMATION
+              </p>
+            ) : TokenApprovalStatus.APPROVED ? (
+              <div className="bg-[#505150] p-1.5 w-fit bg-opacity-30 rounded-[4px] min-h-6 items-center flex">
+                <p className="text-white">APPROVED</p>
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
-      <div className="flex flex-col gap-1">
-        <div className="flex">
-          <p className={!isApproved ? "p-medium-2-dark" : "p-medium-2"}>
-            {getTokenName(token)}
-          </p>
-        </div>
-        <div className="flex p-semibold-dark">
-          {tokenApprovalStatus === TokenApprovalStatus.CLICK_TO_APPROVE ? (
-            <p className=" bg-[#505150] p-1.5 w-fit rounded-[4px] min-h-6 items-center flex">
-              CLICK TO APPROVE
-            </p>
-          ) : tokenApprovalStatus ===
-            TokenApprovalStatus.APPROVE_IN_YOUR_WALLET ? (
-            <p className="bg-[#505150] p-1.5 w-fit rounded-[4px] min-h-6 items-center flex">
-              APPROVE TRANSACTION REQUEST IN YOUR WALLET
-            </p>
-          ) : tokenApprovalStatus ===
-            TokenApprovalStatus.WAITING_BLOCKCHAIN_CONFIRMATION ? (
-            <p className="bg-[#505150] p-1.5 w-fit rounded-[4px] min-h-6 items-center flex">
-              WAITING FOR BLOCKCHAIN CONFIRMATION
-            </p>
-          ) : TokenApprovalStatus.APPROVED ? (
-            <div className="bg-[#505150] p-1.5 w-fit bg-opacity-30 rounded-[4px] min-h-6 items-center flex">
-              <p className="text-white">APPROVED</p>
-            </div>
-          ) : null}
-        </div>
+      <div
+        role="button"
+        className="flex pointer-events-auto items-center"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <BlockExplorerExternalLinkButton
+          address={getTokenContractAddress(token)}
+        />
       </div>
     </div>
   );
