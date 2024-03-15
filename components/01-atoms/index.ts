@@ -39,7 +39,6 @@ export * from "./icons/ChainPolygonIcon";
 export * from "./icons/ChatIcon";
 export * from "./icons/CloseCTA";
 export * from "./icons/CopyIcon";
-export * from "./icons/DangerIcon";
 export * from "./icons/DoneIcon";
 export * from "./icons/ErrorIcon";
 export * from "./icons/EthereumIcon";
