@@ -1,4 +1,8 @@
-import { EthereumIcon, PolygonIcon, SwapContext } from "@/components/01-atoms";
+import {
+  EthereumIcon,
+  ChainPolygonIcon,
+  SwapContext,
+} from "@/components/01-atoms";
 import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
 import { Fragment, useContext, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
@@ -24,7 +28,7 @@ export const SelectDestinyChain = () => {
         {destinyChain === SupportedNetworks.SEPOLIA ? (
           <EthereumIcon width={12} height={12} />
         ) : (
-          <PolygonIcon width={12} height={12} />
+          <ChainPolygonIcon width={12} height={12} />
         )}
         <p>{ChainInfo[destinyChain].name}</p>
       </button>
@@ -70,7 +74,7 @@ export const SelectDestinyChain = () => {
                   {chain === SupportedNetworks.SEPOLIA ? (
                     <EthereumIcon width={24} height={24} />
                   ) : (
-                    <PolygonIcon width={24} height={24} />
+                    <ChainPolygonIcon width={24} height={24} />
                   )}
                   <p>{ChainInfo[chain as SupportedNetworks].name}</p>
                 </div>
