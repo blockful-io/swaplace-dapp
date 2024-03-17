@@ -4,7 +4,7 @@ import {
   getERC721TokensFromAddress,
   getERC20TokensFromAddress,
 } from "@/lib/client/blockchain-utils";
-import { EthereumAddress, Token } from "@/lib/shared/types";
+import { Token } from "@/lib/shared/types";
 import { TokensList } from "@/components/02-molecules";
 import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
 import { useContext, useEffect, useState } from "react";
@@ -18,7 +18,6 @@ export enum TokensShelfVariant {
 }
 
 interface TokensShelfProps {
-  address: EthereumAddress | null;
   variant: TokensShelfVariant;
 }
 
@@ -29,7 +28,7 @@ interface TokensShelfProps {
  *
  * @returns Tokens Shelf based in status of given address
  */
-export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
+export const TokensShelf = ({ variant }: TokensShelfProps) => {
   const { chain } = useNetwork();
   const [allTokensList, setAllTokensList] = useState<Token[]>([]);
   const [tokensQueryStatus, setTokensQueryStatus] = useState<TokensQueryStatus>(
@@ -41,6 +40,11 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   const { validatedAddressToSwap, inputAddress, destinyChain } =
     useContext(SwapContext);
 
+  const address =
+    variant === TokensShelfVariant.Their
+      ? validatedAddressToSwap
+      : authenticatedUserAddress;
+
   const getUserTokens = async () => {
     const chainId = authenticatedUserAddress?.equals(address)
       ? chain?.id
@@ -49,7 +53,8 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     let queriedTokens: Token[] = [];
     let tokensCount = allTokensList.length;
 
-    if (address && chainId) {
+    if (address && chainId && !!authenticatedUserAddress) {
+      console.log("caralhoo ", inputAddress);
       setTokensQueryStatus(TokensQueryStatus.LOADING);
 
       Promise.all([
@@ -78,8 +83,9 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   };
 
   useEffect(() => {
-    getUserTokens();
-  }, [address, chain, destinyChain]);
+    console.log(" esse é o validated ", validatedAddressToSwap);
+    !!authenticatedUserAddress && getUserTokens();
+  }, [authenticatedUserAddress, validatedAddressToSwap]);
 
   const conditionallyCleanTokensList = (condition: boolean) => {
     if (condition) {
@@ -129,6 +135,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     conditionallyCleanTokensList(
       !validatedAddressToSwap && variant === TokensShelfVariant.Their,
     );
+    console.log("clean");
   }, [validatedAddressToSwap]);
 
   return (
