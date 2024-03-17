@@ -93,7 +93,7 @@ export function SwapModalButton({
         "flex items-center gap-2",
         aditionalStyle,
         disabled
-          ? "p-medium-bold dark:p-medium-bold cursor-not-allowed pointer-events-none"
+          ? "p-medium-bold dark:p-medium-bold cursor-not-allowed pointer-events-none bg-[#DDF23D]"
           : "p-medium-bold-dark bg-[#DDF23D]",
       ])}
       {...props}
