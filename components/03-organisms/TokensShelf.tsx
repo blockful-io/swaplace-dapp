@@ -54,7 +54,6 @@ export const TokensShelf = ({ variant }: TokensShelfProps) => {
     let tokensCount = allTokensList.length;
 
     if (address && chainId && !!authenticatedUserAddress) {
-      console.log("caralhoo ", inputAddress);
       setTokensQueryStatus(TokensQueryStatus.LOADING);
 
       Promise.all([
@@ -83,7 +82,6 @@ export const TokensShelf = ({ variant }: TokensShelfProps) => {
   };
 
   useEffect(() => {
-    console.log(" esse é o validated ", validatedAddressToSwap);
     !!authenticatedUserAddress && getUserTokens();
   }, [authenticatedUserAddress, validatedAddressToSwap]);
 
@@ -135,7 +133,6 @@ export const TokensShelf = ({ variant }: TokensShelfProps) => {
     conditionallyCleanTokensList(
       !validatedAddressToSwap && variant === TokensShelfVariant.Their,
     );
-    console.log("clean");
   }, [validatedAddressToSwap]);
 
   return (
