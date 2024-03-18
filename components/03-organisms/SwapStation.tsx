@@ -96,7 +96,7 @@ export const SwapStation = () => {
             <button
               disabled={!isValidSwap}
               className={cc([
-                "pointer-events-none rounded-xl w-full disabled:bg-[#F0EEEE] dark:disabled:bg-[#282B29]  dark:hover:bg-[#4b514d] bg-[#DDF23D] hover:bg-[#aabe13] disabled:border-gray-200  dark:disabled:border-[#353836]  border py-3 px-5 items-center flex justify-center gap-2 font-semibold text-[16px] leading-[20.4px] disabled:text-[#A3A9A5] disabled:dark:text-[#707572] text-[#181A19] dark:shadow-button-swap-station-offer",
+                "pointer-events-none rounded-xl w-full disabled:bg-[#F0EEEE] dark:disabled:bg-[#282B29] dark:hover:bg-[#4b514d] bg-[#DDF23D] hover:bg-[#aabe13] disabled:border-gray-200  dark:disabled:border-[#353836]  disabled:border py-3 px-5 items-center flex justify-center gap-2 font-semibold text-[16px] leading-[20.4px] disabled:text-[#A3A9A5] disabled:dark:text-[#707572] text-[#181A19] dark:shadow-button-swap-station-offer",
               ])}
             >
               <PaperPlane
