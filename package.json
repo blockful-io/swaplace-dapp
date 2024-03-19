@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "semantic-release": "semantic-release",
+    "lint": "next lint --config .eslintrc"
   },
   "dependencies": {
     "@headlessui-float/react": "^0.13.0",
