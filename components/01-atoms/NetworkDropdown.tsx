@@ -44,7 +44,7 @@ export const NetworkDropdown = ({ forAuthedUser }: NetworkDropdownProps) => {
   };
 
   interface NetworkProps {
-    icon: React.JSX.Element;
+    icon: JSX.Element;
     name: string;
   }
 

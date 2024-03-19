@@ -126,5 +126,5 @@ export const SwapIcon = ({
     ),
   };
 
-  return SwapIcons[variant];
+  return SwapIcons[variant] || <></>;
 };

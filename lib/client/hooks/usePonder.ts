@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { SwapContext } from "@/components/01-atoms";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";

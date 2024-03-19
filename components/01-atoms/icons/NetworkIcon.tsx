@@ -68,5 +68,5 @@ export const NetworkIcon = ({
     ),
   };
 
-  return NetworkIcons[variant];
+  return NetworkIcons[variant] || <></>;
 };
