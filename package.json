@@ -1,26 +1,31 @@
 {
-  "name": "swaplace-dapp",
-  "version": "0.1.0",
-  "private": true,
+  "name": "swaplace",
+  "description": "your greatest deals are here",
+  "version": "0.0.0-development",
+  "license": "MIT",
+  "repository": "blockful-io/swaplace-dapp",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "semantic-release": "semantic-release",
+    "lint": "next lint --config .eslintrc"
   },
   "dependencies": {
     "@headlessui-float/react": "^0.13.0",
     "@headlessui/react": "^1.7.17",
-    "@rainbow-me/rainbowkit": "1.0.4",
+    "@rainbow-me/rainbowkit": "^1.3.0",
     "@rainbow-me/rainbowkit-siwe-next-auth": "0.1.8",
     "@typescript-eslint/eslint-plugin": "5.54.1",
-    "eslint-plugin-unused-imports": "2.0.0",
-    "eslint-config-next": "13.4.19",
-    "eslint": "8.7.0",
+    "alchemy-sdk": "^3.1.2",
+    "axios": "^1.6.7",
+    "boring-avatars": "1.7.0",
     "classcat": "^5.0.4",
+    "eslint-plugin-unused-imports": "2.0.0",
     "ethers": "^5.7.2",
     "next": "14.0.3",
     "next-auth": "^4.20.1",
+    "next-themes": "^0.2.1",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
@@ -30,15 +35,20 @@
     "web3": "^4.3.0",
     "web3-eth-ens": "^4.0.8"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
+    "semantic-release": "23.0.2",
     "@types/node": "^20",
     "@types/node-fetch": "^2.6.9",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/parser": "^6.13.1",
+    "autoprefixer": "^10.0.1",
+    "dotenv": "^16.4.1",
     "eslint": "8.7.0",
     "eslint-config-next": "13.4.19",
-    "@typescript-eslint/eslint-plugin": "5.54.1",
-    "autoprefixer": "^10.0.1",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
