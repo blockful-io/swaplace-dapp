@@ -270,5 +270,5 @@ export const ConfirmSwapModal = ({
     ),
   };
 
-  return ConfirmSwapModalStep[currentSwapModalStep];
+  return ConfirmSwapModalStep[currentSwapModalStep] || <></>;
 };

@@ -19,6 +19,7 @@ export const UserOfferInfo = ({
     ensAddress: address,
   });
   const displayAddress = address?.getEllipsedAddress();
+
   return variant == UserOfferVariant.DEFAULT ? (
     <div>
       <div className="flex gap-2">
@@ -36,29 +37,28 @@ export const UserOfferInfo = ({
         </div>
       </div>
     </div>
-  ) : (
-    variant === UserOfferVariant.SECONDARY && (
-      <div>
-        <div className="flex justify-between">
-          <div className="flex gap-2">
-            <div>
-              {address && (
-                <ENSAvatar
-                  avatarENSAddress={address}
-                  size={ENSAvatarSize.SMALL}
-                />
-              )}
-            </div>
-            <div className="flex ">
-              {primaryName ? (
-                <p>{primaryName} gets</p>
-              ) : (
-                <p>{displayAddress} gets</p>
-              )}
-            </div>
+  ) : variant === UserOfferVariant.SECONDARY ? (
+    <div>
+      <div className="flex justify-between">
+        <div className="flex gap-2">
+          <div>
+            {address && (
+              <ENSAvatar
+                avatarENSAddress={address}
+                size={ENSAvatarSize.SMALL}
+              />
+            )}
           </div>
-          {/* TODO > Include logic to calculate tokens value */}
-          {/* <div className="flex-row flex">
+          <div className="flex ">
+            {primaryName ? (
+              <p>{primaryName} gets</p>
+            ) : (
+              <p>{displayAddress} gets</p>
+            )}
+          </div>
+        </div>
+        {/* TODO > Include logic to calculate tokens value */}
+        {/* <div className="flex-row flex">
             <p className="dark:p-small-dark p-small-variant-black">
               0.1639 ETH
             </p>
@@ -66,8 +66,9 @@ export const UserOfferInfo = ({
               &nbsp; ($252.15)
             </p>
           </div> */}
-        </div>
       </div>
-    )
+    </div>
+  ) : (
+    <></>
   );
 };

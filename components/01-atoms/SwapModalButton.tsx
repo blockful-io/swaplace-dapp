@@ -83,7 +83,7 @@ export function SwapModalButton({
 }: Props) {
   const { approvedTokensCount } = useContext(SwapContext);
   const { theme } = useTheme();
-  if (theme === undefined) return false;
+  if (theme === undefined) return <></>;
 
   return (
     <button

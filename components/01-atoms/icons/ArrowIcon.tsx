@@ -91,5 +91,5 @@ export const ArrowIcon = ({
     ),
   };
 
-  return ArrowIcons[variant];
+  return ArrowIcons[variant] || <></>;
 };
