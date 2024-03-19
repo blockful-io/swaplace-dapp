@@ -148,6 +148,8 @@ export const getAPIKeyForNetwork: Map<number, string | undefined> = new Map([
   [ChainInfo.MUMBAI.id, process.env.NEXT_PUBLIC_ALCHEMY_MUMBAI_KEY],
 ]);
 
+export const ALCHEMY_PUBLIC_RPC = "https://eth-mainnet.g.alchemy.com/v2/demo";
+
 export const getCurrentNetworkHttpUrl = (chainId: number) => {
   const httpUrl = getRpcHttpUrlForNetwork.get(chainId);
 
