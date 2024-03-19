@@ -29,6 +29,12 @@ jobs:
       - run: pnpm audit signatures
       - name: Release
         env:
+          NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
+          NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP: ${{ secrets.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP }}
+          NEXT_PUBLIC_ALCHEMY_ETHEREUM_KEY: ${{ secrets.NEXT_PUBLIC_ALCHEMY_ETHEREUM_KEY }}
+          NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP: ${{ secrets.NEXT_PUBLIC_ALCHEMY_SEPOLIA_HTTP }}
+          NEXT_PUBLIC_ALCHEMY_SEPOLIA_KEY: ${{ secrets.NEXT_PUBLIC_ALCHEMY_SEPOLIA_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release

@@ -154,9 +154,7 @@ export const getCurrentNetworkHttpUrl = (chainId: number) => {
   const httpUrl = getRpcHttpUrlForNetwork.get(chainId);
 
   if (!httpUrl) {
-    if (process.env.NODE_ENV === "production")
-      throw new Error(`No RPC URL was defined for chain ID: ${chainId}`);
-    else console.error(`No RPC URL was defined for chain ID: ${chainId}`);
+    throw new Error(`No RPC URL was defined for chain ID: ${chainId}`);
   }
 
   return httpUrl;
