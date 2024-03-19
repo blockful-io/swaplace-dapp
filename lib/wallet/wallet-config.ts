@@ -1,4 +1,7 @@
-import { getCurrentNetworkHttpUrl } from "../client/constants";
+import {
+  ALCHEMY_PUBLIC_RPC,
+  getCurrentNetworkHttpUrl,
+} from "../client/constants";
 import { sepolia } from "@wagmi/core/chains";
 import { configureChains, createConfig } from "wagmi";
 import {
@@ -17,7 +20,7 @@ export const { chains, webSocketPublicClient, publicClient } = configureChains(
   [
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: getCurrentNetworkHttpUrl(chain.id),
+        http: getCurrentNetworkHttpUrl(chain.id) || ALCHEMY_PUBLIC_RPC,
       }),
     }),
   ],
