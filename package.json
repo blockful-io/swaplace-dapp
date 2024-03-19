@@ -1,12 +1,15 @@
 {
-  "name": "swaplace-dapp",
-  "version": "0.1.0",
-  "private": true,
+  "name": "swaplace",
+  "description": "your greatest deals are here",
+  "version": "0.0.0-development",
+  "license": "MIT",
+  "repository": "blockful-io/swaplace-dapp",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@headlessui-float/react": "^0.13.0",
@@ -30,7 +33,11 @@
     "web3": "^4.3.0",
     "web3-eth-ens": "^4.0.8"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
+    "semantic-release": "23.0.2",
     "@types/node": "^20",
     "@types/node-fetch": "^2.6.9",
     "@types/react": "^18",
