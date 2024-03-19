@@ -49,7 +49,7 @@ export const SelectAuthedUserChain = () => {
                   <div style={{ display: "flex", gap: 12 }}>
                     <button
                       onClick={openChainModal}
-                      className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition flex items-center"
+                      className="bg-[#e8e8e8] dark:bg-[#353836] dark:hover:bg-[#4b514d] dark:border-none shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 flex items-center"
                       type="button"
                     >
                       {chain.hasIcon && (

@@ -14,9 +14,6 @@ export const useAuthedAccess = () => {
       toast.success(`Welcome to Swaplace!`, {
         id: "welcome-toast",
       });
-      router.push("/swap");
-    } else {
-      router.push("/");
     }
   }, [router.pathname, authenticatedUserAddress]);
 };
