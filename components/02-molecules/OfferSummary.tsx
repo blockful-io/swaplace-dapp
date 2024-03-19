@@ -1,87 +1,146 @@
-import { NftCard, SwapContext } from "../01-atoms";
-import { EthereumAddress } from "@/lib/shared/types";
+import {
+  ENSAvatar,
+  ENSAvatarSize,
+  PersonIcon,
+  SwapContext,
+} from "@/components/01-atoms";
+import { TokenCardStyleType, TokensList } from "@/components/02-molecules";
+import { TokensShelfVariant } from "@/components/03-organisms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { ChainInfo } from "@/lib/client/constants";
-import { useEnsName, useNetwork } from "wagmi";
+import { useEnsData } from "@/lib/client/hooks/useENSData";
 import { useContext } from "react";
 
 interface IOfferSummary {
-  forAuthedUser: boolean;
+  variant: TokensShelfVariant;
 }
 
-export const OfferSummary = ({ forAuthedUser }: IOfferSummary) => {
-  const { validatedAddressToSwap, nftAuthUser, nftInputUser, destinyChain } =
-    useContext(SwapContext);
-  const { chain } = useNetwork();
-  const { data } = useEnsName({
-    address: validatedAddressToSwap as `0x${string}`,
-  });
+export const OfferSummary = ({ variant }: IOfferSummary) => {
+  const {
+    validatedAddressToSwap,
+    authenticatedUserTokensList,
+    searchedUserTokensList,
+  } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
+  const tokensList =
+    variant === TokensShelfVariant.Your
+      ? authenticatedUserTokensList
+      : searchedUserTokensList;
+
+  const { primaryName: searchedENSName } = useEnsData({
+    ensAddress: validatedAddressToSwap,
+  });
+  const { primaryName: authenticatedUserENSName } = useEnsData({
+    ensAddress: authenticatedUserAddress,
+  });
 
   return (
-    <div className="w-full flex flex-col gap-4 px-3 pt-2 pb-4 bg-[rgba(217,217,217,0.40)] rounded">
-      <div className="flex justify-between items-center h-9 gap-2">
-        <div className="flex space-x-2">
-          <div className="w-6 h-6 bg-[#d9d9d9] rounded-full" />
-          <div className="items-center">
-            <p className="font-medium">
-              {forAuthedUser
-                ? "You give"
-                : !forAuthedUser && !validatedAddressToSwap
-                ? "Use the search bar!"
-                : `${
-                    data
-                      ? data
-                      : new EthereumAddress(
-                          validatedAddressToSwap
-                        ).getEllipsedAddress()
-                  } gives`}
-            </p>
+    <div className="w-full h-full dark:bg-[#282B29] border dark:border-[#353836] bg-[#F0EEEE] border-[#E4E4E4] rounded-lg ">
+      <div className="flex flex-col gap-4 px-4 pt-2 pb-4">
+        <div className="flex justify-between items-center h-9 gap-2">
+          <div className="flex space-x-2 items-center">
+            <div className="flex items-center">
+              {variant === TokensShelfVariant.Your && validatedAddressToSwap ? (
+                <ENSAvatar
+                  avatarENSAddress={validatedAddressToSwap}
+                  size={ENSAvatarSize.SMALL}
+                />
+              ) : variant === TokensShelfVariant.Their &&
+                authenticatedUserAddress ? (
+                <ENSAvatar
+                  avatarENSAddress={authenticatedUserAddress}
+                  size={ENSAvatarSize.SMALL}
+                />
+              ) : (
+                <div className="bg-[#E4E4E4] dark:bg-[#353836] p-[5px] rounded-md">
+                  <PersonIcon className="text-[#A3A9A5] dark:text-[#707572]" />
+                </div>
+              )}
+            </div>
+            <div className="items-center">
+              <p className="p-small-variant-black-3 dark:p-small-variant-light-2 contrast-50">
+                {variant === TokensShelfVariant.Your && validatedAddressToSwap
+                  ? `${
+                      searchedENSName
+                        ? searchedENSName + " gets"
+                        : validatedAddressToSwap
+                        ? validatedAddressToSwap.getEllipsedAddress() + " gets"
+                        : "Use the search bar"
+                    }`
+                  : variant === TokensShelfVariant.Your &&
+                    !validatedAddressToSwap
+                  ? "They get"
+                  : variant === TokensShelfVariant.Their &&
+                    authenticatedUserAddress
+                  ? `${
+                      authenticatedUserENSName
+                        ? authenticatedUserENSName + " gets"
+                        : authenticatedUserAddress
+                        ? authenticatedUserAddress.getEllipsedAddress() +
+                          " gets"
+                        : "Connect your wallet"
+                    }`
+                  : "You get"}
+              </p>
+            </div>
           </div>
+          {(variant === TokensShelfVariant.Their && !validatedAddressToSwap) ||
+          (variant === TokensShelfVariant.Your &&
+            !authenticatedUserAddress) ? null : (
+            <div className="contrast-50">
+              {tokensList.length} item
+              {tokensList.length !== 1 ? "s" : ""}
+            </div>
+          )}
         </div>
-        {!forAuthedUser && !validatedAddressToSwap ? null : (
-          <div>
-            {forAuthedUser ? nftAuthUser.length : nftInputUser.length} item
-            {forAuthedUser
-              ? nftAuthUser.length !== 1
-                ? "s"
-                : ""
-              : nftInputUser.length !== 1
-              ? "s"
-              : ""}
-          </div>
-        )}
-      </div>
-
-      <div className="w-full h-full min-h-[144px] bg-[#f8f8f8] rounded p-4">
-        <div className="grid grid-cols-6 gap-3">
-          {(forAuthedUser && !authenticatedUserAddress?.address) ||
-          (!forAuthedUser && !validatedAddressToSwap) ? null : (
-            <NftCard
+        <div className="w-full h-full max-h-[156px] rounded overflow-auto no-scrollbar">
+          {variant === TokensShelfVariant.Your && authenticatedUserAddress ? (
+            <TokensList
+              withAddTokenCard={false}
+              displayERC20TokensAmount={true}
               withSelectionValidation={false}
-              ownerAddress={
-                forAuthedUser
-                  ? authenticatedUserAddress
-                    ? authenticatedUserAddress.address
-                    : null
-                  : validatedAddressToSwap
-              }
-              nftData={forAuthedUser ? nftAuthUser[0] : nftInputUser[0]}
+              ownerAddress={authenticatedUserAddress}
+              tokensList={tokensList}
+              variant={variant}
+              wideScreenTotalCards={10}
+              desktopTotalCards={8}
+              tabletTotalCards={12}
+              mobileTotalCards={6}
+              tokenCardStyleType={TokenCardStyleType.MEDIUM}
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+            />
+          ) : variant === TokensShelfVariant.Their && validatedAddressToSwap ? (
+            <TokensList
+              withAddTokenCard={false}
+              displayERC20TokensAmount={true}
+              withSelectionValidation={false}
+              ownerAddress={validatedAddressToSwap}
+              tokensList={tokensList}
+              variant={variant}
+              wideScreenTotalCards={10}
+              desktopTotalCards={8}
+              tabletTotalCards={12}
+              mobileTotalCards={6}
+              tokenCardStyleType={TokenCardStyleType.MEDIUM}
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+            />
+          ) : (
+            <TokensList
+              withAddTokenCard={false}
+              displayERC20TokensAmount={true}
+              withSelectionValidation={false}
+              ownerAddress={null}
+              tokensList={tokensList}
+              variant={variant}
+              wideScreenTotalCards={10}
+              desktopTotalCards={8}
+              tabletTotalCards={12}
+              mobileTotalCards={6}
+              tokenCardStyleType={TokenCardStyleType.MEDIUM}
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
             />
           )}
         </div>
-      </div>
-
-      <div className="ml-auto flex space-x-1 mr-1 text-gray-700 font-medium text-sm">
-        <p>from</p>
-        <p>
-          {forAuthedUser ? (
-            <>{chain?.name}</>
-          ) : (
-            <>{ChainInfo[destinyChain].name}</>
-          )}
-        </p>
       </div>
     </div>
   );

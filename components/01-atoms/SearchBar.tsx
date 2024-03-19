@@ -1,139 +1,103 @@
+/* eslint-disable import/no-named-as-default */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-named-as-default-member */
-/* eslint-disable import/no-named-as-default */
-import {
-  MagnifyingGlassIcon,
-  SelectAuthedUserChain,
-  SelectDestinyChain,
-  SwapContext,
-} from ".";
+import { MagnifyingGlassIcon, SwapContext } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { ENS } from "web3-eth-ens";
 import cc from "classcat";
 import Web3 from "web3";
+import toast from "react-hot-toast";
 
 export const SearchBar = () => {
   const {
     setInputAddress,
     inputAddress,
     validateAddressToSwap,
-    userJustValidatedInput,
+    setUserJustValidatedInput,
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
-  const [validateAfterENSaddressLoads, setValidateAfterENSaddressLoads] =
-    useState(false);
-  const validateInput = () => {
-    if (authenticatedUserAddress) {
-      if (loadingENSaddress) {
-        setValidateAfterENSaddressLoads(true);
-      } else {
-        validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+
+  const validateUser = (ensNameAddress: string | null) => {
+    validateAddressToSwap(authenticatedUserAddress, ensNameAddress);
   };
 
-  const [ensNameAddress, setEnsNameAddress] = useState("");
-  const [loadingENSaddress, setLoadingENSaddress] = useState(false);
-  useEffect(() => {
-    if (inputAddress) {
+  const getUserAddress = async () => {
+    if (inputAddress && authenticatedUserAddress) {
       if (!process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP) {
         throw new Error(
-          "Cannot get ENS address without Alchemy Ethereum Mainnet API key"
+          "Cannot get ENS address without Alchemy Ethereum Mainnet API key",
         );
       }
 
       const provider = new Web3.providers.HttpProvider(
-        process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP
+        process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP,
       );
 
       const ens = new ENS(undefined, provider);
 
-      ens
-        .getOwner(
-          inputAddress.toLowerCase().includes(".")
-            ? inputAddress.toLowerCase().includes(".eth")
-              ? inputAddress.split(".")[1].length >= 3
-                ? inputAddress
-                : `${inputAddress.split(".")[0]}.eth`
-              : inputAddress.split(".")[1].length >= 3
-              ? inputAddress
-              : `${inputAddress.split(".")[0]}.eth`
-            : `${inputAddress}.eth`
-        )
-        .then((address: unknown) => {
-          if (typeof address == "string") {
-            setEnsNameAddress(address);
-            setLoadingENSaddress(false);
-          } else {
-            setEnsNameAddress("");
-            setLoadingENSaddress(false);
-          }
-        })
-        .catch(() => {
-          setEnsNameAddress("");
-          setLoadingENSaddress(false);
-        });
+      const formattedAddress = inputAddress.toLowerCase().includes(".")
+        ? inputAddress.toLowerCase().includes(".eth")
+          ? inputAddress.split(".")[1].length >= 3
+            ? inputAddress
+            : `${inputAddress.split(".")[0]}.eth`
+          : inputAddress.split(".")[1].length >= 3
+          ? inputAddress
+          : `${inputAddress.split(".")[0]}.eth`
+        : `${inputAddress}.eth`;
+
+      try {
+        const address: unknown = await ens.getOwner(formattedAddress);
+
+        if (typeof address !== "string") return;
+        validateUser(address);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setUserJustValidatedInput(true);
+      }
+    } else if (inputAddress && !authenticatedUserAddress) {
+      toast.error("Cannot get ENS address without connect your wallet");
     }
-  }, [inputAddress]);
+  };
 
   useEffect(() => {
-    if (!loadingENSaddress && validateAfterENSaddressLoads) {
-      validateInput();
-      setValidateAfterENSaddressLoads(false);
-    }
-  }, [loadingENSaddress]);
+    const requestDelay = setTimeout(() => {
+      setUserJustValidatedInput(false);
+      getUserAddress();
+    }, 1500);
+    return () => clearTimeout(requestDelay);
+  }, [inputAddress]);
 
   return (
-    <div className="w-[95%] h-auto bg-[#f8f8f8] p-5 gap-3 flex flex-col rounded border-2 border-gray-200">
+    <div className="gap-2 xl:w-full max-h-[72px] flex flex-col rounded">
       <div className="w-full flex justify-between space-x-6">
-        <h2 className="font-light text-xl">Who are you swapping with today?</h2>
+        <h2 className="p-normal-2-light dark:p-normal-2-dark contrast-50">
+          Who are you swapping with today?
+        </h2>
       </div>
-      <div className={cc(["flex relative items-center"])}>
+      <div
+        className={cc([
+          "flex items-center border rounded-xl pl-4 pr-3 gap-4 bg-[#F6F6F6] hover:bg-[#F0EEEE75] hover:shadow-[0_0_6px_1px_#00000014] dark:bg-[#212322] border-[#E4E4E4] hover:border-[#AABE13] dark:border-[#353836] focus:border-[#FFFFFF] dark:hover:border-[#edff6259] dark:shadow-swap-station shadow-swap-connection-light transition duration-300 ease-in-out",
+        ])}
+      >
+        <div className="justify-center items-center">
+          <MagnifyingGlassIcon className="w-5 text-[#A3A9A5] dark:text-[#353836]" />
+        </div>
         <input
           id="search"
           name="search"
           type="search"
           className={cc([
-            "w-full h-11 px-4 py-3 border-2 border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 rounded",
-            { "bg-white ": !userJustValidatedInput },
+            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis bg-inherit
+             border-none dark:border-none bg-transparent dark:bg-transparent contrast-50`,
           ])}
-          placeholder="Search for an address or ENS name"
-          onChange={(e) => setInputAddress(e.target.value)}
+          placeholder="Search username, address or ENS"
+          onChange={({ target }) => setInputAddress(target.value)}
         />
-        <div className="absolute right-2 justify-center items-center">
-          <div
-            role="button"
-            onClick={validateInput}
-            className={cc([!inputAddress && "cursor-not-allowed"])}
-          >
-            <button
-              disabled={!inputAddress}
-              className="pointer-events-none p-3 pr-1"
-              type="submit"
-            >
-              <MagnifyingGlassIcon
-                className="w-6"
-                fill={!!inputAddress ? "black" : "#EEE"}
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full z-40 flex items-center justify-between py-1">
-        <div className="flex flex-col space-y-2">
-          <p className="font-medium">Your network:</p>
-          <SelectAuthedUserChain />
-        </div>
-        <div className="flex flex-col space-y-2">
-          <p className="font-medium">Searched address network:</p>
-          <div className="ml-auto">
-            <SelectDestinyChain />
-          </div>
-        </div>
       </div>
     </div>
   );

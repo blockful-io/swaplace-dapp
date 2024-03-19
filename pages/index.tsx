@@ -1,15 +1,15 @@
-import { HomeSection, Layout } from "@/components/04-templates";
+import { Layout, SwapSection } from "@/components/04-templates";
 import cc from "classcat";
 
-export default function Index() {
+export default function IndexPage() {
   return (
     <Layout>
       <div
         className={cc([
-          "w-full min-h-[100vh] h-full flex flex-col justify-center items-center",
+          "w-screen h-screen flex flex-col justify-center items-center",
         ])}
       >
-        <HomeSection />
+        <SwapSection />
       </div>
     </Layout>
   );

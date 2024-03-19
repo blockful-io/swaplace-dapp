@@ -1,7 +1,7 @@
-import { EthereumIcon, PolygonIcon, SwapContext } from ".";
+import { EthereumIcon, PolygonIcon, SwapContext } from "@/components/01-atoms";
 import { ChainInfo, SupportedNetworks } from "@/lib/client/constants";
-import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useContext, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import cc from "classcat";
 
 export const SelectDestinyChain = () => {
@@ -19,7 +19,7 @@ export const SelectDestinyChain = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-[#e8e8e8] shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 transition flex items-center space-x-3"
+        className="bg-[#e8e8e8] dark:bg-[#353836] dark:hover:bg-[#4b514d] dark:border-none  shadow-md border-2 border-[#e8e8e8] hover:bg-[#f8f8f8] rounded px-4 flex items-center space-x-3"
       >
         {destinyChain === SupportedNetworks.SEPOLIA ? (
           <EthereumIcon width={12} height={12} />
