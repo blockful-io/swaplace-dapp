@@ -152,13 +152,17 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
             </div>
             <div className="flex items-center justify-center flex-col gap-1 text-center">
               <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
-                {variant === TokensShelfVariant.Their
+                {variant === TokensShelfVariant.Their &&
+                !!authenticatedUserAddress
                   ? "No user selected yet"
                   : "No wallet is connected yet"}
               </p>
               <p className="dark:text-[#A3A9A5] font-onest font-normal text-[14px] leading-[20px]">
-                {variant === TokensShelfVariant.Their
+                {variant === TokensShelfVariant.Their &&
+                !!authenticatedUserAddress
                   ? "Search for a user to start swapping items"
+                  : variant === TokensShelfVariant.Their
+                  ? "Sign in to search for users"
                   : "Sign in to see your tokens"}
               </p>
             </div>
