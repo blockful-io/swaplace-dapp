@@ -1,3 +1,4 @@
+import { cleanJsonString } from "../utils";
 import { SwapContext } from "@/components/01-atoms";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
@@ -35,6 +36,8 @@ interface Ponder {
 export const usePonder = () => {
   const { inputAddress, ponderFilterStatus } = useContext(SwapContext);
   const [allSwaps, setAllSwaps] = useState<Swap[]>([]);
+  const [acceptedSwaps, setAcceptedSwaps] = useState<Swap[]>([]);
+  const [canceledSwaps, setCanceledSwaps] = useState<Swap[]>([]);
 
   useEffect(() => {
     const fetchAllSwaps = async () => {
@@ -42,10 +45,26 @@ export const usePonder = () => {
         const response = await axios(config);
         console.log("response =", response);
 
-        const allSwapsResponseData = response.data.data.databases.items;
+        const allSwapsResponseDataNotCleaned =
+          response.data.data.databases.items;
+
+        const allSwapsResponseData = allSwapsResponseDataNotCleaned.map(
+          (obj: any) => {
+            return {
+              ...obj,
+              bid: cleanJsonString(obj.bid),
+              ask: cleanJsonString(obj.ask),
+            };
+          },
+        );
+
         console.log("allSwapsResponseData", allSwapsResponseData);
 
-        setAllSwaps(allSwapsResponseData);
+        ponderFilterStatus === PonderFilter.ACCEPTED
+          ? setAcceptedSwaps(allSwapsResponseData)
+          : ponderFilterStatus === PonderFilter.CANCELED
+          ? setCanceledSwaps(allSwapsResponseData)
+          : setAllSwaps(allSwapsResponseData); /// ALL OFFERS
       } catch (error) {
         console.error(error);
         return [];
@@ -69,7 +88,7 @@ export const usePonder = () => {
     ponderQuery = {
       operationName: "databases",
       query: `query databases($orderBy: String!, $orderDirection: String!, $inputAddress: String! ) {
-        databases(orderBy: $orderBy, orderDirection: $orderDirection, where: { owner: $inputAddress }, limit: 20) {
+        databases(orderBy: $orderBy, orderDirection: $orderDirection, where: { owner: $inputAddress }, limit: 200) {
           items {
             swapId
             status
@@ -98,7 +117,7 @@ export const usePonder = () => {
     ponderQuery = {
       operationName: "databases",
       query: `query databases($orderBy: String!, $orderDirection: String!, $inputAddress: String!, $ponderFilterStatus: Status!  ) {
-        databases(orderBy: $orderBy, orderDirection: $orderDirection, where: { owner: $inputAddress, status: $ponderFilterStatus }, limit: 20) {
+        databases(orderBy: $orderBy, orderDirection: $orderDirection, where: { owner: $inputAddress, status: $ponderFilterStatus }, limit: 200) {
           items {
             swapId
             status
@@ -133,5 +152,5 @@ export const usePonder = () => {
     data: ponderQuery,
   };
 
-  return { allSwaps };
+  return { allSwaps, acceptedSwaps, canceledSwaps };
 };
