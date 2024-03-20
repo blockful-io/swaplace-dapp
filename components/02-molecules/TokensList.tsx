@@ -85,7 +85,10 @@ export const TokensList = ({
 
   const placeholders = withPlaceholders
     ? TokenCardsPlaceholder({
-        totalCardsLength: tokensList.length,
+        totalCardsLength:
+          withAddTokenCard && variant === TokensShelfVariant.Your
+            ? tokensList.length + 1 // Removes one empty square, so there is space for addTokenSquare
+            : tokensList.length,
         mobileTotalSquares: mobileTotalCards,
         tabletTotalSquares: tabletTotalCards,
         desktopTotalSquares: desktopTotalCards,
@@ -93,6 +96,7 @@ export const TokensList = ({
         styleType: tokenCardStyleType,
       })
     : [<></>];
+
   const tokenCards = tokensList.map((token: Token, index) => (
     <div key={`token-${index}`}>
       <TokenCard
@@ -107,27 +111,22 @@ export const TokensList = ({
     </div>
   ));
 
-  let allSquares = [...tokenCards, ...placeholders];
-
-  const addTokenSquare = withAddTokenCard ? AddTokenCardManually() : <></>;
-
-  const Layout = (squares: React.JSX.Element[]) => {
-    return (
-      <div className={gridClassNames}>
-        {squares}
-        <TokenAmountSelectionModal
-          owner={selectTokenAmountOf}
-          token={selectTokenAmountFor}
-          onCloseModal={onCloseModal}
-        />
-      </div>
+  const addTokenSquare =
+    withAddTokenCard && variant === TokensShelfVariant.Your ? (
+      AddTokenCardManually()
+    ) : (
+      <></>
     );
-  };
+  const allSquares = [...tokenCards, addTokenSquare, ...placeholders];
 
-  if (variant === TokensShelfVariant.Your) {
-    placeholders.pop(); // Removes the last element to fill with addToken
-    allSquares = [...allSquares, addTokenSquare];
-    return Layout(allSquares);
-  }
-  return Layout(allSquares);
+  return (
+    <div className={gridClassNames}>
+      {allSquares}
+      <TokenAmountSelectionModal
+        owner={selectTokenAmountOf}
+        token={selectTokenAmountFor}
+        onCloseModal={onCloseModal}
+      />
+    </div>
+  );
 };
