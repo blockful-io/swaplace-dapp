@@ -88,6 +88,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     }
   };
 
+  // Here we will transform to Token the ERC721 | ERC20
   const getUserTokensByPonder = async () => {
     const chainId = authenticatedUserAddress?.equals(address)
       ? chain?.id
@@ -96,17 +97,21 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     let queriedTokens: Token[] = [];
 
     if (address && chainId) {
-      await getERC721MetadataFromContractAddress(chainId, erc721AskSwaps)
-        .then((tokens) => {
-          console.log("tokens s s =", tokens);
-          queriedTokens = [...queriedTokens, ...tokens];
-        })
+      console.log("erc721AskSwaps", erc721AskSwaps);
+      Promise.all([
+        getERC721MetadataFromContractAddress(chainId, erc721AskSwaps).then(
+          (tokens) => {
+            console.log("tokens s s =", tokens);
+            queriedTokens = [...queriedTokens, ...tokens];
+          },
+        ),
         //  getERC20MetadataFromContractAddress(address, chainId).then(
         //    (tokens) => {
         //      queriedTokens = [...queriedTokens, ...tokens];
         //      tokensCount = tokensCount + tokens.length;
         //    },
         //  ),
+      ])
         .catch(() => {
           queriedTokens = [];
         })
