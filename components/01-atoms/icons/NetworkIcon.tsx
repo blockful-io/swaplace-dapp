@@ -1,6 +1,6 @@
+import { SepoliaLogo } from "..";
 import { SupportedNetworks } from "@/lib/client/constants";
 import arbitrumSepoliaIcon from "@/public/chains/arbitrumSepoliaIcon.png";
-import sepoliaIcon from "@/public/chains/sepoliaIcon.png";
 import baseGoerliIcon from "@/public/chains/baseGoerliIcon.png";
 import FujiIcon from "@/public/chains/FujiIcon.png";
 import bnbChainIcon from "@/public/chains/bnbChainIcon.png";
@@ -35,9 +35,7 @@ export const NetworkIcon = ({
     [SupportedNetworks.BASEGOERLI]: (
       <Image src={baseGoerliIcon} alt={"Base Goerli Icon"} />
     ),
-    [SupportedNetworks.SEPOLIA]: (
-      <Image src={sepoliaIcon} alt={"Sepolia Icon"} />
-    ),
+    [SupportedNetworks.SEPOLIA]: <SepoliaLogo />,
     [SupportedNetworks.FUJI]: <Image src={FujiIcon} alt={"Fuji Icon"} />,
     [SupportedNetworks.BNB]: <Image src={bnbChainIcon} alt={"BNB Icon"} />,
     [SupportedNetworks.OPTIMISM]: (

@@ -48,6 +48,7 @@ export * from "./icons/PlusIcon";
 export * from "./icons/PolygonIcon";
 export * from "./icons/PowerIcon";
 export * from "./icons/SelectUserIcon";
+export * from "./icons/SepoliaLogo";
 export * from "./icons/ShareIcon";
 export * from "./icons/SunIcon";
 export * from "./icons/SwapIcon";
