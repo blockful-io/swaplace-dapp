@@ -1,16 +1,18 @@
 import { cleanJsonString } from "../utils";
 import { SwapContext } from "@/components/01-atoms";
+import { type NftMetadataBatchToken } from "alchemy-sdk";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 
+// We should update that function after to improve the type like the other swap
 interface Swap {
   swapId: string;
   status: string;
   owner: string;
   allowed: string | null;
   expiry: bigint;
-  bid: string;
-  ask: string;
+  bid: string; // Asset
+  ask: string; // Asset
 }
 
 export enum PonderFilter {
@@ -39,6 +41,11 @@ export const usePonder = () => {
   const [acceptedSwaps, setAcceptedSwaps] = useState<Swap[]>([]);
   const [canceledSwaps, setCanceledSwaps] = useState<Swap[]>([]);
 
+  //Typing those states the way Alchemy understand
+  const [erc721AskSwaps, setERC721AskSwaps] = useState<NftMetadataBatchToken[]>(
+    [],
+  );
+
   useEffect(() => {
     const fetchAllSwaps = async () => {
       try {
@@ -58,13 +65,29 @@ export const usePonder = () => {
           },
         );
 
-        console.log("allSwapsResponseData", allSwapsResponseData);
-
         ponderFilterStatus === PonderFilter.ACCEPTED
           ? setAcceptedSwaps(allSwapsResponseData)
           : ponderFilterStatus === PonderFilter.CANCELED
           ? setCanceledSwaps(allSwapsResponseData)
           : setAllSwaps(allSwapsResponseData); /// ALL OFFERS
+
+        const PonderAlchemyERC721Ask: NftMetadataBatchToken[] =
+          allSwapsResponseData.map((swap: Swap) => {
+            // We are verifying here because the types are not aligned yet, we must change in the future
+            // Must change the type Swap from ponder to update this probably
+            if (Array.isArray(swap.ask) && swap.ask.length > 0) {
+              const askObject = swap.ask[0];
+              return {
+                contractAddress: askObject.addr,
+                tokenId: BigInt(askObject.amountOrId),
+              };
+            } else {
+              console.error("Error ASK is not an array");
+              return null;
+            }
+          });
+
+        setERC721AskSwaps(PonderAlchemyERC721Ask);
       } catch (error) {
         console.error(error);
         return [];
@@ -74,6 +97,7 @@ export const usePonder = () => {
     fetchAllSwaps();
   }, [ponderFilterStatus, inputAddress]);
 
+  // For some reason the process.env isn't working here, must hardcode to test it
   const endpoint = process.env.NEXT_PUBLIC_PONDER_ENDPOINT;
   const headers = {
     "content-type": "application/json",
@@ -152,5 +176,5 @@ export const usePonder = () => {
     data: ponderQuery,
   };
 
-  return { allSwaps, acceptedSwaps, canceledSwaps };
+  return { allSwaps, acceptedSwaps, canceledSwaps, erc721AskSwaps };
 };

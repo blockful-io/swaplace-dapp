@@ -28,6 +28,12 @@ export const TokenOffers = ({
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { validatedAddressToSwap } = useContext(SwapContext);
 
+  /**
+   * The horizonalVariant from TokenOffers get the data from Ponder
+   * This variant will handle the offers to the authenticatedUserAddress
+   *
+   * @returns
+   */
   const HorizontalVariant = () => {
     return (
       <div className="flex flex-col border border-[#353836] dark:shadow-add-manually-card dark:bg-[#282B29] rounded-lg ">
