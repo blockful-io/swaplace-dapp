@@ -17,7 +17,7 @@ export const BlockExplorerExternalLinkButton = ({
 
   const blockExplorer = `${
     chain?.blockExplorers?.default.url
-  }/address/${address?.toString()}`;
+  }/address/${address.toString()}`;
 
   return (
     <div className="flex">
