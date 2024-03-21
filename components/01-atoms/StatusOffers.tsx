@@ -1,54 +1,87 @@
-import { useState } from "react";
+import { SwapContext } from "@/components/01-atoms";
+import { PonderFilter, usePonder } from "@/lib/client/hooks/usePonder";
+import { useState, useContext } from "react";
 import cc from "classcat";
 
+export enum DisplayFilterOptions {
+  ALL_OFFERS = "All Offers",
+  CREATED = "Created",
+  RECEIVED = "Received",
+  ACCEPTED = "Accepted",
+  CANCELED = "Canceled",
+  EXPIRED = "Expired",
+}
+
 export const StatusOffers = () => {
+  const { setPonderFilterStatus } = useContext(SwapContext);
   const [offerIsActive, setOfferIsActive] = useState<number>(0);
-
-  enum FilterOptions {
-    ALL_OFFERS = "All Offers",
-    CREATED = "Created",
-    RECEIVED = "Received",
-    ACCEPTED = "Accepted",
-    CANCELED = "Canceled",
-    EXPIRED = "Expired",
-  }
-
+  const { allSwaps } = usePonder();
+  console.log("AllSwaps Ponder Status Filter = ", allSwaps);
   interface IFilterOffers {
     id: number;
-    name: FilterOptions;
+    name: DisplayFilterOptions;
   }
 
-  const OffersFilter: Record<FilterOptions, IFilterOffers> = {
-    [FilterOptions.ALL_OFFERS]: {
+  const OffersFilter: Record<DisplayFilterOptions, IFilterOffers> = {
+    [DisplayFilterOptions.ALL_OFFERS]: {
       id: 1,
-      name: FilterOptions.ALL_OFFERS,
+      name: DisplayFilterOptions.ALL_OFFERS,
     },
-    [FilterOptions.CREATED]: {
+    [DisplayFilterOptions.CREATED]: {
       id: 2,
-      name: FilterOptions.CREATED,
+      name: DisplayFilterOptions.CREATED,
     },
-    [FilterOptions.RECEIVED]: {
+    [DisplayFilterOptions.RECEIVED]: {
       id: 3,
-      name: FilterOptions.RECEIVED,
+      name: DisplayFilterOptions.RECEIVED,
     },
-    [FilterOptions.ACCEPTED]: {
+    [DisplayFilterOptions.ACCEPTED]: {
       id: 4,
-      name: FilterOptions.ACCEPTED,
+      name: DisplayFilterOptions.ACCEPTED,
     },
-    [FilterOptions.CANCELED]: {
+    [DisplayFilterOptions.CANCELED]: {
       id: 5,
-      name: FilterOptions.CANCELED,
+      name: DisplayFilterOptions.CANCELED,
     },
-    [FilterOptions.EXPIRED]: {
+    [DisplayFilterOptions.EXPIRED]: {
       id: 6,
-      name: FilterOptions.EXPIRED,
+      name: DisplayFilterOptions.EXPIRED,
     },
+  };
+
+  const handleFilterClick = (
+    filterOption: DisplayFilterOptions,
+    index: number,
+  ) => {
+    setOfferIsActive(index);
+
+    switch (filterOption) {
+      case DisplayFilterOptions.CREATED:
+        setPonderFilterStatus(PonderFilter.CREATED);
+        break;
+
+      case DisplayFilterOptions.RECEIVED:
+        setPonderFilterStatus(PonderFilter.RECEIVED);
+        break;
+
+      case DisplayFilterOptions.ACCEPTED:
+        setPonderFilterStatus(PonderFilter.ACCEPTED);
+        break;
+
+      case DisplayFilterOptions.CANCELED:
+        setPonderFilterStatus(PonderFilter.CANCELED);
+        break;
+
+      default:
+        setPonderFilterStatus(PonderFilter.ALL_OFFERS);
+        break;
+    }
   };
 
   return (
     <>
       {Object.keys(OffersFilter).map((key, index) => {
-        const filterOption = key as FilterOptions;
+        const filterOption = key as DisplayFilterOptions;
         const { id, name } = OffersFilter[filterOption];
 
         return (
@@ -60,7 +93,7 @@ export const StatusOffers = () => {
                 : "dark:hover:bg-[#282B29]",
             ])}
             key={index}
-            onClick={() => setOfferIsActive(index)}
+            onClick={() => handleFilterClick(filterOption, index)}
           >
             <div
               className={cc([
