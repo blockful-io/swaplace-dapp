@@ -13,8 +13,8 @@ export const ChainBnbIcon = (props: SVGProps<SVGSVGElement>) => {
       <g id="Vector">
         <path
           id="Vector_2"
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M12 0C18.6279 0 24 5.37212 24 12C24 18.6279 18.6279 24 12 24C5.37212 24 0 18.6279 0 12C0 5.37212 5.37212 0 12 0Z"
           fill="#F0B90B"
         />
