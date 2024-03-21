@@ -50,7 +50,7 @@ export const SwapStation = () => {
       //  As well if isn't valid, select a valid address to swap tokens
       if (!validatedAddressToSwap) {
         if (!inputAddress) {
-          toast.error("Search a address to swap it");
+          toast.error("Search for an address to create a swap offer");
         } else {
           toast.error("You must select a valid address to swap tokens");
         }
