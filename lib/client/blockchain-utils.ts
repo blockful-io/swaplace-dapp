@@ -14,6 +14,9 @@ import {
   type OwnedToken,
   type OwnedNft,
   Alchemy,
+  type TokenMetadataResponse,
+  type GetNftMetadataBatchResponse,
+  type NftMetadataBatchToken,
 } from "alchemy-sdk";
 import toast from "react-hot-toast";
 import { hexToNumber } from "viem";
@@ -99,6 +102,103 @@ export const getERC721TokensFromAddress = async (
       throw new Error("Error getting user's ERC721 tokens.");
     });
 };
+
+export const getERC721MetadataFromContractAddress = async (
+  chainId: number,
+  ponderTokens: NftMetadataBatchToken[],
+) => {
+  const networkAPIKey = getAPIKeyForNetwork.get(chainId);
+  const networkName = getNetwork.get(chainId);
+
+  console.log("ponderTokens,", ponderTokens);
+  if (!networkAPIKey) {
+    throw new Error("No API Key for this network.");
+  }
+
+  if (!networkName) {
+    throw new Error("No Network Name is defined for this network.");
+  }
+
+  const config = {
+    apiKey: networkAPIKey,
+    network: networkName,
+  };
+
+  const alchemy = new Alchemy(config);
+
+  return alchemy.nft
+    .getNftMetadataBatch(ponderTokens) // Error here in response
+    .then((response: GetNftMetadataBatchResponse) => {
+      console.log("response GetErC7211", response.nfts);
+      // return parseERC721MetadataFromContractAddress(response);
+    })
+    .catch((error) => {
+      toastBlockchainTxError(error);
+      throw new Error("Error getting user's ERC721 tokens.");
+    });
+};
+
+// const parseERC721MetadataFromContractAddress = (
+//   tokens: NftMetadataBatchToken[],
+// ): ERC721[] => {
+//   return tokens.map((token) => {
+//     return {
+//       tokenType: TokenType.ERC721,
+//       id: token.tokenId,
+//       name: token.contractAddress,
+//       metadata: token,
+//       contract: token.contractAddress,
+//       contractMetadata: token.contractAddress,
+//     };
+//   });
+// };
+
+export const getERC20MetadataFromContractAddress = async () => {
+  const chainId = 11155111;
+  const networkAPIKey = getAPIKeyForNetwork.get(chainId);
+  const networkName = getNetwork.get(chainId);
+
+  if (!networkAPIKey) {
+    throw new Error("No API Key for this network.");
+  }
+
+  if (!networkName) {
+    throw new Error("No Network Name is defined for this network.");
+  }
+
+  const config = {
+    apiKey: networkAPIKey,
+    network: networkName,
+  };
+
+  const alchemy = new Alchemy(config);
+
+  return alchemy.core
+    .getTokenMetadata("0x36F681679598181E1DBaD6324528eA0f2E4d4CA1")
+    .then((response: TokenMetadataResponse) => {
+      console.log("response getTokenMetadata", response);
+      // return parseAlchemyERC721Tokens(response);
+    })
+    .catch((error) => {
+      toastBlockchainTxError(error);
+      throw new Error("Error getting user's ERC721 tokens.");
+    });
+};
+
+// const parseERC20MetadataFromContractAddress = (
+//   tokens: OwnedNft[],
+// ): TokenMetadataResponse => {
+//   return tokens.map((token) => {
+//     return {
+//       tokenType: TokenType.ERC721,
+//       id: token.tokenId,
+//       name: token.contract.name,
+//       metadata: token.raw.metadata,
+//       contract: token.contract.address,
+//       contractMetadata: token.contract,
+//     };
+//   });
+// };
 
 const parseAlchemyERC721Tokens = (tokens: OwnedNft[]): ERC721[] => {
   return tokens.map((token) => {

@@ -3,10 +3,12 @@ import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import {
   getERC721TokensFromAddress,
   getERC20TokensFromAddress,
+  getERC721MetadataFromContractAddress,
 } from "@/lib/client/blockchain-utils";
 import { EthereumAddress, Token } from "@/lib/shared/types";
 import { TokensList } from "@/components/02-molecules";
 import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
+import { usePonder } from "@/lib/client/hooks/usePonder";
 import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useNetwork } from "wagmi";
@@ -32,14 +34,23 @@ interface TokensShelfProps {
 export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   const { chain } = useNetwork();
   const [allTokensList, setAllTokensList] = useState<Token[]>([]);
+  const [allTokensListByPonder, setAllTokensListByPonder] = useState<Token[]>(
+    [],
+  );
   const [tokensQueryStatus, setTokensQueryStatus] = useState<TokensQueryStatus>(
     TokensQueryStatus.EMPTY_QUERY,
   );
   const { theme } = useTheme();
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-  const { validatedAddressToSwap, inputAddress, destinyChain } =
-    useContext(SwapContext);
+  const {
+    validatedAddressToSwap,
+    inputAddress,
+    destinyChain,
+    ponderFilterStatus,
+  } = useContext(SwapContext);
+
+  const { erc721AskSwaps } = usePonder();
 
   const getUserTokens = async () => {
     const chainId = authenticatedUserAddress?.equals(address)
@@ -77,9 +88,46 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     }
   };
 
+  // Here we will transform to Token the ERC721 | ERC20
+  const getUserTokensByPonder = async () => {
+    const chainId = authenticatedUserAddress?.equals(address)
+      ? chain?.id
+      : ChainInfo[destinyChain].id;
+
+    let queriedTokens: Token[] = [];
+
+    if (address && chainId) {
+      console.log("erc721AskSwaps", erc721AskSwaps);
+      Promise.all([
+        getERC721MetadataFromContractAddress(chainId, erc721AskSwaps).then(
+          (tokens) => {
+            console.log("tokens s s =", tokens);
+            queriedTokens = [...queriedTokens, ...tokens];
+          },
+        ),
+        //  getERC20MetadataFromContractAddress(address, chainId).then(
+        //    (tokens) => {
+        //      queriedTokens = [...queriedTokens, ...tokens];
+        //      tokensCount = tokensCount + tokens.length;
+        //    },
+        //  ),
+      ])
+        .catch(() => {
+          queriedTokens = [];
+        })
+        .finally(() => {
+          if (chainId) {
+          } else {
+            setAllTokensListByPonder(queriedTokens);
+          }
+        });
+    }
+  };
+
   useEffect(() => {
     getUserTokens();
-  }, [address, chain, destinyChain]);
+    getUserTokensByPonder();
+  }, [address, chain, destinyChain, ponderFilterStatus]); // PonderFilterStatus & destinyChain addded probably must be moved to another place
 
   const conditionallyCleanTokensList = (condition: boolean) => {
     if (condition) {

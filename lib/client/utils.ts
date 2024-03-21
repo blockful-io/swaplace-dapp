@@ -66,3 +66,22 @@ export const collapseAddress = (
 
   return collapsedAddress;
 };
+
+/**
+ * Cleans a JSON string by removing escape characters and extra quotes,
+ * and parses it into a JavaScript object.
+ * @param {string} jsonString - The JSON string to clean and parse.
+ * @returns {object|null} The cleaned JavaScript object, or null if an error occurs.
+ */
+export const cleanJsonString = (jsonString: string) => {
+  try {
+    // Remove backslashes and extra quotes
+    const cleanedString = jsonString.replace(/\\/g, "").replace(/^"|"$/g, "");
+    // Parse the cleaned string into a JavaScript object
+    const cleanedObject = JSON.parse(cleanedString);
+    return cleanedObject;
+  } catch (error) {
+    console.error("Error cleaning JSON string:", error);
+    return null; // or return an empty string, depending on your use case
+  }
+};
