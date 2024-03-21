@@ -1,10 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { MobileNotSupported } from "@/components/01-atoms/";
 import { SidebarProvider } from "@/lib/client/contexts/SidebarContext.tsx";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { sepolia, useSwitchNetwork } from "wagmi";
+import cc from "classcat";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   const { isNetworkSupported } = useSupportedNetworks();
@@ -22,12 +24,19 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [authenticatedUserAddress, isNetworkSupported]);
 
   return (
-    <SidebarProvider>
-      <meta
-        content="initial-scale=1.0, width=device-width"
-        name="viewport"
-      ></meta>
-      {children}
-    </SidebarProvider>
+    <>
+      <div className={cc(["md:block hidden"])}>
+        <SidebarProvider>
+          <meta
+            content="initial-scale=1.0, width=device-width"
+            name="viewport"
+          ></meta>
+          {children}
+        </SidebarProvider>
+      </div>
+      <div className="md:hidden flex justify-center items-center">
+        <MobileNotSupported />
+      </div>
+    </>
   );
 };
