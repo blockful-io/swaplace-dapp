@@ -26,11 +26,9 @@ export const BlockExplorerExternalLinkButton = ({
         target="_blank"
         className="flex gap-1 items-center justify-start"
       >
-        <h3 className="text-sm font-medium text-[#A3A9A5]">
-          {label || displayEllipsedAddress}
-        </h3>
+        <h3 className="p-medium">{label || displayEllipsedAddress}</h3>
         <div className="p-1">
-          <ExternalLinkIcon className="dark:text-[#A3A9A5] text-[#AABE13] font-medium" />
+          <ExternalLinkIcon className="p-medium" />
         </div>
       </a>
     </div>

@@ -246,14 +246,14 @@ export const TokenCard = ({
           onError={handleImageLoadError}
           src={tokenDisplayableData.image}
           alt={getTokenName(tokenData)}
-          className="text-center static z-10 w-full h-full overflow-y-auto rounded-xl"
+          className="dark:text-[#707572] text-[#707572] text-center static z-10 w-full h-full overflow-y-auto rounded-xl"
         />,
       )}
     </>
   ) : (
     <>
       {ButtonLayout(
-        <div className="flex justify-center items-center w-full h-full text-[10px] font-medium oveflow-y-scroll break-all">
+        <div className="dark:text-[#707572] text-[#707572] flex justify-center items-center w-full h-full text-[10px] font-medium oveflow-y-scroll break-all">
           {getTokenName(tokenData, {
             withAmountPrefix: tokenData.tokenType === TokenType.ERC20,
             displayTokenAmount: displayERC20TokensAmount,
