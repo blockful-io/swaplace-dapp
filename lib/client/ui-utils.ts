@@ -69,11 +69,16 @@ export const getTokenName = (
  */
 export const getTokenContractAddress = (token: Token): EthereumAddress => {
   if (!token) throw new Error("Token not defined");
-  let address: EthereumAddress;
-  if (!token.contract) {
-    address = (token as ERC721).contractMetadata?.address;
-  } else {
-    address = new EthereumAddress(token.contract as string);
-  }
+
+  let address: EthereumAddress | undefined = !token.contract
+    ? (token as ERC721).contractMetadata?.address
+    : typeof token.contract === "string"
+    ? new EthereumAddress(token.contract)
+    : undefined;
+
+  if (address === undefined)
+    throw new Error(
+      `Token contract address not defined for ${getTokenName(token)}`,
+    );
   return address;
 };
