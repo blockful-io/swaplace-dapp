@@ -7,6 +7,7 @@ import {
 import { Token } from "@/lib/shared/types";
 import { TokensList } from "@/components/02-molecules";
 import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
+import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
 import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useNetwork } from "wagmi";
@@ -30,6 +31,7 @@ interface TokensShelfProps {
  */
 export const TokensShelf = ({ variant }: TokensShelfProps) => {
   const { chain } = useNetwork();
+  const { isNetworkSupported } = useSupportedNetworks();
   const [allTokensList, setAllTokensList] = useState<Token[]>([]);
   const [tokensQueryStatus, setTokensQueryStatus] = useState<TokensQueryStatus>(
     TokensQueryStatus.EMPTY_QUERY,
@@ -81,9 +83,16 @@ export const TokensShelf = ({ variant }: TokensShelfProps) => {
     }
   };
 
+  // will only reload if network isNetworkSupported changes
   useEffect(() => {
-    !!authenticatedUserAddress && getUserTokens();
-  }, [authenticatedUserAddress, validatedAddressToSwap]);
+    !!authenticatedUserAddress && isNetworkSupported && getUserTokens();
+  }, [
+    address,
+    isNetworkSupported,
+    authenticatedUserAddress,
+    validatedAddressToSwap,
+    destinyChain,
+  ]);
 
   const conditionallyCleanTokensList = (condition: boolean) => {
     if (condition) {
@@ -134,6 +143,10 @@ export const TokensShelf = ({ variant }: TokensShelfProps) => {
       !validatedAddressToSwap && variant === TokensShelfVariant.Their,
     );
   }, [validatedAddressToSwap]);
+
+  useEffect(() => {
+    conditionallyCleanTokensList(!isNetworkSupported);
+  }, [isNetworkSupported]);
 
   return (
     <div className="w-full flex rounded-t-none overflow-y-auto lg:max-w-[600px] h-[356px] no-scrollbar">

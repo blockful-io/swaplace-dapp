@@ -60,7 +60,7 @@ export const SearchBar = () => {
         setUserJustValidatedInput(true);
       }
     } else if (inputAddress && !authenticatedUserAddress) {
-      toast.error("Cannot get ENS address without connect your wallet");
+      toast.error("Cannot get ENS address without connecting your wallet");
     }
   };
 
