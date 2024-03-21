@@ -3,8 +3,8 @@ import { MobileNotSupported } from "@/components/01-atoms/";
 import { SidebarProvider } from "@/lib/client/contexts/SidebarContext.tsx";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
-import { sepolia, useSwitchNetwork } from "wagmi";
 import { useEffect } from "react";
+import { sepolia, useSwitchNetwork } from "wagmi";
 import toast from "react-hot-toast";
 import cc from "classcat";
 
