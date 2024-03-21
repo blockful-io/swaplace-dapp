@@ -27,7 +27,7 @@ export const BlockExplorerExternalLinkButton = ({
         className="flex gap-1 items-center justify-start"
       >
         <h3 className="text-sm font-medium text-[#A3A9A5]">
-          {label ? label : displayEllipsedAddress}
+          {label || displayEllipsedAddress}
         </h3>
         <div className="p-1">
           <ExternalLinkIcon className="dark:text-[#A3A9A5] text-[#AABE13] font-medium" />
