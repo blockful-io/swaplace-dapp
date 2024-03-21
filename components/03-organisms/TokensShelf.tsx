@@ -4,7 +4,7 @@ import {
   getERC721TokensFromAddress,
   getERC20TokensFromAddress,
 } from "@/lib/client/blockchain-utils";
-import { EthereumAddress, Token } from "@/lib/shared/types";
+import { Token } from "@/lib/shared/types";
 import { TokensList } from "@/components/02-molecules";
 import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
 import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
@@ -19,7 +19,6 @@ export enum TokensShelfVariant {
 }
 
 interface TokensShelfProps {
-  address: EthereumAddress | null;
   variant: TokensShelfVariant;
 }
 
@@ -30,7 +29,7 @@ interface TokensShelfProps {
  *
  * @returns Tokens Shelf based in status of given address
  */
-export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
+export const TokensShelf = ({ variant }: TokensShelfProps) => {
   const { chain } = useNetwork();
   const { isNetworkSupported } = useSupportedNetworks();
   const [allTokensList, setAllTokensList] = useState<Token[]>([]);
@@ -43,6 +42,11 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   const { validatedAddressToSwap, inputAddress, destinyChain } =
     useContext(SwapContext);
 
+  const address =
+    variant === TokensShelfVariant.Their
+      ? validatedAddressToSwap
+      : authenticatedUserAddress;
+
   const getUserTokens = async () => {
     const chainId = authenticatedUserAddress?.equals(address)
       ? chain?.id
@@ -51,7 +55,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     let queriedTokens: Token[] = [];
     let tokensCount = allTokensList.length;
 
-    if (address && chainId) {
+    if (address && chainId && !!authenticatedUserAddress) {
       setTokensQueryStatus(TokensQueryStatus.LOADING);
 
       Promise.all([
@@ -81,8 +85,14 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
 
   // will only reload if network isNetworkSupported changes
   useEffect(() => {
-    isNetworkSupported && getUserTokens();
-  }, [address, isNetworkSupported, destinyChain]);
+    !!authenticatedUserAddress && isNetworkSupported && getUserTokens();
+  }, [
+    address,
+    isNetworkSupported,
+    authenticatedUserAddress,
+    validatedAddressToSwap,
+    destinyChain,
+  ]);
 
   const conditionallyCleanTokensList = (condition: boolean) => {
     if (condition) {
