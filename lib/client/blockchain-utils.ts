@@ -126,18 +126,28 @@ export const getERC721MetadataFromContractAddress = async (
 
   const alchemy = new Alchemy(config);
 
+  // Ensure ponderTokens is structured correctly for the getNftMetadataBatch method
+  const formattedTokens = ponderTokens.map((token) => ({
+    contractAddress: token.contractAddress,
+    tokenId: token.tokenId.toString(),
+  }));
+
+  console.log("FORMATED TOKENS :", formattedTokens);
+
   return alchemy.nft
-    .getNftMetadataBatch(ponderTokens) // Error here in response
-    .then((response: GetNftMetadataBatchResponse) => {
+    .getNftMetadataBatch(formattedTokens) // Pass the formattedTokens directly
+    .then((response) => {
       console.log("response GetErC7211", response.nfts);
+      // Process and return the response as needed
       // return parseERC721MetadataFromContractAddress(response);
     })
     .catch((error) => {
-      toastBlockchainTxError(error);
+      console.log(error);
       throw new Error("Error getting user's ERC721 tokens.");
     });
 };
 
+// Parses the information into an understandable
 // const parseERC721MetadataFromContractAddress = (
 //   tokens: NftMetadataBatchToken[],
 // ): ERC721[] => {

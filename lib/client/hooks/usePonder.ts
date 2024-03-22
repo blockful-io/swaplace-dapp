@@ -36,7 +36,7 @@ interface Ponder {
 }
 
 export const usePonder = () => {
-  const { inputAddress, ponderFilterStatus } = useContext(SwapContext);
+  const { ponderFilterStatus } = useContext(SwapContext);
   const [allSwaps, setAllSwaps] = useState<Swap[]>([]);
   const [acceptedSwaps, setAcceptedSwaps] = useState<Swap[]>([]);
   const [canceledSwaps, setCanceledSwaps] = useState<Swap[]>([]);
@@ -46,14 +46,23 @@ export const usePonder = () => {
     [],
   );
 
+  // TODO: place the actual ADDRESS_ZERO, not a hardcoded one
+  const inputAddress = "0x12a0AA4054CDa340492228B1ee2AF0315276092b";
+  // const inputAddress = "0xB0CA2E19356F763721110b2E0B318883DF844cBC";
+
   useEffect(() => {
     const fetchAllSwaps = async () => {
       try {
         const response = await axios(config);
-        console.log("response =", response);
+        // console.log("response =", response);
 
         const allSwapsResponseDataNotCleaned =
           response.data.data.databases.items;
+
+        console.log(
+          "allSwapsResponseDataNotCleaned :",
+          allSwapsResponseDataNotCleaned,
+        );
 
         const allSwapsResponseData = allSwapsResponseDataNotCleaned.map(
           (obj: any) => {
@@ -89,7 +98,7 @@ export const usePonder = () => {
 
         setERC721AskSwaps(PonderAlchemyERC721Ask);
       } catch (error) {
-        console.error(error);
+        console.error("error loading allSwaps :", error);
         return [];
       }
     };
