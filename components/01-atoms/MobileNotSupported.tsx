@@ -1,6 +1,8 @@
 import { ErrorIcon, SwaplaceIcon } from "@/components/01-atoms";
+import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 
-export const MobileNotSupported = () => {
+export const WarningScreenSizeNotSupported = () => {
+  const { isMobile, isTablet } = useScreenSize();
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center py-8 px-6 gap-6">
       <div className="flex gap-1">
@@ -13,7 +15,11 @@ export const MobileNotSupported = () => {
         </div>
         <div className="flex flex-col text-center items-center">
           <p className="dark:p-medium-bold-2-dark p-medium-bold-2-dark-variant-black ">
-            Oh no, mobile isn&apos;t available yet!
+            {isTablet ? (
+              <p>Oh no, tablet isn&apos;t available yet!</p>
+            ) : isMobile ? (
+              <p>Oh no, mobile isn&apos;t available yet!</p>
+            ) : null}
           </p>
           <p className="p-small dark:!text-[#A3A9A5] !text-[#212322] ">
             Please try our desktop version to get a better experience

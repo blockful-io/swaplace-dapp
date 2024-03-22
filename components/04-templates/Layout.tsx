@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { MobileNotSupported } from "@/components/01-atoms/";
+import { WarningScreenSizeNotSupported } from "@/components/01-atoms/";
 import { SidebarProvider } from "@/lib/client/contexts/SidebarContext.tsx";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
@@ -12,7 +11,6 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   const { isNetworkSupported } = useSupportedNetworks();
   const { switchNetwork } = useSwitchNetwork();
   const { authenticatedUserAddress } = useAuthenticatedUser();
-
   useEffect(() => {
     if (authenticatedUserAddress && !isNetworkSupported) {
       toast.error("Network not supported, change network and try again", {
@@ -22,10 +20,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       switchNetwork && switchNetwork(sepolia.id);
     }
   }, [authenticatedUserAddress, isNetworkSupported]);
-
   return (
     <>
-      <div className={cc(["md:block hidden"])}>
+      <div className={cc(["lg:block hidden"])}>
         <SidebarProvider>
           <meta
             content="initial-scale=1.0, width=device-width"
@@ -34,8 +31,8 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
           {children}
         </SidebarProvider>
       </div>
-      <div className="md:hidden flex justify-center items-center">
-        <MobileNotSupported />
+      <div className="lg:hidden flex justify-center items-center">
+        <WarningScreenSizeNotSupported />
       </div>
     </>
   );
