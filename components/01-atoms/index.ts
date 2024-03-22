@@ -6,6 +6,7 @@ export * from "./DisconnectWallet";
 export * from "./ENSAvatar";
 export * from "./LoadingIndicator";
 export * from "./NetworkDropdown";
+export * from "./MobileNotSupported";
 export * from "./OfferExpiryConfirmSwap";
 export * from "./OfferTag";
 export * from "./ProgressBar";
