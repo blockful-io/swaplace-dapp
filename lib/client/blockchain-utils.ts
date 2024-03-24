@@ -1,4 +1,5 @@
 import { getAPIKeyForNetwork, getNetwork } from "./constants";
+import { Asset } from "./swap-utils";
 import { publicClient } from "../wallet/wallet-config";
 import {
   Token,
@@ -14,12 +15,10 @@ import {
   type OwnedToken,
   type OwnedNft,
   Alchemy,
-  type TokenMetadataResponse,
-  type GetNftMetadataBatchResponse,
-  type NftMetadataBatchToken,
 } from "alchemy-sdk";
 import toast from "react-hot-toast";
 import { hexToNumber } from "viem";
+import { sepolia } from "wagmi";
 
 export enum ButtonClickPossibilities {
   PREVIOUS_STEP,
@@ -103,14 +102,11 @@ export const getERC721TokensFromAddress = async (
     });
 };
 
-export const getERC721MetadataFromContractAddress = async (
-  chainId: number,
-  ponderTokens: NftMetadataBatchToken[],
-) => {
+async function getERC20OrERC721Metadata(token: Asset): Promise<Token> {
+  const chainId = sepolia.id;
   const networkAPIKey = getAPIKeyForNetwork.get(chainId);
   const networkName = getNetwork.get(chainId);
 
-  console.log("ponderTokens,", ponderTokens);
   if (!networkAPIKey) {
     throw new Error("No API Key for this network.");
   }
@@ -126,25 +122,70 @@ export const getERC721MetadataFromContractAddress = async (
 
   const alchemy = new Alchemy(config);
 
-  // Ensure ponderTokens is structured correctly for the getNftMetadataBatch method
-  const formattedTokens = ponderTokens.map((token) => ({
-    contractAddress: token.contractAddress,
-    tokenId: token.tokenId.toString(),
-  }));
+  try {
+    const response = await alchemy.core.getTokenMetadata(token.addr);
 
-  console.log("FORMATED TOKENS :", formattedTokens);
+    if (!!response.decimals) {
+      console.log("ERC20 Token Metadata:", response);
 
-  return alchemy.nft
-    .getNftMetadataBatch(formattedTokens) // Pass the formattedTokens directly
-    .then((response) => {
-      console.log("response GetErC7211", response.nfts);
-      // Process and return the response as needed
-      // return parseERC721MetadataFromContractAddress(response);
-    })
-    .catch((error) => {
-      console.log(error);
-      throw new Error("Error getting user's ERC721 tokens.");
-    });
+      TokenType.ERC20;
+
+      return {
+        tokenType: TokenType.ERC20,
+        name: response.name ?? undefined,
+        logo: response.logo ?? undefined,
+        symbol: response.symbol ?? undefined,
+        contract: token.addr,
+        rawBalance: Number(token.amountOrId),
+        decimals: response.decimals,
+      };
+
+      // return {
+      //   ...response,
+      //   tokenType: TokenType.ERC20,
+      //   amount: token.amountOrId,
+      //   address: token.addr,
+      // };
+    } else {
+      // Retrieve metadata as an erc721
+      const metadata = await alchemy.nft.getNftMetadata(
+        token.addr,
+        token.amountOrId,
+      );
+
+      return {
+        tokenType: TokenType.ERC721,
+        id: token.amountOrId.toString(),
+        name: metadata.name,
+        contract: metadata.contract.address,
+        metadata: metadata,
+      };
+      console.log("Treating as an erc721", metadata);
+      // return {
+      //   ...metadata,
+      //   tokenType: TokenType.ERC721,
+      //   amount: token.amountOrId,
+      //   address: token.addr,
+      // };
+    }
+  } catch (error) {
+    console.error("Error fetching token metadata:", error);
+    throw new Error("Error fetching token metadata.");
+  }
+}
+
+// retrieve data for array of tokens
+export const retrieveDataFromTokensArray = async (
+  tokens: Asset[],
+): Promise<Token[]> => {
+  // Use map to transform tokens into an array of promises
+  const promises = tokens.map((token) => getERC20OrERC721Metadata(token));
+
+  // Wait for all promises to resolve
+  const newTokensList = await Promise.all(promises);
+
+  console.log("newTokensList :", newTokensList);
+  return newTokensList;
 };
 
 // Parses the information into an understandable
@@ -163,37 +204,36 @@ export const getERC721MetadataFromContractAddress = async (
 //   });
 // };
 
-export const getERC20MetadataFromContractAddress = async () => {
-  const chainId = 11155111;
-  const networkAPIKey = getAPIKeyForNetwork.get(chainId);
-  const networkName = getNetwork.get(chainId);
+// export const getERC20MetadataFromContractAddress = async () => {
+//   const chainId = 11155111;
+//   const networkAPIKey = getAPIKeyForNetwork.get(chainId);
+//   const networkName = getNetwork.get(chainId);
 
-  if (!networkAPIKey) {
-    throw new Error("No API Key for this network.");
-  }
+//   if (!networkAPIKey) {
+//     throw new Error("No API Key for this network.");
+//   }
 
-  if (!networkName) {
-    throw new Error("No Network Name is defined for this network.");
-  }
+//   if (!networkName) {
+//     throw new Error("No Network Name is defined for this network.");
+//   }
 
-  const config = {
-    apiKey: networkAPIKey,
-    network: networkName,
-  };
+//   const config = {
+//     apiKey: networkAPIKey,
+//     network: networkName,
+//   };
 
-  const alchemy = new Alchemy(config);
+//   const alchemy = new Alchemy(config);
 
-  return alchemy.core
-    .getTokenMetadata("0x36F681679598181E1DBaD6324528eA0f2E4d4CA1")
-    .then((response: TokenMetadataResponse) => {
-      console.log("response getTokenMetadata", response);
-      // return parseAlchemyERC721Tokens(response);
-    })
-    .catch((error) => {
-      toastBlockchainTxError(error);
-      throw new Error("Error getting user's ERC721 tokens.");
-    });
-};
+//   return alchemy.core
+//     .getTokenMetadata("0x36F681679598181E1DBaD6324528eA0f2E4d4CA1")
+//     .then((response: TokenMetadataResponse) => {
+//       // return parseAlchemyERC721Tokens(response);
+//     })
+//     .catch((error) => {
+//       toastBlockchainTxError(error);
+//       throw new Error("Error getting user's ERC721 tokens.");
+//     });
+// };
 
 // const parseERC20MetadataFromContractAddress = (
 //   tokens: OwnedNft[],
@@ -276,6 +316,7 @@ const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
       */
       id: ((Date.now() * Math.random()) / Math.random()).toFixed(0),
       name: token.name,
+      decimals: token.decimals,
       logo: token.logo,
       symbol: token.symbol,
       rawBalance: rawBalanceAsNumber,

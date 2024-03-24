@@ -1,4 +1,4 @@
-import { TokenOfferVariant, TokenOffers } from "@/components/03-organisms";
+import { TokenSwapOffers } from "../03-organisms/TokenSwapOffers";
 import { FilterOffers, TheHeader } from "@/components/02-molecules";
 
 export const OfferSection = () => {
@@ -10,8 +10,8 @@ export const OfferSection = () => {
           <div className="flex flex-col">
             <FilterOffers />
           </div>
-          <div className="flex xl:flex-col ">
-            <TokenOffers variant={TokenOfferVariant.HORIZONTAL} />
+          <div className="flex xl:flex-col w-full items-center h-full overflow-scroll">
+            <TokenSwapOffers />
           </div>
         </div>
       </section>

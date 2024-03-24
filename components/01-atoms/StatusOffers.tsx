@@ -85,9 +85,9 @@ export const StatusOffers = () => {
         const { id, name } = OffersFilter[filterOption];
 
         return (
-          <div
+          <button
             className={cc([
-              "h-11 dark:shadow-swap-station border border-solid border-[#353836] flex justify-between items-center px-3 bg-[#F2F2F2] group rounded-[10px] dark:bg-[#212322] mb-3 font-onest leading-5",
+              "h-11 w-full dark:shadow-swap-station border border-solid border-[#353836] flex justify-between items-center px-3 bg-[#F2F2F2] group rounded-[10px] dark:bg-[#212322] mb-3 font-onest leading-5",
               offerIsActive === index
                 ? "dark:shadow-[0px_0px_8px_1px_#83980026] dark:border-[#505150] dark:bg-[#212322]"
                 : "dark:hover:bg-[#282B29]",
@@ -114,7 +114,7 @@ export const StatusOffers = () => {
             >
               {id}
             </div>
-          </div>
+          </button>
         );
       })}
     </>

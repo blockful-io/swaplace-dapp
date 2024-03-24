@@ -22,6 +22,7 @@ export interface ERC20 {
   symbol?: string;
   contract?: string;
   rawBalance: number;
+  decimals?: number;
 }
 
 export interface ERC20WithTokenAmountSelection extends ERC20 {

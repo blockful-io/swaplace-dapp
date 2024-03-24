@@ -6,12 +6,8 @@ import {
   SwapIconVariant,
 } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { usePonder } from "@/lib/client/hooks/usePonder";
-import { Token } from "@/lib/shared/types";
-import { getERC721MetadataFromContractAddress } from "@/lib/client/blockchain-utils";
 import cc from "classcat";
-import { useContext, useState } from "react";
-import { sepolia } from "wagmi";
+import { useContext } from "react";
 
 export enum TokenOfferVariant {
   HORIZONTAL = "horizontal",
@@ -32,12 +28,6 @@ export const TokenOffers = ({
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { validatedAddressToSwap } = useContext(SwapContext);
 
-  const { erc721AskSwaps } = usePonder();
-
-  const [allTokensListByPonder, setAllTokensListByPonder] = useState<Token[]>(
-    [],
-  );
-
   /**
    * The horizonalVariant from TokenOffers get the data from Ponder
    * This variant will handle the offers to the authenticatedUserAddress
@@ -45,50 +35,6 @@ export const TokenOffers = ({
    * @returns
    */
 
-  console.log("erc721AskSwaps ", erc721AskSwaps);
-
-  // Transforms to Token the ERC721 | ERC20
-  const getUserTokensByPonder = async () => {
-    // const chainId = authenticatedUserAddress?.equals(address)
-    //   ? chain?.id
-    //   : ChainInfo[destinyChain].id;
-
-    const chainId = sepolia.id;
-    const address = "0x12a0AA4054CDa340492228B1ee2AF0315276092b";
-    let queriedTokens: Token[] = [];
-
-    // ta dando erro essa parada
-    if (address && chainId) {
-      console.log("erc721AskSwaps", erc721AskSwaps);
-      Promise.all([
-        getERC721MetadataFromContractAddress(chainId, erc721AskSwaps).then(
-          (tokens) => {
-            console.log("tokens s s =", tokens);
-            // queriedTokens = [...queriedTokens, ...tokens];
-          },
-        ),
-        //  getERC20MetadataFromContractAddress(address, chainId).then(
-        //    (tokens) => {
-        //      queriedTokens = [...queriedTokens, ...tokens];
-        //      tokensCount = tokensCount + tokens.length;
-        //    },
-        //  ),
-      ])
-        .catch((err) => {
-          console.log(err);
-          queriedTokens = [];
-        })
-        .finally(() => {
-          if (chainId) {
-          } else {
-            setAllTokensListByPonder(queriedTokens);
-          }
-        });
-    }
-  };
-
-  getUserTokensByPonder();
-  console.log(allTokensListByPonder);
   const HorizontalVariant = () => {
     return (
       <div className="flex flex-col border border-[#353836] dark:shadow-add-manually-card dark:bg-[#282B29] rounded-lg ">
