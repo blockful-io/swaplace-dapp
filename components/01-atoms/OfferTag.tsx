@@ -1,14 +1,36 @@
-export const OfferTag = () => {
-  enum TAG {
-    PEDING = "PENDING",
-    ACCEPTED = "ACCEPTED",
-    CANCELED = "CANCELED",
-    EXPIRED = "EXPIRED",
-  }
+export enum TAG {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  CANCELED = "CANCELED",
+  EXPIRED = "EXPIRED",
+}
+
+interface OfferTagProps {
+  status: string;
+}
+
+export const OfferTag = ({ status }: OfferTagProps) => {
   interface TagConfig {
     body: React.ReactNode;
   }
 
+  // TODO: Test that
+  const getTagStatus = () => {
+    switch (status) {
+      case "created" || "Received":
+        return TAG.PENDING;
+      case "canceled":
+        return TAG.CANCELED;
+      case "accepted":
+        return TAG.ACCEPTED;
+      case "expired":
+        return TAG.EXPIRED;
+      default:
+        return TAG.PENDING;
+    }
+  };
+
+  console.log(status);
   const Tags: Record<TAG, TagConfig> = {
     [TAG.ACCEPTED]: {
       body: <div className="bg-[#10584C] p-1 rounded">{TAG.ACCEPTED}</div>,
@@ -19,14 +41,14 @@ export const OfferTag = () => {
     [TAG.EXPIRED]: {
       body: <div className="bg-[#4A4F80] p-1 rounded">{TAG.EXPIRED}</div>,
     },
-    [TAG.PEDING]: {
-      body: <div className="bg-[#DE7B30] p-1 rounded">{TAG.PEDING}</div>,
+    [TAG.PENDING]: {
+      body: <div className="bg-[#DE7B30] p-1 rounded">{TAG.PENDING}</div>,
     },
   };
 
   return (
     <div className="shadow-tag p-semibold-dark flex items-center">
-      {Tags[TAG.PEDING].body}
+      {Tags[getTagStatus()].body}
     </div>
   );
 };

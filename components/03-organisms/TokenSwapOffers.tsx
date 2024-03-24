@@ -4,9 +4,8 @@ import {
   SwapIcon,
   TokensOfferSkeleton,
 } from "@/components/01-atoms";
-import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { usePonder } from "@/lib/client/hooks/usePonder";
-import { Token, TokenType } from "@/lib/shared/types";
+import { EthereumAddress, Token, TokenType } from "@/lib/shared/types";
 import { retrieveDataFromTokensArray } from "@/lib/client/blockchain-utils";
 import cc from "classcat";
 import { useEffect, useState } from "react";
@@ -15,15 +14,25 @@ interface TokenOffersConfig {
   place?: string;
 }
 
+interface SwapOfferInterface {
+  status: string;
+  expiryDate?: string;
+  bid: {
+    address?: EthereumAddress;
+    tokens: Token[];
+  };
+  ask: {
+    address?: EthereumAddress;
+    tokens: Token[];
+  };
+}
+
 export const TokenSwapOffers = ({}: TokenOffersConfig) => {
   const { allSwaps, isPonderSwapsLoading } = usePonder();
   const [isLoading, setIsLoading] = useState(true);
 
   const [allTokensListByPonder, setAllTokensListByPonder] = useState<
-    {
-      bid: Token[];
-      ask: Token[];
-    }[]
+    SwapOfferInterface[]
   >([]);
 
   /**
@@ -46,14 +55,24 @@ export const TokenSwapOffers = ({}: TokenOffersConfig) => {
     setIsLoading(true);
 
     const tokensTokenizedPromises = allSwaps.map(async (swap) => {
+      const expiry = (BigInt(swap.allowed!) >> BigInt(96)).toString();
+      const allowed = new EthereumAddress(
+        "0x" + BigInt(swap.allowed!).toString(16),
+      );
+      const owner = new EthereumAddress(swap.owner);
+
+      console.log("allowed ", allowed);
+      console.log("expiry ", expiry);
+
       const formattedAskArray = await retrieveDataFromTokensArray(swap.ask);
       const formattedBidArray = await retrieveDataFromTokensArray(swap.bid);
       return {
-        ask: formattedAskArray,
-        bid: formattedBidArray,
+        status: swap.status,
+        ask: { address: owner, tokens: formattedAskArray },
+        bid: { address: allowed, tokens: formattedBidArray },
       };
     });
-
+    EthereumAddress;
     // Wait for all promises to resolve
     const tokensTokenized = await Promise.all(tokensTokenizedPromises);
     setIsLoading(false);
@@ -81,28 +100,23 @@ export const TokenSwapOffers = ({}: TokenOffersConfig) => {
 
 interface TokenSwapOfferProps {
   isLoading: boolean;
-  swapTokens?: {
-    bid: Token[];
-    ask: Token[];
-  };
+  swapTokens?: SwapOfferInterface;
 }
 
 const TokenSwapOffer = ({ swapTokens }: TokenSwapOfferProps) => {
-  const { authenticatedUserAddress } = useAuthenticatedUser();
-
   return (
     <div className="flex flex-col border border-[#353836] dark:shadow-add-manually-card dark:bg-[#282B29] rounded-lg ">
       <div className="flex flex-row border-b dark:border-[#353836] relative">
         <div className={cc(["border-r dark:border-[#353836]"])}>
           <CardSwapOffer
-            tokens={swapTokens?.ask}
-            address={authenticatedUserAddress}
+            tokens={swapTokens?.ask.tokens}
+            address={swapTokens?.ask.address ?? null}
           />
         </div>
         <div>
           <CardSwapOffer
-            tokens={swapTokens?.bid}
-            address={authenticatedUserAddress}
+            tokens={swapTokens?.bid.tokens}
+            address={swapTokens?.bid.address ?? null}
           />
         </div>
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] bg-[#212322] rounded-[100px] w-[24px] h-[24px] items-center flex justify-center">
@@ -111,7 +125,11 @@ const TokenSwapOffer = ({ swapTokens }: TokenSwapOfferProps) => {
       </div>
       <div className="flex-col">
         {/* expiry, status, and created by who  */}
-        <TokenOfferDetails />
+        <TokenOfferDetails
+          expiry={swapTokens?.expiryDate}
+          owner={swapTokens?.ask.address}
+          status={swapTokens?.status ?? ""}
+        />
       </div>
     </div>
   );

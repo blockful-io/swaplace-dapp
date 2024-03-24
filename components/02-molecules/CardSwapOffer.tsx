@@ -24,7 +24,7 @@ export const CardSwapOffer = ({ address, tokens }: CardOffersProps) => {
   return (
     <div className="md:p-4">
       <div className="flex flex-col justify-content gap-4 md:w-[326px]">
-        <UserOfferInfo address={authenticatedUserAddress} />
+        <UserOfferInfo address={address} />
         <div className="max-h-[100px] overflow-scroll">
           <TokensSwapList
             ownerAddress={authenticatedUserAddress}
@@ -39,7 +39,7 @@ export const CardSwapOffer = ({ address, tokens }: CardOffersProps) => {
         </div>
 
         <div>
-          <TokenCardProperties properties={{ amount: 2, value: 0.056 }} />
+          <TokenCardProperties properties={{ amount: tokens?.length ?? 0 }} />
         </div>
       </div>
     </div>
