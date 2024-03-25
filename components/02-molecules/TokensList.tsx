@@ -22,6 +22,7 @@ export interface TokensListProps {
   tabletTotalCards?: number;
   desktopTotalCards?: number;
   wideScreenTotalCards?: number;
+  confirmationModalTotalSquares?: number;
 
   /* 
     When true, instead of displaying an ERC20 Token balance
@@ -36,13 +37,14 @@ export interface TokensListProps {
 }
 
 /**
+ * Renders a list of tokens associated with a user's account.
  *
- * This component receives the data of multiple tokens and create its cards
- * @param tokensList
- * @param ownerAddress
+ * This component allows users to view a list of tokens associated with a specific account.
+ * It provides flexibility in displaying tokens based on various parameters and screen sizes.
+ * Users can interact with individual tokens, including selecting tokens for swapping and viewing token amounts.
+ * Additionally, the component supports the addition of custom styling and actions for token cards.
  *
- * @returns TokensList
- */
+ **/
 
 export const TokensList = ({
   tokensList,
@@ -51,13 +53,14 @@ export const TokensList = ({
   tabletTotalCards,
   desktopTotalCards,
   wideScreenTotalCards,
+  confirmationModalTotalSquares = 0,
   withPlaceholders = true,
   withAddTokenCard = true,
   withSelectionValidation = true,
   displayERC20TokensAmount = false,
   variant = TokensShelfVariant.Your,
   tokenCardStyleType = TokenCardStyleType.NORMAL,
-  tokenCardClickAction = TokenCardActionType.SELECT_NFT_FOR_SWAP,
+  tokenCardClickAction = TokenCardActionType.SELECT_TOKEN_FOR_SWAP,
   gridClassNames = "w-full h-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-3",
 }: TokensListProps) => {
   const [selectTokenAmountOf, setSelectTokenAmountOf] =
@@ -94,12 +97,13 @@ export const TokensList = ({
         tabletTotalSquares: tabletTotalCards,
         desktopTotalSquares: desktopTotalCards,
         wideScreenTotalSquares: wideScreenTotalCards,
+        confirmationModalTotalSquares: confirmationModalTotalSquares,
         styleType: tokenCardStyleType,
       })
     : [<></>];
   const tokenCards = tokensList.map((token: Token, index) => (
-    <div key={`token-${index}`}>
       <TokenCard
+        key={index}
         styleType={tokenCardStyleType}
         onClickAction={tokenCardClickAction}
         displayERC20TokensAmount={displayERC20TokensAmount}
@@ -108,7 +112,6 @@ export const TokensList = ({
         ownerAddress={ownerAddress}
         tokenData={token}
       />
-    </div>
   ));
 
   let allSquares = [...tokenCards, ...placeholders];

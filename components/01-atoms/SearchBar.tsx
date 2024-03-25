@@ -7,6 +7,7 @@ import { useContext, useEffect } from "react";
 import { ENS } from "web3-eth-ens";
 import cc from "classcat";
 import Web3 from "web3";
+import toast from "react-hot-toast";
 
 export const SearchBar = () => {
   const {
@@ -25,7 +26,7 @@ export const SearchBar = () => {
   };
 
   const getUserAddress = async () => {
-    if (inputAddress) {
+    if (inputAddress && authenticatedUserAddress) {
       if (!process.env.NEXT_PUBLIC_ALCHEMY_ETHEREUM_HTTP) {
         throw new Error(
           "Cannot get ENS address without Alchemy Ethereum Mainnet API key",
@@ -58,6 +59,8 @@ export const SearchBar = () => {
       } finally {
         setUserJustValidatedInput(true);
       }
+    } else if (inputAddress && !authenticatedUserAddress) {
+      toast.error("Cannot get ENS address without connecting your wallet");
     }
   };
 
@@ -89,10 +92,11 @@ export const SearchBar = () => {
           name="search"
           type="search"
           className={cc([
-            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis bg-inherit
-             border-none dark:border-none bg-transparent dark:bg-transparent contrast-50`,
+            `h-11 w-full border-gray-100 focus:ring-0 focus:ring-transparent focus:outline-none focus-visible:border-gray-300 placeholder:p-small text-ellipsis
+             border-none bg-transparent dark:border-none dark:bg-transparent contrast-50`,
           ])}
           placeholder="Search username, address or ENS"
+          value={inputAddress}
           onChange={({ target }) => setInputAddress(target.value)}
         />
       </div>

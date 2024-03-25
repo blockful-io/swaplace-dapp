@@ -68,18 +68,20 @@ export const CardOffers = ({
     if (!address) return null;
 
     return (
-      <div className="flex flex-col justify-content gap-4 md:w-[400px] max-h-[150px] overflow-y-auto no-scrollbar">
+      <div className="flex flex-col justify-content gap-4 md:w-[400px] overflow-x-hidden no-scrollbar">
         <UserOfferInfo address={address} variant={UserOfferVariant.SECONDARY} />
         <TokensList
           ownerAddress={address}
           withAddTokenCard={false}
-          withPlaceholders={false}
+          withPlaceholders={true}
           variant={tokenShelfVariant}
           displayERC20TokensAmount={true}
           withSelectionValidation={false}
           tokenCardClickAction={TokenCardActionType.NO_ACTION}
           tokensList={tokensOfferFor[tokenShelfVariant]}
+          confirmationModalTotalSquares={5}
           tokenCardStyleType={TokenCardStyleType.MEDIUM}
+          gridClassNames="grid md:grid-cols-5 md:gap-3"
         />
       </div>
     );

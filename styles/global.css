@@ -26,6 +26,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.no-transition * {
+  transition: none !important;
+}
+
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
@@ -194,7 +198,7 @@ input[type="number"] {
     @apply p-2 shadow-inner w-[90px] h-[90px] lg:w-[80px] lg:h-[80px] relative rounded-xl border border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
   }
   .card-token-small {
-    @apply shadow-inner mx-auto w-[44px] h-[44px] lg:w-[44px] lg:h-[44px] overflow-hidden relative rounded-lg border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
+    @apply shadow-inner mx-auto w-[55px] h-[55px] lg:w-[55px] lg:h-[55px] relative rounded-lg border-2 border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;
   }
   .card-token-medium {
     @apply p-2 shadow-inner w-[72px] h-[72px] lg:w-[72px] lg:h-[72px] relative rounded-xl border border-[#E0E0E0] bg-[#E0E0E0] dark:bg-[#353836] dark:border-[#212322] flex flex-col shadow-token;

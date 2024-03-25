@@ -3,6 +3,7 @@ import {
   ERC20,
   ERC20WithTokenAmountSelection,
   ERC721,
+  EthereumAddress,
   Token,
   TokenType,
 } from "../shared/types";
@@ -62,4 +63,25 @@ export const getTokenName = (
   } else {
     return `${token.tokenType} - Token Name Not Found`;
   }
+};
+
+/**
+ *
+ * @param token
+ * @returns TokenContractAddress from token, returns EthereumAddress type.
+ */
+export const getTokenContractAddress = (token: Token): EthereumAddress => {
+  if (!token) throw new Error("Token not defined");
+
+  let address: EthereumAddress | undefined = !token.contract
+    ? (token as ERC721).contractMetadata?.address
+    : typeof token.contract === "string"
+    ? new EthereumAddress(token.contract)
+    : undefined;
+
+  if (address === undefined)
+    throw new Error(
+      `Token contract address not defined for ${getTokenName(token)}`,
+    );
+  return address;
 };

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {
-  LeftIcon,
+  ArrowIcon,
+  ArrowIconVariant,
   LoadingIndicator,
-  RightIcon,
   SwapContext,
 } from "@/components/01-atoms";
 import React, { ButtonHTMLAttributes, useContext } from "react";
@@ -93,7 +93,7 @@ export function SwapModalButton({
         "flex items-center gap-2",
         aditionalStyle,
         disabled
-          ? "p-medium-bold dark:p-medium-bold cursor-not-allowed pointer-events-none"
+          ? "p-medium-bold dark:p-medium-bold cursor-not-allowed pointer-events-none bg-[#DDF23D]"
           : "p-medium-bold-dark bg-[#DDF23D]",
       ])}
       {...props}
@@ -104,21 +104,26 @@ export function SwapModalButton({
       ) : variant === ButtonVariant.DEFAULT ? (
         <>
           {label}
-          <RightIcon
-            fill={ButtonVariantsConfigs[variant].arrowColorInHex(
-              theme,
-              !!approvedTokensCount,
-            )}
+          <ArrowIcon
+            variant={ArrowIconVariant.RIGHT}
+            props={{
+              className: ButtonVariantsConfigs[variant].arrowColorInHex(
+                theme,
+                !!approvedTokensCount,
+              ),
+            }}
           />
         </>
       ) : variant === ButtonVariant.ALTERNATIVE ? (
         <>
-          <LeftIcon
-            className="p-medium-bold dark:p-medium-bold"
-            fill={ButtonVariantsConfigs[variant].arrowColorInHex(
-              theme,
-              !!approvedTokensCount,
-            )}
+          <ArrowIcon
+            variant={ArrowIconVariant.LEFT}
+            props={{
+              className: ButtonVariantsConfigs[variant].arrowColorInHex(
+                theme,
+                !!approvedTokensCount,
+              ),
+            }}
           />
           {label}
         </>

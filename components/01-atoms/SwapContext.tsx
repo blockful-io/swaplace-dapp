@@ -6,6 +6,7 @@ import { SwapModalSteps } from "@/lib/client/ui-utils";
 import { ADDRESS_ZERO, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress, Token } from "@/lib/shared/types";
 import { ButtonClickPossibilities } from "@/lib/client/blockchain-utils";
+import { PonderFilter } from "@/lib/client/hooks/usePonder";
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -45,6 +46,10 @@ interface SwapContextProps {
   setTimeDate: Dispatch<React.SetStateAction<bigint>>;
 
   clearSwapData: () => void;
+
+  // Ponder Filter Status
+  setPonderFilterStatus: Dispatch<React.SetStateAction<PonderFilter>>;
+  ponderFilterStatus: PonderFilter;
 }
 
 export const SwapContextProvider = ({ children }: any) => {
@@ -65,6 +70,10 @@ export const SwapContextProvider = ({ children }: any) => {
   const [currentSwapModalStep, setCurrentSwapModalStep] =
     useState<SwapModalSteps>(SwapModalSteps.APPROVE_TOKENS);
   const [approvedTokensCount, setApprovedTokensCount] = useState(0);
+
+  const [ponderFilterStatus, setPonderFilterStatus] = useState<PonderFilter>(
+    PonderFilter.ALL_OFFERS,
+  );
 
   const router = useRouter();
 
@@ -183,6 +192,8 @@ export const SwapContextProvider = ({ children }: any) => {
       updateSwapStep,
       currentSwapModalStep,
       clearSwapData,
+      setPonderFilterStatus,
+      ponderFilterStatus,
     });
   }, [
     inputAddress,
@@ -194,6 +205,7 @@ export const SwapContextProvider = ({ children }: any) => {
     timeDate,
     approvedTokensCount,
     currentSwapModalStep,
+    ponderFilterStatus,
   ]);
 
   const [swapData, setSwapData] = useState<SwapContextProps>({
@@ -216,6 +228,8 @@ export const SwapContextProvider = ({ children }: any) => {
     updateSwapStep,
     currentSwapModalStep,
     clearSwapData,
+    setPonderFilterStatus,
+    ponderFilterStatus,
   });
 
   // This is a temporary measure while we don't turn the dApp into a SPA
@@ -252,4 +266,6 @@ export const SwapContext = React.createContext<SwapContextProps>({
   currentSwapModalStep: SwapModalSteps.APPROVE_TOKENS,
   updateSwapStep: (buttonClickAction: ButtonClickPossibilities) => {},
   clearSwapData: () => {},
+  setPonderFilterStatus: () => {},
+  ponderFilterStatus: PonderFilter.ALL_OFFERS,
 });

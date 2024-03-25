@@ -1,4 +1,4 @@
-import { ENSAvatar } from "@/components/01-atoms";
+import { ENSAvatar, ENSAvatarSize } from "@/components/01-atoms";
 import { useEnsData } from "@/lib/client/hooks/useENSData";
 import { EthereumAddress } from "@/lib/shared/types";
 
@@ -23,7 +23,9 @@ export const UserOfferInfo = ({
     <div>
       <div className="flex gap-2">
         <div>
-          {address && <ENSAvatar avatarENSAddress={address} size="small" />}
+          {address && (
+            <ENSAvatar avatarENSAddress={address} size={ENSAvatarSize.SMALL} />
+          )}
         </div>
         <div className="flex ">
           {primaryName ? (
@@ -40,7 +42,12 @@ export const UserOfferInfo = ({
         <div className="flex justify-between">
           <div className="flex gap-2">
             <div>
-              {address && <ENSAvatar avatarENSAddress={address} size="small" />}
+              {address && (
+                <ENSAvatar
+                  avatarENSAddress={address}
+                  size={ENSAvatarSize.SMALL}
+                />
+              )}
             </div>
             <div className="flex ">
               {primaryName ? (

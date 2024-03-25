@@ -1,4 +1,9 @@
-import { ENSAvatar, PersonIcon, SwapContext } from "@/components/01-atoms";
+import {
+  ENSAvatar,
+  ENSAvatarSize,
+  PersonIcon,
+  SwapContext,
+} from "@/components/01-atoms";
 import { TokenCardStyleType, TokensList } from "@/components/02-molecules";
 import { TokensShelfVariant } from "@/components/03-organisms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
@@ -14,11 +19,9 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
     validatedAddressToSwap,
     authenticatedUserTokensList,
     searchedUserTokensList,
-    inputAddress,
   } = useContext(SwapContext);
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
-
   const tokensList =
     variant === TokensShelfVariant.Your
       ? authenticatedUserTokensList
@@ -27,6 +30,9 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
   const { primaryName: searchedENSName } = useEnsData({
     ensAddress: validatedAddressToSwap,
   });
+  const { primaryName: authenticatedUserENSName } = useEnsData({
+    ensAddress: authenticatedUserAddress,
+  });
 
   return (
     <div className="w-full h-full dark:bg-[#282B29] border dark:border-[#353836] bg-[#F0EEEE] border-[#E4E4E4] rounded-lg ">
@@ -34,40 +40,47 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
         <div className="flex justify-between items-center h-9 gap-2">
           <div className="flex space-x-2 items-center">
             <div className="flex items-center">
-              {variant === TokensShelfVariant.Your &&
-              authenticatedUserAddress ? (
-                <ENSAvatar
-                  avatarENSAddress={authenticatedUserAddress}
-                  size="small"
-                />
-              ) : variant === TokensShelfVariant.Their &&
-                validatedAddressToSwap ? (
+              {variant === TokensShelfVariant.Your && validatedAddressToSwap ? (
                 <ENSAvatar
                   avatarENSAddress={validatedAddressToSwap}
-                  size="small"
+                  size={ENSAvatarSize.SMALL}
+                />
+              ) : variant === TokensShelfVariant.Their &&
+                authenticatedUserAddress ? (
+                <ENSAvatar
+                  avatarENSAddress={authenticatedUserAddress}
+                  size={ENSAvatarSize.SMALL}
                 />
               ) : (
-                <PersonIcon />
+                <div className="bg-[#E4E4E4] dark:bg-[#353836] p-[5px] rounded-md">
+                  <PersonIcon className="text-[#A3A9A5] dark:text-[#707572]" />
+                </div>
               )}
             </div>
             <div className="items-center">
               <p className="p-small-variant-black-3 dark:p-small-variant-light-2 contrast-50">
-                {variant === TokensShelfVariant.Your && authenticatedUserAddress
-                  ? "You give"
-                  : variant === TokensShelfVariant.Your &&
-                    !authenticatedUserAddress
-                  ? "Connect your wallet"
-                  : variant === TokensShelfVariant.Their &&
-                    validatedAddressToSwap &&
-                    inputAddress
+                {variant === TokensShelfVariant.Your && validatedAddressToSwap
                   ? `${
                       searchedENSName
-                        ? searchedENSName + " gives"
+                        ? searchedENSName + " gets"
                         : validatedAddressToSwap
-                        ? validatedAddressToSwap.getEllipsedAddress() + " gives"
+                        ? validatedAddressToSwap.getEllipsedAddress() + " gets"
                         : "Use the search bar"
                     }`
-                  : "Use the search bar"}
+                  : variant === TokensShelfVariant.Your &&
+                    !validatedAddressToSwap
+                  ? "They get"
+                  : variant === TokensShelfVariant.Their &&
+                    authenticatedUserAddress
+                  ? `${
+                      authenticatedUserENSName
+                        ? authenticatedUserENSName + " gets"
+                        : authenticatedUserAddress
+                        ? authenticatedUserAddress.getEllipsedAddress() +
+                          " gets"
+                        : "Connect your wallet"
+                    }`
+                  : "You get"}
               </p>
             </div>
           </div>
@@ -80,7 +93,7 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
             </div>
           )}
         </div>
-        <div className="w-full h-full max-h-[156px] rounded overflow-auto no-scrollbar">
+        <div className="w-full h-full max-h-[156px] rounded overflow-x-hidden overflow-y-auto no-scrollbar">
           {variant === TokensShelfVariant.Your && authenticatedUserAddress ? (
             <TokensList
               withAddTokenCard={false}
@@ -90,11 +103,11 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               tokensList={tokensList}
               variant={variant}
               wideScreenTotalCards={10}
-              desktopTotalCards={8}
+              desktopTotalCards={6}
               tabletTotalCards={12}
               mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
-              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-3 gap-2 md:gap-3 xl:gap-3 lg:gap-3"
             />
           ) : variant === TokensShelfVariant.Their && validatedAddressToSwap ? (
             <TokensList
@@ -105,11 +118,11 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               tokensList={tokensList}
               variant={variant}
               wideScreenTotalCards={10}
-              desktopTotalCards={8}
+              desktopTotalCards={6}
               tabletTotalCards={12}
               mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
-              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-3 gap-2 md:gap-3 xl:gap-3 lg:gap-3"
             />
           ) : (
             <TokensList
@@ -120,11 +133,11 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               tokensList={tokensList}
               variant={variant}
               wideScreenTotalCards={10}
-              desktopTotalCards={8}
+              desktopTotalCards={6}
               tabletTotalCards={12}
               mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
-              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-3 gap-2 md:gap-3 xl:gap-3 lg:gap-3"
             />
           )}
         </div>

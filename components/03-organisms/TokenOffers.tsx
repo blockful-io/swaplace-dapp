@@ -53,20 +53,24 @@ export const TokenOffers = ({
     return (
       <div className="flex flex-col rounded-lg flex-grow">
         <div className="flex flex-col relative gap-2 flex-grow">
-          <div className="p-4 flex flex-grow border border-[#353836] rounded-lg dark:bg-[#282B29]">
+          <div className="p-4 relative flex flex-grow border border-[#353836] rounded-lg dark:bg-[#282B29]">
             <CardOffers
               address={authenticatedUserAddress}
               variant={TokenOfferVariant.VERTICAL}
             />
           </div>
+
+          <div className="w-full relative">
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border dark:border-[#353836] border-[#707572] bg-[#F6F6F6] dark:bg-[#212322] rounded-full w-9 h-9 flex items-center justify-center">
+              <SwapIcon variant={SwapIconVariant.VERTICAL} />
+            </div>
+          </div>
+
           <div className="p-4 flex flex-grow border border-[#353836] rounded-lg dark:bg-[#282B29]">
             <CardOffers
               address={validatedAddressToSwap}
               variant={TokenOfferVariant.VERTICAL}
             />
-          </div>
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
-            <SwapIcon variant={SwapIconVariant.VERTICAL} />
           </div>
         </div>
       </div>

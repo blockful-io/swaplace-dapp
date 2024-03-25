@@ -8,17 +8,20 @@ import {
 } from "@/components/01-atoms";
 import { ConfirmSwapModal, OfferSummary } from "@/components/02-molecules";
 import { TokensShelfVariant } from "@/components/03-organisms";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import { toast } from "react-hot-toast";
 
 export const SwapStation = () => {
   const [isValidSwap, setIsValidSwap] = useState<boolean>(false);
+  const { authenticatedUserAddress } = useAuthenticatedUser();
 
   const {
     authenticatedUserTokensList,
     searchedUserTokensList,
     validatedAddressToSwap,
+    inputAddress,
   } = useContext(SwapContext);
 
   useEffect(() => {
@@ -38,19 +41,40 @@ export const SwapStation = () => {
 
   const validateSwapSending = () => {
     if (!isValidSwap) {
+      if (!authenticatedUserAddress) {
+        toast.error("Please connect your wallet to begin");
+        return;
+      }
+
+      /// Check if the searched address is valid. If doesn't have input. You must search a address.
+      //  As well if isn't valid, select a valid address to swap tokens
       if (!validatedAddressToSwap) {
-        toast.error("You must select a destiny wallet to swap tokens with");
+        if (!inputAddress) {
+          toast.error("Search for an address to create a swap offer");
+        } else {
+          toast.error("You must select a valid address to swap tokens");
+        }
+        return;
+      }
+
+      if (
+        !authenticatedUserTokensList.length &&
+        !searchedUserTokensList.length
+      ) {
+        toast.error("You must select the tokens you want to swap");
         return;
       }
 
       if (!authenticatedUserTokensList.length) {
-        toast.error("You must select at least one NFT from yours to swap");
+        toast.error(
+          "You must select at least one token from your items to swap",
+        );
         return;
       }
 
       if (!searchedUserTokensList.length) {
         toast.error(
-          "You must select at least one NFT from the destiny wallet to swap",
+          "You must select at least one token from their items to swap",
         );
         return;
       }
@@ -69,10 +93,14 @@ export const SwapStation = () => {
           <SwapExpireTime />
         </div>
         <div className="flex flex-col gap-2 relative">
-          <OfferSummary variant={TokensShelfVariant.Your} />
           <OfferSummary variant={TokensShelfVariant.Their} />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] dark:bg-[#212322] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
-            <SwapIcon variant={SwapIconVariant.VERTICAL} />
+          <OfferSummary variant={TokensShelfVariant.Your} />
+
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border dark:border-[#353836]  border-[#E4E4E4] dark:bg-[#212322] bg-[#F6F6F6] rounded-[100px] w-[36px] h-[36px] items-center flex justify-center">
+            <SwapIcon
+              variant={SwapIconVariant.VERTICAL}
+              props={{ className: "text-[#A3A9A5] dark:text-[#F6F6F6]" }}
+            />
           </div>
         </div>
         <Tooltip
@@ -92,14 +120,14 @@ export const SwapStation = () => {
             <button
               disabled={!isValidSwap}
               className={cc([
-                "pointer-events-none rounded-xl w-full disabled:bg-[#F0EEEE] dark:disabled:bg-[#282B29]  dark:hover:bg-[#4b514d] bg-green-400 border-green-500 disabled:border-gray-200  dark:disabled:border-[#353836]  border-2 py-3 px-5 items-center flex justify-center gap-2 font-semibold text-[16px] leading-[20.4px] disabled:text-[#A3A9A5] disabled:dark:text-[#707572] text-green-900 dark:shadow-button-swap-station-offer ",
+                "pointer-events-none rounded-xl w-full disabled:bg-[#F0EEEE] dark:disabled:bg-[#282B29] dark:hover:bg-[#4b514d] bg-[#DDF23D] hover:bg-[#aabe13] disabled:border-gray-200  dark:disabled:border-[#353836]  disabled:border py-3 px-5 items-center flex justify-center gap-2 font-semibold text-[16px] leading-[20.4px] disabled:text-[#A3A9A5] disabled:dark:text-[#707572] text-[#181A19] dark:shadow-button-swap-station-offer",
               ])}
             >
               <PaperPlane
                 className={cc([
                   "w-6",
                   isValidSwap
-                    ? "text-green"
+                    ? "text-[#181A19]"
                     : "dark:text-[#707572] text-[#A3A9A5]",
                 ])}
               />

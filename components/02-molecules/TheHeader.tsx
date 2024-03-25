@@ -22,6 +22,20 @@ export const TheHeader = () => {
   const { systemTheme, theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
+  const setThemeMode = (mode: "light" | "dark") => {
+    const body = document.body;
+
+    // Add the class to disable transitions
+    body.classList.add("no-transition");
+
+    setTheme(mode);
+
+    // Use a timeout to re-enable transitions
+    setTimeout(() => {
+      body.classList.remove("no-transition");
+    }, 0);
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -49,7 +63,9 @@ export const TheHeader = () => {
               >
                 <button
                   className="cursor-pointer bg-black-500 hover:bg-[#353836] transition-colors duration-200 rounded-[10px] group"
-                  onClick={() => setTheme("light")}
+                  onClick={() => {
+                    setThemeMode("light");
+                  }}
                 >
                   <SunIcon className="w-10 p-2 dark:text-[#767777] group-hover:text-[#F6F6F6]" />
                 </button>
@@ -61,7 +77,9 @@ export const TheHeader = () => {
               >
                 <button
                   className="bg-black-500 outline-none hover:bg-[#E4E4E4] transition-colors duration-200 rounded-[10px]"
-                  onClick={() => setTheme("dark")}
+                  onClick={() => {
+                    setThemeMode("dark");
+                  }}
                 >
                   <MoonIcon className="w-10 p-2 text-[#A3A9A5]" />
                 </button>
@@ -87,10 +105,10 @@ export const TheHeader = () => {
                   position={window.innerWidth > 1440 ? "right" : "bottom"}
                   content={"Connect a Wallet"}
                 >
-                    <ConnectWallet
-                      customStyle="w-full flex justify-center items-center h-10 w-10 rounded-[10px] bg-[#DDF23D]"
-                      walletIcon={true}
-                    />
+                  <ConnectWallet
+                    customStyle="w-full flex justify-center items-center h-10 w-10 rounded-[10px] bg-[#DDF23D]"
+                    walletIcon={true}
+                  />
                 </Tooltip>
               )}
             </>

@@ -1,8 +1,10 @@
-import { PowerIcon } from "@/components/01-atoms";
+import { PowerIcon, SwapContext } from "@/components/01-atoms";
 import { useSidebar } from "@/lib/client/contexts/SidebarContext.tsx";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useDisconnect } from "wagmi";
 import cc from "classcat";
 import { useTheme } from "next-themes";
+import { useContext } from "react";
 
 export const DisconnectWallet = () => {
   const { disconnect } = useDisconnect();
@@ -10,8 +12,13 @@ export const DisconnectWallet = () => {
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark";
   const { toggleSidebar } = useSidebar();
+  const { authenticatedUserAddress } = useAuthenticatedUser();
+
+  const { validateAddressToSwap, setInputAddress } = useContext(SwapContext);
 
   const handleClick = () => {
+    setInputAddress("");
+    validateAddressToSwap(authenticatedUserAddress, null);
     toggleSidebar();
     disconnect();
   };
