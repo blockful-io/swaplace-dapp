@@ -93,7 +93,7 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
             </div>
           )}
         </div>
-        <div className="w-full h-full max-h-[156px] rounded overflow-auto no-scrollbar">
+        <div className="w-full h-full max-h-[156px] rounded overflow-x-hidden overflow-y-auto no-scrollbar">
           {variant === TokensShelfVariant.Your && authenticatedUserAddress ? (
             <TokensList
               withAddTokenCard={false}
@@ -103,11 +103,11 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               tokensList={tokensList}
               variant={variant}
               wideScreenTotalCards={10}
-              desktopTotalCards={8}
+              desktopTotalCards={6}
               tabletTotalCards={12}
               mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
-              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-3 gap-2 md:gap-3 xl:gap-3 lg:gap-3"
             />
           ) : variant === TokensShelfVariant.Their && validatedAddressToSwap ? (
             <TokensList
@@ -118,11 +118,11 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               tokensList={tokensList}
               variant={variant}
               wideScreenTotalCards={10}
-              desktopTotalCards={8}
+              desktopTotalCards={6}
               tabletTotalCards={12}
               mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
-              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-3 gap-2 md:gap-3 xl:gap-3 lg:gap-3"
             />
           ) : (
             <TokensList
@@ -133,11 +133,11 @@ export const OfferSummary = ({ variant }: IOfferSummary) => {
               tokensList={tokensList}
               variant={variant}
               wideScreenTotalCards={10}
-              desktopTotalCards={8}
+              desktopTotalCards={6}
               tabletTotalCards={12}
               mobileTotalCards={6}
               tokenCardStyleType={TokenCardStyleType.MEDIUM}
-              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 gap-3"
+              gridClassNames="w-full grid grid-cols-3 md:grid-cols-6 xl:grid-cols-5 lg:grid-cols-3 gap-2 md:gap-3 xl:gap-3 lg:gap-3"
             />
           )}
         </div>
