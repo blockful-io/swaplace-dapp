@@ -10,6 +10,7 @@ import { TokenCardsPlaceholder } from "@/components/01-atoms";
 import { ERC20, EthereumAddress, Token } from "@/lib/shared/types";
 import { EMPTY_ERC_20_BALANCE } from "@/lib/client/blockchain-utils";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export interface TokensListProps {
   tokensList: Token[];
@@ -68,6 +69,10 @@ export const TokensList = ({
     owner: EthereumAddress,
     token: Token,
   ) => {
+    toast("You have selected one ERC20 token!", {
+      icon: "⬇️",
+    });
+
     setSelectTokenAmountFor(token);
     setSelectTokenAmountOf(owner);
   };
@@ -110,7 +115,7 @@ export const TokensList = ({
 
   const addTokenSquare = withAddTokenCard ? AddTokenCardManually() : <></>;
 
-  const Layout = (squares: React.JSX.Element[]) => {
+  const Layout = (squares: JSX.Element[]) => {
     return (
       <div className={gridClassNames}>
         {squares}

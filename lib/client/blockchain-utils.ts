@@ -55,10 +55,12 @@ export const getTokenAmountOrId = (token: Token): bigint => {
         tokenAmountOrTokenId = (token as ERC20WithTokenAmountSelection)
           .tokenAmount;
       }
+      break;
     case TokenType.ERC721:
       if (token.id) {
         tokenAmountOrTokenId = token.id as string;
       }
+      break;
   }
 
   if (typeof tokenAmountOrTokenId === "undefined")
@@ -147,12 +149,12 @@ export const getERC20TokensFromAddress = async (
     });
 };
 
-export const EMPTY_ERC_20_BALANCE = 0;
+export const EMPTY_ERC_20_BALANCE = 0n;
 
 const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
   return tokens.map((token) => {
-    const rawBalanceAsNumber = token.rawBalance
-      ? hexToNumber(token.rawBalance as `0x${string}`)
+    const rawBalanceAsBigInt = token.rawBalance
+      ? BigInt(hexToNumber(token.rawBalance as `0x${string}`))
       : EMPTY_ERC_20_BALANCE;
 
     return {
@@ -168,7 +170,7 @@ const parseAlchemyERC20Tokens = (tokens: OwnedToken[]): ERC20[] => {
       name: token.name,
       logo: token.logo,
       symbol: token.symbol,
-      rawBalance: rawBalanceAsNumber,
+      rawBalance: rawBalanceAsBigInt,
       contract: token.contractAddress,
     };
   });

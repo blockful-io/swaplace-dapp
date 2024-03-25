@@ -24,8 +24,8 @@ export const TokenAmountSelectionModal = ({
   token,
   onCloseModal,
 }: TokenAmountSelectionModalProps) => {
-  const [tokenAmount, setTokenAmount] = useState(0);
-  const [userBalance, setUserBalance] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState(0n);
+  const [userBalance, setUserBalance] = useState(0n);
   const { chain } = useNetwork();
 
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -91,8 +91,8 @@ export const TokenAmountSelectionModal = ({
       setSearchedUserTokensList(originalTokensList);
     }
 
-    setUserBalance(0);
-    setTokenAmount(0);
+    setUserBalance(0n);
+    setTokenAmount(0n);
 
     onCloseModal();
   };
@@ -114,7 +114,17 @@ export const TokenAmountSelectionModal = ({
                 type="number"
                 name="amount"
                 placeholder="0.00"
-                onChange={(e) => setTokenAmount(Number(e.target.value))}
+                onChange={(e) => {
+                  try {
+                    const inputAsBigInt = BigInt(e.target.value);
+
+                    setTokenAmount(inputAsBigInt);
+                  } catch {
+                    toast.error("Invalid Token amount set");
+
+                    setTokenAmount(0n);
+                  }
+                }}
                 className="w-full rounded-lg rounded-r-none p-3 text-left bg-[#282B29] border-[#353836] border-r-0 focus:outline-none"
                 id={token.tokenType + "-amount-selector"}
               />

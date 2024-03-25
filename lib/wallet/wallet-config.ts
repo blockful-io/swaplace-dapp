@@ -7,7 +7,6 @@ import {
   coinbaseWallet,
   walletConnectWallet,
   injectedWallet,
-  rainbowWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
@@ -37,7 +36,6 @@ const connectors = connectorsForWallets([
       coinbaseWallet(connectorArgs),
       ledgerWallet(connectorArgs),
       trustWallet(connectorArgs),
-      rainbowWallet(connectorArgs),
       walletConnectWallet(connectorArgs),
     ],
   },
