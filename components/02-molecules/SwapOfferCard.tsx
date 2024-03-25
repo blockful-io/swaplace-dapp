@@ -9,12 +9,12 @@ import { TokenCardProperties } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { EthereumAddress, Token } from "@/lib/shared/types";
 
-interface CardOffersProps {
+interface SwapOfferCardProps {
   address: EthereumAddress | null;
   tokens?: Token[];
 }
 
-export const CardSwapOffer = ({ address, tokens }: CardOffersProps) => {
+export const SwapOfferCard = ({ address, tokens }: SwapOfferCardProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
 
   const tokenShelfVariant = authenticatedUserAddress?.equals(address)

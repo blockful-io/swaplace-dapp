@@ -2,14 +2,14 @@ import {
   AddTokenOrSwapManuallyModal,
   AddTokenOrSwapManuallyModalVariant,
 } from "@/components/02-molecules";
-import { PlusIcon, Tooltip } from "@/components/01-atoms";
+import { PlusIcon } from "@/components/01-atoms";
 import { useState } from "react";
 
 export const AddTokenCardManually = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
+    <div key="add-card">
       <div
         className="
           group shadow-inner 
@@ -24,7 +24,6 @@ export const AddTokenCardManually = () => {
           transition-all duration-200
         "
       >
-        <Tooltip content="Add Token" position="top" />
         <div className="flex items-center justify-center h-full">
           <button
             onClick={() => setOpen(!open)}
@@ -40,6 +39,6 @@ export const AddTokenCardManually = () => {
         onClose={() => setOpen(false)}
         open={open}
       />
-    </>
+    </div>
   );
 };

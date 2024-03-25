@@ -1,5 +1,5 @@
 import {
-  TokenOfferVariant,
+  CreateTokenOfferVariant,
   TokensShelfVariant,
 } from "@/components/03-organisms";
 import {
@@ -16,7 +16,7 @@ import { useContext } from "react";
 
 interface CardOffersProps {
   address: EthereumAddress | null;
-  variant?: TokenOfferVariant;
+  variant?: CreateTokenOfferVariant;
 }
 
 interface CardOfferSConfig {
@@ -25,7 +25,7 @@ interface CardOfferSConfig {
 
 export const CardOffers = ({
   address,
-  variant = TokenOfferVariant.HORIZONTAL,
+  variant = CreateTokenOfferVariant.HORIZONTAL,
 }: CardOffersProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const { authenticatedUserTokensList, searchedUserTokensList } =
@@ -86,11 +86,14 @@ export const CardOffers = ({
     );
   };
 
-  const CardOfferVariantsConfig: Record<TokenOfferVariant, CardOfferSConfig> = {
-    [TokenOfferVariant.HORIZONTAL]: {
+  const CardOfferVariantsConfig: Record<
+    CreateTokenOfferVariant,
+    CardOfferSConfig
+  > = {
+    [CreateTokenOfferVariant.HORIZONTAL]: {
       body: HorizontalVariant(address),
     },
-    [TokenOfferVariant.VERTICAL]: {
+    [CreateTokenOfferVariant.VERTICAL]: {
       body: VerticalVariant(address),
     },
   };

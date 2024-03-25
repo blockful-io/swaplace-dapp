@@ -1,4 +1,4 @@
-import { CardSwapOffer } from "../02-molecules/CardSwapOffer";
+import { SwapOfferCard } from "../02-molecules/SwapOfferCard";
 import {
   TokenOfferDetails,
   SwapIcon,
@@ -27,7 +27,7 @@ interface SwapOfferInterface {
   };
 }
 
-export const TokenSwapOffers = ({}: TokenOffersConfig) => {
+export const SwapOffers = ({}: TokenOffersConfig) => {
   const { allSwaps, isPonderSwapsLoading } = usePonder();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -101,33 +101,30 @@ export const TokenSwapOffers = ({}: TokenOffersConfig) => {
   ) : (
     <div className="flex flex-col gap-5">
       {allTokensListByPonder.map((swap, index) => {
-        return (
-          <TokenSwapOffer isLoading={isLoading} key={index} swapTokens={swap} />
-        );
+        return <SwapOffer key={index} swap={swap} />;
       })}
     </div>
   );
 };
 
-interface TokenSwapOfferProps {
-  isLoading: boolean;
-  swapTokens?: SwapOfferInterface;
+interface SwapOfferProps {
+  swap?: SwapOfferInterface;
 }
 
-const TokenSwapOffer = ({ swapTokens }: TokenSwapOfferProps) => {
+const SwapOffer = ({ swap }: SwapOfferProps) => {
   return (
     <div className="flex flex-col border border-[#353836] dark:shadow-add-manually-card dark:bg-[#282B29] rounded-lg ">
       <div className="flex flex-row border-b dark:border-[#353836] relative">
         <div className={cc(["border-r dark:border-[#353836]"])}>
-          <CardSwapOffer
-            tokens={swapTokens?.ask.tokens}
-            address={swapTokens?.ask.address ?? null}
+          <SwapOfferCard
+            tokens={swap?.ask.tokens}
+            address={swap?.ask.address ?? null}
           />
         </div>
         <div>
-          <CardSwapOffer
-            tokens={swapTokens?.bid.tokens}
-            address={swapTokens?.bid.address ?? null}
+          <SwapOfferCard
+            tokens={swap?.bid.tokens}
+            address={swap?.bid.address ?? null}
           />
         </div>
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-[#707572] bg-[#212322] rounded-[100px] w-[24px] h-[24px] items-center flex justify-center">
@@ -136,9 +133,9 @@ const TokenSwapOffer = ({ swapTokens }: TokenSwapOfferProps) => {
       </div>
       <div className="flex-col">
         <TokenOfferDetails
-          expiry={swapTokens?.expiryDate}
-          owner={swapTokens?.ask.address}
-          status={swapTokens?.status ?? ""}
+          expiry={swap?.expiryDate}
+          owner={swap?.ask.address}
+          status={swap?.status ?? ""}
         />
       </div>
     </div>

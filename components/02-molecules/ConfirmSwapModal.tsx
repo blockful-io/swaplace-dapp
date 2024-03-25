@@ -15,7 +15,7 @@ import {
   packingData,
   toastBlockchainTxError,
 } from "@/lib/client/blockchain-utils";
-import { TokenOffers } from "@/components/03-organisms";
+import { CreateTokenOffer } from "@/components/03-organisms";
 import { fromTokensToAssets, getSwapConfig } from "@/lib/client/swap-utils";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "@/lib/client/constants";
 import { publicClient } from "@/lib/wallet/wallet-config";
@@ -191,7 +191,7 @@ export const ConfirmSwapModal = ({
         body={
           <div className="flex flex-col gap-2 flex-grow">
             <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-            <TokenOffers />
+            <CreateTokenOffer />
           </div>
         }
         footer={
@@ -226,7 +226,7 @@ export const ConfirmSwapModal = ({
         body={
           <div className="flex flex-col gap-2 flex-grow">
             <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-            <TokenOffers />
+            <CreateTokenOffer />
           </div>
         }
         footer={
@@ -251,7 +251,7 @@ export const ConfirmSwapModal = ({
         body={
           <div className="flex flex-col gap-2 flex-grow">
             <OfferExpiryConfirmSwap expireTime={"3 weeks"} />
-            <TokenOffers />
+            <CreateTokenOffer />
           </div>
         }
         footer={

@@ -93,6 +93,7 @@ export const TokensList = ({
         styleType: tokenCardStyleType,
       })
     : [<></>];
+
   const tokenCards = tokensList.map((token: Token, index) => (
     <div key={`token-${index}`}>
       <TokenCard
