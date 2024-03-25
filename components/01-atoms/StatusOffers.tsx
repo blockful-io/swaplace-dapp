@@ -1,5 +1,5 @@
 import { SwapContext } from "@/components/01-atoms";
-import { PonderFilter, usePonder } from "@/lib/client/hooks/usePonder";
+import { PonderFilter } from "@/lib/client/hooks/usePonder";
 import { useState, useContext } from "react";
 import cc from "classcat";
 
@@ -15,8 +15,6 @@ export enum DisplayFilterOptions {
 export const StatusOffers = () => {
   const { setPonderFilterStatus } = useContext(SwapContext);
   const [offerIsActive, setOfferIsActive] = useState<number>(0);
-  const { allSwaps } = usePonder();
-  console.log("AllSwaps Ponder Status Filter = ", allSwaps);
   interface IFilterOffers {
     id: number;
     name: DisplayFilterOptions;

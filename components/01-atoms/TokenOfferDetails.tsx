@@ -17,14 +17,14 @@ export const TokenOfferDetails = ({
   owner,
   expiry,
 }: TokenOfferDetailsProps) => {
-  console.log("status,", status, owner, expiry);
-
   // TODO: Create acceptSwap function
   const acceptSwap = () => {
     return;
   };
 
   const displayStatus = status;
+
+  // TODO: Include status, owner and expiryDate
   return (
     <div className="flex w-full justify-between items-center py-2 px-3">
       <div>
@@ -32,7 +32,7 @@ export const TokenOfferDetails = ({
           {displayStatus && <OfferTag status={displayStatus} />}
           <li className="flex items-center gap-2">
             <div className=" w-1 h-1 bg-neutral-600 rounded-full shadow-inner" />
-            Expires on 16 Oct, 2023
+            Expires on {expiry}
           </li>
           <li className="flex items-center gap-2">
             <div className="w-1 h-1 bg-neutral-600 rounded-full shadow-inner" />

@@ -30,7 +30,6 @@ export const OfferTag = ({ status }: OfferTagProps) => {
     }
   };
 
-  console.log(status);
   const Tags: Record<TAG, TagConfig> = {
     [TAG.ACCEPTED]: {
       body: <div className="bg-[#10584C] p-1 rounded">{TAG.ACCEPTED}</div>,

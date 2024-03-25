@@ -5,7 +5,7 @@ import {
   TokensOfferSkeleton,
 } from "@/components/01-atoms";
 import { usePonder } from "@/lib/client/hooks/usePonder";
-import { EthereumAddress, Token, TokenType } from "@/lib/shared/types";
+import { EthereumAddress, Token } from "@/lib/shared/types";
 import { retrieveDataFromTokensArray } from "@/lib/client/blockchain-utils";
 import cc from "classcat";
 import { useEffect, useState } from "react";
@@ -42,11 +42,6 @@ export const TokenSwapOffers = ({}: TokenOffersConfig) => {
    * @returns
    */
 
-  console.log("allSwaps ", allSwaps);
-
-  TokenType.ERC20;
-  console.log("allTokensListByPonder :", allTokensListByPonder);
-
   useEffect(() => {
     allSwaps && processSwaps();
   }, [allSwaps]);
@@ -55,19 +50,35 @@ export const TokenSwapOffers = ({}: TokenOffersConfig) => {
     setIsLoading(true);
 
     const tokensTokenizedPromises = allSwaps.map(async (swap) => {
-      const expiry = (BigInt(swap.allowed!) >> BigInt(96)).toString();
+      const expiry = swap.expiry.toString();
       const allowed = new EthereumAddress(
         "0x" + BigInt(swap.allowed!).toString(16),
       );
+
       const owner = new EthereumAddress(swap.owner);
 
-      console.log("allowed ", allowed);
-      console.log("expiry ", expiry);
+      const date = new Date(Number(expiry) * 1000);
+      let isDateValid = true;
+
+      console.log(expiry);
+
+      // Check if the date is valid
+      if (isNaN(date.getTime())) {
+        isDateValid = false;
+      }
+
+      const day = date.getDate(); // Day of the month
+      const month = date.toLocaleString("default", { month: "short" }); // Month abbreviation
+      const year = date.getFullYear(); // Year
+
+      // Format the date string
+      const formattedDate = isDateValid ? `${day} ${month}, ${year}` : null;
 
       const formattedAskArray = await retrieveDataFromTokensArray(swap.ask);
       const formattedBidArray = await retrieveDataFromTokensArray(swap.bid);
       return {
         status: swap.status,
+        expiryDate: formattedDate ?? "",
         ask: { address: owner, tokens: formattedAskArray },
         bid: { address: allowed, tokens: formattedBidArray },
       };
@@ -124,7 +135,6 @@ const TokenSwapOffer = ({ swapTokens }: TokenSwapOfferProps) => {
         </div>
       </div>
       <div className="flex-col">
-        {/* expiry, status, and created by who  */}
         <TokenOfferDetails
           expiry={swapTokens?.expiryDate}
           owner={swapTokens?.ask.address}
