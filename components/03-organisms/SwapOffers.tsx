@@ -14,7 +14,7 @@ interface TokenOffersConfig {
   place?: string;
 }
 
-interface SwapOfferInterface {
+export interface SwapOfferInterface {
   status: string;
   expiryDate?: string;
   bid: {
@@ -108,7 +108,7 @@ export const SwapOffers = ({}: TokenOffersConfig) => {
 };
 
 interface SwapOfferProps {
-  swap?: SwapOfferInterface;
+  swap: SwapOfferInterface;
 }
 
 const SwapOffer = ({ swap }: SwapOfferProps) => {
@@ -132,11 +132,7 @@ const SwapOffer = ({ swap }: SwapOfferProps) => {
         </div>
       </div>
       <div className="flex-col">
-        <TokenOfferDetails
-          expiry={swap?.expiryDate}
-          owner={swap?.ask.address}
-          status={swap?.status ?? ""}
-        />
+        <TokenOfferDetails swap={swap} />
       </div>
     </div>
   );

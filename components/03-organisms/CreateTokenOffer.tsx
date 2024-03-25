@@ -1,10 +1,5 @@
 import { CardOffers } from "@/components/02-molecules";
-import {
-  TokenOfferDetails,
-  SwapIcon,
-  SwapContext,
-  SwapIconVariant,
-} from "@/components/01-atoms";
+import { SwapIcon, SwapContext, SwapIconVariant } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import cc from "classcat";
 import { useContext } from "react";
@@ -49,9 +44,7 @@ export const CreateTokenOffer = ({
             <SwapIcon />
           </div>
         </div>
-        <div className="flex-col">
-          <TokenOfferDetails />
-        </div>
+        <div className="flex-col"></div>
       </div>
     );
   };
