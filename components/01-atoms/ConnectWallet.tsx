@@ -1,4 +1,4 @@
-import { WalletIcon } from "@/components/01-atoms";
+import { LoadingIndicator, WalletIcon } from "@/components/01-atoms";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 
