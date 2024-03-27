@@ -156,6 +156,7 @@ export const TokensShelf = ({ variant }: TokensShelfProps) => {
             ownerAddress={address}
             tokensList={allTokensList}
             variant={variant}
+            withAddTokenCard={true}
           />
         </div>
       ) : tokensQueryStatus == TokensQueryStatus.EMPTY_QUERY || !address ? (
