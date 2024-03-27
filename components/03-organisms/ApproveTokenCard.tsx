@@ -62,6 +62,7 @@ export const ApproveTokenCard = ({
     const approved = await isTokenSwapApproved({
       token,
       chainId,
+      authedUserAddress: authenticatedUserAddress,
     });
 
     setIsApproved(approved);
@@ -97,6 +98,10 @@ export const ApproveTokenCard = ({
   useEffect(() => {
     checkForTokenApproval(token);
   }, []);
+
+  useEffect(() => {
+    checkForTokenApproval(token);
+  }, [chain, token, authenticatedUserAddress]);
 
   useEffect(() => {
     if (isApproved) {

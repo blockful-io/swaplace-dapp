@@ -93,7 +93,6 @@ export const ConfirmSwapModal = ({
     if (!validatedAddressToSwap)
       throw new Error("No Swap offer receiver is defined");
 
-    // Franco TODO: Review this need
     const SwaplaceContract = getContract({
       address: SWAPLACE_SMART_CONTRACT_ADDRESS[chainId] as `0x${string}`,
       publicClient: publicClient({ chainId: chain.id }),

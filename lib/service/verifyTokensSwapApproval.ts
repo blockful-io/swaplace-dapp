@@ -1,42 +1,72 @@
-import { TokenApprovalData } from "../client/blockchain-utils";
+import {
+  TokenApprovalData,
+  getTokenAmountOrId,
+} from "../client/blockchain-utils";
 import { publicClient } from "../wallet/wallet-config";
-import { MockERC721Abi } from "../client/abi";
+import { MockERC20Abi, MockERC721Abi } from "../client/abi";
 import { SWAPLACE_SMART_CONTRACT_ADDRESS } from "../client/constants";
-import { Token, TokenType } from "../shared/types";
+import { EthereumAddress, Token, TokenType } from "../shared/types";
 import { getTokenInfoBeforeSwap } from "../client/swap-utils";
 
 export async function isTokenSwapApproved({
   token,
   chainId,
+  authedUserAddress,
 }: {
   token: Token;
   chainId: number;
+  authedUserAddress: EthereumAddress | null;
 }): Promise<boolean> {
+  if (!authedUserAddress) return false;
+
   try {
     const tokenSwapInfo = getTokenInfoBeforeSwap(token);
 
-    let data;
+    let abi: Readonly<Array<Record<string, any>>> = [];
+    let functionName = "";
+    let args: any[] = [];
     if (token.tokenType === TokenType.ERC20) {
-      // Todo: implement ERC20 approval amount checker
-      return false;
+      abi = MockERC20Abi;
+      functionName = "allowance";
+      args = [
+        authedUserAddress.address,
+        SWAPLACE_SMART_CONTRACT_ADDRESS[chainId],
+      ];
     } else if (token.tokenType === TokenType.ERC721) {
-      const tokenTypeAbi = MockERC721Abi;
-      const getApprovedStatusMethod = "getApproved";
-      data = await publicClient({ chainId }).readContract({
-        abi: tokenTypeAbi,
-        functionName: getApprovedStatusMethod,
-        address: tokenSwapInfo.tokenAddress,
-        args: [tokenSwapInfo.amountOrId.toString()],
-      });
+      abi = MockERC721Abi;
+      functionName = "getApproved";
+      args = [getTokenAmountOrId(token).toString()];
     }
 
-    /* 
-      Whenever a token is approved to be exchanged by a given Smart-Contract,
-      the returned string of 'getApproved()' informs the given Smart-Contract 
-      address. If the token is not approved to be swap by this given
-      Smart-Contract, 'getApproved()' returns 'ADDRESS_ZERO'
-    */
-    return data === SWAPLACE_SMART_CONTRACT_ADDRESS[chainId];
+    const data = await publicClient({ chainId }).readContract({
+      abi,
+      functionName,
+      address: tokenSwapInfo.tokenAddress,
+      args,
+    });
+
+    if (token.tokenType === TokenType.ERC20) {
+      /*
+        ERC20's allowance returns the amount of tokens a user has allowed a given
+        Smart-Contract to spend on their behalf. The below comparison checks if
+        the amount the user has allowed the given Smart-Contract to spend is
+        greater than the amount they are trying to swap.
+      */
+      const tokenSwapAmount = getTokenAmountOrId(token);
+      const allowedAmount = data as number;
+
+      return tokenSwapAmount <= allowedAmount;
+    } else if (token.tokenType === TokenType.ERC721) {
+      /* 
+        Whenever a token is approved to be exchanged by a given Smart-Contract,
+        the returned string of 'getApproved()' informs the given Smart-Contract 
+        address. If the token is not approved to be swap by this given
+        Smart-Contract, 'getApproved()' returns 'ADDRESS_ZERO'
+      */
+      return data === SWAPLACE_SMART_CONTRACT_ADDRESS[chainId];
+    }
+
+    return false;
   } catch (e) {
     console.error(e);
     return false;
@@ -46,13 +76,18 @@ export async function isTokenSwapApproved({
 export async function getMultipleTokensApprovalStatus(
   tokensList: Token[],
   chainId: number,
+  authedUserAddress: EthereumAddress | null,
 ): Promise<TokenApprovalData[]> {
   const promises = tokensList.map(async (token) => {
     const tokenSwapInfo = getTokenInfoBeforeSwap(token);
 
     return {
       ...tokenSwapInfo,
-      approved: await isTokenSwapApproved({ token, chainId }),
+      approved: await isTokenSwapApproved({
+        token,
+        chainId,
+        authedUserAddress,
+      }),
     };
   });
 
