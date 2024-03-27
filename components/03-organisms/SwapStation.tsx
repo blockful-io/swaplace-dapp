@@ -8,17 +8,20 @@ import {
 } from "@/components/01-atoms";
 import { ConfirmSwapModal, OfferSummary } from "@/components/02-molecules";
 import { TokensShelfVariant } from "@/components/03-organisms";
+import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import { toast } from "react-hot-toast";
 
 export const SwapStation = () => {
   const [isValidSwap, setIsValidSwap] = useState<boolean>(false);
+  const { authenticatedUserAddress } = useAuthenticatedUser();
 
   const {
     authenticatedUserTokensList,
     searchedUserTokensList,
     validatedAddressToSwap,
+    inputAddress,
   } = useContext(SwapContext);
 
   useEffect(() => {
@@ -38,19 +41,40 @@ export const SwapStation = () => {
 
   const validateSwapSending = () => {
     if (!isValidSwap) {
+      if (!authenticatedUserAddress) {
+        toast.error("Please connect your wallet to begin");
+        return;
+      }
+
+      /// Check if the searched address is valid. If doesn't have input. You must search a address.
+      //  As well if isn't valid, select a valid address to swap tokens
       if (!validatedAddressToSwap) {
-        toast.error("You must select a destiny wallet to swap tokens with");
+        if (!inputAddress) {
+          toast.error("Search for an address to create a swap offer");
+        } else {
+          toast.error("You must select a valid address to swap tokens");
+        }
+        return;
+      }
+
+      if (
+        !authenticatedUserTokensList.length &&
+        !searchedUserTokensList.length
+      ) {
+        toast.error("You must select the tokens you want to swap");
         return;
       }
 
       if (!authenticatedUserTokensList.length) {
-        toast.error("You must select at least one NFT from yours to swap");
+        toast.error(
+          "You must select at least one token from your items to swap",
+        );
         return;
       }
 
       if (!searchedUserTokensList.length) {
         toast.error(
-          "You must select at least one NFT from the destiny wallet to swap",
+          "You must select at least one token from their items to swap",
         );
         return;
       }

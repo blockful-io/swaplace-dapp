@@ -1,9 +1,10 @@
 import { CopyAdressButton } from "@/components/02-molecules";
-import { ENSAvatar, ExternalLinkIcon } from "@/components/01-atoms";
+import {
+  BlockExplorerExternalLinkButton,
+  ENSAvatar,
+} from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import { useEnsData } from "@/lib/client/hooks/useENSData";
-import React from "react";
-import { useNetwork } from "wagmi";
 
 export const EnsNameAndAddressWallet = () => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
@@ -12,13 +13,7 @@ export const EnsNameAndAddressWallet = () => {
     ensAddress: authenticatedUserAddress,
   });
 
-  const { chain } = useNetwork();
-
   if (!authenticatedUserAddress) return null;
-
-  const blockExplorer = `${
-    chain?.blockExplorers?.default.url
-  }/address/${authenticatedUserAddress?.toString()}`;
 
   const displayAddress = authenticatedUserAddress?.getEllipsedAddress();
 
@@ -42,20 +37,10 @@ export const EnsNameAndAddressWallet = () => {
                 displayAddress={displayAddress}
               />
             </div>
-            <div className="flex">
-              <a
-                href={blockExplorer}
-                target="_blank"
-                className="flex gap-1 items-center justify-start"
-              >
-                <h3 className="text-sm font-medium text-[#A3A9A5] ">
-                  View on explorer
-                </h3>
-                <div className="p-1">
-                  <ExternalLinkIcon className="dark:text-[#A3A9A5] text-[#AABE13] font-medium" />
-                </div>
-              </a>
-            </div>
+            <BlockExplorerExternalLinkButton
+              address={authenticatedUserAddress}
+              label="View on explorer"
+            />
           </div>
         </>
       )}

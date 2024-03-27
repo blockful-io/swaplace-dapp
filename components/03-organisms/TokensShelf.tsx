@@ -4,9 +4,10 @@ import {
   getERC721TokensFromAddress,
   getERC20TokensFromAddress,
 } from "@/lib/client/blockchain-utils";
-import { EthereumAddress, Token } from "@/lib/shared/types";
+import { Token } from "@/lib/shared/types";
 import { TokensList } from "@/components/02-molecules";
 import { SelectUserIcon, SwapContext } from "@/components/01-atoms";
+import { useSupportedNetworks } from "@/lib/client/hooks/useSupportedNetworks";
 import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useNetwork } from "wagmi";
@@ -18,7 +19,6 @@ export enum TokensShelfVariant {
 }
 
 interface TokensShelfProps {
-  address: EthereumAddress | null;
   variant: TokensShelfVariant;
 }
 
@@ -29,8 +29,9 @@ interface TokensShelfProps {
  *
  * @returns Tokens Shelf based in status of given address
  */
-export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
+export const TokensShelf = ({ variant }: TokensShelfProps) => {
   const { chain } = useNetwork();
+  const { isNetworkSupported } = useSupportedNetworks();
   const [allTokensList, setAllTokensList] = useState<Token[]>([]);
   const [tokensQueryStatus, setTokensQueryStatus] = useState<TokensQueryStatus>(
     TokensQueryStatus.EMPTY_QUERY,
@@ -41,6 +42,11 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
   const { validatedAddressToSwap, inputAddress, destinyChain } =
     useContext(SwapContext);
 
+  const address =
+    variant === TokensShelfVariant.Their
+      ? validatedAddressToSwap
+      : authenticatedUserAddress;
+
   const getUserTokens = async () => {
     const chainId = authenticatedUserAddress?.equals(address)
       ? chain?.id
@@ -49,7 +55,7 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     let queriedTokens: Token[] = [];
     let tokensCount = allTokensList.length;
 
-    if (address && chainId) {
+    if (address && chainId && !!authenticatedUserAddress) {
       setTokensQueryStatus(TokensQueryStatus.LOADING);
 
       Promise.all([
@@ -77,9 +83,16 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     }
   };
 
+  // will only reload if network isNetworkSupported changes
   useEffect(() => {
-    getUserTokens();
-  }, [address, chain, destinyChain]);
+    !!authenticatedUserAddress && isNetworkSupported && getUserTokens();
+  }, [
+    address,
+    isNetworkSupported,
+    authenticatedUserAddress,
+    validatedAddressToSwap,
+    destinyChain,
+  ]);
 
   const conditionallyCleanTokensList = (condition: boolean) => {
     if (condition) {
@@ -131,6 +144,10 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
     );
   }, [validatedAddressToSwap]);
 
+  useEffect(() => {
+    conditionallyCleanTokensList(!isNetworkSupported);
+  }, [isNetworkSupported]);
+
   return (
     <div className="w-full flex rounded-t-none overflow-y-auto lg:max-w-[600px] h-[356px] no-scrollbar">
       {tokensQueryStatus == TokensQueryStatus.WITH_RESULTS && allTokensList ? (
@@ -146,20 +163,21 @@ export const TokensShelf = ({ address, variant }: TokensShelfProps) => {
         <div className="flex w-full h-full bg-inherit  justify-center items-center">
           <div className="flex-col flex items-center gap-5">
             <div className="w-[80px] h-[80px] flex items-center border-[3px] rounded-full dark:border-[#DDF23D] border-[#A3A9A5] ">
-              <SelectUserIcon
-                className="w-[100px]"
-                fill={theme == "dark" ? "#DDF23D" : "#A3A9A5"}
-              />
+              <SelectUserIcon className="w-[100px] dark:text-[#DDF23D] text-[#A3A9A5]" />
             </div>
             <div className="flex items-center justify-center flex-col gap-1 text-center">
-              <p className="dark:text-[#F6F6F6] font-onest font-medium text-[16px] leading-[20px]">
-                {variant === TokensShelfVariant.Their
+              <p className="p-normal-2-light dark:p-normal-2-dark contrast-50 text-[16px] leading-[20px]">
+                {variant === TokensShelfVariant.Their &&
+                !!authenticatedUserAddress
                   ? "No user selected yet"
                   : "No wallet is connected yet"}
               </p>
-              <p className="dark:text-[#A3A9A5] font-onest font-normal text-[14px] leading-[20px]">
-                {variant === TokensShelfVariant.Their
+              <p className="p-normal-2-light dark:p-normal-2-dark contrast-50 text-[14px] leading-[20px]">
+                {variant === TokensShelfVariant.Their &&
+                !!authenticatedUserAddress
                   ? "Search for a user to start swapping items"
+                  : variant === TokensShelfVariant.Their
+                  ? "Sign in to search for users"
                   : "Sign in to see your tokens"}
               </p>
             </div>

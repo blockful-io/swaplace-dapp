@@ -21,6 +21,7 @@ export interface TokensListProps {
   tabletTotalCards?: number;
   desktopTotalCards?: number;
   wideScreenTotalCards?: number;
+  confirmationModalTotalSquares?: number;
 
   /* 
     When true, instead of displaying an ERC20 Token balance
@@ -51,6 +52,7 @@ export const TokensList = ({
   tabletTotalCards,
   desktopTotalCards,
   wideScreenTotalCards,
+  confirmationModalTotalSquares = 0,
   withPlaceholders = true,
   withAddTokenCard = true,
   withSelectionValidation = true,
@@ -93,13 +95,14 @@ export const TokensList = ({
         tabletTotalSquares: tabletTotalCards,
         desktopTotalSquares: desktopTotalCards,
         wideScreenTotalSquares: wideScreenTotalCards,
+        confirmationModalTotalSquares: confirmationModalTotalSquares,
         styleType: tokenCardStyleType,
       })
     : [<></>];
 
   const tokenCards = tokensList.map((token: Token, index) => (
-    <div key={`token-${index}`}>
       <TokenCard
+        key={index}
         styleType={tokenCardStyleType}
         onClickAction={tokenCardClickAction}
         displayERC20TokensAmount={displayERC20TokensAmount}
@@ -108,7 +111,6 @@ export const TokensList = ({
         ownerAddress={ownerAddress}
         tokenData={token}
       />
-    </div>
   ));
 
   const addTokenSquare =
