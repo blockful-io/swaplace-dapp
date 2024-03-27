@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { LoadingIndicator } from "@/components/01-atoms";
 import {
   ENSAvatarQueryStatus,
@@ -6,6 +7,7 @@ import {
 import { EthereumAddress } from "@/lib/shared/types";
 import BoringAvatar from "boring-avatars";
 import cc from "classcat";
+import { useEffect, useState } from "react";
 
 export enum ENSAvatarSize {
   SMALL = "small",
@@ -26,9 +28,35 @@ export const ENSAvatar = ({
   avatarENSAddress,
   size = ENSAvatarSize.MEDIUM,
 }: ENSAvatarProps) => {
-  const { avatarQueryStatus, avatarSrc } = useEnsData({
+  const { avatarQueryStatus, avatarSrc, primaryName } = useEnsData({
     ensAddress: avatarENSAddress,
   });
+
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [failedLoadingImage, setFailedLoadingImage] = useState<boolean>(false);
+  useEffect(() => {
+    if (avatarQueryStatus === ENSAvatarQueryStatus.SUCCESS) {
+      if (avatarSrc) {
+        fetch(avatarSrc)
+          .then((response) => {
+            if (response.ok) {
+              setImageSrc(avatarSrc);
+              setFailedLoadingImage(false);
+            } else {
+              setImageSrc(null);
+              setFailedLoadingImage(true);
+            }
+          })
+          .catch(() => {
+            setImageSrc(null);
+            setFailedLoadingImage(true);
+          });
+      } else {
+        setImageSrc(null);
+        setFailedLoadingImage(true);
+      }
+    }
+  }, [avatarQueryStatus]);
 
   return (
     <div>
@@ -41,12 +69,13 @@ export const ENSAvatar = ({
         >
           <LoadingIndicator />
         </div>
-      ) : avatarQueryStatus === ENSAvatarQueryStatus.ERROR ? (
+      ) : avatarQueryStatus === ENSAvatarQueryStatus.ERROR ||
+        failedLoadingImage ? (
         <div className={ENSAvatarClassName[size]}>
           <BoringAvatar
-            variant="bauhaus"
+            variant="marble"
             data-atropos-offset="2"
-            name={avatarENSAddress.toString()}
+            name={primaryName || avatarENSAddress.toString()}
             square={true}
             colors={[
               "#353836",
@@ -58,15 +87,9 @@ export const ENSAvatar = ({
             ]}
           />
         </div>
-      ) : /* 
-          Below condition will always be true since we only have 3 possible values 
-          for avatarQueryStatus, being the third one ENSAvatarQueryStatus.SUCCESS:
-          
-          When the query is successful, avatarSrc will be defined
-        */
-      avatarSrc ? (
+      ) : imageSrc ? (
         <img
-          src={avatarSrc}
+          src={imageSrc}
           className={ENSAvatarClassName[size]}
           alt={`ENS Avatar for ${avatarENSAddress}`}
         />
