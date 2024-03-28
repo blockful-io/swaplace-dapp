@@ -6,7 +6,7 @@ import { SwapModalSteps } from "@/lib/client/ui-utils";
 import { ADDRESS_ZERO, SupportedNetworks } from "@/lib/client/constants";
 import { EthereumAddress, Token } from "@/lib/shared/types";
 import { ButtonClickPossibilities } from "@/lib/client/blockchain-utils";
-import { PonderFilter } from "@/lib/client/hooks/usePonder";
+import { PonderFilter } from "@/lib/client/hooks/usePonderRq";
 import React, { Dispatch, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
