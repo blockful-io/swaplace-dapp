@@ -1,11 +1,12 @@
+/* import { ENSAvatar } from "@/components/01-atoms"; */
 import { useScreenSize } from "@/lib/client/hooks/useScreenSize";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import {
   ConnectWallet,
-  ENSAvatar,
   MoonIcon,
   NetworkDropdown,
   NetworkVariantPosition,
+  PersonIcon,
   SunIcon,
   SwaplaceIcon,
   SwappingIcons,
@@ -93,9 +94,13 @@ export const TheHeader = () => {
                 <Tooltip position={"left"} content={"Your wallet"}>
                   <button
                     onClick={() => toggleSidebar()}
-                    className="rounded-[10px] flex items-center justify-center"
+                    className="rounded-[10px] flex items-center justify-center w-full h-full"
                   >
-                    <ENSAvatar avatarENSAddress={authenticatedUserAddress} />
+                    {/* <ENSAvatar avatarENSAddress={authenticatedUserAddress} /> */}
+                    <PersonIcon
+                      size={"20"}
+                      className="h-full items-center justify-center flex w-full p-2 text-sageGray dark:text-mediumGray"
+                    />
                   </button>
                 </Tooltip>
               ) : (

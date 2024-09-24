@@ -1,5 +1,5 @@
 import { ForWhom } from "../03-organisms";
-import { ENSAvatar, ENSAvatarSize, PersonIcon } from "@/components/01-atoms";
+import { PersonIcon } from "@/components/01-atoms";
 import {
   EtherFieldAddition,
   TokenCardStyleType,
@@ -8,9 +8,35 @@ import {
 import { ADDRESS_ZERO } from "@/lib/client/constants";
 import { SwapContext } from "@/lib/client/contexts";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
-import { useEnsData } from "@/lib/client/hooks/useENSData";
+/**
+ *  @deprecated
+ *
+ *  import { useEnsData } from "@/lib/client/hooks/useENSData";
+ */
 import { useContext } from "react";
 
+/**
+ * OfferSummary component displays a summary of token offers for a given user.
+ *
+ * @param {ForWhom} variant - Specifies whether the summary is for the authenticated user or another user.
+ *
+ *
+ * @remarks
+ * This component uses the `SwapContext` to fetch the necessary data for rendering the token offers.
+ * It also utilizes the `useAuthenticatedUser` hook to get the authenticated user's address.
+ *
+ * The component conditionally renders different sections based on the `variant` prop:
+ * - If `variant` is `ForWhom.Yours`, it displays the authenticated user's token offers.
+ * - If `variant` is `ForWhom.Their`, it displays the searched user's token offers.
+ *
+ * The ENS-related sections are currently commented out due to issues with fetching the correct ENS address.
+ * These sections include:
+ * - Displaying the ENS avatar for the searched address.
+ * - Displaying the ENS name for the searched address.
+ *
+ * These sections are currently commented out because the `ens-avatar-searched-address` has issues fetching the correct address.
+ * Since the ENS are not working properly. We're commenting those sections.
+ */
 export const OfferSummary = ({ variant }: { variant: ForWhom }) => {
   const {
     validatedAddressToSwap,
@@ -24,12 +50,14 @@ export const OfferSummary = ({ variant }: { variant: ForWhom }) => {
       ? authenticatedUserTokensList
       : searchedUserTokensList;
 
-  const { primaryName: searchedENSName } = useEnsData({
-    ensAddress: validatedAddressToSwap,
-  });
-  const { primaryName: authenticatedUserENSName } = useEnsData({
-    ensAddress: authenticatedUserAddress,
-  });
+  /**
+   * const { primaryName: searchedENSName } = useEnsData({
+   *  ensAddress: validatedAddressToSwap,
+   * });
+   * const { primaryName: authenticatedUserENSName } = useEnsData({
+   *  ensAddress: authenticatedUserAddress,
+   * });
+   */
 
   return (
     <div className="w-full h-full dark:bg-darkGreen border dark:border-darkGray bg-[#F0EEEE] borderlightSilver rounded-lg ">
@@ -37,32 +65,36 @@ export const OfferSummary = ({ variant }: { variant: ForWhom }) => {
         <div className="flex justify-between items-center h-9 gap-2">
           <div className="flex space-x-2 items-center">
             <div className="flex items-center">
-              {variant === ForWhom.Their && validatedAddressToSwap ? (
-                <ENSAvatar
-                  avatarENSAddress={validatedAddressToSwap}
-                  size={ENSAvatarSize.SMALL}
+              {/* {variant === ForWhom.Their && validatedAddressToSwap ? (
+               *<ENSAvatar
+               *  avatarENSAddress={validatedAddressToSwap}
+               *  size={ENSAvatarSize.SMALL}
+               *  />
+               *) : variant === ForWhom.Yours && authenticatedUserAddress ? (
+               *  <ENSAvatar
+               *    avatarENSAddress={authenticatedUserAddress}
+               *    size={ENSAvatarSize.SMALL}
+               *  />
+               *) : ( */}
+              <div className="bg-lightSilver dark:bg-darkGray p-[5px] rounded-md">
+                <PersonIcon
+                  size="14"
+                  className="text-sageGray dark:text-mediumGray"
                 />
-              ) : variant === ForWhom.Yours && authenticatedUserAddress ? (
-                <ENSAvatar
-                  avatarENSAddress={authenticatedUserAddress}
-                  size={ENSAvatarSize.SMALL}
-                />
-              ) : (
-                <div className="bg-lightSilver dark:bg-darkGray p-[5px] rounded-md">
-                  <PersonIcon
-                    size="14"
-                    className="text-sageGray dark:text-mediumGray"
-                  />
-                </div>
-              )}
+              </div>
+              {/* )} */}
             </div>
             <div className="items-center">
               <p className="p-small-variant-black-3 dark:p-small-variant-light-2 contrast-50">
                 {variant === ForWhom.Their && validatedAddressToSwap
                   ? `${
-                      searchedENSName
-                        ? `${searchedENSName} offers`
-                        : validatedAddressToSwap
+                      /**
+                       * searchedENSName
+                       * ? `${searchedENSName} offers`
+                       *
+                       *
+                       */
+                      validatedAddressToSwap
                         ? `${
                             validatedAddressToSwap.address === ADDRESS_ZERO
                               ? "Any user offers"
@@ -75,9 +107,11 @@ export const OfferSummary = ({ variant }: { variant: ForWhom }) => {
                   ? "They offer"
                   : variant === ForWhom.Yours && authenticatedUserAddress
                   ? `${
-                      authenticatedUserENSName
-                        ? `${authenticatedUserENSName} offers`
-                        : authenticatedUserAddress
+                      /**
+                       * authenticatedUserENSName
+                       * ? `${authenticatedUserENSName} offers`
+                       */
+                      authenticatedUserAddress
                         ? `${authenticatedUserAddress.getEllipsedAddress()} offers`
                         : "Connect your wallet"
                     }`

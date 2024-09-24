@@ -3,7 +3,10 @@ export * from "./ApproveTokenCards";
 export * from "./BlockExplorerExternalLinkButton";
 export * from "./ConnectWallet";
 export * from "./DisconnectWallet";
-export * from "./ENSAvatar";
+/**
+*  This export is commented out from dApp's features for now.
+*  export * from "./ENSAvatar";
+*/
 export * from "./LoadingIndicator";
 export * from "./NetworkDropdown";
 export * from "./MobileNotSupported";

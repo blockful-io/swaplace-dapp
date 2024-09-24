@@ -1,4 +1,24 @@
+/**
+ * @deprecated This component is deprecated because the searched Ethereum addresses
+ * are not always returning the relative ENS primary names, which negatively impacts the user experience
+ * in the application.
+ *
+ * The `ENSAvatar` component is responsible for displaying an Ethereum Name Service (ENS)
+ * avatar based on the provided Ethereum address. It supports two sizes: small and medium.
+ *
+ * The component uses the `useEnsData` hook to fetch the avatar data. Depending on the
+ * status of the query, it either shows a loading indicator, an error icon, or the
+ * fetched avatar image.
+ *
+ * @component
+ * @param {EthereumAddress} avatarETHAddress - The Ethereum address to fetch the avatar for.
+ * @param {ENSAvatarSize} ENSAvatarSize - The size of the avatar to display. Defaults to ENSAvatarSize.MEDIUM
+ *
+ * @returns {JSX.Element} The rendered ENS avatar component.
+ */
 /* eslint-disable react-hooks/exhaustive-deps */
+
+/**
 import { LoadingIndicator, PersonIcon } from "@/components/01-atoms";
 import {
   ENSAvatarQueryStatus,
@@ -101,3 +121,5 @@ export const ENSAvatar = ({
     </div>
   );
 };
+
+ */

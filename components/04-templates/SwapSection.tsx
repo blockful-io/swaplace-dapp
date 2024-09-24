@@ -7,7 +7,7 @@ import {
 
 export const SwapSection = () => {
   return (
-    <div className="max-w-[1280px] xl:max-h-[720px] w-full flex xl:flex-row flex-col lg:justify-center xl:h-full">
+    <div className="max-w-[1280px] xl:max-h-[720px] w-full flex xl:flex-row flex-col lg:justify-center">
       <TheHeader />
       <section className="flex items-center xl:px-[60px] pt-8 xl:flex-row flex-col">
         <div className="flex lg:flex-row flex-col xl:h-[656px] xl:w-[1098px] lg:gap-[20px] w-[95%] gap-2 xl:pt-0">
