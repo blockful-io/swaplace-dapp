@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { SwaplaceIcon } from "@/components/01-atoms";
+import { SwaplaceIcon, Token3DModal } from "@/components/01-atoms";
 import { useAuthenticatedUser } from "@/lib/client/hooks/useAuthenticatedUser";
 import {
   ERC20,
@@ -10,9 +10,11 @@ import {
 } from "@/lib/shared/types";
 import { getTokenName } from "@/lib/client/ui-utils";
 import { SwapContext } from "@/lib/client/contexts";
+import useLongPress from "@/lib/client/hooks/useLongPress";
 import React, { useContext, useEffect, useState } from "react";
 import cc from "classcat";
 import toast from "react-hot-toast";
+import { Atropos } from "atropos/react";
 
 interface TokenCardProps {
   tokenData: Token;
@@ -31,6 +33,7 @@ interface TokenCardProps {
   displayERC20TokensAmount?: boolean;
   withSelectionValidation?: boolean;
   styleType?: StyleVariant;
+  isToken3D?: boolean; // If true, the token card will be displayed in 3D using the AtroposLibrary
 }
 
 export enum TokenCardActionType {
@@ -45,6 +48,7 @@ export enum TokenCardStyleType {
   NORMAL = "normal",
   MEDIUM = "medium",
   LARGE = "large",
+  FIT = "fit",
 }
 
 type StyleVariant =
@@ -52,13 +56,15 @@ type StyleVariant =
   | "small"
   | "normal"
   | "medium"
-  | "large";
+  | "large"
+  | "fit";
 
 export const TokenSizeClassNames = {
   [TokenCardStyleType.SMALL]: "card-token-small",
   [TokenCardStyleType.NORMAL]: "card-token-normal",
   [TokenCardStyleType.MEDIUM]: "card-token-medium",
   [TokenCardStyleType.LARGE]: "card-token-large",
+  [TokenCardStyleType.FIT]: "w-full h-full",
 };
 
 /**
@@ -85,6 +91,7 @@ export const TokenCard = ({
   displayERC20TokensAmount = false,
   styleType = TokenCardStyleType.NORMAL,
   onClickAction = TokenCardActionType.SELECT_TOKEN_FOR_SWAP,
+  isToken3D = false,
 }: TokenCardProps) => {
   const { authenticatedUserAddress } = useAuthenticatedUser();
   const {
@@ -95,11 +102,42 @@ export const TokenCard = ({
   } = useContext(SwapContext);
   const [currentNftIsSelected, setCurrentNftIsSelected] = useState(false);
   const [couldntLoadNftImage, setCouldntLoadNftImage] = useState(false);
-
   const [tokenDisplayableData, setDisplayableData] = useState({
     id: "",
     symbol: "",
   });
+  const [isPressed, setIsPressed] = useState(false);
+
+  interface TokenToClipboard {
+    tokenType: TokenType;
+    id?: string;
+    name?: string;
+    image: string;
+    contract: string;
+  }
+
+  /**
+   * Parses the token data into a format suitable for copying to the clipboard.
+   * @param tokenData The token data to be parsed.
+   * @returns The parsed token data in the form of TokenToClipboard object.
+   */
+  const parseTokenDataToClipboard = (tokenData: Token): TokenToClipboard => {
+    const tokenCopyToClipboard: TokenToClipboard = {
+      tokenType: tokenData.tokenType,
+      id: tokenData.id,
+      name: tokenData.name,
+      image:
+        tokenData.tokenType === TokenType.ERC721
+          ? ((tokenData as ERC721).metadata?.image as string)
+          : "",
+      contract:
+        tokenData.tokenType === TokenType.ERC721
+          ? ((tokenData as ERC721).contract as string)
+          : "",
+    };
+
+    return tokenCopyToClipboard;
+  };
 
   useEffect(() => {
     const displayableData = { ...tokenDisplayableData };
@@ -207,7 +245,8 @@ export const TokenCard = ({
         }
       }
     } else if (onClickAction === TokenCardActionType.SHOW_NFT_DETAILS) {
-      navigator.clipboard.writeText(JSON.stringify(tokenData));
+      const tokenDataToClipboard = parseTokenDataToClipboard(tokenData);
+      navigator.clipboard.writeText(JSON.stringify(tokenDataToClipboard));
       toast.success("NFT data copied to your clipboard!");
     }
   };
@@ -216,8 +255,47 @@ export const TokenCard = ({
     setCouldntLoadNftImage(true);
   };
 
+  const handleClick = () => {
+    setIsPressed(false);
+  };
+
+  const handleClickLong = () => {
+    setIsPressed(true);
+  };
+
+  const { onMouseDown, onMouseUp, onMouseLeave } = useLongPress(
+    handleClickLong,
+    onCardClick, // when the user clicks in Button card
+  );
+
   const ButtonLayout = (children: React.ReactNode) => {
-    return (
+    return isToken3D ? (
+      <Atropos shadowScale={0.5} scaleClassName="atropos-scale" scaleChildren>
+        <button
+          onClick={handleClick}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseLeave}
+          className={cc([
+            TokenSizeClassNames[styleType],
+            {
+              "border-green-500":
+                currentNftIsSelected && withSelectionValidation,
+              "cursor-auto": onClickAction === TokenCardActionType.NO_ACTION,
+            },
+          ])}
+        >
+          {currentNftIsSelected && withSelectionValidation && (
+            <div className="flex items-end justify-end absolute bottom-0 right-0 w-full h-full rounded-xl z-20">
+              <div className=" dark:bg-[#212322] bg-[#F6F6F6] translate-x-[1px] translate-y-[1px] p-1 rounded-tl-xl">
+                <SwaplaceIcon className="text-[#AABE13] dark:text-[#DDF23D] w-4 h-4" />
+              </div>
+            </div>
+          )}
+          {children}
+        </button>
+      </Atropos>
+    ) : (
       <button
         onClick={onCardClick}
         className={cc([
@@ -250,6 +328,16 @@ export const TokenCard = ({
           className="dark:text-mediumGray text-mediumGray text-center static z-10 w-full h-full overflow-y-auto rounded-xl"
         />,
       )}
+      {isPressed && (
+        <Token3DModal
+          token={tokenData}
+          ownerAddress={ownerAddress}
+          isOpen={isPressed}
+          onClose={() => {
+            setIsPressed(false);
+          }}
+        />
+      )}
     </>
   ) : (
     <>
@@ -260,6 +348,16 @@ export const TokenCard = ({
             displayTokenAmount: displayERC20TokensAmount,
           })}
         </div>,
+      )}
+      {isPressed && (
+        <Token3DModal
+          token={tokenData}
+          ownerAddress={ownerAddress}
+          isOpen={isPressed}
+          onClose={() => {
+            setIsPressed(false);
+          }}
+        />
       )}
     </>
   );

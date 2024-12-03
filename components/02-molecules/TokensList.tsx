@@ -34,6 +34,7 @@ export interface TokensListProps {
   tokenCardClickAction?: TokenCardActionType;
   variant: ForWhom;
   gridClassNames?: string;
+  isToken3D?: boolean; // If true, the token card will be displayed in 3D using the AtroposLibrary
 }
 
 /**
@@ -62,6 +63,7 @@ export const TokensList = ({
   tokenCardStyleType = TokenCardStyleType.NORMAL,
   tokenCardClickAction = TokenCardActionType.SELECT_TOKEN_FOR_SWAP,
   gridClassNames = "w-full h-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-3",
+  isToken3D = false,
 }: TokensListProps) => {
   const [selectTokenAmountOf, setSelectTokenAmountOf] =
     useState<EthereumAddress | null>(null);
@@ -113,6 +115,7 @@ export const TokensList = ({
       withSelectionValidation={withSelectionValidation}
       ownerAddress={ownerAddress}
       tokenData={token}
+      isToken3D={isToken3D}
     />
   ));
 

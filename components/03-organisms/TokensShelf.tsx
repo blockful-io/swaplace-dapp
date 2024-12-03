@@ -191,6 +191,7 @@ export const TokensShelf = ({ variant }: { variant: ForWhom }) => {
             ownerAddress={address}
             tokensList={allTokensList}
             variant={variant}
+            isToken3D={true}
           />
         </div>
       ) : tokensQueryStatus == TokensQueryStatus.EMPTY_QUERY || !address ? (

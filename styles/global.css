@@ -214,3 +214,8 @@ input[type="number"] {
     @apply w-10 h-10 rounded-[10px] overflow-hidden;
   }
 }
+
+
+.atropos-scale {
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}

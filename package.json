@@ -17,6 +17,7 @@
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "@wagmi/core": "^2.6.9",
     "alchemy-sdk": "^3.1.2",
+    "atropos": "^2.0.2",
     "axios": "^1.6.7",
     "boring-avatars": "1.7.0",
     "classcat": "^5.0.4",

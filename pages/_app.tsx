@@ -27,6 +27,7 @@ import localFont from "next/font/local";
 import cc from "classcat";
 import { ThemeProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "atropos/css";
 
 const onest = localFont({
   src: "../public/fonts/Onest-VariableFont_wght.woff2",
